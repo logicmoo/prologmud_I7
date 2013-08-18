@@ -57,39 +57,39 @@ is_prop_public_at(see,1, worn_on).
 
 is_prop_public_at(see,1, in). % has_rel
 is_prop_public_at(see,1, on). % has_rel
+is_prop_public_at(_, 2, has_rel).
 
-is_prop_public_at(knows,2, name).
-is_prop_public_at(knows,2, eat).
-is_prop_public_at(knows,2, has_rel).
-is_prop_public_at(knows,2, default_rel).
+% parsing
+is_prop_public_at(knows,1, name).
 is_prop_public_at(knows,1, adjs).
 is_prop_public_at(knows,1, nouns).
+is_prop_public_at(knows,1, default_rel).
 
-is_prop_public_at(action,3, move).
+% dunno where to put eatable
+is_prop_public_at(knows,2, eat).
 
+% debugging
 is_prop_public_at(knows,3, inherit).
 is_prop_public_at(knows,3, isnt).
 is_prop_public_at(knows,3, inheriting).
+is_prop_public_at(knows,3, inherited).
 
-is_prop_public_at(knows,4, inherited).
 is_prop_public_at(knows,4, held_by).
+is_prop_public_at(knows,4, class_desc).
+is_prop_public_at(knows,4, has_sense).
+is_prop_public_at(knows,4, co(_)).
+is_prop_public_at(knows,4, knows_verbs).
+is_prop_public_at(knows,4, can_be).
 
-
+% action = try it to find out
+is_prop_public_at(action,3, move).
 is_prop_public_at(action,5, effect).
 is_prop_public_at(action,5, after).
 is_prop_public_at(action,5, before).
 is_prop_public_at(action,5, breaks_into).
 is_prop_public_at(action,5, oper).
+is_prop_public_at(action,5, cant_go).
 is_prop_public_at(S,N, P):- var(N), compound(P), functor(P,F,_), is_prop_public_at(S, 5, F), !, N = 5.
-
-is_prop_public_at(knows,4, can_be).
-is_prop_public_at(knows,4, class_desc).
-is_prop_public_at(_,4, co(_)).
-is_prop_public_at(_,4, effect).
-is_prop_public_at(_,4, has_rel).                            
-is_prop_public_at(knows,4, has_sense).
-is_prop_public_at(knows,4, knows_verbs).
-is_prop_public_at(action,4, cant_go).
 
 is_prop_public_at(_,_, P):- \+ compound(P), !, fail.
 is_prop_public_at(S,N, F = _):- !, is_prop_public_at(S, N, F).
@@ -100,18 +100,22 @@ object_props(Object, Sense, PropDepth, PropList, S0):-
  findall(P, (getprop(Object, P, S0), is_prop_public(Sense, PropDepth, P)), PropListL),
  list_to_set(PropListL,PropList), !.
                                    
+send_sense(IF, Agent, Sense, Depth, Data, S0, S1):- 
+ call(IF) ->
+   queue_agent_percept(Agent, percept(Agent, Sense, Depth, Data), S0, S1)
+  ; S0 = S1.
 
 act_examine(Agent, Sense, PrepIn, Object, Depth, SA, S3):- Depth = depth(DepthN),
-   (DepthN = 1 -> KnowsD = 3 ;  (DepthN = 2 -> KnowsD = 2 ; KnowsD = 1)),
-   object_props(Object, knows, KnowsD, KPropList, S0), !, 
-     %(PropList\==[] -> (queue_agent_percept(Agent, props(Object, KPropList), SA, S0)) ; SA = S0),
-     %(PropList\==[] -> (queue_agent_percept(Agent, percept_props(Agent, knows, Object, KnowsD, KPropList), SA, S0)) ; SA = S0),
-     (PropList\==[] -> (queue_agent_percept(Agent, percept(Agent, knows, KnowsD, props(Object, KPropList)), SA, S0)) ; SA = S0),
-   object_props(Object, Sense, 3, PropList, S0), !, 
-   %(PropList\==[] -> (queue_agent_percept(Agent, percept_props(Agent, Sense, Object, Depth, PropList), S0, S1)) ; S0 = S1), 
-   (PropList\==[] -> (queue_agent_percept(Agent, percept(Agent, Sense, Depth, props(Object, PropList)), S0, S1)) ; S0 = S1), 
+ (DepthN = 1 -> KnowsD = 3 ;  (DepthN = 2 -> KnowsD = 2 ; KnowsD = 1)),
+ object_props(Object, knows, KnowsD, KPropList, SA), 
+ send_sense((KPropList\==[]), Agent, knows, KnowsD, props(Object, KPropList), SA, S0 ),
+ object_props(Object, Sense, 3, PropList, SA), 
+ send_sense((PropList\==[]),Agent, Sense, Depth, props(Object, PropList), S0, S1),
  add_child_precepts(Sense,Agent,PrepIn, DepthN, Object, S1, S2),
- (DepthN=1 -> (prep_object_exitnames(PrepIn, Object, Exits, S0), queue_agent_percept(Agent, percept(Agent, Sense, Depth, exits(PrepIn, Object, Exits)), S2, S3)) ; S2 = S3),!.
+ (DepthN=1 -> 
+   (prep_object_exitnames(PrepIn, Object, Exits, S0), queue_agent_percept(Agent, 
+                                                            percept(Agent, Sense, Depth, exits(PrepIn, Object, Exits)), S2, S3)) 
+    ; S2 = S3),!.
 
 
 get_relation_list(Object, RelationSet, S1) :- 
