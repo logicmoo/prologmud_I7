@@ -28,7 +28,7 @@ extra_look_around(Agent, S0, S9) :-
  must_act(inventory(Agent), S3, S9).
 
 
-random_noise(Agent, [cap(subj(Agent)), Msg]) :-
+random_noise(Agent, [cap(subj(Agent)), Msg]) :- fail, 
  random_member(Msg, [
  'hums quietly to themself.',
  'inspects their inspection cover.',
@@ -135,7 +135,7 @@ consider_request(_Speaker, Agent, Action, _M0, _M1) :-
 consider_request(_Speaker, Agent, take(Agent, Object), M0, M1) :-
  add_goal(h(_Spatial, held_by, Object, Agent, _), M0, M1).
 consider_request(Requester, Agent, Query, M0, M1) :-
- do_introspect(Query, Answer, M0),
+ do_introspect(Agent,Query, Answer, M0),
  %add_todo(print_(Answer), M0, M1).
  add_todo(emote(Agent, say, Requester, Answer), M0, M1).
 consider_request(_Speaker, Agent, forget(goals), M0, M2) :-

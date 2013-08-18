@@ -127,10 +127,16 @@ stores_props(props(Object, PropList), Object, PropList).
 
 % get_all_props(Object, AllProps, S0):- findall(Prop,getprop(Object, Prop, S0),AllProps).
 
-
 getprop(Object, Prop, S0):- 
- quietly(( assertion(\+ atom(Prop)), getprop1(Object, [], Object, Prop, S0)))
- *-> true; getprop_from_state(Object, Object, Prop, S0).
+ quietly(( compound(Prop), 
+   getprop0(Object, Prop, S0))) 
+ *-> true ; 
+ quietly(( assertion(\+ atom(Prop)), 
+   getprop1(Object, [], Object, Prop, S0)))
+ *-> true; 
+ getprop_from_state(Object, Object, Prop, S0).
+
+getprop0(Object, Prop, S0):- Prop=..[Name,Value], Element =..[Name, Object, Value], member(Element,S0).
 
 getprop_from_state(Orig, Object, Prop, Memory):- 
  member(state(S0), Memory), !, getprop1(Orig, [], Object, Prop, S0).

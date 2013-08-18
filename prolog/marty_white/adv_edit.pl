@@ -113,26 +113,24 @@ do_metacmd(Doer, CLS, S0, S0) :- security_of(Doer,wizard),
  (is_main_console -> catch(CLS,E,(bugout(CLS:- throw(E)),fail)) ;
  (redirect_error_to_string(catch(CLS,E,(bugout(CLS:- throw(E)),fail)),Str),!, write(Str))),!.
 
-do_metacmd(Doer, inspect(Self, memory, Target), S0, S0) :-
+do_metacmd(Doer, inspect(Self, NamedProperty, Target), S0, S1) :-
+ do_metacmd(Doer, inspect(Self, getprop(Target,NamedProperty)), S0, S1).
+
+do_metacmd(Doer, inspect(Self, getprop(Target,NamedProperty)), S0, S0) :-
  security_of(Doer,wizard),
- forall(member(memories(Target, Memory), S0),
- meta_pprint(Self, Memory, always)),
+ pred_holder(NamedProperty,PropertyPred),
+ PropAndData=..[PropertyPred,Data],
+ findall(Data,getprop(Target,PropAndData,S0),DataList),
+ meta_pprint(Self, DataList, always),
  maybe_pause(Doer).
 
-do_metacmd(Doer, inspect(Self, model, Target), S0, S0) :-
- security_of(Doer,wizard),
- forall(member(memories(Target, Memory), S0),
- forall(thought(model(ModelData), Memory),
- meta_pprint(Self, ModelData, always))),
- maybe_pause(Doer).
-
-do_metacmd(Doer, create(Object), S0, S1) :-
+do_metacmd(Doer, create(Object, _Why), S0, S1) :-
  security_of(Doer,wizard),
  current_player(Agent),
  related(Spatial, Prep, Agent, Here, S0),
  declare(h(Spatial, Prep, Object, Here), S0, S1),
  player_format('You now see a ~w.~n', [Object]).
-do_metacmd(Doer, destroy(Object), S0, S1) :-
+do_metacmd(Doer, destroy(Object, _Why), S0, S1) :-
  security_of(Doer,wizard),
  undeclare(h(_Spatial, _, Object, _), S0, S1),
  player_format('It vanishes instantly.~n', []).
@@ -165,4 +163,6 @@ do_metacmd(Doer, WA, S0, S1) :-
  ((cmd_workarround(WA, WB) -> WB\==WA)), !, do_metacmd(Doer, WB, S0, S1).
 
 
-
+pred_holder(memory,memories).
+pred_holder(precepts,preceptq).
+pred_holder(X,X).

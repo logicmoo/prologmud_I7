@@ -85,13 +85,13 @@ can_sense( Sense, Thing, Agent, _State):- bugout(pretending_can_sense( Sense, Th
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Manipulate one agents percepts
-queue_percept(Agent, Event, S0, S2) :-
+queue_agent_percept(Agent, Event, S0, S2) :-
  dmust((select(perceptq(Agent, Queue), S0, S1),
  append(Queue, [Event], NewQueue),
  append([perceptq(Agent, NewQueue)], S1, S2))).
 
 queue_event(Event, S0, S2) :-
- each_sensing_agent(_All, queue_percept(Event), S0, S2).
+ each_sensing_agent(_All, queue_agent_percept(Event), S0, S2).
 
 
 % Room-level simulation percepts
@@ -100,7 +100,7 @@ queue_local_percept(Agent, Spatial, Event, Places, S0, S1) :-
  member(Where, Places),
  get_open_traverse(look, Spatial, OpenTraverse),
  related(Spatial, OpenTraverse, Agent, Where, S0),
- queue_percept(Agent, Event, S0, S1),!.
+ queue_agent_percept(Agent, Event, S0, S1),!.
 queue_local_percept(_Agent, _Spatial, _Event, _Places, S0, S0).
 
 /*
@@ -251,7 +251,7 @@ process_percept_player(Agent, Percept, _Stamp, Mem0, Mem0) :-
 is_player(Agent):- \+ is_non_player(Agent).
 is_non_player(Agent):- Agent == 'floyd~1'.
 
-
+% process_percept(Agent, PerceptsList, Stamp, OldModel, NewModel)
 process_percept(Agent, Percept, Stamp, Mem0, Mem1) :-
  once(is_player(Agent)),
  once((process_percept_player(Agent, Percept, Stamp, Mem0, Mem1))),

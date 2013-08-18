@@ -18,8 +18,10 @@
 */
 
 :- dynamic(adv:cmd_help/2).
-
+                                                             
 :- dynamic(adv:cmd_help/2).
+
+:- use_module(library(help)). %,[online_manual_stream/1, pager_stream/1,  show_ranges/3, user_index/2, write_ranges_to_file/2, prolog:show_help_hook/2]).
 
 add_help(Cmd,HelpStr):-
  retractall(adv:cmd_help(Cmd,_)),
@@ -56,24 +58,22 @@ give_help(A) :-
   format('No help available for ~w~n', [A]).
 
 show_help(C, B) :-
- online_help:(
-  predicate_property(prolog:show_help_hook(_, _),
+ predicate_property(prolog:show_help_hook(_, _),
        number_of_clauses(A)),
   A>0,
-  write_ranges_to_file(B, D),
-  prolog:show_help_hook(C, D)).
+  online_help:write_ranges_to_file(B, D),
+  call(call,prolog:show_help_hook(C, D)).
 
 show_help(_, A) :-
-  online_help:
-  ( current_prolog_flag(pipe, true), !,
-  online_manual_stream(B),
-  pager_stream(C),
-  catch(show_ranges(A, B, C), _, true),
+  current_prolog_flag(pipe, true), !,
+  online_help:online_manual_stream(B),
+  online_help:pager_stream(C),
+  catch(online_help:show_ranges(A, B, C), _, true),
   close(B),
-  catch(close(C), _, true)).
+  catch(close(C), _, true).
+
 show_help(_, A) :-
- online_help:(
-  online_manual_stream(B),
-  show_ranges(A, B, user_output)).
+  online_help:online_manual_stream(B),
+  online_help:show_ranges(A, B, user_output).
 
 

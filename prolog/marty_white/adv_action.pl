@@ -92,9 +92,8 @@ do_command(Agent, Action, S0, S1) :-
 do_command(Agent, Action, _, _) :- set_last_action(Agent,Action), fail.
  
 do_command(Agent, Action, S0, S1) :-
- declared(memories(Agent, Mem), S0),
- do_introspect(Action, Answer, Mem),
- queue_percept(Agent, [answer(Answer), Answer], S0, S1), !.
+ do_introspect(Agent,Action, Answer, S0),
+ queue_agent_percept(Agent, [answer(Answer), Answer], S0, S1), !.
  %player_format('~w~n', [Answer]).
 do_command(Agent, Action, S0, S3) :-
  undeclare(memories(Agent, Mem0), S0, S1),
@@ -154,8 +153,8 @@ apply_act( examine(Agent, How, Thing), State, NewState) :-
 apply_act( Action, State, NewState) :- 
  act_verb_thing_model_sense(Agent, Action, _Verb, _Thing, _Spatial, _Sense),
  cant( Action, Reason, State),
- log2eng(Agent, Reason, Eng),
- queue_percept(Agent, [failure(Action, Reason), Eng], State, NewState), !.
+ % log2eng(Agent, Reason, Eng),
+ queue_agent_percept(Agent, [failure(Action, Reason)], State, NewState), !.
 
 
 apply_act( Action, State, NewState):- act( Action, State, NewState), !.
@@ -165,8 +164,7 @@ apply_act( Action, State, State):- notrace((bugout(failed_act( Action), general)
 must_act( Action, State, NewState):- apply_act( Action, State, NewState) *-> ! ; fail.
 % must_act( Action, S0, S1) :- rtrace(must_act( Action, S0, S1)), !.
 must_act( Action, S0, S1) :-
- format(atom(Message), 'You can''t do that ~w. "~p"', [Agent, Action]),
- queue_percept(Agent, [failure(Action), Message], S0, S1).
+ queue_agent_percept(Agent, [failure(Action, unknown_to(Agent,Action))], S0, S1).
 
 
 :- discontiguous act/3.
@@ -184,14 +182,17 @@ act( Action, State, NewState) :-
    Nearby),
  findall(Direction, related(Spatial, exit(Direction), Here, _, State), Exits),
  !,
- queue_percept(Agent,
-    [sense(Agent, Sense, [you_are(Agent, Relation, Here), exits_are(Agent,Here,Exits), here_are(Agent, Sense, Relation, Here, Nearby)])],
+ queue_agent_percept(Agent,
+    [sense(Agent, Sense, [
+             you_are(Agent, Relation, Here), 
+             exits_are(Agent,Here,Exits), 
+             here_are(Agent, Sense, Relation, Here, Nearby)]) ],
     State, NewState).
 
-act( inventory, State, NewState) :- 
+act( inventory(Agent), State, NewState) :- 
  Spatial = spatial,
  findall(What, related(Spatial, child, What, Agent, State), Inventory),
- queue_percept(Agent, [carrying(Agent, Spatial, Inventory)], State, NewState).
+ queue_agent_percept(Agent, [carrying(Agent, Spatial, Inventory)], State, NewState).
 
 act( examine(Agent, Object), S0, S2) :- act( examine(Agent, see, Object), S0, S2).
 
@@ -200,7 +201,7 @@ act( examine(Agent, Sense, Object), S0, S2) :-
  ((
  findall(P, (getprop(Object, P, S0), is_prop_public(Sense,P)), PropListL),
  list_to_set(PropListL,PropList),
- queue_percept(Agent, [sense_props(Agent, Sense, Object, PropList)], S0, S1),
+ queue_agent_percept(Agent, [sense_props(Agent, Sense, Object, PropList)], S0, S1),
  (has_rel(Spatial, Relation, Object, S1); Relation='<unrelatable>'),
  % Remember that Agent might be on the inside or outside of Object.
  findall(What,
@@ -208,12 +209,12 @@ act( examine(Agent, Sense, Object), S0, S2) :-
    once(can_sense( Sense, What, Agent, S1))),
    ChildrenL),
  list_to_set(ChildrenL,Children),
- queue_percept(Agent, [notice_children(Agent, Sense, Object, Relation, Children)], S1, S2))).
+ queue_agent_percept(Agent, [notice_children(Agent, Sense, Object, Relation, Children)], S1, S2))).
 
 
 act( goto(Agent, Walk, Dir, Relation, Place), S0, S1):- !,
  (act_goto( Agent, Walk, Dir, Relation, Place, S0, S1)->true;
- queue_percept(Agent,
+ queue_agent_percept(Agent,
     [failure(goto(Agent, Walk, Dir, Relation, Place)), 'You can\'t go that way'],
     S0, S1)).
 
@@ -241,7 +242,7 @@ act_goto( Agent, _Walk, Dir, _Relation, _Room, S0, S9) :- nonvar(Dir),
    S0, S1),
  (related(Spatial, exit(RDir), There, Here, S0)-> true ; reverse_dir(Dir,RDir,S0)),
  queue_local_event(Spatial, [moved( Agent, Here, PrepThere, There), 
- the(Agent), person(arrived, arrives),from,the, RDir], [There], S1, S2),
+ msg([the(Agent), person(arrived, arrives),from,the, RDir])], [There], S1, S2),
  must_act( look(Agent, Spatial), S2, S9).
 
 act_goto( Agent, _Walk, Dir, Relation, Room, S0, S9) :- nonvar(Room),   % go in (adjacent) room
@@ -347,7 +348,7 @@ act( throw(Agent, Thing, Dir), S0, S9) :-
 act( hit(Agent, Thing), S0, S9) :-
  related(spatial, _Relation, Agent, Here, S0),
  hit(Agent, Thing, Agent, [Here], S0, S1),
- queue_percept(Agent, [true, 'OK.'], S1, S9).
+ queue_agent_percept(Agent, [true, 'OK.'], S1, S9).
 
 act( dig(Agent, Hole, Where, Tool), S0, S9) :-
  memberchk(Hole, [hole, trench, pit, ditch]),
@@ -371,9 +372,10 @@ act( dig(Agent, Hole, Where, Tool), S0, S9) :-
 act( eat(Agent, Thing), S0, S9) :-
  getprop(Thing, can_be(eat, t), S0),
  undeclare(h(_Spatial, _, Thing, _), S0, S1),
- queue_percept(Agent, [destroyed(Thing), 'Mmmm, good!'], S1, S9).
+ queue_agent_percept(Agent, [destroyed(Thing), 'Mmmm, good!'], S1, S9).
+
 act( eat(Agent, Thing), S0, S9) :-
- queue_percept(Agent, [failure(eat(Agent, Thing)), 'It''s inedible!'], S0, S9).
+ queue_agent_percept(Agent, [failure(eat(Agent, Thing), ['It''s inedible!'])], S0, S9).
 
 /*
 act( switch(Open, Thing), S0, S) :-
@@ -394,7 +396,7 @@ act( switch(OnOff, Thing), S0, S) :-
  getprop(Thing, effect(switch(OnOff), Term0), S0),
  subst(equivalent, $self, Thing, Term0, Term),
  call(Term, S0, S1),
- queue_percept(Agent, [true, 'OK'], S1, S).
+ queue_agent_percept(Agent, [true, 'OK'], S1, S).
 */
 % todo
 act_required_posses('lock','key',$agent).
@@ -475,7 +477,7 @@ act( OpenThing, S0, S) :-
 act( touch(Agent, Thing), S0, S9) :-
  unless_reason(Agent, reachable(Spatial, Thing, Agent, S0),
    cant( reach(Agent, Spatial, Thing))),
- queue_percept(Agent, [true, 'OK.'], S0, S9).
+ queue_agent_percept(Agent, [true, 'OK.'], S0, S9).
 
 
 act( emote(Agent, SAYTO, Object, Message), S0, S1) :- !, % directed message
@@ -491,7 +493,7 @@ act( emote(Agent, SAYTO, Object, Message), S0, S1) :- !, % directed message
 % queue_local_event(Spatial, [emoted(Agent,  say, (*), Message)], [Here], S0, S1).
 
 act( wait(Agent), State, NewState) :-
- queue_percept(Agent, [time_passes(Agent)], State, NewState).
+ queue_agent_percept(Agent, [time_passes(Agent)], State, NewState).
 act( print_(Agent, Msg), S0, S1) :-
  related(Spatial, descended, Agent, Here, S0),
  queue_local_event(Spatial, [true, Msg], [Here], S0, S1).

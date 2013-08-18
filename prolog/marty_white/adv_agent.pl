@@ -100,55 +100,53 @@ add_todo_all([Action|Rest], Mem0, Mem2) :-
 
 % -----------------------------------------------------------------------------
 
-% do_introspect(Query, Answer, Memory)
-do_introspect(path(There), Answer, Memory) :-
- thought(inst(Agent), Memory),
+% do_introspect(Agent,Query, Answer, Memory)
+do_introspect(Agent, [path,_TO,There], Answer, S0) :-
+ getprop(Agent, memories(Memory), S0), 
  thought_model(ModelData, Memory),
  in_model(h(Spatial, _Prep, Agent, Here, _T), ModelData),
  find_path(Spatial, Here, There, Route, ModelData),
  Answer = ['Model is', ModelData, '\nShortest path is', Route].
 
 
-do_introspect(whereis(X), Answer, Memory) :-
- remember_whereis(X, Answer, Memory).
-do_introspect(whereis(X), Answer, Memory) :- !,
- thought(inst(Agent), Memory),
- sensory_model(Sense, spatial),
- Answer = [subj(Agent), person('don\'t', 'doesn\'t'),
-   'recall ever ', ing(Sense), ' a "', X, '".'].
-
-do_introspect(whois(X), Answer, Memory) :-
- remember_whereis(X, Answer, Memory).
-do_introspect(whois( X), [X, is, X, .], _Memory).
-
-do_introspect(whatis( X), Answer, Memory) :-
- remember_whereis(X, Answer, Memory).
-do_introspect(whatis( X), [X, is, X, .], _Memory).
-
-
-
-remember_whereis(Thing, Answer, Memory) :-
- thought(inst(Agent), Memory),
+do_introspect(recall(Agent, WHQ, Target), Answer, S0) :-
+ getprop(Agent, memories(Memory), S0), 
  thought_model(ModelData, Memory),
+ recall_whereis(Agent, WHQ, Target, Answer, ModelData).
+
+
+
+recall_whereis(Agent, _WHQ, Thing, Answer, ModelData) :-
  in_model(h(_Spatial, Prep, Thing, Where, T), ModelData),
  Prep \= exit(_),
  Answer = ['At time', T, subj(Agent), 'saw the', Thing, Prep, the, Where, .].
-remember_whereis(Here, Answer, Memory) :-
- thought(inst(Agent), Memory),
- thought_model(ModelData, Memory),
- in_model(h(_Spatial, _Prep, Agent, Here, _T), ModelData),
- Answer = 'Right here.'.
-remember_whereis(There, Answer, Memory) :-
- thought(inst(Agent), Memory),
- thought_model(ModelData, Memory),
+
+recall_whereis(Agent, WHQ, Here, Answer, ModelData) :- 
+ in_model(h(Spatial, Prep, Agent, Here, T), ModelData),
+ related_answer(WHQ, where), !,
+ Answer = [msg(['Right here.']),h(Spatial, Prep, Agent, Here, T)].
+
+recall_whereis(Agent, _WHQ, There, Answer, ModelData) :-
  in_model(h(Spatial, _Prep, Agent, Here, _T), ModelData),
  find_path(Spatial, Here, There, Route, ModelData),
  Answer = ['To get to the', There, ', ', Route].
-remember_whereis(There, Answer, Memory) :-
- thought_model(ModelData, Memory),
- (in_model(h(_Spatial, exit(_), _, There, _T), ModelData);
- in_model(h(_Spatial, exit(_), There, _, _T), ModelData)),
- Answer = 'Can''t get there from here.'.
+
+recall_whereis(Agent, _WHQ, There, Answer, ModelData) :-
+(in_model(h(_Spatial, exit(_), _, There, _T), ModelData); in_model(h(_Spatial, exit(_), There, _, _T), ModelData)),
+ Answer = [Agent,'Can''t get there from here.'].
+
+recall_whereis(_Agent, _WHQ, There, Answer, ModelData) :-
+ findall(Data, (member(Data,ModelData), related_answer(Data, There)), Memories),
+ Memories\==[],
+ Answer = Memories.
+
+recall_whereis(Agent, _WHQ, There, Answer, _ModelData) :- 
+ sensory_model(Sense, spatial),
+ Answer = [subj(Agent), person('don\'t', 'doesn\'t'),
+   'recall ever ', ing(Sense), ' a "', There, '".'].
+
+
+related_answer(Data, There):- sub_term(E,Data),nonvar(E),E=There.
 
 
 

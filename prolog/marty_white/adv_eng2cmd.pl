@@ -79,13 +79,14 @@ parse2logical(Self, [rtrace|Args], Action, M) :- Args\==[], !, rtrace(parse2logi
 % %%%%%%%%%%%%%%
 % Introspection
 % %%%%%%%%%%%%%%
-parse2logical(Self, [model|Tail], inspect(Self,model,Agent), Mem) :- parse2agent(Tail, Agent, Mem).
-parse2logical(Self, [memory|Tail], inspect(Self,memory,Agent), Mem) :- parse2agent(Tail, Agent, Mem).
-parse2logical(Self, [whom|Tail], inspect(Self,whois,Agent), Mem) :- parse2agent(Tail, Agent, Mem).
-parse2logical(Self, [who|Tail], inspect(Self,whois,Agent), Mem) :- parse2agent(Tail, Agent, Mem).
+parse2logical(Self, [model|Tail], inspect(Self,getprop(Target,model)), Mem) :- parse2agent(Tail, Target, Mem).
+parse2logical(Self, [memory|Tail], inspect(Self,getprop(Target,memory)), Mem) :- parse2agent(Tail, Target, Mem).
 
-parse2logical(Self, [what|Tail], inspect(Self,whatis,Agent), Mem) :- parse2object(Tail, Agent, Mem).
-parse2logical(Self, [where|Tail], inspect(Self,whereis,Agent), Mem) :- parse2object(Tail, Agent, Mem).
+parse2logical(Self, [whom|Tail], recall(Self,who,Target), Mem) :- parse2agent(Tail, Target, Mem).
+parse2logical(Self, [who|Tail], recall(Self,who,Target), Mem) :- parse2agent(Tail, Target, Mem).
+
+parse2logical(Self, [what|Tail], recall(Self,what,Target), Mem) :- parse2object(Tail, Target, Mem).
+parse2logical(Self, [where|Tail], recall(Self,where,Target), Mem) :- parse2object(Tail, Target, Mem).
 
 
 % %%%%%%%%%%%%%%
