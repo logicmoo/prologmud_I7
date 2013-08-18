@@ -42,25 +42,8 @@ related_with_prop(At, Object, Place, Prop, S0) :-
   h(At, Object, Place, S0),
   getprop(Object, Prop, S0).
 
-:- defn_state_getter(in_state(domrel, inst)).
-in_state(~(Open), Object, State) :- ground(Open),!,
- getprop(Object, Open=f, State).
-in_state(Open, Object, State) :-
- getprop(Object, Open=t, State).
-% getprop(Object, can_be(open, State),
-% \+ getprop(Object, =(open, t), State).
-
-:- defn_state_getter(in_scope(agent,thing)).
-in_scope(_Agent, Star, _State) :- is_star(Star), !.
-in_scope(Agent, Thing, S0) :-
-  from_loc(Agent, Here, S0),
-  (Thing=Here;  open_traverse(Thing, Here, S0)),!.
-in_scope(Agent, Thing, State) :-
- % get_open_traverse(_Open, _See, _Traverse, Sense),
- h(Sense, Agent, Here, State),
- (Thing=Here; h(Sense, Thing, Here, State)).
-in_scope(Agent, Thing, _State):- bugout1(pretending_in_scope(Agent, Thing)).
-
+% getprop(Object, can_be(open, S0),
+% \+ getprop(Object, =(open, t), S0).
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -123,7 +106,26 @@ h(descended, X, Z, S0) :-
 
 h(open_traverse, X, Z, S0):-
   h(descended, X, Z, S0),
-  \+ (is_closed(in, Z, S0), h(inside, X, Z, S0)).
+  \+ (h(inside, X, Z, S0), is_closed(in, Z, S0)).
+
+h(in_scope, X, Z, S0):- 
+  h(child, X, Y, S0),
+  h(descended, Z, Y, S0).
+h(in_scope, X, Z, S0):- 
+  h(descended, X, Z, S0).
+
+h(touchable, X, Z, S0):- 
+  h(in_scope, X, Z, S0),
+  \+ ((h(inside, Z, C, S0), is_closed(in, C, S0),   % cant reach what is inside of something closed unless...
+                          \+ h(inside, X, C, S0))). % ... we are inside of that something as well as well
+
+h(takeable, X, Z, S0):- 
+  h(touchable, X, Z, S0),
+  X \= Z, % cant take self
+  \+ getprop(Z,can_be(move, f)),
+  \+ getprop(Z,can_be(take, f)),
+  \+ h(inside, X, Z, S0),  % cant take outer object
+  \+ h(held_by, Z, X, S0). % cant take what already have
 
 
 h(inside, X, Z, S0) :- h(in, X, Z, S0).
@@ -151,8 +153,15 @@ escape_rel(escape).
 
 :- defn_state_getter(is_closed(prep,inst)).
 
+:- defn_state_getter(in_state(domrel, inst)).
+in_state(~(Opened), Object, S0) :- ground(Opened),!,
+ getprop(Object, Opened=f, S0).
+in_state(Opened, Object, S0) :-
+ getprop(Object, Opened=t, S0).
+
+:- defn_state_getter(is_closed(domrel, inst)).
 is_closed(At,Object, S0) :-  
-  getprop(Object, opened=f, S0) -> getprop(Object, default_rel = At, S0).
+ in_state(~(opened), Object, S0) -> getprop(Object, default_rel = At, S0).
 %  getprop(Object, openable, S0),
 %  \+ getprop(Object, open, S0).
 
@@ -174,13 +183,6 @@ open_traverse(Thing, Here, S0):-
    h(open_traverse, Here, Thing, S0).
 
 
-
-:- defn_state_getter(touchable(agent,thing)).
-touchable(Agent, Thing, S0):- notrace(touchable0(Agent, Thing, S0)).
-touchable0(_Agent, Star, _State) :- is_star(Star), !.
-touchable0(Agent, Thing, S0) :-
-  h(child, Agent, Here, S0), % can't reach out of boxes, etc.
-  (Thing=Here;  open_traverse(Thing, Here, S0)).
 
 
 

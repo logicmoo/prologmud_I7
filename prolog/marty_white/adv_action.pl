@@ -162,14 +162,14 @@ do_action(Agent, Action, S0, S3) :-
  declare(memories(Agent, Mem1), S1, S2))),
  dmust_tracing(must_act( Action, S2, S3)), !.
 
-% memorize_doing(Action, Mem0, Mem0):- has_depth(Action),!.
+memorize_doing(Action, Mem0, Mem0):- has_depth(Action),!.
 memorize_doing(Action, Mem0, Mem2):- 
   copy_term(Action,ActionG),
   numbervars(ActionG,999,_),
   ( has_depth(Action) 
     -> Mem0 = Mem1 ; 
     (thought(timestamp(T0,_OldNow), Mem0), T1 is T0 + 1,clock_time(Now), memorize(timestamp(T1,Now), Mem0, Mem1))), 
-  memorize(did(ActionG), Mem1, Mem2).
+  memorize(attempting(ActionG), Mem1, Mem2).
 
 has_depth(Action):- compound(Action), functor(Action,_,A),arg(A,Action,E),compound(E),E=depth(_),!.
 
@@ -181,13 +181,61 @@ trival_act(look(_)).
 trival_act(wait(_)).
 trival_act(goto(_,_,_,_)).
 
+satisfy_each(_Ctxt,[]) --> [], !.
+satisfy_each(Context,[Cond|CondList]) --> !,
+  dmust_det(satisfy_each(Context,Cond)), !,
+  ((sg(member(failed(_Why)))) ; satisfy_each(Context,CondList)),!.
+satisfy_each(_Ctx,A \= B) --> {dif(A,B)},!.
+
+satisfy_each(Context, believe(Beliver, Cond)) --> !, 
+   undeclare(memories(Beliver,Memory)), !, 
+   {satisfy_each(Context,Cond,Memory,NewMemory)},  
+   declare(memories(Beliver,NewMemory)).
+
+satisfy_each(Context, foreach(Cond,Event), S0, S9) :- findall(Event, phrase(Cond,S0,_), TODO), satisfy_each(Context, TODO, S0, S9).
+satisfy_each(_,precept_local(Where,Event)) --> !, queue_local_event([Event],[Where]).
+satisfy_each(_,precept(Agent,Event)) --> !, queue_agent_percept(Agent,Event).
+satisfy_each(postCond(_Action), ~(Cond)) --> !, undeclare_always(Cond).
+satisfy_each(postCond(_Action),  Cond) --> !, declare(Cond).
+satisfy_each(Context, ~(Cond)) --> !, (( \+ satisfy_each(Context, Cond)) ; [failed(Cond)] ).
+satisfy_each(_, Cond) --> declared(Cond).
+satisfy_each(_, Cond) --> [failed(Cond)].
+
+
+oper_splitk(Agent,Action,Preconds,Postconds):-
+  oper(Agent,Action,PrecondsK,PostcondsK),
+  split_k(Agent,PrecondsK,Preconds),
+  split_k(Agent,PostcondsK,Postconds).
+
+split_k(_Agent,[],[]) :- !.
+split_k(Agent,[k(P,X,Y)|PrecondsK],[believe(Agent,h(P,X,Y)),h(P,X,Y)|Preconds]):- !,
+  split_k(Agent,PrecondsK,Preconds).
+split_k(Agent,[b(P,X,Y)|PrecondsK],[believe(Agent,h(P,X,Y))|Preconds]):- !, 
+  split_k(Agent,PrecondsK,Preconds).
+split_k(Agent,[Cond|PrecondsK],[Cond|Preconds]):- 
+  split_k(Agent,PrecondsK,Preconds).
+
+
 apply_act( Action) --> 
  action_doer(Action, Agent), 
  do_introspect(Agent,Action, Answer),
  queue_agent_percept(Agent, [answer(Answer), Answer]), !.
- %player_format('~w~n', [Answer]).
 
-apply_act( Action) --> aXiom(_, Action), !.
+apply_act(print_(Agent, Msg)) -->
+  h(descended, Agent, Here),
+  queue_local_event(msg_from(Agent, Msg), [Here]).
+
+apply_act(wait(Agent)) -->
+ from_loc(Agent, Here),
+ queue_local_event(time_passes(Agent),Here).
+
+apply_act( Action) --> 
+ {oper_splitk(Agent,Action,Preconds,Postconds)}, !, 
+ dmust_det(satisfy_each(preCond(_),Preconds)),
+ (((sg(member(failed(Why))),queue_agent_percept(Agent, failed(Action,Why))))
+    ; (satisfy_each(postCond(_),Postconds),queue_agent_percept(Agent, success(Action)))),!.
+
+apply_act( Action) --> aXiom(Action), !.
 
 /*
 apply_act( Action) --> fail, 

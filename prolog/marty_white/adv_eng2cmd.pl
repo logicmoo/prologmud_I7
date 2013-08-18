@@ -240,9 +240,9 @@ parse2logical(Self, [Verb|TheArgs], Action, M) :-
  args2logical(TheArgs, Args, M), wdmsg( TheArgs->Args), !, 
  Action =.. [Verb,Self|Args].
 
-verbatum_anon(Verb):- member(Verb, [prolog, make, cls, mem, props, ls, debug, cd, pwd, 
+verbatum_anon(Verb):- member(Verb, [prolog, make, cls, mem, types, props, ls, debug, cd, pwd, 
  agent, create, delprop, destroy, echo, halt, getprops,
- memory, model, path, properties, setprop, state, state, help, threads,
+ memory, model, path, properties, setprop, state, state, perceptq, help, threads,
  spy,nospy,call,
  rtrace, nortrace, 
  trace, notrace %, %whereami, whereis, whoami

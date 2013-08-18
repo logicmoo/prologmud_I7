@@ -44,45 +44,6 @@ get_some_agents(Precond, LiveAgents, S0):-
 
 
 
-is_prop_public(_,P) :-
-  \+ \+ member(P, [has_rel(_),
-     emits_light, can_be(eat,t), name(_), desc(_), breaks_into(_),
-             can_be(take, f), openable, open, closed(_), lockable, locked, locked(_),
-             shiny]).
-is_prop_public(_,Prop):- is_prop_nonpublic(Prop),!,fail.
-is_prop_public(_,P) :-
- \+ \+ 
- member(P, [                            
-    name(_),
-    desc(_),
-    breaks_into(_),emitting(_,_Light), 
-    %has_rel(_), 
-    
-    can_be(eat, _), 
-    can_be(move, _), 
-    can_be(open, _), =(open, _), 
-    can_be(lock, t), =(locked, _),
-    inherit(shiny,t)]).            
-
-is_prop_public(_,_):-!.
-
-is_prop_nonpublic(P):- \+ callable(P),!,fail.
-is_prop_nonpublic(inherit(_,f)):- !,fail.
-is_prop_nonpublic(P):- compound(P),functor(P,F,_),!,is_prop_nonpublic(F).
-is_prop_nonpublic(has_sense).
-is_prop_nonpublic(has_rel).                            
-is_prop_nonpublic(effect).
-is_prop_nonpublic(oper).
-is_prop_nonpublic(co).
-is_prop_nonpublic(class_desc).
-is_prop_nonpublic(inherited).
-is_prop_nonpublic(knows_verbs).
-is_prop_nonpublic(can_be).
-is_prop_nonpublic(breaks_into).
-is_prop_nonpublic(before).
-is_prop_nonpublic(after).
-
-
 sense_here(_Sense, _In, _Here, _S0):-!.
 sense_here(Sense, _In, Here, S0):- 
  getprop(Here, TooDark, S0),
@@ -150,8 +111,9 @@ queue_local_agent_percept(Agent, Event, Places, S0, S1) :-
 queue_local_agent_percept(_Agent, _Event, _Places, S0, S0).
 
 
-queue_local_event(Event, Places, S0, S2) :- 
- each_sensing_agent(_All, queue_local_agent_percept(Event, Places), S0, S2).
+queue_local_event(Event, Places) --> {\+ is_list(Places)}, !, queue_local_event(Event, [Places]).
+queue_local_event(Event, Places) --> 
+ each_sensing_agent(_All, queue_local_agent_percept(Event, Places)).
 
 
 
@@ -230,13 +192,14 @@ process_percept_auto(Agent, [Percept|Tail], Stamp, M0, M9) :-
 process_percept_auto(Agent, Percept, _Stamp, M0, M0) :- was_own_self(Agent, Percept),!.
 
 % Auto examine room items
-process_percept_auto(Agent, percept_children(Agent, Sense, _Here, _Prep, Depth, Objects), _Stamp, Mem0, Mem2) :- 
- agent_thought_model(Agent, ModelData, Mem0),
+process_percept_auto(Agent, percept(Agent, Sense, Depth, child_list(_Here, _Prep, Objects)), _Stamp, Mem0, Mem2) :- 
+ agent_thought_model(Agent, _ModelData, Mem0),
  Depth = depth(DepthN),
- DepthN > 1, DepthLess is DepthN - 1,
+ getprop(Agent, model_depth = ModelDepth, advstate),  DepthN < ModelDepth, 
+ DepthLess is DepthN + 1,
  findall( sub__examine(Agent, Sense, child, Obj, depth(DepthLess)),
    ( member(Obj, Objects),    
-   Obj \== Agent, \+ member(props(Obj, _), ModelData)),
+      Obj \== Agent), % ( \+ member(props(Obj, _), ModelData); true),
    Actions),
  percept_todo(Actions, Mem0, Mem2).
 
@@ -281,6 +244,7 @@ process_percept_player(Agent, [Percept|Tail], Stamp, Mem0, Mem4) :- !,
  process_percept_player(Agent, Percept, Stamp, Mem0, Mem1),
  process_percept_player(Agent, Tail, Stamp, Mem1, Mem4).
 process_percept_player(Agent,Percept, _Stamp, Mem0, Mem0) :- was_own_self(Agent, Percept),!.
+process_percept_player(Agent,Percept, _Stamp, Mem0, Mem0) :- sub_term(Sub,Percept),compound(Sub),Sub=depth(DepthN),getprop(Agent, look_depth = LookDepth, advstate), DepthN > LookDepth, !.
 process_percept_player(Agent, Percept, _Stamp, Mem0, Mem0) :-
  percept2txt(Agent, Percept, Text),!, player_format('~N~w~n', [Text]),!.
 
@@ -288,7 +252,7 @@ process_percept_player(Agent, Percept, _Stamp, M0, M0) :-
  player_format(Agent, '~N~q~n', [Agent:Percept]).
 
 is_player(Agent):- \+ is_non_player(Agent).
-is_non_player(Agent):- Agent == 'floyd~1'.
+is_non_player(Agent):- Agent == floyd.
 
 
 :- defn_state_setter(process_percept_main//3).

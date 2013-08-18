@@ -105,7 +105,7 @@ declare_list(HasList, State, [NewFront|NewState]) :-
   select(Functor,State,NewState),!,
   arg(A,Functor,OldPropList),assertion(is_list(OldPropList)),
   append(PropList,OldPropList,NewPropList),
-  assertion(A=2), NewFront=..[F,Object,NewPropList]. 
+  assertion(A=2;A=3), NewFront=..[F,Object,NewPropList]. 
 declare_list(Fact, State, NewState) :- append([Fact],State,NewState).
 
 
@@ -180,33 +180,30 @@ stores_props(props(Object, PropList), Object, PropList).
 
 
 
+as_first_arg(Object, Prop, Element):-
+  callable(Prop), Prop=..[Name| Value], Element =..[Name, Object| Value].
+
 
 % get_all_props(Object, AllProps, S0):- findall(Prop,getprop(Object, Prop, S0),AllProps).
 :- defn_state_getter(getprop(thing, nv)).
-getprop(Object, Prop, S0):- 
- quietly(( compound(Prop), 
-   getprop0(Object, Prop, S0))) 
- *-> true ; 
- quietly(( assertion(\+ atom(Prop)), 
-   getprop1(Object, [], Object, Prop, S0)))
- *-> true ;
- fail.
+getprop(Object, Prop, S0) :- quietly((correct_prop(Prop,PropList),getprop0(Object, PropList, S0))).
 
-getprop0(Object, Prop, S0):- Prop=..[Name,Value], Element =..[Name, Object, Value], member(Element,S0).
+getprop0(Object, Prop, S0):-  
+  ((as_first_arg(Object, Prop, Element), declared(Element,S0)) 
+     *-> true ; getprop1(Object, [], Object, Prop, S0)).
 
 getprop1(Orig, AlreadyUsed, Object, Prop, S0) :- 
  direct_props(Object, PropList, S0),
- ( declared(Prop,PropList)*-> true ; 
+ ( declared(Prop, PropList)*-> true ; 
  inherited_prop1(Orig, AlreadyUsed, Object, Prop, PropList, S0)).
 
 inherited_prop1(Orig, AlreadyUsed, _Object, Prop, PropList, S0):- 
  member(inherit(Delegate,t), PropList),
- \+ member(inherit(Delegate,t), AlreadyUsed),
- \+ member(inherits(Delegate), PropList),
- \+ member(isnt(Delegate), PropList),
+ \+ member(inherit(Delegate, t), AlreadyUsed),
+ \+ member(inherit(Delegate, f), PropList),
  \+ member(inherited(Delegate), AlreadyUsed),
- \+ member(isnt(Delegate), AlreadyUsed),
- append(AlreadyUsed,PropList,AllPropList),
+ append(AlreadyUsed, PropList, AllPropList),
+ \+ member(isnt(Delegate), AllPropList),
  getprop1(Orig, AllPropList, Delegate, Prop, S0).
 
 inherited_prop1(_Orig, AlreadyUsed, _Object, Prop, PropList, _S0):- 
@@ -214,7 +211,6 @@ inherited_prop1(_Orig, AlreadyUsed, _Object, Prop, PropList, _S0):-
  \+ member(link(Delegate), AlreadyUsed),
  nb_current(Delegate,NewProps),
  member(Prop,NewProps).
-
 
 
 direct_props(Object, PropList, State):- 
@@ -334,10 +330,72 @@ merge_value(_F,_,_B,A,R):- R = A.
 text_prop(nouns).
 text_prop(adjs).
 text_prop(desc).
+
 single_valued_prop(name).
 single_valued_prop(desc).
 single_valued_prop(mass).
 single_valued_prop(volume).
 
 
+is_state_info(StateInfo):- \+ compound(StateInfo), !, fail.
+is_state_info(StateInfo):- functor(StateInfo, F, A),
+   (functor_arity_state(F, A)->true; (A>2, functor_arity_state(F, 2))).
+
+functor_arity_state(F, A):- functor(TypeFunctor, F, A), type_functor(state, TypeFunctor).
+functor_arity_state(type, 2).
+%functor_arity_state(F, A):- is_spatial_rel(F).
+
+is_spatial_rel(worn_by).
+is_spatial_rel(held_by).
+is_spatial_rel(in).
+is_spatial_rel(on).
+is_spatial_rel(exit).
+
+push_to_state(StateInfo):- \+ compound(StateInfo), !.
+push_to_state(StateInfo):- is_list(StateInfo), !, maplist(push_to_state, StateInfo).
+push_to_state(type(Type, Conj)):-  !, push_to_state(props(type(Type), Conj)).
+push_to_state(props(type(Type), Conj)):- !, props_to_list(Conj, List), push_to_state(type_props(Type, List)).
+push_to_state(props(Obj, Conj)):-  props_to_list(Conj, List) -> Conj\== List, !, push_to_state(props(Obj, List)).
+push_to_state(type_props(Obj, Conj)):-  props_to_list(Conj, List) -> Conj\== List, !, push_to_state(type_props(Obj, List)).
+push_to_state(StateInfo):- StateInfo=..[F, Obj, E1, E2|More], functor_arity_state(F, 2), !, StateInfoNew=..[F, Obj, [E1, E2|More]], !, push_to_state(StateInfoNew).
+push_to_state(StateInfo):- props_to_list(StateInfo, StateInfo2)->StateInfo2\=[StateInfo], !, push_to_state(StateInfo2).
+push_to_state(StateInfo):- is_state_info(StateInfo), !, declare(StateInfo, istate, _).
+push_to_state(StateInfo):- forall(arg(_, StateInfo, Sub), push_to_state(Sub)).
+
+correct_props(_Obj, PropsIn, PropsOut):- props_to_list(PropsIn, PropsOut), !.
+
+check_atom(Atom):- assertion(atom(Atom)).
+
+props_to_list(Nil, []):- assertion(\+ var(Nil)), Nil==[], !.
+props_to_list(end_of_list, []):- !.
+props_to_list(Before, [After]):- (correct_prop(Before, After) -> Before\==After), !.
+props_to_list(NC, [nc(NC)]):- \+ compound(NC), !.
+props_to_list(oper(_, _, _), []):- !.
+props_to_list([A|B], ABL):- !,
+   props_to_list(A, AL),
+   props_to_list(B, BL),
+   append(AL, BL, ABL).
+props_to_list((A, B), ABL):- !,
+   props_to_list(A, AL),
+   props_to_list(B, BL),
+   append(AL, BL, ABL).
+props_to_list(Other, [Other]).
+
+correct_prop(NC, NO):- var(NC), !, NC = NO.
+correct_prop(Type, inherit(Type, t)):- atom(Type).
+correct_prop(NC, nc(NC)):- \+ compound(NC), !.
+correct_prop(~(Type), inherit(Type, f)):- atom(Type), !.
+correct_prop(HPRED, h(FS, X, Y)):- HPRED=..[F, S, X, Y], is_spatial_rel(F), !, FS=..[F, S].
+correct_prop(HPRED, h(F, X, Y)):- HPRED=..[F, X, Y], is_spatial_rel(F), !.
+correct_prop(SV, N=V):- SV=..[N, V], single_valued_prop(N), !.
+correct_prop((can(Verb)), can_be(Verb, t)):- nop(check_atom(Verb)).
+correct_prop(~(can(Verb)), can_be(Verb, f)):- nop(check_atom(Verb)).
+correct_prop((knows_verbs(Verb)), knows_verbs(Verb, t)):- nop(check_atom(Verb)).
+correct_prop(~(knows_verbs(Verb)), knows_verbs(Verb, f)):- nop(check_atom(Verb)).
+correct_prop((has_rel(Verb)), has_rel(Verb, t)):- nop(check_atom(Verb)).
+correct_prop(~(has_rel(Verb)), has_rel(Verb, f)):- nop(check_atom(Verb)).
+correct_prop(isa(Type), inherit(Type, t)):- check_atom(Type), !.
+correct_prop(isnt(Type), inherit(Type, f)):- check_atom(Type), !.
+correct_prop(inherit(Type), inherit(Type, t)):- check_atom(Type), !.
+correct_prop(Other,Other).
 

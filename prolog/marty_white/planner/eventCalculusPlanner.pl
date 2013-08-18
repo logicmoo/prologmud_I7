@@ -637,7 +637,7 @@ abresolve(knowledgeBase(Username, GroupList),R,[],R,false) :- !,
 %Check html attributes
 abresolve(valid_html_form(Type, Att),R,[],R,false):- !, valid_html_form(Type,Att).
 
-%Check html children
+%Check html child_list
 abresolve(valid_html_formChildren(Type, Children),R,[],R,false):- !, valid_html_formChildren(Type,Children).
 
 

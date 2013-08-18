@@ -28,6 +28,8 @@
 printable_state(S,S).
 
 
+include_functor(List,P):- compound(P),functor(P,F,_),member(F,List),!.
+
 print_english(Doer, Logic):- is_list(Logic),!, maplist(print_english(Doer), Logic).
 print_english(Doer, Logic):- log2eng(Doer, Logic, Eng),dmust_det((eng2txt(Doer, Doer, Eng, Text))), pprint(Text,always).
 
@@ -90,7 +92,21 @@ do_metacmd(Doer, state, S0, S0) :-
 do_metacmd(Doer, props, S0, S0) :-
  security_of(Doer,wizard),
  printable_state(S0,S),
- include(@=<(props(_,_)),S,SP),
+ include(include_functor([props,h]),S,SP),
+ reverse(SP,SPR),
+ meta_pprint(Doer, SPR, always),
+ maybe_pause(Doer).
+do_metacmd(Doer, perceptq, S0, S0) :-
+ security_of(Doer,wizard),
+ printable_state(S0,S),
+ include(include_functor([perceptq]),S,SP),
+ reverse(SP,SPR),
+ meta_pprint(Doer, SPR, always),
+ maybe_pause(Doer).
+do_metacmd(Doer, types, S0, S0) :-
+ security_of(Doer,wizard),
+ printable_state(S0,S),
+ include(include_functor([type_props]),S,SP),
  reverse(SP,SPR),
  meta_pprint(Doer, SPR, always),
  maybe_pause(Doer).
@@ -122,7 +138,7 @@ do_metacmd(Doer, prolog, S0, S0) :-
  setup_call_cleanup('$set_typein_module'(mu),prolog,'$set_typein_module'(Was)),
  ensure_has_prompt(Doer).
 
-do_metacmd(Doer, CLS, S0, S0) :- security_of(Doer,wizard), 
+do_metacmd(Doer, CLS, S0, S0) :- security_of(Doer, wizard), 
  current_predicate(_, CLS), 
  (is_main_console -> catch(CLS,E,(bugout1(CLS:- throw(E)),fail)) ;
  (redirect_error_to_string(catch(CLS,E,(bugout1(CLS:- throw(E)),fail)),Str),!, write(Str))),!,

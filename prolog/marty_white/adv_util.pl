@@ -60,9 +60,9 @@ defn_state_pred_wrapper(M,F,A,_,1):-
   append(Args,[S0],NewArgs0),
   PPS0 =..[F|NewArgs0],
   append(Args,[S0,S9],NewArgs09),
-  PPS09 =..[F|NewArgs09],
-  
-  M:asserta((PPS09:- M:PPS0, S0 = S9)).
+  PPS09 =..[F|NewArgs09],  
+  M:asserta((PPS09:- M:PPS0, S0 = S9)),
+  M:asserta((PP:- get_advstate(S0),M:PPS0)).
  
 
 

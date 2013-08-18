@@ -104,7 +104,7 @@ simplify_dbug({O},{O}):- !.
 simplify_dbug(List,O):-
  ( is_list(List) -> clip_cons(List,'...'(_),O) ;
  ( List = [_|_], append(LeftSide,Open,List),
-  Open \= [_|_], !, assertion(is_list(LeftSide)),
+  ((var(Open);Open \= [_|_])), !, assertion(is_list(LeftSide)),
  clip_cons(LeftSide,'...'(Open),O))).
 simplify_dbug(G,GG):- compound_name_arguments(G,F,GL), F\==percept_props, !,
  maplist(simplify_dbug,GL,GGL),!,compound_name_arguments(GG,F,GGL).

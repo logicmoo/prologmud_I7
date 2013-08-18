@@ -5,6 +5,26 @@ action_agent_verb_subject_prep_object(Action, Agent, Verb, Thing, At, Thing2):-
   preposition(_,At),
   append(_,[Thing2],Args).
 
+/*
+aXiom(open(Agent, Thing)) -->
+  will_touch(Agent, Thing),
+  %getprop(Thing, openable),
+  %\+ getprop(Thing, open),
+  delprop(Thing, closed(true)),
+  %setprop(Thing, open),
+  setprop(Thing, closed(fail)),
+  open_traverse(Agent, Here),
+  queue_local_event([setprop(Thing, closed(fail)), 'Opened.'], [Here]).
+aXiom(close(Agent, Thing)) -->
+  will_touch(Agent, Thing),
+  %getprop(Thing, openable),
+  %getprop(Thing, open),
+  delprop(Thing, closed(fail)),
+  %delprop(Thing, open),
+  setprop(Thing, closed(true)),
+  open_traverse(Agent, Here),
+  queue_local_event([setprop(Thing, closed(true)), 'Closed.'], [Here]).
+*/
 
 
   %dmust(agent_act_verb_thing_sense(Agent, Action, _Verb, _Thing, _Sense)).

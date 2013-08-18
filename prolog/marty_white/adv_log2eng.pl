@@ -34,6 +34,7 @@ pretty :- \+ flag_level(pretty,=(0)).
 flag_level(Flag,Prop):-flag(Flag,Was,Was),Prop=..[F|Args],apply(F,[Was|Args]).
 
 
+same_agent(A,B):- A=@=B.
 
 % A percept or event:
 % - is a logical description of what happened
@@ -134,7 +135,7 @@ compile_eng(Context, [AN, Apple|More], Text) :-
  name(TxtApple,[A|_]),
  char_type(A,to_lower(Vowel)), 
  (vowel(Vowel) -> atom_concat('an ', TxtApple,Text);atom_concat('a ', TxtApple,Text)).
-% mu:compile_eng([agent('player~1'),person('player~1')],a('floyd~1'),_64404)
+% mu:compile_eng([agent('player~1'),person('player~1')],a(floyd),_64404)
 compile_eng(Context, [First|Rest], [First2|Rest2]) :-
  compile_eng(Context, First, First2),
  compile_eng(Context, Rest, Rest2).
@@ -375,15 +376,16 @@ log2eng( Obj, Some, English):-
 log2eng_( Obj, Prop, English):- 
  \+ ground(Prop), copy_term(Prop,Prop2),!,
  numbervars(Prop2,55,_), log2eng(Obj, Prop2, English).
+log2eng_(_Obj, desc = (Out), [' "',Out,'"']):- !.
 log2eng_(Obj, Some, English):- (pretty -> true ; dif(English,[])), logic2eng(Obj, Some, English),!.
-log2eng_(Obj, Prop, English):- Prop =..[N, Obj1, A| VRange],Obj1==Obj,Prop2 =..[N, A| VRange], log2eng( Obj, Prop2, English).
 log2eng_(Context, Inst, TheThing):- atom(Inst), inst_of(Inst, Type, N), !,
  (nth0(N, [(unknown), '', thee, old, some, a], Det) -> true; atom_concat('#',N,Det)),
  compile_eng_txt(Context, [Det, Type], TheThing).
-log2eng_(_Obj, desc(Out), [' "',Out,'"']):- !.
 log2eng_(_, V,[String]):- (string(V);(atom(V),atom_needs_quotes(V))),!, format(atom(String), ' "~w" ', [V]), !.
-log2eng_( Obj, Prop, [cap(N),of,O, aux(be), Value]):- Prop =..[N,O, V], list2eng(Obj, V, Value).
+%log2eng_( Obj, Prop, [cap(N),of,O, aux(be), Value]):- Prop =..[N,O, V], list2eng(Obj, V, Value).
+
 log2eng_( Obj, Prop, [cap(N), aux(be), Value]):- Prop =..[N, V], list2eng(Obj, V, Value).
+% log2eng_(Obj, Prop, English):- Prop =..[N, Obj1, A| VRange],Obj1==Obj,Prop2 =..[N, A| VRange], log2eng( Obj, Prop2, English).
 %logic2eng(_Obj, Prop, [String]):- compound(Prop), !, String=''. % format(atom(String), ' \n {{ ~q. }}\n ', [Prop]), !.
 log2eng_(_Obj, Prop, [String]):- compound(Prop), \+ xtreme_english, !, format(atom(String), ' {{ ~q }} ', [Prop]), !.
 log2eng_( Obj, Prop, [cap(N), Value, aux(be), English]):- Prop =..[N, V| Range],
@@ -424,28 +426,25 @@ logic2eng(Obj, HWestFromTo_At, [ Ago | Info]):-
 logic2eng(_Obj, Prop, [String]):- compound(Prop), no_english, !, format(atom(String), '~q', [Prop]), !.
 logic2eng( Obj, ~(Type), ['(','logically','not','(',Out, '))']):- dmust_det(log2eng(Obj, Type, Out)), !.
 
-
-%logic2eng(_Agent, time_passes, []).
 logic2eng(_Context, time_passes(Agent), ['Time passes for',Agent,'.']).
 
-%logic2eng(_Agent, you_are(Self, Prep, Here), [cap(subj(Self)), person(are, is), Prep, 'the', Here, '\n']).
+logic2eng(Context, exits(Relation, Here, Exits), ['Exits',Relation,Here,' are:', ExitText, '\n']):-  list2eng(Context, Exits, ExitText).
 
-logic2eng(Context, can_sense_from_here(Agent, At, Here, Sense, Nearby),
-            ['From', At, cap(subj(Here)), cap(subj(Agent)), ',',  'can', person(Sense, es(Sense)), ':', SeeText, '.']) :-
-  findall(X, (member(X, Nearby), X\=Agent), OtherNearby),
-  list2eng(Context, OtherNearby, SeeText).
-
-logic2eng(Context, percept_exits(_Agent, Relation, Here, Exits), ['Exits',Relation,Here,' are:', ExitText, '\n']):-
-  list2eng(Context, Exits, ExitText).
-
-logic2eng(_Context, percept_children(_Agent, Sense, Object, Prep, Depth, '<mystery>'(Closed,_,_)), extra_verbose([Object, aux(be), Closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
-logic2eng(_Context, percept_children(_Agent, _Sense, Object, Prep, Depth, []), extra_verbose([nothing,Prep,Object]) ):- Depth \= depth(3).
-logic2eng(Context, percept_children(Agent, Sense, Here, Prep, _Depth, Nearby), 
+logic2eng(_Context, percept(_Agent,  Sense, Depth, child_list(Object, Prep, '<mystery>'(Closed,_,_))), extra_verbose([Object, aux(be), Closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
+logic2eng(_Context, percept(_Agent, _Sense, Depth, child_list(Object, Prep, [])), extra_verbose([nothing,Prep,Object]) ):- Depth \= depth(1).
+logic2eng(Context,  percept( Agent, Sense, _Depth, child_list(Here, Prep, Nearby)), 
     [cap(subj(Agent)), is, Prep, Here, and, es(Sense), ':'  | SeeText]):- 
  select(Agent, Nearby, OthersNearby),!,  list2eng(Context, OthersNearby, SeeText).
 
-logic2eng(Context, percept_children(Agent, Sense, Here, Prep, _Depth, Nearby), 
+logic2eng(Context, percept( Agent, Sense, _Depth, child_list(Here, Prep, Nearby)), 
  [cap(subj(Agent)), person(Sense, es(Sense)),Prep,Here, ':', SeeText]):-  list2eng(Context, Nearby, SeeText).
+                                 
+logic2eng(Context, percept(Agent, How, _, Info), notices(Agent,How, What)):- 
+  logic2eng(Context, Info, What).
+
+logic2eng(Context, percept(Agent, How, _, Info), notices(Agent,How, What)):- 
+ \+ same_agent(Context, Agent), logic2eng(Agent, Info, What).
+
 
 logic2eng(Context, carrying(Agent, Items),
    [cap(subj(Agent)), 'carrying:'|Text]) :-
@@ -461,17 +460,19 @@ logic2eng(_Agent, transformed(Before, After), [Before, 'turns into', After, .]).
 logic2eng(_Agent, destroyed(Thing), [Thing, aux(be), 'destroyed.']).
 
 logic2eng(_Context, percept_props(_Agent, _Sense, _Object, _Depth, []),  [] ) :- !.
-
-logic2eng(Context, percept_props(Agent, see, Object, _Depth, PropList), [cap(subj(Agent)), notices | English ] ) :-
- log2eng(Context, props(Object, PropList), English).
-
+logic2eng(Context, percept_props(Agent, see, Object, _Depth, PropList), [cap(subj(Agent)), sees | English ] ) :-
+ log2eng(Context, do_props(Object, PropList), English).
 logic2eng(Context, percept_props(Agent, Sense, Object, _Depth, PropList), 
    [cap(subj(Agent)),
     person(Sense, es(Sense))| English] ) :-
- log2eng(Context, props(Object, PropList),English).
+ logic2eng(Context, do_props(Object, PropList), English ).
 
-logic2eng(_Agent, props(_Object, []),  [] ) :- !.
-logic2eng(_Agent, props(Object, PropList), [the(Object), ': ('|English] ) :- list2eng(['.'=')'],Object, PropList, English).
+logic2eng(Context, props(Object, PropList), [the(Object), ': ('|English] ) :-
+  logic2eng(Context, do_props(Object, PropList), English ).
+
+logic2eng(_Agent, do_props(_Object, []),  '<..>' ) :- !.
+logic2eng(_Agent, do_props(Object, PropList), English ) :- list2eng(['.'=')'],Object, PropList, English).
+
 
 logic2eng(_Agent, memories(Object, PropList), ['\n\n', the(Object), ' remembers:\n'|English] ) :- 
  reverse(PropList,PropListR),
@@ -549,7 +550,6 @@ logic2eng(_Aobj, cantdothat(EatCmd), [ 'can\'t do: ', EatCmd]).
 
 %log2eng(_Obj, oper(OProp, [cap(N), aux(be), V]):- Prop =..[N, V].
 
-logic2eng(_Obj, has_rel(Value,TF) , [TF,'that it has,',Value]).
 logic2eng( Obj, Prop, English):- Prop =..[N, V, T| VRange],T==t,Prop2 =..[N, V| VRange], log2eng( Obj, Prop2, English).
 logic2eng(_Obj, has_rel(on), ['has a surface']).
 logic2eng(_Obj, has_rel(in), ['has an interior']).
@@ -567,10 +567,11 @@ logic2eng(_Obj, =(Name, Value), [Name,aux(be),Value]).
 logic2eng(_Obj, =(Statused), [aux(be), Statused ]).
 logic2eng(_Obj, =(Statused, f), [aux(be), 'not', Statused ]).
 logic2eng( Obj, inherit(Type), ['is',Out]):- log2eng(Obj, [Type], Out), !.
-logic2eng( Obj, inherit(Type, f), ['isnt '|Out]):- log2eng(Obj, [Type], Out), !.
+logic2eng( Obj, isnt(Type, f), ['isnt '|Out]):- log2eng(Obj, [Type], Out), !.
 logic2eng( Obj, inherited(Type), ['inherit',Out]):- log2eng(Obj, [Type], Out), !.
 logic2eng( _Obj,msg(Msg), Msg):- !.
 logic2eng(_Obj, class_desc(_), []).
+logic2eng(_Obj, has_rel(Value,TF) , [TF,'that it has,',Value]).
 
 logic2eng( Obj, oper(Act,Precond,PostCond), OUT) :- 
  (xtreme_english->OUT = ['{{',if,'action: ',ActE,' test:', PrecondE,'resulting: ',PostCondE,'}}'];
@@ -578,17 +579,17 @@ logic2eng( Obj, oper(Act,Precond,PostCond), OUT) :-
  maplist(log2eng(Obj), [Act,Precond,PostCond], [ActE,PrecondE,PostCondE]).
 
 
-logic2eng( Obj, Prop, English):- Prop =..[N, Obj1, A| VRange],Obj1==Obj,Prop2 =..[N, A| VRange], log2eng( Obj, Prop2, English).
+% logic2eng( Obj, Prop, English):- Prop =..[N, Obj1, A| VRange],Obj1==Obj,Prop2 =..[N, A| VRange], log2eng( Obj, Prop2, English).
 logic2eng( Obj, Prop, English):- Prop =..[N, V, T| VRange],T==t,Prop2 =..[N, V| VRange], log2eng( Obj, Prop2, English).
 
 logic2eng(Context, Inst, TheThing):- atom(Inst), inst_of(Inst, Type, N), !,
  (nth0(N, [(unknown), '', thee, old, some, a], Det) -> true; atom_concat('#',N,Det)),
  compile_eng(Context, [Det, Type], TheThing).
 
-logic2eng(_Obj, desc(Out), [' "',Out,'"']):- !.
+logic2eng(_Obj, desc = (Out), [' "',Out,'"']):- !.
 logic2eng(_, V,[String]):- (string(V);(atom(V),atom_needs_quotes(V))),!, format(atom(String), ' "~w" ', [V]), !.
 
-logic2eng( Obj, Prop, [cap(N),of,O, aux(be), Value]):- Prop =..[N,O, V], list2eng(Obj, V, Value).
+% logic2eng( Obj, Prop, [cap(N),of,O, aux(be), Value]):- Prop =..[N,O, V], list2eng(Obj, V, Value).
 logic2eng( Obj, Prop, ['(',cap(N), ':', Value,')']):- Prop =..[N, V], list2eng(Obj, V, Value).
 %logic2eng(_Obj, Prop, [String]):- compound(Prop), !, String=''. % format(atom(String), ' \n {{ ~q. }}\n ', [Prop]), !.
 logic2eng(_Obj, Prop, [String]):- compound(Prop), \+ xtreme_english, !, format(atom(String), ' {{ ~q }} ', [Prop]), !.

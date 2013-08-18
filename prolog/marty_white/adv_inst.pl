@@ -38,7 +38,7 @@ declare_inst_type(Inst,Type,S0,S2):-
   object_props_or(Inst, PropList1, [], S0),
   undeclare_always(props(Inst,_), S0, S1),
   (member(adjs(_),PropList1)-> PropList1=PropList;  [nouns([Type])|PropList1]=PropList),
-  list_to_set([inherit(Type,t)|PropList],Set),
+  list_to_set([shape=Type,inherit(Type,t)|PropList],Set),
   declare(props(Inst,Set),S1,S2).
 
 % create_agent_conn(Agent,_Named, _Info, S0, S0) :- declared(agent(Agent,t), S0),!.
@@ -168,12 +168,15 @@ create_instances(_Suffix,_Info,[],S0,S0).
 
 
 create_objs([Obj|Objs],[NewObj|NewObjs],Suffix,Info,S0,S2):-
+ wdmsg(create_1obj(Suffix,Info,Obj,NewObj)),
  dmust_det(create_1obj(Suffix,Info,Obj,NewObj,S0,S1)),
  create_objs(Objs,NewObjs,Suffix,Info,S1,S2).
 create_objs([],[],_Suffix,_Info,S0,S0).
 
 
 create_1obj(Suffix,_Info,a(Type),Inst,S0,S2):- !, 
+ dmust_det(create_new_suffixed_unlocated(Suffix,Type,Inst,S0,S2)).
+create_1obj(Suffix,_Info,the(Type),Inst,S0,S2):- !, 
  dmust_det(create_new_suffixed_unlocated(Suffix,Type,Inst,S0,S2)).
 
 create_1obj(Suffix,Info,the(Type),Inst,S0,S2):- find_recent(Suffix,Type,Inst,S0,S2)->true;create_1obj(Suffix,Info,Type,Inst,S0,S2).
@@ -183,7 +186,7 @@ create_1obj(_Suffix,_Info,I,I, S0,S0):- assertion(atom(I)),!.
 find_recent(_Suffix,Type,Inst,S0,S0):- declared(props(Inst,PropList),S0),declared(instance(Type),PropList).
 
 %inst_of(I,C,N):- compound(I),!,I=..[C,N|_],number(N).
-inst_of(I,C,N):- I\==[], atom(I),!, atomic_list_concat([C,NN],'~',I),atom_number(NN,N).
+inst_of(I,C,N):- I\==[], (atom(C);var(C)), (integer(N);var(N)), atom(I),!, atomic_list_concat([C,NN],'~',I),atom_number(NN,N).
 %inst_of(I,C,N):- atom(C),atomic_list_concat([C,NN],'~',I),atom_number(NN,N).
 
 
