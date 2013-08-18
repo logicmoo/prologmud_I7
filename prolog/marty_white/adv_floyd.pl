@@ -20,13 +20,13 @@
 :- bugout(ensure_loaded('adv_robot_floyd')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-extra_look_around(Agent, S0, S9) :-
+/*extra_look_around(Agent, S0, S9) :-
  undeclare(memories(Agent, Mem0), S0, S1),
  memorize_list([did(look(Agent, Spatial)), did(inventory)], Mem0, Mem1),
  declare(memories(Agent, Mem1), S1, S2),
  must_act(look(Agent, Spatial), S2, S3),
  must_act(inventory(Agent), S3, S9).
-
+*/
 
 random_noise(Agent, [cap(subj(Agent)), Msg]) :- fail, 
  random_member(Msg, [

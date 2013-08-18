@@ -39,6 +39,7 @@ equals_efffectly(_, Value, Value).
 :- nop(ensure_loaded('adv_relation')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+never_equal(Sense,Thing,Agent):- nop(never_equal(Sense,Thing,Agent)),!.
 never_equal(Sense,Thing,Agent):-
   never_equal(Sense,Thing),never_equal(Sense,Agent).
 never_equal(Sense,Thing):-

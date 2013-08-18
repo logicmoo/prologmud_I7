@@ -20,8 +20,16 @@
 %:- ensure_loaded(adv_main).
 
 % Manipulate memories (M stands for Memories)
-memorize(Figment, M0, M1) :- notrace(append([Figment], M0, M1)).
-memorize_list(FigmentList, M0, M1) :- notrace((must_be(list,FigmentList),dmust(append(FigmentList, M0, M1)))).
+memorize(Figment, M0, M1) :- assertion(\+ is_list(Figment)), notrace(append([Figment], M0, M1)).
+% memorize(Figment, M0, M1) :- notrace(append([Figment], M0, M1)).
+memorize_list([],M0,M0):-!.
+memorize_list([E|List],M0,M2):-!,
+  memorize_list(List,M0,M1),
+  memorize_list(E,M1,M2).
+memorize_list(Figment, M0, M1):-
+  notrace(append([Figment], M0, M1)).
+%memorize_list(FigmentList, M0, M1) :- notrace((must_be(list,FigmentList),dmust(append(FigmentList, M0, M1)))).
+%memorize_list(FigmentList, M0, M1) :- notrace((must_be(list,FigmentList),dmust(append(FigmentList, M0, M1)))).
 forget(Figment, M0, M1) :- select(Figment, M0, M1).
 forget_always(Figment, M0, M1) :- select_always(Figment, M0, M1).
 %forget_default(Figment, Default, M0, M1) :-
@@ -63,9 +71,6 @@ update_model_exits(Spatial, [Exit|Tail], From, Timestamp, M0, M2) :-
  update_model_exit(Spatial, Exit, From, Timestamp, M0, M1),
  update_model_exits(Spatial, Tail, From, Timestamp, M1, M2).
 
-%butlast(List, ListButLast) :-
-% %last(List, Item),
-% append(ListButLast, [_Item], List).
 
 % Match only the most recent Figment in Memory.
 %last_thought(Figment, Memory) :- % or member1(F, M), or memberchk(Term, List)
@@ -75,6 +80,8 @@ update_model_exits(Spatial, [Exit|Tail], From, Timestamp, M0, M2) :-
 
 update_model(Agent, carrying(Agent, _Spatial, Objects), Timestamp, _Memory, M0, M1) :-
  update_relations( held_by, Objects, Agent, Timestamp, M0, M1).
+update_model(Agent, wearing(Agent, _Spatial, Objects), Timestamp, _Memory, M0, M1) :-
+ update_relations( worn_by, Objects, Agent, Timestamp, M0, M1).
 update_model(Agent, notice_children(Agent, _Sense, Object, How, Children), Timestamp, _Mem, M0, M1) :-
  update_relations( How, Children, Object, Timestamp, M0, M1).
 update_model(Agent, sense_props(Agent, _Sense, Object, PropList), Stamp, _Mem, M0, M2) :-
@@ -121,7 +128,7 @@ update_model(Agent, time_passes(Target), Timestamp, _Memory, M, M):-
 update_model(_Agent, [], _Timestamp, _Memory, M, M).
 update_model(Agent, [Percept|Tail], Timestamp, Memory, M0, M2) :-
  update_model(Agent, Percept, Timestamp, Memory, M0, M1),
- update_model_all( Agent, Tail, Timestamp, Memory, M1, M2).
+ update_model_all( Agent, Tail, Timestamp, Memory, M1, M2),!.
 
 
 update_model(Agent, Percept, Timestamp, _Memory, M, M):-

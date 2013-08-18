@@ -222,20 +222,34 @@ act( examine(Agent, Object), S0, S2) :- act( examine(Agent, see, Object), S0, S2
 
 act( examine(Agent, Sense, Object), S0, S2) :-
  %declared(props(Object, PropList), S0),
- ((
  findall(P, (getprop(Object, P, S0), is_prop_public(Sense,P)), PropListL),
  list_to_set(PropListL,PropList),
- queue_agent_percept(Agent, [sense_props(Agent, Sense, Object, PropList)], S0, S1),
- (has_rel(Spatial, Relation, Object, S1); Relation='<unrelatable>'),
- % Remember that Agent might be on the inside or outside of Object.
+ queue_agent_percept(Agent, sense_props(Agent, Sense, Object, PropList), S0, S1),
+ add_child_precepts(Sense,Agent,Object,S1,S2).
+
+add_child_precepts(Sense,Agent,Object,S1,S2):- 
+ findall(Relation, 
+     (getprop(Object,has_rel(_, Relation),S1);
+      declared(h(_, Relation, _, Object),S1)), RelationList),
+ list_to_set(RelationList,RelationSet),
+ dmsg(list_to_set(RelationList,RelationSet)),
+ add_child_precepts_rel_list(Sense, Agent,Object,RelationSet,S1,S2).
+                                              
+add_child_precepts_rel_list(_Sense, _Agent,_Object,[],S1,S1).
+add_child_precepts_rel_list(Sense, Agent,Object,[Prep|More],S0,S2):- !, 
+  add_child_precepts_rel_list(Sense, Agent,Object,More,S0,S1),
+  add_child_precepts_rel_list(Sense, Agent,Object,Prep,S1,S2).
+
+add_child_precepts_rel_list(Sense, Agent,Object,Relation,S1,S2):- 
  findall(What,
-   (related(Spatial, child, What, Object, S1),
-   once(can_sense( Sense, What, Agent, S1))),
+   (related(_Spatial, Relation, What, Object, S1),
+    nop(once(can_sense(_VSense, What, Agent, S1)))),
    ChildrenL),
  list_to_set(ChildrenL,Children),
- queue_agent_percept(Agent, [notice_children(Agent, Sense, Object, Relation, Children)], S1, S2))).
+ queue_agent_percept(Agent, notice_children(Agent, Sense, Object, Relation, Children), S1, S2).
 
 
+% Remember that Agent might be on the inside or outside of Object.
 act( goto(Agent, Walk, Dir, Relation, Place), S0, S1):- !,
  (act_goto( Agent, Walk, Dir, Relation, Place, S0, S1)->true;
  queue_agent_percept(Agent,

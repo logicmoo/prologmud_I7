@@ -286,8 +286,8 @@ extra_decl(T,P):-
 
   % People
   type_props(character, [
-   has_rel(Spatial, held_by),
    has_rel(Spatial, worn_by),
+   has_rel(Spatial, held_by),   
    % overridable defaults
    mass(50), volume(50), % liters  (water is 1 kilogram per liter)
    can_do(eat, t),
