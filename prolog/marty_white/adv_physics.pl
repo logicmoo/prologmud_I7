@@ -231,7 +231,7 @@ related_hl(Spatial, exit(escape), Inner, Outer, State) :-
 moveto(Spatial, Object, Prep, Dest, Vicinity, Msg, State, S9) :-
  undeclare(h(Spatial, _, Object, Here), State, VoidState),
  declare(h(Spatial, Prep, Object, Dest), VoidState, S2),
- queue_local_event(Spatial, [moved( Object, Here, Prep, Dest), Msg], Vicinity, S2, S9).
+ queue_local_event(Spatial, [moved( Object, Here, Prep, Dest), msg(Msg)], Vicinity, S2, S9).
 
 moveallto(_Spatial, [], _R, _D, _V, _M, S, S).
 moveallto(Spatial, [Object|Tail], Relation, Destination, Vicinity, Msg, S0, S2) :-

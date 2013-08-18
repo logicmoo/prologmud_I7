@@ -113,7 +113,7 @@ autonomous_decide_action(Agent, Mem0, Mem1) :-
 autonomous_decide_action(Agent, Mem0, Mem1) :-
  0 is random(5),
  random_noise(Agent, Msg),
- add_todo(emote(Agent, see, *, Msg), Mem0, Mem1).
+ add_todo(emote(Agent, act, *, Msg), Mem0, Mem1).
 autonomous_decide_action(Agent, Mem0, Mem0) :-
  bugout('~w: Can\'t think of anything to do.~n', [Agent], autonomous+verbose).% trace.
 

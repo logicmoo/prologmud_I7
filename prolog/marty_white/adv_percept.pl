@@ -85,6 +85,9 @@ can_sense( Sense, Thing, Agent, _State):- bugout(pretending_can_sense( Sense, Th
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Manipulate one agents percepts
+queue_agent_percept(Agent, Event, S0, S2) :- 
+ \+ is_list(Event),!, 
+ queue_agent_percept(Agent, [Event], S0, S2).
 queue_agent_percept(Agent, Event, S0, S2) :-
  dmust((select(perceptq(Agent, Queue), S0, S1),
  append(Queue, [Event], NewQueue),
@@ -103,12 +106,6 @@ queue_local_percept(Agent, Spatial, Event, Places, S0, S1) :-
  queue_agent_percept(Agent, Event, S0, S1),!.
 queue_local_percept(_Agent, _Spatial, _Event, _Places, S0, S0).
 
-/*
-queue_local_event(Spatial, Event, Places, S0, S2) :-
- current_player(Player),
- queue_local_percept(Spatial, Player, Event, Places, S0, S1),
- queue_local_percept(Spatial, floyd , Event, Places, S1, S2).
-*/
 
 queue_local_event(Spatial, Event, Places, S0, S2) :- 
  each_sensing_agent(_All, queue_local_percept(Spatial, Event, Places), S0, S2).
@@ -197,7 +194,7 @@ problem_solution(noisy, hear, quiet).
 % Autonomous logical percept processing.
 %process_percept_auto(Agent, with_msg(Percept, _Msg), Timestamp, M0, M2) :- !, 
 % process_percept_auto(Agent, Percept, Timestamp, M0, M2).
-
+process_percept_auto(_Agent, msg(_), _Stamp, Mem0, Mem0) :- !.
 process_percept_auto(Agent, [Percept|Tail], Stamp, Mem0, Mem4) :-
  process_percept_auto(Agent, Percept, Stamp, Mem0, Mem1),
  process_percept_auto(Agent, Tail, Stamp, Mem1, Mem4).
@@ -251,45 +248,36 @@ process_percept_player(Agent, Percept, _Stamp, Mem0, Mem0) :-
 is_player(Agent):- \+ is_non_player(Agent).
 is_non_player(Agent):- Agent == 'floyd~1'.
 
+
 % process_percept(Agent, PerceptsList, Stamp, OldModel, NewModel)
+process_percept(_Agent, [], _Stamp, Mem0, Mem0) :- !.
+process_percept(Agent, [Percept|Tail], Stamp, Mem0, Mem4) :-
+ process_percept(Agent, Percept, Stamp, Mem0, Mem1),
+ process_percept(Agent, Tail, Stamp, Mem1, Mem4).
 process_percept(Agent, Percept, Stamp, Mem0, Mem1) :-
  once(is_player(Agent)),
  once((process_percept_player(Agent, Percept, Stamp, Mem0, Mem1))),
  \+ declared(inherited(autonomous), Mem1),!.
- 
-process_percept(Agent, [LogicalPercept|_IgnoredList], Stamp, Mem0, Mem1) :-
+process_percept(Agent, LogicalPercept, Stamp, Mem0, Mem1) :-
  declared(inherited(autonomous), Mem0),
- nop((ignore(((IgnoredList\==[], bugout(ignored_process_percept_auto(Agent,IgnoredList))))))),
- process_percept_auto(Agent, LogicalPercept, Stamp, Mem0, Mem1).
-
+ process_percept_auto(Agent, LogicalPercept, Stamp, Mem0, Mem1),!.
 process_percept(Agent, Percept, Stamp, Mem0, Mem0):- 
  bugout('~q FAILED!~n', [bprocess_percept(Agent, Percept, Stamp)], todo), !.
 
-process_percept_main(Agent, Percept, Stamp, Mem0, Mem3) :-
- dmust((
- forget(model(Model0), Mem0, Mem1),
- Percept = [LogicalPercept|IgnoredList],
- nop(ignore(((IgnoredList\==[], bugout(ignored_model_update(Agent,IgnoredList)))))),
- update_model(Agent, LogicalPercept, Stamp, Mem1, Model0, Model1),
- memorize(model(Model1), Mem1, Mem2),
- process_percept(Agent, Percept, Stamp, Mem2, Mem3))).
-process_percept_main(_Agent, Percept, _Stamp, Mem0, Mem0) :-
- bugout('process_percept_main(~w) FAILED!~n', [Percept], todo), !.
 
-
-
-process_percept_list(_Agent, [], _Stamp, Mem0, Mem0).
 % caller memorizes PerceptList
 process_percept_list(_Agent, _, _Stamp, Mem, Mem) :-
  declared(inherited(no_perceptq), Mem),
  !.
-process_percept_list(Agent, [Percept|Tail], Stamp, Mem0, Mem4) :-
- %bugout('process_percept_list([~w|_])~n', [Percept], autonomous),
- %!,
- process_percept_main(Agent, Percept, Stamp, Mem0, Mem1),
- process_percept_list(Agent, Tail, Stamp, Mem1, Mem4).
-process_percept_list(Agent, List, Stamp, Mem0, Mem0) :-
- bugout('process_percept_list FAILED!~n'(Agent, List, Stamp), todo).
+process_percept_list(Agent, LogicalPercept, Stamp, Mem0, Mem3) :-
+ dmust((
+ forget(model(Model0), Mem0, Mem1),
+ update_model(Agent, LogicalPercept, Stamp, Mem1, Model0, Model1),
+ memorize(model(Model1), Mem1, Mem2),
+ process_percept(Agent, LogicalPercept, Stamp, Mem2, Mem3))),!.
+
+process_percept_list(_Agent, Percept, _Stamp, Mem0, Mem0) :-
+ bugout('process_percept_list(~w) FAILED!~n', [Percept], todo), !.
 
 
 

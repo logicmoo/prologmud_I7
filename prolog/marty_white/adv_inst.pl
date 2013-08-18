@@ -103,14 +103,14 @@ create_objprop(Object, inherit(memorize,t), S0, S0):- declared(memories(Object,_
  todo([look]),
  inst(Object)|PropList]), S0, S2).*/
 
-create_objprop(Object, inherit(memorize,t), S0, S2):- !, clock_time(Now),
- declare(memories(Object, [
- structure_label(mem(Object)),
+create_objprop(Self, inherit(memorize,t), S0, S2):- !, clock_time(Now),
+ declare(memories(Self, [
+ structure_label(mem(Self)),
  timestamp(0,Now),
  model([]),
  goals([]),
- todo([look(Object)]),
- inst(Object)]), S0, S2).
+ todo([look(Self, spatial)]),
+ inst(Self)]), S0, S2).
 
 
 create_objprop(_Object, inherit(Other,t), S0, S0):- direct_props(Other, PropList, S0), member(no_copy(t),PropList),!.

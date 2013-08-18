@@ -82,7 +82,7 @@ add_goals(Goals, Mem0, Mem2) :-
  memorize(goals(NewGoals), Mem1, Mem2).
 
 add_todo(Auto, Mem0, Mem3) :- Auto = auto,
- member(inst(Agent), Mem0),
+ dmust(member(inst(Agent), Mem0)),
  autonomous_decide_goal_action(Agent, Mem0, Mem3),!,
  redraw_prompt(Agent).
 
@@ -109,38 +109,36 @@ do_introspect(Agent, [path,_TO,There], Answer, S0) :-
  Answer = ['Model is', ModelData, '\nShortest path is', Route].
 
 
-do_introspect(recall(Agent, WHQ, Target), Answer, S0) :-
+do_introspect(Agent1, recall(Agent, WHQ, Target), Answer, S0) :-
  getprop(Agent, memories(Memory), S0), 
  thought_model(ModelData, Memory),
- recall_whereis(Agent, WHQ, Target, Answer, ModelData).
+ recall_whereis(S0, Agent1, WHQ, Target, Answer, ModelData).
+
+do_introspect(Agent1, recall(Agent, Target), Answer, S0) :-
+ getprop(Agent, memories(Memory), S0), 
+ thought_model(ModelData, Memory),
+ recall_whereis(S0, Agent1, _WHQ, Target, Answer, ModelData).
 
 
+/*
+recall_whereis(_S0,_Self,  _WHQ, Thing, Answer, ModelData) :- fail,
+ in_model(h(Spatial, Prep, Thing, Where, T), ModelData),
+ Prep \= exit(_), 
+ Answer = h(Spatial, Prep, Thing, Where, T). % ['At time', T, subj(Agent), 'saw the', Thing, Prep, the, Where, .].
 
-recall_whereis(Agent, _WHQ, Thing, Answer, ModelData) :-
- in_model(h(_Spatial, Prep, Thing, Where, T), ModelData),
- Prep \= exit(_),
- Answer = ['At time', T, subj(Agent), 'saw the', Thing, Prep, the, Where, .].
-
-recall_whereis(Agent, WHQ, Here, Answer, ModelData) :- 
- in_model(h(Spatial, Prep, Agent, Here, T), ModelData),
- related_answer(WHQ, where), !,
- Answer = [msg(['Right here.']),h(Spatial, Prep, Agent, Here, T)].
-
-recall_whereis(Agent, _WHQ, There, Answer, ModelData) :-
- in_model(h(Spatial, _Prep, Agent, Here, _T), ModelData),
- find_path(Spatial, Here, There, Route, ModelData),
- Answer = ['To get to the', There, ', ', Route].
-
-recall_whereis(Agent, _WHQ, There, Answer, ModelData) :-
-(in_model(h(_Spatial, exit(_), _, There, _T), ModelData); in_model(h(_Spatial, exit(_), There, _, _T), ModelData)),
- Answer = [Agent,'Can''t get there from here.'].
-
-recall_whereis(_Agent, _WHQ, There, Answer, ModelData) :-
+recall_whereis(S0,Agent,  _WHQ, Place, AnswerO, ModelData) :- 
+ in_model(h(Spatial, child, Agent, Here), S0),
+ in_model(h(Spatial, Prep2, Place, There, T), ModelData),
+ (find_path(Spatial, Here, There, Route, ModelData) ; Route = 'Unknown'),
+ Answer = [h(Spatial, Prep2, Place, There, T),['To get to the', There, ', ', Route]],
+ AnswerO = sense(Agent,sees,Answer).
+*/
+recall_whereis(_S0,_Self,  _WHQ, There, Answer, ModelData) :-
  findall(Data, (member(Data,ModelData), related_answer(Data, There)), Memories),
  Memories\==[],
  Answer = Memories.
 
-recall_whereis(Agent, _WHQ, There, Answer, _ModelData) :- 
+recall_whereis(_S0,Agent,  _WHQ, There, Answer, _ModelData) :- 
  sensory_model(Sense, spatial),
  Answer = [subj(Agent), person('don\'t', 'doesn\'t'),
    'recall ever ', ing(Sense), ' a "', There, '".'].

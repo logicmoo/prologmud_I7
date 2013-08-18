@@ -90,19 +90,9 @@ do_command(Agent, Action, S0, S1) :-
  redraw_prompt(Agent).
 
 do_command(Agent, Action, _, _) :- set_last_action(Agent,Action), fail.
- 
 do_command(Agent, Action, S0, S1) :-
- do_introspect(Agent,Action, Answer, S0),
- queue_agent_percept(Agent, [answer(Answer), Answer], S0, S1), !.
- %player_format('~w~n', [Answer]).
-do_command(Agent, Action, S0, S3) :-
- undeclare(memories(Agent, Mem0), S0, S1),
- copy_term(Action,ActionG),
- numbervars(ActionG,999,_),
- memorize(did(ActionG), Mem0, Mem1),
- declare(memories(Agent, Mem1), S1, S2),
- must_act( Action, S2, S3), !,
- nop(redraw_prompt(Agent)).
+ do_action(Agent, Action, S0, S1), !.
+ % nop(redraw_prompt(Agent)).
 do_command(Agent, Action, S0, S0) :-
  player_format('Failed or No Such Command: ~w~n', Action), !,
  nop(redraw_prompt(Agent)).
@@ -143,12 +133,24 @@ do_todo(_Agent, S0, S0).
 % In TADS:
 % "verification" methods perferm tests only
 
-apply_act( Action, _State, _NewState):- notrace((bugout(apply_act( Action), action))),fail.
 
-apply_act( examine(Agent, How, Thing), State, NewState) :-
- (equals_efffectly(sense, Sense, _), equals_efffectly(model, Spatial, _)) ->
- Sense \== Spatial, How == Spatial, !,
- apply_act( examine(Agent, Sense, Thing), State, NewState).
+get_actor(Action,Agent):- arg(1,Action,Agent),nonvar(Agent), \+ preposition(_,Agent),!.
+get_actor(Action,Agent):-
+  dmust(act_verb_thing_model_sense(Agent, Action, _Verb, _Thing, _Spatial, _Sense)).
+
+
+do_action(Agent, Action, S0, S3) :-
+ undeclare(memories(Agent, Mem0), S0, S1),
+ copy_term(Action,ActionG),
+ numbervars(ActionG,999,_),
+ memorize(did(ActionG), Mem0, Mem1),
+ declare(memories(Agent, Mem1), S1, S2),
+ must_act( Action, S2, S3), !,
+ nop(redraw_prompt(Agent)).
+
+
+
+apply_act( Action, _State, _NewState):- notrace((bugout(apply_act( Action), action))),fail.
 
 apply_act( Action, State, NewState) :- 
  act_verb_thing_model_sense(Agent, Action, _Verb, _Thing, _Spatial, _Sense),
@@ -156,14 +158,29 @@ apply_act( Action, State, NewState) :-
  % log2eng(Agent, Reason, Eng),
  queue_agent_percept(Agent, [failure(Action, Reason)], State, NewState), !.
 
+apply_act( Action, S0, S1) :-
+ get_actor(Action,Agent), 
+ do_introspect(Agent,Action, Answer, S0),
+ queue_agent_percept(Agent, [answer(Answer), Answer], S0, S1), !.
+ %player_format('~w~n', [Answer]).
 
 apply_act( Action, State, NewState):- act( Action, State, NewState), !.
+
+apply_act( Action, State, NewState):- fail, 
+  get_actor(Action, Agent),
+  copy_term(Action,ActionG),
+  related(Spatial, child, Agent, Here, State),  
+  % queue_local_event(spatial, [attempting(Agent, Action)], [Here], S0, S1),
+  act( Action, State, S0), !,
+  queue_local_event(Spatial, [emoted(Agent, act, '*', ActionG)], [Here], S0, NewState).
+  
 apply_act( Act, State, NewState):- ((cmd_workarround(Act, NewAct) -> Act\==NewAct)), !, apply_act( NewAct, State, NewState).
 apply_act( Action, State, State):- notrace((bugout(failed_act( Action), general))),!.
 
 must_act( Action, State, NewState):- apply_act( Action, State, NewState) *-> ! ; fail.
-% must_act( Action, S0, S1) :- rtrace(must_act( Action, S0, S1)), !.
+% must_act( Action, S0, S1) :- rtrace(apply_act( Action, S0, S1)), !.
 must_act( Action, S0, S1) :-
+ get_actor(Action,Agent), 
  queue_agent_percept(Agent, [failure(Action, unknown_to(Agent,Action))], S0, S1).
 
 
@@ -189,10 +206,17 @@ act( Action, State, NewState) :-
              here_are(Agent, Sense, Relation, Here, Nearby)]) ],
     State, NewState).
 
-act( inventory(Agent), State, NewState) :- 
- Spatial = spatial,
+
+act( inventory(Agent), State, NewState) :- act( examine(Agent, Agent), State, NewState).
+/* Spatial = spatial,
  findall(What, related(Spatial, child, What, Agent, State), Inventory),
  queue_agent_percept(Agent, [carrying(Agent, Spatial, Inventory)], State, NewState).
+*/
+
+act( examine(Agent, How, Thing), State, NewState) :-
+ (equals_efffectly(sense, Sense, _), equals_efffectly(model, Spatial, _)) ->
+ Sense \== Spatial, How == Spatial, !,
+ apply_act( examine(Agent, Sense, Thing), State, NewState).
 
 act( examine(Agent, Object), S0, S2) :- act( examine(Agent, see, Object), S0, S2).
 
@@ -228,7 +252,8 @@ act_goto( Agent, Walk, _Dir, Relation, Object, S0, S9) :- nonvar(Object),   % go
 
  moveto(Spatial, Agent, Relation, Object, [Here, Object],
  [subj(Agent), person(get, gets), Relation, the, Object, .], S0, S1),
- must_act( look(Agent, Spatial), S1, S9).
+ add_look(Agent, S1, S9).
+
 
 % go n/s/e/w/u/d/in/out
 act_goto( Agent, _Walk, Dir, _Relation, _Room, S0, S9) :- nonvar(Dir), 
@@ -242,8 +267,8 @@ act_goto( Agent, _Walk, Dir, _Relation, _Room, S0, S9) :- nonvar(Dir),
    S0, S1),
  (related(Spatial, exit(RDir), There, Here, S0)-> true ; reverse_dir(Dir,RDir,S0)),
  queue_local_event(Spatial, [moved( Agent, Here, PrepThere, There), 
- msg([the(Agent), person(arrived, arrives),from,the, RDir])], [There], S1, S2),
- must_act( look(Agent, Spatial), S2, S9).
+   msg([the(Agent), person(arrived, arrives),from,the, RDir])], [There], S1, S2),
+ add_look(Agent, S2, S9).
 
 act_goto( Agent, _Walk, Dir, Relation, Room, S0, S9) :- nonvar(Room),   % go in (adjacent) room
  has_rel(Spatial, Relation, Room, S0),!,
@@ -253,7 +278,7 @@ act_goto( Agent, _Walk, Dir, Relation, Room, S0, S9) :- nonvar(Room),   % go in 
 
  moveto(Spatial, Agent, Relation, Room, [Room, Here],
  [cap(subj(Agent)), person(go, goes), Dir], S0, S1),
- must_act( look(Agent, Spatial), S1, S9).
+ add_look(Agent, S1, S9).
 
 act_goto( Agent, _Walk, Dir, _To, Room, S0, S9) :- nonvar(Room),    % go to (adjacent) room
  has_rel(Spatial, Relation, Room, S0),
@@ -263,7 +288,7 @@ act_goto( Agent, _Walk, Dir, _To, Room, S0, S9) :- nonvar(Room),    % go to (adj
 
  moveto(Spatial, Agent, Relation, Room, [Room, Here],
  [cap(subj(Agent)), person(go, goes), Dir], S0, S1),
- must_act( look(Agent, Spatial), S1, S9).
+ add_look(Agent, S1, S9).
 
 reverse_dir(Dir,RDir,S0):-
  related(Spatial, exit(Dir), Here, Room, S0),
@@ -328,7 +353,7 @@ act( give(Agent, Thing, Recipient), S0, S9) :-
  % OK, give it
  related(Spatial, OpenTraverse, Agent, Here, S0),
  moveto(Spatial, Thing, held_by, Recipient, [Here],
- [cap(subj(Agent)), person([give, Recipient, the], 'gives you a'), Thing, '.'],
+ msg([cap(subj(Agent)), person([give, Recipient, the], 'gives you a'), Thing, '.']),
  S0, S9).
 
 act( throw(Agent, Thing, at, Target), S0, S9) :-
@@ -366,16 +391,16 @@ act( dig(Agent, Hole, Where, Tool), S0, S9) :-
  declare(h(Spatial, in, dirt, Where), S3, S8),
  queue_event(
  [ created(Hole, Where),
-  [cap(subj(Agent)), person(dig, digs), 'a', Hole, 'in the', Where, '.']],
+  msg([cap(subj(Agent)), person(dig, digs), 'a', Hole, 'in the', Where, '.'])],
  S8, S9))).
 
 act( eat(Agent, Thing), S0, S9) :-
  getprop(Thing, can_be(eat, t), S0),
  undeclare(h(_Spatial, _, Thing, _), S0, S1),
- queue_agent_percept(Agent, [destroyed(Thing), 'Mmmm, good!'], S1, S9).
+ queue_agent_percept(Agent, [destroyed(Thing), msg('Mmmm, good!')], S1, S9).
 
 act( eat(Agent, Thing), S0, S9) :-
- queue_agent_percept(Agent, [failure(eat(Agent, Thing), ['It''s inedible!'])], S0, S9).
+ queue_agent_percept(Agent, [failure(eat(Agent, Thing), msg(['It''s inedible!']))], S0, S9).
 
 /*
 act( switch(Open, Thing), S0, S) :-
@@ -471,7 +496,7 @@ act( OpenThing, S0, S) :-
 
  setprop(Thing, state(Opened, TF), S1, S2),
 
- queue_local_event(Spatial, [setprop(Thing, state(Opened, TF)),[Open,is,TF]], [Here, Thing], S2, S))),!.
+ queue_local_event(Spatial, [setprop(Thing, state(Opened, TF)),msg([Thing,is,TF,Opened])], [Here, Thing], S2, S))),!.
 
 % used mainly to debug if things are reachable
 act( touch(Agent, Thing), S0, S9) :-
@@ -479,7 +504,15 @@ act( touch(Agent, Thing), S0, S9) :-
    cant( reach(Agent, Spatial, Thing))),
  queue_agent_percept(Agent, [true, 'OK.'], S0, S9).
 
+act( wait(Agent), State, NewState) :-
+ queue_agent_percept(Agent, [time_passes(Agent)], State, NewState).
+act( print_(Agent, Msg), S0, S1) :-
+ related(Spatial, descended, Agent, Here, S0),
+ queue_local_event(Spatial, [true, Msg], [Here], S0, S1).
 
+%act( say(Message), S0, S1) :-   % undirected message
+% related(Spatial, OpenTraverse, Agent, Here, S0),
+% queue_local_event(Spatial, [emoted(Agent,  say, (*), Message)], [Here], S0, S1).
 act( emote(Agent, SAYTO, Object, Message), S0, S1) :- !, % directed message
  dmust((
  action_sensory(SAYTO, Sense),
@@ -488,15 +521,8 @@ act( emote(Agent, SAYTO, Object, Message), S0, S1) :- !, % directed message
  can_sense( Sense, Object, Agent, S0),
  related(Spatial, OpenTraverse, Agent, Here, S0), 
  queue_local_event(Spatial, [emoted(Agent, SAYTO, Object, Message)], [Here,Object], S0, S1))).
-%act( say(Message), S0, S1) :-   % undirected message
-% related(Spatial, OpenTraverse, Agent, Here, S0),
-% queue_local_event(Spatial, [emoted(Agent,  say, (*), Message)], [Here], S0, S1).
 
-act( wait(Agent), State, NewState) :-
- queue_agent_percept(Agent, [time_passes(Agent)], State, NewState).
-act( print_(Agent, Msg), S0, S1) :-
- related(Spatial, descended, Agent, Here, S0),
- queue_local_event(Spatial, [true, Msg], [Here], S0, S1).
+
 act(_Agent, true, S, S).
 
 
@@ -523,4 +549,12 @@ is_ignorable(at). is_ignorable(in). is_ignorable(to). is_ignorable(the). is_igno
 
 verb_alias(look, examine) :- fail.
 
+                                 
+add_agent_todo(Agent, Action, S0, S9):-  
+  undeclare(memories(Agent, Mem0), S0, S1),
+  add_todo(Action, Mem0, Mem1),
+  declare(memories(Agent, Mem1), S1, S9).
+
+add_look(Agent, S0, S9):- add_agent_todo(Agent, look(Agent, spatial), S0, S9).
+% add_look(Agent, S1, S9):- dmust(act( look(Agent, spatial), S1, S9)).
 

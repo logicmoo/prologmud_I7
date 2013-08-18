@@ -234,7 +234,9 @@ parse2logical(Self, [Verb|TheArgs], Action, M) :-
 
 verbatum(Verb):- member(Verb, [prolog, make, cls, mem, props,
  agent, create, delprop, destroy, echo, quit,
- memory, model, path, properties, setprop, state, trace, notrace, whereami, whereis, whoami
+ memory, model, path, properties, setprop, state, help, 
+
+ trace, notrace, whereami, whereis, whoami
  ]).
 
 parse2agent([], Agent, Mem):- thought(inst(Agent), Mem), !.

@@ -72,7 +72,6 @@ adventure_init :-
  (retractall(advstate(_));true),
  istate(S0),
  init_objects(S0, S1),
- %each_live_agent(must_act(look(Agent)), S1, S3),
  asserta(advstate(S1)))), !,
  player_format('=============================================~n', []),
  player_format('INIT STATE~n', []),

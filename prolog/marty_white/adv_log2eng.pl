@@ -459,7 +459,7 @@ logic2eng(Context, did(Action), [the(Agent), 'did: '|English] ) :-
  act_verb_thing_model_sense(Agent, Action, _Verb, _Thing, _Spatial, _Sense),
  logic2eng(Context, Action, English ).
 
-%log2eng(_Agent, emote(Self, say, Speaker, (*), Eng), [cap(subj(Speaker)), ': "', Text, '"']) :- eng2txt(Speaker, 'I', Eng, Text).
+%log2eng(_Agent, emote(Speaker, say, (*), Eng), [cap(subj(Speaker)), ': "', Text, '"']) :- eng2txt(Speaker, 'I', Eng, Text).
 logic2eng(_, emoted(Speaker, see, Audience, Eng),
  [a(Speaker), 'to', Audience, ', "', Text, '"']) :-
  eng2txt(Speaker, Speaker, Eng, Text).
@@ -542,6 +542,7 @@ logic2eng(_Obj, state(Open, f), [aux(be), 'not', Open ]).
 logic2eng( Obj, inherit(Type), ['inherits',Out]):- log2eng(Obj, nouns(Type), Out), !.
 logic2eng( Obj, inherit(Type, f), ['isnt '|Out]):- log2eng(Obj, adjs(Type), Out), !.
 logic2eng( Obj, inherited(Type), ['is',Out]):- log2eng(Obj, nouns(Type), Out), !.
+logic2eng( _Obj, msg(Msg), Msg):- !.
 
 logic2eng( Obj, oper(Act,Precond,PostCond), OUT) :- 
  (xtreme_english->OUT = ['{{',if,'action: ',ActE,' test:', PrecondE,'resulting: ',PostCondE,'}}'];
