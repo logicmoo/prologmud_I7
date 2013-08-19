@@ -62,6 +62,112 @@
 %:- op(900, xfx, props).
 :- op(900, fy, '~').
 
+type_functor(dest, spatially(in, inst)).
+type_functor(dest, spatially(at, inst)).
+type_functor(dest, spatially(on, inst)).
+type_functor(dest, of(up,$here)).
+type_functor(dest, of(west,$here)).
+
+
+type_functor(nv_of_any, structure_label(term)).
+
+
+type_functor(memory, goals(list_of(goals))).
+type_functor(memory, todo(list_of(doing))).
+type_functor(memory, model(list_of(state_with_stamps))).
+type_functor(event, timestamp(ordinal, timept)).
+
+type_functor(state_with_stamps, h(domain, domrel, inst, inst, timept)).
+
+type_functor(state, type_props(type, list_of(nv))).
+type_functor(state, props(inst, list_of(nv))).
+type_functor(state, memories(inst, list_of(event))).
+type_functor(state, preceptq(inst, list_of(event))).
+type_functor(state, h(domain, domrel, inst, inst)).
+
+
+type_functor(doing, inventory(agnt)). 
+type_functor(doing, look(agnt, optional(domain, spatial))).
+type_functor(doing, examine(agnt, inst)).
+type_functor(doing, examine(agnt, sense, inst)).
+type_functor(event, sense_props(agnt, sense, inst, list_of(nv))).
+
+
+type_functor(doing, dig(agnt, holetype, loc, inst)).
+type_functor(doing, create(type, msg)).
+
+type_functor(doing, eat(agnt, inst)).
+type_functor(doing, hit(agnt, inst)).
+type_functor(doing, destroy(inst, msg)).
+
+type_functor(doing, switch(agnt, tfstate, tf, inst)).
+type_functor(doing, touch(agnt, inst)).
+
+%type_functor(doing, say(Message)).   % undirected message
+type_functor(doing, emote(agnt, emotype, dest, statement)).
+type_functor(event, emoted(agnt, emotype, dest, statement)).
+
+
+type_functor(doing, wait(agnt)).
+type_functor(event, time_passes(agnt)).
+
+
+type_functor(doing, recall(agnt, prop, inst2)).
+type_functor(doing, properties(inst)).
+type_functor(doing, inspect(agnt, getprop(inst, propname))).
+type_functor(doing, setprop(inst, nv)).
+type_functor(doing, print_(agnt, msg)).
+
+
+
+type_functor(doing, give(agnt, inst, agnt2)).
+type_functor(doing, take(agnt, inst)).
+type_functor(doing, drop(agnt, inst)).
+
+type_functor(doing, goto(agnt, movetype, dest)).
+type_functor(doing, throw(agnt, inst, dest)).
+type_functor(doing, put(agnt, inst, dest)).
+type_functor(event, moved(inst, dest1, dest2)).
+
+
+
+type_functor(event, carrying(agnt, list_of(inst))).
+type_functor(event, destroyed(inst)).
+type_functor(event, did(doing)).
+type_functor(event, sense_each(agnt, sense, list_of(event))).
+type_functor(event, exits_are(agnt, dest, list_of(exit))).
+type_functor(event, here_are(agnt, sense, dest, list_of(inst))).
+type_functor(event, notice_children(agnt, sense, inst, domrel, list_of(inst))).
+type_functor(event, failed(doing, msg)).
+type_functor(event, transformed(inst, inst2)).
+
+
+
+type_functor(nv, adjs(list_of(text))).
+type_functor(nv, can_be(actverb, tf)).
+type_functor(nv, can_do(actverb, tf)).
+type_functor(nv, cant_go(inst, dir, text)).
+type_functor(nv, class_desc(list_of(text))).
+type_functor(nv, co(list_of(nv))).
+type_functor(nv, desc(sv(text))).
+type_functor(nv, door_to(inst)).
+type_functor(nv, effect(verb_targeted, script)).
+type_functor(nv, fragile(type)).
+type_functor(nv, has_rel(domain, domrel, tf)).
+type_functor(nv, has_sense(sense)).
+type_functor(nv, inherit(type, tf)).
+type_functor(nv, inherited(type)).
+type_functor(nv, inheriting(type)).
+type_functor(nv, inst(sv(term))).
+type_functor(nv, isnt(type)).
+type_functor(nv, name(sv(text))).
+type_functor(nv, nominals(list_of(text))).
+type_functor(nv, nouns(list_of(text))).
+type_functor(nv, oper(doing, preconds, postconds)).
+type_functor(nv, state(tfstate, tf)).
+
+
+
 istate([
   structure_label(istate),
 

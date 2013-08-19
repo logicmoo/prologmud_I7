@@ -217,6 +217,10 @@ upmerge_prop(_,_,Before,After,Result):- Before==After,!, Result=Before.
 upmerge_prop(F,N,Before,After,Result):- arg(N,Before,B),arg(N,After,A),!,
  merge_value(F,N,B,A,R),duplicate_term(After,Result),nb_setarg(N,Result,R).
 
+merge_value(F,N,B,A,RO):- text_prop(F), \+ is_list(B),!,merge_value(F,N,[B],A,RO).
+merge_value(F,N,B,A,RO):- text_prop(F), \+ is_list(A),!,merge_value(F,N,B,[A],RO).
+merge_value(F,_,_,A,R):- single_valued_prop(F),!,A=R.
+
 merge_value(_,_,_,t,R):- !, R = t.
 merge_value(_,_,_,f,R):- !, R = f.
 merge_value(_,_,_,[],R):- !, R = [].
@@ -224,11 +228,17 @@ merge_value(_,_,_,A,R):- number(A),!,A=R.
 
 merge_value(_F,1,B,A,R):- B == A, !, R = A.
 
-merge_value(_F,1,B,A,R):- (is_list(B);is_list(A)),flatten([B,A],R).
+merge_value(_F,1,B,A,RO):- (is_list(B);is_list(A)),flatten([A,B],R),!,list_to_set(R,RO).
 
 merge_value(_, 1,_,A,R):- number(A),!,A=R.
 merge_value(_,1,_,_,_):- !,fail.
 merge_value(_F,_,_B,A,R):- R = A.
+
+text_prop(nouns).
+text_prop(adjs).
+text_prop(desc).
+single_valued_prop(name).
+single_valued_prop(desc).
 
 % Replace or create Prop.
 updateprop(Object, Prop, S00, S2) :- notrace((updateprop_(Object, Prop, S00, S2))).

@@ -186,74 +186,33 @@ must_act( Action, S0, S1) :-
 
 :- discontiguous act/3.
 
-act( Action, State, NewState) :-
- act_verb_thing_model_sense(Agent, Action, Verb, _Thing, Spatial, Sense),
- sensory_verb(Sense, Verb),
- related(Spatial, Relation, Agent, Here, State),
- sensory_model_problem_solution(Sense, Spatial, _TooDark, _EmittingLight),
- findall(What,
-   related(Spatial, child, What, Here, State),
-   %(related(Spatial, descended, What, Here, State),
-   %\+ (related(Spatial, inside, What, Container, State),
-   % related(Spatial, descended, Container, Here, State))),
-   Nearby),
- findall(Direction, related(Spatial, exit(Direction), Here, _, State), Exits),
- !,
- queue_agent_percept(Agent,
-    [sense(Agent, Sense, [
-             you_are(Agent, Relation, Here), 
-             exits_are(Agent,Here,Exits), 
-             here_are(Agent, Sense, Relation, Here, Nearby)]) ],
-    State, NewState).
-
+act( wait(Agent), State, NewState) :-
+ queue_agent_percept(Agent, [time_passes(Agent)], State, NewState).
 
 act( inventory(Agent), State, NewState) :- act( examine(Agent, Agent), State, NewState).
 /* Spatial = spatial,
  findall(What, related(Spatial, child, What, Agent, State), Inventory),
  queue_agent_percept(Agent, [carrying(Agent, Spatial, Inventory)], State, NewState).
 */
+act( Action, State, NewState) :-
+ act_verb_thing_model_sense(Agent, Action, Verb, _Thing, Spatial, Sense),
+ sensory_verb(Sense, Verb),
+ related(Spatial, child, Agent, Here, State),
+ act_examine(Agent, Sense, Here, State, NewState).
 
-act( examine(Agent, How, Thing), State, NewState) :-
+act( examine(Agent), S0, S2) :- act( look(Agent), S0, S2) .
+act( examine(Agent, Object), S0, S2) :- act_examine(Agent, see, Object, S0, S2).
+act( examine(Agent, How, Object), S0, S2) :-
  (equals_efffectly(sense, Sense, _), equals_efffectly(model, Spatial, _)) ->
- Sense \== Spatial, How == Spatial, !,
- apply_act( examine(Agent, Sense, Thing), State, NewState).
-
-act( examine(Agent, Object), S0, S2) :- act( examine(Agent, see, Object), S0, S2).
-
-act( examine(Agent, Sense, Object), S0, S2) :-
+ Sense \== Spatial, How == Spatial, !, act_examine(Agent, Sense, Object, S0, S2).
+act( examine(Agent, Sense, Object), S0, S2) :- act_examine(Agent, Sense, Object, S0, S2).
  %declared(props(Object, PropList), S0),
- findall(P, (getprop(Object, P, S0), is_prop_public(Sense,P)), PropListL),
- list_to_set(PropListL,PropList),
- queue_agent_percept(Agent, sense_props(Agent, Sense, Object, PropList), S0, S1),
- add_child_precepts(Sense,Agent,Object,S1,S2).
-
-add_child_precepts(Sense,Agent,Object,S1,S2):- 
- findall(Relation, 
-     (getprop(Object,has_rel(_, Relation),S1);
-      declared(h(_, Relation, _, Object),S1)), RelationList),
- list_to_set(RelationList,RelationSet),
- dmsg(list_to_set(RelationList,RelationSet)),
- add_child_precepts_rel_list(Sense, Agent,Object,RelationSet,S1,S2).
-                                              
-add_child_precepts_rel_list(_Sense, _Agent,_Object,[],S1,S1).
-add_child_precepts_rel_list(Sense, Agent,Object,[Prep|More],S0,S2):- !, 
-  add_child_precepts_rel_list(Sense, Agent,Object,More,S0,S1),
-  add_child_precepts_rel_list(Sense, Agent,Object,Prep,S1,S2).
-
-add_child_precepts_rel_list(Sense, Agent,Object,Relation,S1,S2):- 
- findall(What,
-   (related(_Spatial, Relation, What, Object, S1),
-    nop(once(can_sense(_VSense, What, Agent, S1)))),
-   ChildrenL),
- list_to_set(ChildrenL,Children),
- queue_agent_percept(Agent, notice_children(Agent, Sense, Object, Relation, Children), S1, S2).
-
 
 % Remember that Agent might be on the inside or outside of Object.
 act( goto(Agent, Walk, Dir, Relation, Place), S0, S1):- !,
- (act_goto( Agent, Walk, Dir, Relation, Place, S0, S1)->true;
+ (act_goto( Agent, Walk, Dir, Relation, Place, S0, S1)-> !;
  queue_agent_percept(Agent,
-    [failure(goto(Agent, Walk, Dir, Relation, Place)), 'You can\'t go that way'],
+    [failure(goto(Agent, Walk, Dir, Relation, Place), 'can\'t go that way')],
     S0, S1)).
 
 
@@ -516,13 +475,11 @@ act( OpenThing, S0, S) :-
 act( touch(Agent, Thing), S0, S9) :-
  unless_reason(Agent, reachable(Spatial, Thing, Agent, S0),
    cant( reach(Agent, Spatial, Thing))),
- queue_agent_percept(Agent, [true, 'OK.'], S0, S9).
+ queue_agent_percept(Agent, [success(touch(Agent, Thing),'Ok.')], S0, S9).
 
-act( wait(Agent), State, NewState) :-
- queue_agent_percept(Agent, [time_passes(Agent)], State, NewState).
 act( print_(Agent, Msg), S0, S1) :-
  related(Spatial, descended, Agent, Here, S0),
- queue_local_event(Spatial, [true, Msg], [Here], S0, S1).
+ queue_local_event(Spatial, [msg(Msg)], [Here], S0, S1).
 
 %act( say(Message), S0, S1) :-   % undirected message
 % related(Spatial, OpenTraverse, Agent, Here, S0),

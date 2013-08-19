@@ -50,6 +50,7 @@ extra :- true. % Fuller, but questionable if needed yet.
 :- consult(adv_inst).
 :- consult(adv_edit).
 
+:- consult(adv_examine).
 :- consult(adv_action).
 :- consult(adv_agent).
 :- consult(adv_eng2cmd).
