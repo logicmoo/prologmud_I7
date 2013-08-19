@@ -29,9 +29,9 @@ precond_matches_effect(Cond, Cond).
 precond_matches_effects(path(Spatial, Here, There), StartEffects) :-
  find_path(Spatial, Here, There, _Route, StartEffects).
 precond_matches_effects(exists(Spatial, Object), StartEffects) :-
- in_model(h(Spatial, _, Object, _, _), StartEffects)
+ in_model(h_at(Spatial, _, Object, _, _), StartEffects)
  ;
- in_model(h(Spatial, _, _, Object, _), StartEffects).
+ in_model(h_at(Spatial, _, _, Object, _), StartEffects).
 precond_matches_effects(Cond, Effects) :-
  member(E, Effects),
  precond_matches_effect(Cond, E).
@@ -45,7 +45,7 @@ oper(Self, goto(Self, Walk, Dir, Rel, There),
   cap(subj(actor(Self))), does(Walk), from(place(Here)), via(exit(Dir)) , Rel, to(place(There)) ],
   [ %Preconds:
   Here \= Self, There \= Self,
-  props(Self, can_do(goto, t)),
+  \+ props(Self, can_do(goto, f)),
   h(Spatial, WasRel, Self, Here),
   props(Here, inherit(place, t)),
   props(There, inherit(place, t)),
@@ -54,8 +54,8 @@ oper(Self, goto(Self, Walk, Dir, Rel, There),
   \+ is_state(~(open), Dir),
   h(Spatial, exit(Dir), Here, There)], % path(Spatial, Here, There)
   [ %Postconds:
-  h(Spatial, Rel, Self, There, _),
-  ~ h(Spatial, WasRel, Self, Here, _)]).
+  h_at(Spatial, Rel, Self, There, _),
+  ~ h_at(Spatial, WasRel, Self, Here, _)]).
 
 
 
@@ -66,60 +66,60 @@ oper(Self, Action, Preconds, Effects):- % Hooks to better KR above
 
 oper(Self, goto(Self, _Walk, Dir, Rel, There),
   [ Here \= Self, There \= Self,
-  h(Spatial, WasRel, Self, Here, _),
-  h(Spatial, exit(Dir), Here, There, _)], % path(Spatial, Here, There)
-  [ h(Spatial, Rel, Self, There, _),
-  ~ h(Spatial, WasRel, Self, Here, _)]).
+  h_at(Spatial, WasRel, Self, Here, _),
+  h_at(Spatial, exit(Dir), Here, There, _)], % path(Spatial, Here, There)
+  [ h_at(Spatial, Rel, Self, There, _),
+  ~ h_at(Spatial, WasRel, Self, Here, _)]).
 
 oper(Self, take(Self, Thing), % from same room
   [ Thing \= Self, exists(Spatial, Thing),
   There \= Self,
-  h(Spatial, At, Thing, There, _T0),
-  h(Spatial, At, Self, There, _T1)],
-  [ h(Spatial, held_by, Thing, Self, _T2),
-  ~ h(Spatial, At, Thing, There, _T3)]).
+  h_at(Spatial, At, Thing, There, _T0),
+  h_at(Spatial, At, Self, There, _T1)],
+  [ h_at(Spatial, held_by, Thing, Self, _T2),
+  ~ h_at(Spatial, At, Thing, There, _T3)]).
 oper(Self, take(Self, Thing), % from something else
   [ Thing \= Self, exists(Spatial, Thing),
-  h(Spatial, Prep, Thing, What, _),
-  h(Spatial, At, What, There, _),
-  h(Spatial, At, Self, There, _) ],
-  [ h(Spatial, held_by, Thing, Self, _),
-  ~ h(Spatial, Prep, Thing, There, _)]):- extra.
+  h_at(Spatial, Prep, Thing, What, _),
+  h_at(Spatial, At, What, There, _),
+  h_at(Spatial, At, Self, There, _) ],
+  [ h_at(Spatial, held_by, Thing, Self, _),
+  ~ h_at(Spatial, Prep, Thing, There, _)]):- extra.
 oper(Self, drop(Self, Thing),
   [ Thing \= Self, exists(Spatial, Thing),
-  h(Spatial, held_by, Thing, Self, _)],
-  [ ~ h(Spatial, held_by, Thing, Self, _)] ).
+  h_at(Spatial, held_by, Thing, Self, _)],
+  [ ~ h_at(Spatial, held_by, Thing, Self, _)] ).
 oper(Self, emote(Self, say, Player, [please, give, Self, the(Thing)]),
   [ Thing \= Self, exists(Spatial, Thing),
-  h(Spatial, held_by, Thing, Player, _),
-  h(Spatial, Prep, Player, Where, _),
-  h(Spatial, Prep, Self, Where, _) ],
-  [ h(Spatial, held_by, Thing, Self, _),
-  ~ h(Spatial, held_by, Thing, Player, _)] ):- extra.
+  h_at(Spatial, held_by, Thing, Player, _),
+  h_at(Spatial, Prep, Player, Where, _),
+  h_at(Spatial, Prep, Self, Where, _) ],
+  [ h_at(Spatial, held_by, Thing, Self, _),
+  ~ h_at(Spatial, held_by, Thing, Player, _)] ):- extra.
 oper(Self, give(Self, Thing, Recipient),
   [ Thing \= Self, Recipient \= Self,
   exists(Spatial, Thing), exists(Spatial, Recipient),
   Where \= Self,
-  h(Spatial, held_by, Thing, Self, _),
-  h(Spatial, in, Recipient, Where, _), exists(Spatial, Where),
-  h(Spatial, in, Self, Where, _)],
-  [ h(Spatial, held_by, Thing, Recipient, _),
-  ~ h(Spatial, held_by, Thing, Self, _)
+  h_at(Spatial, held_by, Thing, Self, _),
+  h_at(Spatial, in, Recipient, Where, _), exists(Spatial, Where),
+  h_at(Spatial, in, Self, Where, _)],
+  [ h_at(Spatial, held_by, Thing, Recipient, _),
+  ~ h_at(Spatial, held_by, Thing, Self, _)
   ] ).
 oper(Self, put(Self, Spatial, Thing, Relation, What), % in something else
   [ Thing \= Self, What \= Self, Where \= Self,
   Thing \= What, What \= Where, Thing \= Where,
-  h(Spatial, held_by, Thing, Self, _), exists(Spatial, Thing),
-  h(Spatial, in, What, Where, _), exists(Spatial, What), exists(Spatial, Where),
-  h(Spatial, in, Self, Where, _)],
-  [ h(Spatial, Relation, Thing, What, _),
-  ~ h(Spatial, held_by, Thing, Self, _)] ).
+  h_at(Spatial, held_by, Thing, Self, _), exists(Spatial, Thing),
+  h_at(Spatial, in, What, Where, _), exists(Spatial, What), exists(Spatial, Where),
+  h_at(Spatial, in, Self, Where, _)],
+  [ h_at(Spatial, Relation, Thing, What, _),
+  ~ h_at(Spatial, held_by, Thing, Self, _)] ).
 oper(Self, put(Self, Spatial, Thing, Relation, Where), % in room
   [ Thing \= Self, exists(Spatial, Thing),
-  h(Spatial, held_by, Thing, Self, _),
-  h(Spatial, Relation, Self, Where, _)],
-  [ h(Spatial, Relation, Thing, Where, _),
-  ~ h(Spatial, held_by, Thing, Self, _)] ) :- extra.
+  h_at(Spatial, held_by, Thing, Self, _),
+  h_at(Spatial, Relation, Self, Where, _)],
+  [ h_at(Spatial, Relation, Thing, Where, _),
+  ~ h_at(Spatial, held_by, Thing, Self, _)] ) :- extra.
 
 % Return an operator after substituting Agent for Self.
 operagent(Agent, Action, Conds, Effects) :- oper(Agent, Action, Conds, Effects).
@@ -312,7 +312,7 @@ conds_as_goals(ID, [C|R], [G|T]) :-
  conds_as_goals(ID, R, T).
 
 cond_equates(Cond0, Cond1) :- Cond0 = Cond1.
-cond_equates(h(Spatial, X, Y, Z, _), h(Spatial, X, Y, Z, _)).
+cond_equates(h_at(Spatial, X, Y, Z, _), h_at(Spatial, X, Y, Z, _)).
 cond_equates(~ ~ Cond0, Cond1) :- cond_equates(Cond0, Cond1).
 cond_equates(Cond0, ~ ~ Cond1) :- cond_equates(Cond0, Cond1).
 
@@ -438,8 +438,8 @@ choose_operator([goal(GoalID, exists(Spatial, GoalCond))|Goals0], Goals0,
      plan(Steps, Order9, Bindings, NewLinks),
      Depth, Depth ) :-
  memberchk(step(start, oper(_Self, _Action, _Preconds, Effects)), Steps),
- ( in_model(h(Spatial, _Prep, GoalCond, _Where, _), Effects);
- in_model(h(Spatial, _Prep, _What, GoalCond, _), Effects)),
+ ( in_model(h_at(Spatial, _Prep, GoalCond, _Where, _), Effects);
+ in_model(h_at(Spatial, _Prep, _What, GoalCond, _), Effects)),
  add_ordering(before(start, GoalID), Order0, Order1),
  % Need to protect new link from all existing steps
  protect_link_all(causes(start, GoalCond, GoalID), Steps, Order1, Order9),
@@ -577,24 +577,24 @@ generate_plan(FullPlan, Mem0) :-
 
 
 path2directions(Spatial, [Here, There], [ goto(_Self, _Walk, Dir, _To, There)], ModelData) :-
- in_model(h(Spatial, exit(Dir), Here, There, _), ModelData).
+ in_model(h_at(Spatial, exit(Dir), Here, There, _), ModelData).
 
 path2directions(Spatial, [Here, There], [ goto(_Self, _Walk, _Dir, in, There)], ModelData) :-
- in_model(h(Spatial, descended, Here, There, _), ModelData).
+ in_model(h_at(Spatial, descended, Here, There, _), ModelData).
 
 path2directions(Spatial, [Here, Next|Trail], [goto(_Self, _Walk, Dir, _To, _There)|Tail], ModelData) :-
- in_model(h(Spatial, exit(Dir), Here, Next, _), ModelData),
+ in_model(h_at(Spatial, exit(Dir), Here, Next, _), ModelData),
  path2directions(Spatial, [Next|Trail], Tail, ModelData).
 
 path2directions(Spatial, [Here, Next|Trail], [goto(_Self, _Walk, _Dir, in, Next)|Tail], ModelData) :-
- in_model(h(Spatial, descended, Here, Next, _), ModelData),
+ in_model(h_at(Spatial, descended, Here, Next, _), ModelData),
  path2directions(Spatial, [Next|Trail], Tail, ModelData).
 
 find_path1(_Spatial, [First|_Rest], Dest, First, _ModelData) :-
  First = [Dest|_].
 find_path1(Spatial, [[Last|Trail]|Others], Dest, Route, ModelData) :-
  findall([Z, Last|Trail],
-   (in_model(h(Spatial, _Prep, Last, Z, _), ModelData), \+ member(Z, Trail)),
+   (in_model(h_at(Spatial, _Prep, Last, Z, _), ModelData), \+ member(Z, Trail)),
    List),
  append(Others, List, NewRoutes),
  find_path1(Spatial, NewRoutes, Dest, Route, ModelData).

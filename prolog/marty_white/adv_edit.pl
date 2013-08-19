@@ -36,8 +36,8 @@ meta_pprint(_Doer, D,K):- pprint(D,K).
 
 % do_metacmd(Doer, Action, S0, S1)
 :- add_help(quit,"Quits the game.").
-do_metacmd(Doer, quit, S0, S1) :-
- declare(wishes(Doer, quit), S0, S1),
+do_metacmd(_Doer, quit(Agent), S0, S1) :-
+ declare(wishes(Agent, quit), S0, S1),
  player_format('Bye!~n', []).
 
 do_metacmd(_Doer, help, S0, S0) :- !,

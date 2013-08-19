@@ -45,7 +45,7 @@ never_equal(Sense,Thing,Agent):-
 never_equal(Sense,Thing):-
  notrace((freeze(Thing, (dmust(Thing\==Sense))), freeze(Sense, (dmust(Thing\==Sense))))).
 
-cant( Action, cant( sense(Agent, Sense, Thing, Why)), State) :-
+cant( Action, Why, State) :-
  never_equal(Sense,Thing, Agent),
  act_verb_thing_model_sense(Agent, Action, Verb, Thing, Spatial, Sense),
  psubsetof(Verb, _),
@@ -53,7 +53,7 @@ cant( Action, cant( sense(Agent, Sense, Thing, Why)), State) :-
  (Why = (\+ in_scope(Spatial, Thing, Agent))).
 
 
-cant( Action, cant( sense(Agent, Sense, Thing, Why)), State) :-
+cant( Action,  Why, State) :-
  never_equal(Sense,Thing, Agent),
  % sensory_model(Sense, Spatial),
  act_verb_thing_model_sense(Agent, Action, Verb, Thing, _Spatial, Sense),
@@ -68,8 +68,8 @@ cant( Agent, Action, cant( reach(Agent, Spatial, Thing)), State) :-
  \+ reachable(Spatial, Thing, Agent, State).
 */
 
-cant( Action, cant( move(Agent, Spatial, Thing)), State) :-
- act_verb_thing_model_sense(Agent, Action, Verb, Thing, Spatial, _Sense),
+cant( Action, getprop(Thing, can_be(Move, f)), State) :-
+ act_verb_thing_model_sense(_Agent, Action, Verb, Thing, _Spatial, _Sense),
  psubsetof(Verb, move),
  getprop(Thing, can_be(move, f), State).
 
@@ -79,19 +79,23 @@ cant( Action, musthave( Thing), State) :-
  psubsetof(Verb, drop),
  \+ related(Spatial, OpenTraverse, Thing, Agent, State).
 
-cant( Action, cant( manipulate(Spatial, self)), _) :-
+cant( Action, manipulate(Spatial, self), _) :-
  Action =.. [Verb, Agent, Agent |_],
  psubsetof(Verb, touch(Spatial)).
 cant( take(Agent, Thing), alreadyhave(Thing), State) :-
  related(_Spatial, descended, Thing, Agent, State).
 cant( take(Agent, Thing), mustgetout(Thing), State) :-
  related(_Spatial, descended, Agent, Thing, State).
-cant( put(_Agent, _Spatial, Thing1, _Prep, Thing1), self_relation( Thing1), _S0).
-cant( put(_Agent, Spatial, Thing1, _Prep, Thing2), moibeus_relation( Thing1, Thing2), S0) :-
- related(Spatial, descended, Thing2, Thing1, S0).
+
+cant( put(_Agent, _Spatial, Thing1, Dest), self_relation(Thing1), _S0):- 
+  dest_target(Dest,Object),Object==Thing1.
+cant( put(_Agent, Spatial, Thing1, Dest), moibeus_relation( Thing1, Target), S0) :-
+ dest_target(Dest,Target),
+ related(Spatial, descended, Target, Thing1, S0).
+
 cant( throw(_Agent, Thing1, _Prep, Thing1), self_relation( Thing1), _S0).
-cant( throw(_Agent, Thing1, _Prep, Thing2), moibeus_relation( Thing1, Thing2), S0) :-
- related(_Spatial, descended, Thing2, Thing1, S0).
+cant( throw(_Agent, Thing1, _Prep, Target), moibeus_relation( Thing1, Target), S0) :-
+ related(_Spatial, descended, Target, Thing1, S0).
 
 
 
@@ -106,28 +110,26 @@ cant( look(Agent, Spatial), TooDark, State) :-
 % sensory_model_problem_solution(Sense, Spatial, TooDark, _EmittingLight),
 % \+ has_sensory(Spatial, Sense, Agent, State).
 
-cant( examine(Agent, Sense, Thing), cant( sense( Agent, Sense, Thing, TooDark)), State) :- equals_efffectly(sense, Sense, see),
+cant( examine(Agent, Sense, Thing), TooDark, State) :- 
+ equals_efffectly(sense, Sense, see),
  never_equal(Sense,Thing, Agent),
  sensory_model_problem_solution(Sense, Spatial, TooDark, _EmittingLight),
  \+ has_sensory(Spatial, Sense, Agent, State).
 
-cant( examine(Agent, Sense, Thing), cant( sense( Agent, Sense, Thing, Why)), State) :-
+cant( examine(Agent, Sense, Thing), Why, State) :-
  never_equal(Sense,Thing, Agent),
  \+ can_sense( Sense, Thing, Agent, State),
  (Why = ( \+ can_sense( Sense, Thing, Agent, State))).
 
 
-cant( goto(Agent, _Walk, _Dir, _Relation, Object), mustdrop(Object), State) :- nonvar(Object),
- related(_Spatial, descended, Object, Agent, State).
+cant( goto(Agent, _Walk, Dest), mustdrop(Target), State) :- 
+ dest_object(Dest,Target),
+ nonvar(Target),
+ related(_Spatial, descended, Target, Agent, State).
 
 cant( EatCmd, cantdothat(Verb), State) :-
  act_verb_thing_model_sense(Agent, EatCmd, Verb, _Thing, _Spatial, _Sense),
  getprop(Agent, can_do(Verb, f), State).
-
-cant( EatCmd, cantdothat_verb(EatVerb, EatCmd), State) :-
- act_verb_thing_model_sense(Agent, EatCmd, EatVerb, _Thing, _Spatial, _Sense),
- getprop(Agent, can_do(EatVerb, f), State).
-
 
 
 

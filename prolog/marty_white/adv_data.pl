@@ -77,7 +77,7 @@ type_functor(memory, todo(list_of(doing))).
 type_functor(memory, model(list_of(state_with_stamps))).
 type_functor(event, timestamp(ordinal, timept)).
 
-type_functor(state_with_stamps, h(domain, domrel, inst, inst, timept)).
+type_functor(state_with_stamps, h_at(domain, domrel, inst, inst, timept)).
 
 type_functor(state, type_props(type, list_of(nv))).
 type_functor(state, props(inst, list_of(nv))).
@@ -186,11 +186,11 @@ istate([
     oper( put(Agent, Spatial, Thing, Relation, What), % in something else
            [ Thing \= Agent, What \= Agent, Where \= Agent, 
   Thing \= What, What \= Where, Thing \= Where,
-           h(Spatial, held_by, Thing, Agent, _), exists(Spatial, Thing), 
-  h(Spatial, in, What, Where, _), exists(Spatial, What), exists(Spatial, Where),
-           h(Spatial, in, Agent, Where, _)], 
-  [ h(Spatial, Relation, Thing, What, _),
-           ~ h(Spatial, held_by, Thing, Agent, _)] )
+           h_at(Spatial, held_by, Thing, Agent, _), exists(Spatial, Thing), 
+           h_at(Spatial, in, What, Where, _), exists(Spatial, What), exists(Spatial, Where), 
+           h_at(Spatial, in, Agent, Where, _)], 
+           [ h_at(Spatial, Relation, Thing, What, _), 
+           ~ h_at(Spatial, held_by, Thing, Agent, _)] )
   ]),
 
   % props(telnet, [inherit(telnet,t),isnt(console),inherit('player~1')]),

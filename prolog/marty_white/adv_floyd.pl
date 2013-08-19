@@ -60,7 +60,7 @@ maybe_autonomous_decide_goal_action(Agent, Mem0, Mem0) :-
  getprop(Agent, state(powered, f), S1),!.
 
 maybe_autonomous_decide_goal_action(Agent, Mem0, Mem1) :- notrace((do_autonomous_cycle(Agent),
- set_last_action(Agent,[auto]))),
+ set_last_action(Agent,[auto(Agent)]))),
  autonomous_decide_goal_action(Agent, Mem0, Mem1).
 maybe_autonomous_decide_goal_action(_Agent, Mem0, Mem0).
 
@@ -97,17 +97,17 @@ autonomous_decide_action(Agent, Mem0, Mem2) :-
 % If no actions or goals, but there's an unexplored exit here, go that way.
 autonomous_decide_action(Agent, Mem0, Mem1) :-
  thought_model(ModelData, Mem0),
- in_model(h(Spatial, _Prep, Agent, Here, _T0), ModelData),
- in_model(h(Spatial, exit(Dir), Here, '<unexplored>', _T1), ModelData),
+ in_model(h_at(Spatial, _Prep, Agent, Here, _T0), ModelData),
+ in_model(h_at(Spatial, exit(Dir), Here, '<unexplored>', _T1), ModelData),
  add_todo( goto(Agent, walk, Dir, _To, _Place), Mem0, Mem1).
 
 % Follow Player to adjacent rooms.
 autonomous_decide_action(Agent, Mem0, Mem1) :-
  thought_model(ModelData, Mem0),
- in_model(h(Spatial, _, Agent, Here, _), ModelData),
+ in_model(h_at(Spatial, _, Agent, Here, _), ModelData),
  dif(Agent, Player), current_player(Player),
- in_model(h(Spatial, _, Player, There, _), ModelData),
- in_model(h(Spatial, exit(Dir), Here, There, _), ModelData),
+ in_model(h_at(Spatial, _, Player, There, _), ModelData),
+ in_model(h_at(Spatial, exit(Dir), Here, There, _), ModelData),
  add_todo( goto(Agent, walk, Dir, _To, _Dest), Mem0, Mem1).
 
 autonomous_decide_action(Agent, Mem0, Mem1) :-
@@ -133,7 +133,7 @@ consider_request(_Speaker, Agent, Action, _M0, _M1) :-
  bugout('~w: considering request: ~w.~n', [Agent, Action], autonomous),
  fail.
 consider_request(_Speaker, Agent, take(Agent, Object), M0, M1) :-
- add_goal(h(_Spatial, held_by, Object, Agent, _), M0, M1).
+ add_goal(h_at(_Spatial, held_by, Object, Agent, _), M0, M1).
 consider_request(Requester, Agent, Query, M0, M1) :-
  do_introspect(Agent,Query, Answer, M0),
  %add_todo(print_(Answer), M0, M1).
@@ -147,11 +147,11 @@ consider_request(_Speaker, Agent, goto(Self, How, Dir, Prep, Dest), M0, M1) :-
  add_todo(goto(Self, How, Dir, _To, Dest), M0, M1).
 consider_request(Speaker, _Agent, fetch(Spatial, Object), M0, M1) :-
  % Bring object back to Speaker.
- add_goal(h(Spatial, held_by, Object, Speaker, _), M0, M1).
+ add_goal(h_at(Spatial, held_by, Object, Speaker, _), M0, M1).
 consider_request(_Speaker, Agent, put(Agent, Spatial, Thing, Relation, Where), M0, M) :-
- add_goal(h(Spatial, Relation, Thing, Where, _), M0, M).
+ add_goal(h_at(Spatial, Relation, Thing, Where, _), M0, M).
 consider_request(_Speaker, Agent, take(Agent, Thing), M0, M) :-
- add_goal(h(_Spatial, held_by, Thing, Agent, _), M0, M).
+ add_goal(h_at(_Spatial, held_by, Thing, Agent, _), M0, M).
 consider_request(_Speaker, Agent, Action, M0, M1) :-
  bugout('Finding goals for action: ~w~n', [Action], autonomous),
  initial_operators(Agent, Operators),

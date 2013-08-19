@@ -81,8 +81,8 @@ add_goals(Goals, Mem0, Mem2) :-
  append(Goals, OldGoals, NewGoals),
  memorize(goals(NewGoals), Mem1, Mem2).
 
-add_todo(Auto, Mem0, Mem3) :- Auto = auto,
- dmust(member(inst(Agent), Mem0)),
+add_todo(Auto, Mem0, Mem3) :- Auto = auto(Agent),
+ %dmust(member(inst(Agent), Mem0)),
  autonomous_decide_goal_action(Agent, Mem0, Mem3),!,
  redraw_prompt(Agent).
 
@@ -104,7 +104,7 @@ add_todo_all([Action|Rest], Mem0, Mem2) :-
 do_introspect(Agent, [path,_TO,There], Answer, S0) :-
  getprop(Agent, memories(Memory), S0), 
  thought_model(ModelData, Memory),
- in_model(h(Spatial, _Prep, Agent, Here, _T), ModelData),
+ in_model(h_at(Spatial, _Prep, Agent, Here, _T), ModelData),
  find_path(Spatial, Here, There, Route, ModelData),
  Answer = ['Model is', ModelData, '\nShortest path is', Route].
 
@@ -122,15 +122,15 @@ do_introspect(Agent1, recall(Agent, Target), Answer, S0) :-
 
 /*
 recall_whereis(_S0,_Self,  _WHQ, Thing, Answer, ModelData) :- fail,
- in_model(h(Spatial, Prep, Thing, Where, T), ModelData),
+ in_model(h_at(Spatial, Prep, Thing, Where, T), ModelData),
  Prep \= exit(_), 
- Answer = h(Spatial, Prep, Thing, Where, T). % ['At time', T, subj(Agent), 'saw the', Thing, Prep, the, Where, .].
+ Answer = h_at(Spatial, Prep, Thing, Where, T). % ['At time', T, subj(Agent), 'saw the', Thing, Prep, the, Where, .].
 
 recall_whereis(S0,Agent,  _WHQ, Place, AnswerO, ModelData) :- 
  in_model(h(Spatial, child, Agent, Here), S0),
- in_model(h(Spatial, Prep2, Place, There, T), ModelData),
+ in_model(h_at(Spatial, Prep2, Place, There, T), ModelData),
  (find_path(Spatial, Here, There, Route, ModelData) ; Route = 'Unknown'),
- Answer = [h(Spatial, Prep2, Place, There, T),['To get to the', There, ', ', Route]],
+ Answer = [h_at(Spatial, Prep2, Place, There, T),['To get to the', There, ', ', Route]],
  AnswerO = sense(Agent,sees,Answer).
 */
 recall_whereis(_S0,_Self,  _WHQ, There, Answer, ModelData) :-
@@ -215,7 +215,7 @@ decide_action(Agent, Mem0, Mem3) :-
 decide_action(_Agent, Mem, Mem) :-
  declared(inherited(memorize), Mem), !. % recorders don't decide much.
 decide_action(Agent, Mem0, Mem0) :-
- set_last_action(Agent,[auto]),
+ set_last_action(Agent,[auto(Agent)]),
  nop(bugout('decide_action(~w) FAILED!~n', [Agent], general)).
 
 

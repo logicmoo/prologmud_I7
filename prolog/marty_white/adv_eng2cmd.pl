@@ -76,6 +76,8 @@ parse_command(Self, Tokens, Action, Memory) :-
 % %%%%%%%%%%%%%%
 parse2logical(Self, [rtrace|Args], Action, M) :- Args\==[], !, rtrace(parse2logical(Self, Args, Action, M)).
 
+parse2logical(Self, [wait], wait(Self), _Mem) :- !.
+
 % %%%%%%%%%%%%%%
 % Introspection
 % %%%%%%%%%%%%%%
@@ -104,7 +106,7 @@ parse2logical(Self, [tell, Object | Msg], emote(Self, say, Object, Msg), _M):- !
 parse2logical(Self, [talk, Object | Msg], emote(Self, say, Object, Msg), _M):- !.
 parse2logical(Self, [Object, ',' | Msg], emote(Self, say, Object, Msg), Mem):- current_spatial(Spatial),
  thought_model(ModelData, Mem),
- in_model(h(Spatial, _, Object, _, _T), ModelData).
+ in_model(h_at(Spatial, _, Object, _, _T), ModelData).
 
 parse2logical(Self, Words, Action, Mem) :- 
  fail, 
@@ -133,7 +135,7 @@ parse2logical(Self, [run|Info], Logic, Mem):- !, dmust(txt2goto(Self, run, Info,
 parse2logical(Self, [Prep], Logic, Mem) :- preposition(spatial, Prep), !, dmust(txt2goto(Self, walk, [Prep], Logic, Mem)).
 parse2logical(Self, [ExitName], Logic, Mem) :- 
  thought_model(ModelData, Mem),
- in_model(h(_Spatial, exit(ExitName), _, _, _T), ModelData),
+ in_model(h_at(_Spatial, exit(ExitName), _, _, _T), ModelData),
  !, dmust(txt2goto(Self, walk, [ExitName], Logic, Mem)).
 
 parse2logical(Self, [get, Prep| More], Logic, Mem) :- preposition(spatial, Prep), !, dmust(txt2goto(Self, walk, [Prep| More], Logic, Mem)).
@@ -152,7 +154,7 @@ txt2goto(Self, Walk,[ Prep, Dest], goto(Self, Walk, _Dir, Prep, Where), Mem) :-
 % go north
 txt2goto(Self, Walk,[ ExitName], goto(Self, Walk, ExitName, _To, _Where), Mem) :-
  thought_model(ModelData, Mem),
- in_model(h(_Spatial, exit(ExitName), _, _, _T), ModelData).
+ in_model(h_at(_Spatial, exit(ExitName), _, _, _T), ModelData).
 % go escape
 txt2goto(Self, Walk,[ Dir], goto(Self, Walk, Dir, _To, _Object), _Mem) :- (compass_direction(Dir);Dir==escape),!.
 % go [out,in,..]
@@ -166,7 +168,7 @@ txt2place(List, Place, Mem):- is_list(List), parse2object(List,Object,Mem),
  txt2place(Object, Place, Mem).
 txt2place(Dest, Place, Mem):- 
  thought_model(ModelData, Mem),
- in_model(h(_Spatial, _, _, Dest, _T), ModelData),
+ in_model(h_at(_Spatial, _, _, Dest, _T), ModelData),
  Dest = Place.
  % getprop(Dest, has_rel(Spatial, Prep), ModelData).
 
@@ -203,7 +205,7 @@ parse2logical(Self, [switch, OnOff| TheThing], switch(Self, OnOff, Thing), Mem) 
 parse2logical(Agent, [dig, Hole], dig(Agent, Hole, Where, Tool), Mem) :-
  thought_model(ModelData, Mem),
  thought(inst(Agent), Mem),
- in_model(h(_Spatial, _, Agent, Where, _T), ModelData),
+ in_model(h_at(_Spatial, _, Agent, Where, _T), ModelData),
  Tool=shovel.
 
 parse2logical(Self, [CmdAlias|Tail], Action, Mem) :-
@@ -236,7 +238,8 @@ verbatum(Verb):- member(Verb, [prolog, make, cls, mem, props,
  agent, create, delprop, destroy, echo, quit,
  memory, model, path, properties, setprop, state, help, 
 
- trace, notrace, whereami, whereis, whoami
+ rtrace, nortrace, 
+ trace, notrace %, %whereami, whereis, whoami
  ]).
 
 parse2agent([], Agent, Mem):- thought(inst(Agent), Mem), !.
