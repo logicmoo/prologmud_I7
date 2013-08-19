@@ -26,10 +26,19 @@ filter_spec( Spec, PropList):- declared(Spec, PropList).
 
 create_new_unlocated(Type,Inst,S0,S2):- 
  atom_concat(Type,'~',TType),gensym(TType,Inst),
- declare(props(Inst,[inherit(Type,t)]),S0,S2).
+ declare_inst_type(Inst,Type,S0,S2).
+
 create_new_suffixed_unlocated(Suffix, Type,Inst,S0,S2):- 
  atom_concat(Type,Suffix,Inst),
- declare(props(Inst,[inherit(Type,t)]),S0,S2).
+ declare_inst_type(Inst,Type,S0,S2).
+
+declare_inst_type(Inst,Type,S0,S2):- 
+  assertion(nonvar(Inst)),
+  assertion(nonvar(Type)),
+  object_props_or(Inst, PropList, [], S0),
+  undeclare_always(props(Inst,_), S0, S1),
+  list_to_set([inherit(Type,t),adjs([Type])|PropList],Set),
+  declare(props(Inst,Set),S1,S2).
 
 % create_agent_conn(Agent,_Named, _Info, S0, S0) :- declared(agent(Agent,t), S0),!.
  %create_new_unlocated('watch',Watch),
@@ -115,17 +124,20 @@ create_objprop(Self, inherit(memorize,t), S0, S2):- !, clock_time(Now),
 
 create_objprop(_Object, inherit(Other,t), S0, S0):- direct_props(Other, PropList, S0), member(no_copy(t),PropList),!.
 create_objprop(Object, inherit(Other,t), S0, S9):- 
- direct_props_or(Other, PropList, [], S0),
+ direct_props_or(Other, PropList0, [], S0),
+ subst(PropList0,$class,Other,PropList1),
+ (member(adjs(_),PropList1)-> PropList1=PropList;  [nouns([Other])|PropList1]=PropList),
  copy_term(PropList,PropListC),!,
  % dmust(updateprop(Object, inherit(Other,t), S5, S9)), !,
- dmust(updateprop(Object, inherited(Other), S0, S2)), !,
+ dmust(updateprop(Object, inherited(Other), S0, S2)),
  dmust(create_objprop(Object, PropListC, S2, S9)),
  %dmust(setprop(Object, inherited(Other), S3, S9)),
  !.
 
 create_objprop(Object, inherit(Other,t), S0, S0):- getprop(Object,inherited(Other),S0),!.
 
-create_objprop(Object, Prop, S0, S2):- subst(equivalent,$self,Object,Prop,NewProp),Prop\==NewProp,!,
+create_objprop(Object, Prop, S0, S2):- 
+ subst(equivalent,$self,Object,Prop,NewProp),Prop\==NewProp,!,
  create_objprop(Object, NewProp, S0, S2).
 create_objprop(Object, Prop, S0, S2):- dmust(updateprop(Object,Prop,S0, S2)).
 
@@ -136,6 +148,7 @@ create_missing_instances(S0,S2):-
  create_instances(Sym,S0,S0,S0,S2).
 
 may_contain_insts(h).
+may_contain_insts(h_at).
 
 create_instances(Suffix,Info,[Prop|TODO],S0,S3):-
  Prop =.. [F, Spatial, Pred | Objs], 

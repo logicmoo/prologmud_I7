@@ -534,13 +534,16 @@ extra_decl(T,P):-
   type_props(fountain, [   
    volume_capacity(150),
    inherit(place,t),
-   inherit(container,t)
+   inherit(flask, t), 
+%   state(locked, f), 
+   can_be(lock, f)
   ]),
 
- type_props(measurable,[has_rel(quantity,ammount,t)]),
+ type_props(measurable, [adjs($class), has_rel(quantity, ammount, t)]), 
+
  
  % shiny things are corporial
- type_props(shiny, [adjs(shiny),inherit(object,t), inherit(corporial,t)]),
+ type_props(shiny, [adjs($class), inherit(object, t), inherit(corporial, t)]), 
 
  type_props(coins, [inherit(shiny,t),inherit(measurable,t)]),
   type_props(food,[can_be(eat, t),inherit(object,t),inherit(measurable,t)]),
@@ -568,8 +571,13 @@ extra_decl(T,P):-
  effect(switch(on), true),
  effect(switch(off), true) % calls true(S0, S1) !
  ]),
-   type_props(shelf, [has_rel(Spatial, on), can_be(move, f)]),
-   type_props(table, [has_rel(Spatial, on), has_rel(Spatial, reverse(on))]),
+
+   type_props(surface, [has_rel(Spatial, on, t), inherit(flask, f)]), 
+
+   type_props(shelf, [inherit(surface, t), inherit(furnature, f)]), 
+
+   type_props(table, [inherit(surface, t), has_rel(Spatial, reverse(on), t)]), 
+
    type_props(wrench, [inherit(shiny,t)]),
    type_props(videocamera, [
    inherit(memorize,t),

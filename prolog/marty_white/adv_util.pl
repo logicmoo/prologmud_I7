@@ -135,6 +135,8 @@ findterm(Term, T) :-
  T =.. List,
  findterm(Term, List).
 
+subst(Prop,Find,Replace,NewProp):- subst(equivalent,Find,Replace,Prop,NewProp).
+
 % Substitute 'Replace' for 'Find' in T0, yielding T.
 % TODO: add ^ handling like with bagof/setof.
 % bagof(Template, X^Goal, List) means to never instantiate X
