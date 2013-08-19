@@ -346,48 +346,59 @@ extra_decl(T,P):-
   ]),
 
    type_props(unthinkable, [
-    can_be( examine(Agent, _), f),
+    can_be(examine, f), 
+    adjs($class), 
     class_desc(['kind is normally unthinkable'])]),
 
    type_props(thinkable, [
-    can_be( examine(Agent, _), t),
+    can_be(examine, t), 
+    nouns($self), 
+    adjs($class), 
     class_desc(['kind is normally thinkable'])]),
 
-   type_props(only_conceptual, [ 
-    can_be( examine(Agent, Spatial), f),
-    inherit(thinkable,t),
-    class_desc(['kind is completely conceptual'])]),
-
    type_props(noncorporial, [
-    can_be( examine(Agent, Spatial), f),
+    can_be(examine, f), 
     can_be(touch, f),
     inherit(thinkable,t),
+    adjs($class), 
     inherit(corporial,f),
-    class_desc(['kind is completely non-corporial'])]),
+    class_desc(['direct inheriters are completely noncorporial'])]), 
+
+  type_props(only_conceptual, [ 
+             adjs($class), 
+    inherit(noncorporial, t), 
+    inherit(thinkable, t), 
+    class_desc(['kind is only conceptual'])]), 
+
 
    type_props(partly_noncorporial, [
     inherit(corporial,t),
+   adjs($class), 
     inherit(noncorporial,t),
     class_desc(['kind is both partly corporial and non-corporial'])]),
 
    type_props(corporial, [
     can_be(touch, t),
-    can_be( examine(Agent, Spatial), t),
+    can_be(examine, t), 
     inherit(thinkable,t),
+   adjs($class), 
     class_desc(['kind is corporial'])]),
 
    type_props(object, [
-    can_be(touch, t),
-    can_be( examine(Agent, Spatial), t),
+    can_be(examine, t), 
+    adjs([]), 
+    can_be(move, t), 
+    inherit(corporial, t), 
     inherit(thinkable,t),
-    can_be(move, t),
-    class_desc(['kind is an Object'])]),
+    class_desc(['kind is an Movable Object'])]), 
 
    type_props(furnature, [
-    can_be(touch, t),
-    can_be( examine(Agent, Spatial), t),
+    can_be(examine, t), 
     can_be(move, f),
+    inherit(corporial, t), 
+    inherit(surface, t), 
     inherit(thinkable,t),
+ 
     class_desc(['kind is furnature'])]),
 
   % People
