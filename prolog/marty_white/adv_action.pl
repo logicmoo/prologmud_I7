@@ -359,7 +359,7 @@ act( dig(Agent, Hole, Where, Tool), S0, S9) :-
  \+ related(Spatial, _Relation, Hole, Where, S0),
  % OK, dig the hole.
  declare(h(Spatial, in, Hole, Where), S0, S1),
- setprop(Hole, has_rel(Spatial, in), S1, S2),
+ setprop(Hole, has_rel(Spatial, in, t), S1, S2),
  setprop(Hole, can_be(move, f), S2, S3),
  declare(h(Spatial, in, dirt, Where), S3, S8),
  queue_event(

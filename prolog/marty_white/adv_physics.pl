@@ -177,9 +177,9 @@ subrelation(worn_by, child).
 subrelation(held_by, child).
 
 has_rel(Spatial, How, X, State) :-
- getprop(X, has_rel(Spatial, How), State).
+ getprop(X, has_rel(Spatial, How, t), State).
 has_rel(Spatial, How, X, State) :-
- getprop(X, has_rel(Spatial, Specific), State),
+ getprop(X, has_rel(Spatial, Specific, t), State),
  subrelation(Specific, How).
 
 %related(_Spatial, How, _X, _Y, _State) :- assertion(nonvar(How)), fail.

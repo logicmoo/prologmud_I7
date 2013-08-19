@@ -474,7 +474,7 @@ extra_decl(T,P):-
     body(move(Agent, Spatial, Thing, in, $self))),
     inherit(flask, f), 
     adjs(flask, f),
-   has_rel(Spatial, in)
+    nop(has_rel(Spatial, in))
    ]),
 
  type_props(console, [adjs([]), nominals([console]), nouns([player])]), 
