@@ -183,17 +183,18 @@ istate([
     todo([look('player~1')]),
     inst('player~1'),
     name('player~1'),
-    oper(Self, put(Self, Spatial, Thing, Relation, What), % in something else
-  [ Thing \= Self, What \= Self, Where \= Self,
+    oper( put(Agent, Spatial, Thing, Relation, What), % in something else
+           [ Thing \= Agent, What \= Agent, Where \= Agent, 
   Thing \= What, What \= Where, Thing \= Where,
-  h(Spatial, held_by, Thing, Self, _), exists(Spatial, Thing),
+           h(Spatial, held_by, Thing, Agent, _), exists(Spatial, Thing), 
   h(Spatial, in, What, Where, _), exists(Spatial, What), exists(Spatial, Where),
-  h(Spatial, in, Self, Where, _)],
+           h(Spatial, in, Agent, Where, _)], 
   [ h(Spatial, Relation, Thing, What, _),
-  ~ h(Spatial, held_by, Thing, Self, _)] )
+           ~ h(Spatial, held_by, Thing, Agent, _)] )
   ]),
 
   % props(telnet, [inherit(telnet,t),isnt(console),inherit('player~1')]),
+	
 	
 	
   h(Spatial, in, 'floyd~1', pantry),
@@ -205,8 +206,8 @@ istate([
 	
   h(Spatial, in, 'coins~1', 'bag~1'),
   h(Spatial, held_by, 'wrench~1', 'floyd~1'),
+ props('coins~1', [inherit(coins, t)]), 
 
- props('coins~1',[inherit(coins,t)]),
  % Relationships
 
  h(Spatial, exit(south), pantry, kitchen), % pantry exits south to kitchen
@@ -241,17 +242,16 @@ istate([
  props(dining_room, [inherit(place,t)]),
  props(garden, [
  inherit(place,t),
- % goto(Self, Prep, Dir, dir, result) provides special handling for going in a direction.
- goto(Self, Prep, Dir, up, 'You lack the ability to fly.'),
- effect(goto(Self, Prep, Dir, _, north), getprop(screendoor, state(opened, t))),
- oper($self, /*garden, */ goto(Self, Prep, Dir, _, north),
+ % goto(Agent, Prep, Dir, dir, result) provides special handling for going in a direction.
+ cant_go(Agent, up, 'You lack the ability to fly.'), 
+ oper( /*garden, */ goto(Agent, _, north, _, _), 
    % precond(Test, FailureMessage)
    precond(getprop(screendoor, state(opened, t)), ['you must open the door first']),
    % body(clause)
    body(inherited)
  ),
  % cant_go provides last-ditch special handling for Go.
- cant_goto(Self, Prep, Dir, 'The fence surrounding the garden is too tall and solid to pass.')
+ cant_go(Agent, _Dir, 'The fence surrounding the garden is too tall and solid to pass.')
  ]),
  props(kitchen, [inherit(place,t)]),
   h(Spatial, reverse(on), a(table), a(table_leg)),
@@ -296,8 +296,7 @@ istate([
   inherit(door,t)
  ])
 
-   
-]) :-  clock_time(Now),
+]) :-  clock_time(Now), Agent = $agent, 
  sensory_model_problem_solution(_Sense, Spatial, TooDark, _EmittingLight).
 
 
@@ -306,6 +305,7 @@ istate([
 :- multifile(extra_decl/2).
 :- dynamic(extra_decl/2).
 extra_decl(T,P):-
+ Agent = $agent, 
  sensory_model_problem_solution(Sense, Spatial, TooDark, EmittingLight),
  member(type_props(T,P), 
  [
@@ -314,8 +314,8 @@ extra_decl(T,P):-
     effect(switch(on), true),
     effect(switch(off), true),
     can_be(switch, t),
-    adjs(dented),
-    adjs(broken)
+    adjs([dented]), 
+    adjs($class)
    ]),
   type_props(mushroom, [
   % Sense DM4
@@ -405,6 +405,8 @@ extra_decl(T,P):-
   type_props(character, [
    has_rel(Spatial, worn_by),
    has_rel(Spatial, held_by),   
+   has_rel(Spatial, worn_by, t), 
+   has_rel(Spatial, held_by, t), 
    % overridable defaults
    mass(50), volume(50), % liters  (water is 1 kilogram per liter)
    can_do(eat, t),
@@ -417,13 +419,14 @@ extra_decl(T,P):-
   ]),
 
    type_props(natural_force, [
-    ~has_rel(Spatial, held_by),
-    ~has_rel(Spatial, worn_by),
     can_do(eat, f),
 
     can_do(examine, t),
     can_be(touch, f),
+    has_rel(Spatial, held_by, f), 
+    has_rel(Spatial, worn_by, f), 
     has_sense(Sense),
+    inherit(no_perceptq, t), 
     inherit(noncorporial,t),
     inherit(character,t)
    ]),
@@ -435,6 +438,7 @@ extra_decl(T,P):-
     inherit(character,t),
     inherit(memorize,t),
     inherit(player,t),
+ 
     % players use power but cant be powered down
     can_be(switch(off), f), state(powered, t)
    ]),
@@ -444,11 +448,12 @@ extra_decl(T,P):-
   inherit(autonomous,t),
   EmittingLight,
   volume(50), mass(200), % density(4) % kilograms per liter
-  nouns(robot),
-  adjs(metallic),
+  nouns([robot]), 
+  adjs([metallic]), 
   desc('Your classic robot: metallic with glowing red eyes, enthusiastic but not very clever.'),
   can_be(switch, t),
   inherit(memorize,t),
+  nouns($class), 
   inherit(shiny,t),
   inherit(character,t),
   state(powered, t),
@@ -458,17 +463,22 @@ extra_decl(T,P):-
   ]),
 
   % Places
-  type_props(place, [can_be(move, f), inherit(container,t), volume_capacity(10000), has_rel(exit(_), t)]),
+  type_props(place, [can_be(move, f), inherit(container,t), volume_capacity(10000), has_rel(Spatial, exit(_), t), has_rel(exit(_), t)]),
 
   type_props(container, [
-
-   oper($self, put(Self, Spatial, Thing, in, $self),
+   has_rel(Spatial, in, t), 
+   oper( put(Agent, Spatial, Thing, in, $self), 
     % precond(Test, FailureMessage)
     precond(( ~(getprop(Thing, inherit(liquid,t)))), ['liquids would spill out']),
     % body(clause)
     body(move(Agent, Spatial, Thing, in, $self))),
+    inherit(flask, f), 
+    adjs(flask, f),
    has_rel(Spatial, in)
    ]),
+
+ type_props(console, [adjs([]), nominals([console]), nouns([player])]), 
+ type_props(telnet, [adjs([remote]), nouns([player])]), 
   type_props(bag, [
    inherit(container,t),
    inherit(object,t),
@@ -479,52 +489,47 @@ extra_decl(T,P):-
   type_props(cup, [inherit(flask,t)]),
 
   type_props(flask, [
-
-    oper($self, put(Self, Spatial, Thing, in, $self),
+     adjs([]), 
+    oper( put(Agent, Spatial, Thing, in, $self), 
      % precond(Test, FailureMessage)
      precond(getprop(Thing, inherit(corporial,t)), ['non-physical would spill out']),
     % body(clause)
      body(move(Agent, Spatial, Thing, in, $self))),
-    inherit(object,t),
-    inherit(container,t)
+    inherit(surface, f), 
+    inherit(container, t), 
+    inherit(object, t)
    ]),
 
   type_props(bowl, [
-   inherit(container,t),
-   inherit(object,t),
+   inherit(flask, t), 
    volume_capacity(2),
    fragile(shards),
    state(dirty,t),
-   inherit(flask,t),
    name('porcelain bowl'),
    desc('This is a modest glass cooking bowl with a yellow flower motif glazed into the outside surface.')
   ]),
   type_props(plate, [
-   inherit(container,t),
+   inherit(surface, t), 
    inherit(object,t),
    volume_capacity(2),
    fragile(shards),
    state(dirty,t),
-   inherit(flask,f),
    name('plate')
   ]),
   type_props(box, [
    inherit(container,t),
    inherit(object,t),
-   volume_capacity(15),
+   volume_capacity(11), 
    fragile(splinters),
-   %can_be(open, t),
+   can_be(open, t), 
    state(opened, f),
-   %can_be(lock, t),
-   state(locked, t),
    TooDark
   ]),
   type_props(sink, [
-   inherit(container,t),
+   state(dirty, t), 
    inherit(furnature,t),
-   volume_capacity(10),
-   state(dirty,t),
-   inherit(flask,f)
+   inherit(flask, t), 
+   volume_capacity(5)  
   ]),
   type_props(cabinate, [
    inherit(container,t),
