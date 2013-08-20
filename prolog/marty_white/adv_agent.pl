@@ -161,7 +161,7 @@ console_decide_action(Agent, Mem0, Mem1):-
  (Words0==[]->(Words=[wait],makep);Words=Words0))),
  parse_command(Agent, Words, Action, Mem0),      
  !,
- (Action =.. Words; nop(player_format('~w~n', [Action]))),
+ if_tracing(bugout('Console TODO ~p~n', [Agent: Words->Action], telnet)),
  add_todo(Action, Mem0, Mem1), ttyflush, !.
 
 makep:- 
@@ -197,11 +197,11 @@ decide_action(Agent, Mem0, Mem1) :-
 
 % Stdin Client
 decide_action(Agent, Mem0, Mem1) :-
- notrace(declared(inherited(console), Mem0)),!,
+ notrace((declared(inherited(console), Mem0),current_input(In))),!,
+ 
  % agent_to_input(Agent,In),
- (tracing->catch(sleep(3),_,(nortrace,notrace,break));true),
+ (tracing->catch(wait_for_input([In,user_input],Found,20),_,(nortrace,notrace,break));wait_for_input([In,user_input],Found,0.1)),
 
- (current_input(In), wait_for_input([In,user_input],Found,0.1)),
      % Found = [some],
  % read_pending_codes(In,Codes,Missing), 
  (Found==[] -> (Mem0=Mem1) ; 
@@ -258,7 +258,7 @@ run_agent_pass_1_0(Agent, S0, S) :-
  thought(timestamp(T0,_OldNow), Mem0), 
  (PerceptQ==[] -> (T1 is T0 + 0, Mem0 = Mem1) ; (T1 is T0 + 1, memorize(timestamp(T1,Now), Mem0, Mem1))), 
  process_percept_list(Agent, PerceptQ, T1, Mem1, Mem2),
- memorize_list(PerceptQ, Mem2, Mem3),
+ notrace(memorize_list(PerceptQ, Mem2, Mem3)),
  decide_action(Agent, Mem3, Mem4),
  declare(memories(Agent, Mem4), S2, S3),
  declare(perceptq(Agent, []), S3, S),

@@ -65,8 +65,10 @@ convert_reflexive(Agent, Words, NewWords) :-
 
 
 % -- parse(Doer, WordList, ActionOrQuery, Memory)
-parse_command(Self, Tokens, Action, Memory) :-
+parse_command(_Self, NotList, Action, _Memory) :- \+ is_list(NotList), !, Action = NotList.
+parse_command(Self, Tokens, Action, Memory) :- 
  (Tokens = [_] -> Tokens2 = Tokens ; strip_noise_words(Tokens, Tokens2)),
+ if_tracing((dmsg(parse_command(Self, Tokens -> Tokens2)))),
  parse2logical(Self, Tokens2, Action, Memory).
 
 :- discontiguous(parse2logical/4).
@@ -74,7 +76,11 @@ parse_command(Self, Tokens, Action, Memory) :-
 % %%%%%%%%%%%%%%
 % parser tracing            
 % %%%%%%%%%%%%%%
+
+parse2logical(_Self,  NotList, Action, _) :- \+ is_list(NotList), !, Action = NotList.
+parse2logical(_Self, [NonAtom], Action, _) :- \+ atom(NonAtom), !, Action=NonAtom.
 parse2logical(Self, [rtrace|Args], Action, M) :- Args\==[], !, rtrace(parse2logical(Self, Args, Action, M)).
+parse2logical(Self, [cls|Args], Action, M) :- Args\==[], !, cls, notrace(parse2logical(Self, Args, Action, M)).
 
 parse2logical(Self, [wait], wait(Self), _Mem) :- !.
 
@@ -122,7 +128,7 @@ parse2logical(Self, Words, Action, Mem) :-
 % %%%%%%%%%%%%%%
 
 % get [out,in,..]
-parse2logical(Self, [get, Prep, Object], goto(Self, walk, _, Prep, Object), _Mem) :-
+parse2logical(Self, [get, Prep, Object], goto(Self, walk, loc(Self, _, Prep, Object)), _Mem) :-
  preposition(spatial, Prep).
 % n/s/e/w
 parse2logical(Self, [Dir], Logic, Mem):- (compass_direction(Dir);Dir==escape), !, dmust(txt2goto(Self, walk, [Dir], Logic, Mem)).
@@ -145,22 +151,24 @@ parse2logical(Self, [get, Prep| More], Logic, Mem) :- preposition(spatial, Prep)
 
 txt2goto(Self, Walk,[to, Prep| More], Logic, Mem) :- !, txt2goto(Self, Walk, [Prep| More], Logic, Mem).
 txt2goto(Self, Walk,[Alias| More], Logic, Mem) :- cmdalias(Alias,Dir), !, txt2goto(Self, Walk,[Dir| More], Logic, Mem).
+
 % go in kitchen
 % go in car
-txt2goto(Self, Walk,[ Prep, Dest], goto(Self, Walk, _Dir, Prep, Where), Mem) :- 
+txt2goto(Self, Walk,[ Prep, Dest], goto(Self, Walk, loc(Self,_Dir, Prep, Where)), Mem) :- 
  preposition(spatial, Prep),!,
  dmust(txt2place(Dest, Where, Mem)).
 
 % go north
-txt2goto(Self, Walk,[ ExitName], goto(Self, Walk, ExitName, _To, _Where), Mem) :-
+txt2goto(Self, Walk,[ ExitName], goto(Self, Walk, loc(Self, ExitName, _To, _Where)), Mem) :-
  thought_model(ModelData, Mem),
  in_model(h_at(_Spatial, exit(ExitName), _, _, _T), ModelData).
 % go escape
-txt2goto(Self, Walk,[ Dir], goto(Self, Walk, Dir, _To, _Object), _Mem) :- (compass_direction(Dir);Dir==escape),!.
-% go [out,in,..]
-txt2goto(Self, Walk,[ Prep], goto(Self, Walk, _Dir, Prep, _Where), _Mem) :- preposition(spatial, Prep).
+txt2goto(Self, Walk,[ Dir], goto(Self, Walk, loc(Self, Dir, _To, _Object)), _Mem) :- (compass_direction(Dir);Dir==escape),!.
+txt2goto(Self, Walk,[ Dir], goto(Self, Walk, loc(Self, Dir, _To, _Object)), _Mem) :- (Dir=down;Dir==up),!.
+% go [out,in,..] 
+txt2goto(Self, Walk,[ Prep], goto(Self, Walk, loc(Self, _Dir, Prep, _Where)), _Mem) :- preposition(spatial, Prep).
 % go kitchen
-txt2goto(Self, Walk, Dest, goto(Self, Walk, _Dir, _To, Where), Mem) :-
+txt2goto(Self, Walk, Dest, goto(Self, Walk, loc(Self, _Dir, _To, Where)), Mem) :-
  txt2place(Dest, Where, Mem).
 
 
@@ -234,7 +242,7 @@ parse2logical(Self, [Verb|TheArgs], Action, M) :-
  args2logical(TheArgs, Args, M), wdmsg( TheArgs->Args), !, 
  Action =.. [Verb,Self|Args].
 
-verbatum(Verb):- member(Verb, [prolog, make, cls, mem, props,
+verbatum(Verb):- member(Verb, [prolog, make, cls, mem, props, ls, debug, cd, pwd, 
  agent, create, delprop, destroy, echo, quit,
  memory, model, path, properties, setprop, state, help, 
 

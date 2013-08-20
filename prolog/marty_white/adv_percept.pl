@@ -203,7 +203,7 @@ process_percept_auto(Agent, [Percept|Tail], Stamp, Mem0, Mem4) :-
 
 process_percept_auto(_Agent, _Percept, _Timestamp, M0, M0):-  \+ declared(inherited(autonomous), M0),!.
 
-process_percept_auto(Agent, Same, _Stamp, Mem0, Mem0) :- fail, was_own_self(Agent, Same).
+process_percept_auto(Agent, Percept, _Stamp, Mem0, Mem0) :- was_own_self(Agent, Percept),!.
 % Auto Answer
 process_percept_auto(Agent, emoted(Speaker,  _Say, Agent, Words), _Stamp, Mem0, Mem1) :-
  consider_text(Speaker, Agent, Words, Mem0, Mem1).
@@ -238,11 +238,11 @@ process_percept_auto(_Agent, _Percept, _Stamp, Mem0, Mem0).
 
 
 %was_own_self(Agent, say(Agent, _)).
-was_own_self(Agent, emote(Agent, _, _Agent, _)).
-was_own_self(Agent, emoted(Agent, _, _Agent, _)).
+was_own_self(Agent, emote(Agent, _, _Targ, _)).
+was_own_self(Agent, emoted(Agent, _, _Targ, _)).
 
 % Ignore own speech.
-% process_percept_player(Agent, [Same|_], _Stamp, Mem0, Mem0) :- was_own_self(Agent, Same).
+process_percept_player(Agent,Percept, _Stamp, Mem0, Mem0) :- was_own_self(Agent, Percept),!.
 
 process_percept_player(Agent, _Percept, _Stamp, Mem0, Mem0) :- \+ is_player(Agent),!.
 process_percept_player(Agent, Percept, _Stamp, Mem0, Mem0) :-
@@ -264,7 +264,7 @@ process_percept_main(Agent, [Percept|Tail], Stamp, Mem0, Mem4) :-
  process_percept_main(Agent, Percept, Stamp, Mem0, Mem1),
  process_percept_main(Agent, Tail, Stamp, Mem1, Mem4).
 process_percept_main(Agent, Percept, Stamp, Mem0, Mem2) :-
- process_percept_player(Agent, Percept, Stamp, Mem0, Mem1),
+ quietly(process_percept_player(Agent, Percept, Stamp, Mem0, Mem1)),
  process_percept_auto(Agent, Percept, Stamp, Mem1, Mem2).
 process_percept_main(Agent, Percept, Stamp, Mem0, Mem0):- 
  bugout('~q FAILED!~n', [bprocess_percept(Agent, Percept, Stamp)], todo), !.

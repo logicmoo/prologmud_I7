@@ -99,7 +99,7 @@ adventure :-
 
 main(S0, S9) :-
  notrace((nb_setval(advstate,S0))),
- update_telnet_clients(S0,S1),
+ dmust(update_telnet_clients(S0,S1)),
  ((nb_setval(advstate,S1),
  % pprint(S1,general),
  get_live_agents(LiveAgents, S1),
@@ -133,7 +133,7 @@ telnet_decide_action(Agent, Mem0, Mem1) :-
  %dmust(thought(timestamp(T0), Mem0)),
  retract(adv:console_tokens(Agent, Words)), !,
  dmust((parse_command(Agent, Words, Action, Mem0),
- nop(bugout('Telnet TODO ~p~n', [Agent: Words->Action], telnet)),
+ if_tracing(bugout('Telnet TODO ~p~n', [Agent: Words->Action], telnet)),
  add_todo(Action, Mem0, Mem1))), !.
 telnet_decide_action(Agent, Mem, Mem) :-
  nop(bugout('~w: Can\'t think of anything to do.~n', [Agent], telnet)).

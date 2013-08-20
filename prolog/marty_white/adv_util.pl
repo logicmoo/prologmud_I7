@@ -103,7 +103,7 @@ apply_state(Goal, S0, S2) :-
  must_input_state(S0),
  Call=..[F|NewGoalL])),
  dmust(Call),
- must_output_state(S2).
+ notrace(must_output_state(S2)).
 
 
 
@@ -114,7 +114,7 @@ apply_first_arg_state(Arg, Goal, S0, S2) :-
  must_input_state(S0),
  Call=..[F, Arg|NewGoalL])),
  dmust(Call),
- must_output_state(S2).
+ notrace(must_output_state(S2)).
 
 %:- meta_predicate(apply_first(+,3,+,-)).
 apply_first_arg(Arg, Goal, S0, S2):- 

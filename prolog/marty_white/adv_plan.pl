@@ -40,7 +40,7 @@ precond_matches_effects(Cond, Effects) :-
 % oper(Self, Action, Desc, Preconds, Effects)
 
 % go north
-oper(Self, goto(Self, Walk, Dir, Rel, There),
+oper(Self, goto(Self, Walk, loc(Self, Dir, Rel, There)),
   [ %Desc: cap(subj(Agent)), person(go, goes)
   cap(subj(actor(Self))), does(Walk), from(place(Here)), via(exit(Dir)) , Rel, to(place(There)) ],
   [ %Preconds:
@@ -64,7 +64,7 @@ oper(Self, Action, Preconds, Effects):- % Hooks to better KR above
  oper(Self, Action, _Desc, Preconds, Effects).
 
 
-oper(Self, goto(Self, _Walk, Dir, Rel, There),
+oper(Self, goto(Self, _Walk, loc(Self, Dir, Rel, There)),
   [ Here \= Self, There \= Self,
   h_at(Spatial, WasRel, Self, Here, _),
   h_at(Spatial, exit(Dir), Here, There, _)], % path(Spatial, Here, There)
@@ -576,17 +576,17 @@ generate_plan(FullPlan, Mem0) :-
 % ----
 
 
-path2directions(Spatial, [Here, There], [ goto(_Self, _Walk, Dir, _To, There)], ModelData) :-
+path2directions(Spatial, [Here, There], [ goto(Self, _Walk, loc(Self, Dir, _To, There))], ModelData) :-
  in_model(h_at(Spatial, exit(Dir), Here, There, _), ModelData).
 
-path2directions(Spatial, [Here, There], [ goto(_Self, _Walk, _Dir, in, There)], ModelData) :-
+path2directions(Spatial, [Here, There], [ goto(Self, _Walk, loc(Self, _Dir, in, There))], ModelData) :-
  in_model(h_at(Spatial, descended, Here, There, _), ModelData).
 
-path2directions(Spatial, [Here, Next|Trail], [goto(_Self, _Walk, Dir, _To, _There)|Tail], ModelData) :-
+path2directions(Spatial, [Here, Next|Trail], [goto(Self, _Walk, loc(Self, Dir, _To, _There))|Tail], ModelData) :-
  in_model(h_at(Spatial, exit(Dir), Here, Next, _), ModelData),
  path2directions(Spatial, [Next|Trail], Tail, ModelData).
 
-path2directions(Spatial, [Here, Next|Trail], [goto(_Self, _Walk, _Dir, in, Next)|Tail], ModelData) :-
+path2directions(Spatial, [Here, Next|Trail], [goto(Self, _Walk, loc(Self, _Dir, in, Next))|Tail], ModelData) :-
  in_model(h_at(Spatial, descended, Here, Next, _), ModelData),
  path2directions(Spatial, [Next|Trail], Tail, ModelData).
 

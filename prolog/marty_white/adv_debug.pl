@@ -19,22 +19,80 @@
 
 :- user:ensure_loaded(library(poor_bugger)).
 
+:- meta_predicate reset_prolog_flag(0,*,*,*).
+:- meta_predicate reset_prolog_flag(0,*,*).
+:- meta_predicate system_default_debug(0).
+
+reset_prolog_flag(YN, Name, SystemValue):- 
+  YN -> set_prolog_flag(Name, SystemValue) ; true.
+
+reset_prolog_flag(YN, Name, SystemValue, OverrideValue):-
+  YN -> set_prolog_flag(Name, SystemValue)
+   ;  set_prolog_flag(Name, OverrideValue).
+
+system_default_debug(YN):-
+  reset_prolog_flag(YN, answer_format, '~p', '~q'), 
+  reset_prolog_flag(YN, answer_write_options, [quoted(true), portray(true), max_depth(10), spacing(next_argument)], 
+   [quoted(true), portray(true), max_depth(4), spacing(next_argument)]), 
+  reset_prolog_flag(YN, debugger_write_options, [quoted(true), portray(true), max_depth(10), attributes(portray), spacing(next_argument)], 
+   [quoted(true), portray(true), max_depth(4), attributes(portray), spacing(next_argument)]), 
+  reset_prolog_flag(YN, print_write_options, [portray(true), quoted(true), numbervars(true)], 
+   [portray(true), quoted(true), numbervars(true)]), 
+
+  reset_prolog_flag(YN, backtrace, true), 
+  reset_prolog_flag(YN, backtrace_depth, 20, 2000), 
+  reset_prolog_flag(YN, backtrace_goal_depth, 3, 4), 
+  reset_prolog_flag(YN, backtrace_show_lines, true), 
+  reset_prolog_flag(YN, debug, false, true), 
+  reset_prolog_flag(YN, debug_on_error, true), 
+  reset_prolog_flag(YN, debugger_show_context, false, true), 
+
+  reset_prolog_flag(YN, gc, true), 
+
+  reset_prolog_flag(YN, last_call_optimisation, true, false), 
+  reset_prolog_flag(YN, optimise, false), 
+  reset_prolog_flag(YN, optimise_debug, default), 
+
+  reset_prolog_flag(YN, prompt_alternatives_on, determinism), 
+  reset_prolog_flag(YN, toplevel_goal, default), 
+  reset_prolog_flag(YN, toplevel_mode, backtracking), 
+  reset_prolog_flag(YN, toplevel_residue_vars, false, true), 
+  reset_prolog_flag(YN, toplevel_print_anon, true), 
+  reset_prolog_flag(YN, toplevel_print_factorized, false, true), 
+  reset_prolog_flag(YN, write_attributes, ignore),
+
+  reset_prolog_flag(YN, warn_override_implicit_import, true), 
+  reset_prolog_flag(YN, access_level, user),
+  reset_prolog_flag(YN, sandboxed_load, false), 
+  reset_prolog_flag(YN, save_history, true), 
+  !.
+
+:- system_default_debug(false).
+
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
 :- nop(ensure_loaded('adv_debug')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+:- meta_predicate dmust_tracing(0).
+dmust_tracing(G):- notrace((tracing,cls)),!,dmust(G).
+dmust_tracing(G):- call(G).
+:- meta_predicate if_tracing(0).
+if_tracing(G):- tracing -> notrace(G) ; true.
 
  :- meta_predicate dshow_true(0).
  :- meta_predicate dshow_call(0).
  :- meta_predicate dshow_fail(0).
 
 % '$hide'(Pred) :- '$set_predicate_attribute'(Pred, trace, false).
+never_trace(_Spec):- prolog_load_context(reloading,true),!.
 never_trace(Spec):- '$hide'(Spec),'$iso'(Spec),trace(Spec, -all).
 :- use_module(library(lists)).
-/*
 :- never_trace(lists:append(_,_,_)).
 :- never_trace(lists:list_to_set/2).
 :- never_trace(lists:member_(_,_,_)).
+/*
 :- never_trace(prolog_debug:assertion(_)).
 */
 

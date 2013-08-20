@@ -62,6 +62,11 @@
 %:- op(900, xfx, props).
 :- op(900, fy, '~').
 
+dest_target(spatially(in,Dest),Target):- nonvar(Dest), !, dest_target(Dest,Target).
+dest_target(spatially(to,Dest),Target):- nonvar(Dest), !, dest_target(Dest,Target).
+dest_target(loc(_,_,_,Target),Target):- nonvar(Target), !.
+
+
 type_functor(dest, spatially(in, inst)).
 type_functor(dest, spatially(at, inst)).
 type_functor(dest, spatially(on, inst)).
@@ -127,7 +132,7 @@ type_functor(doing, drop(agnt, inst)).
 type_functor(doing, goto(agnt, movetype, dest)).
 type_functor(doing, throw(agnt, inst, dest)).
 type_functor(doing, put(agnt, inst, dest)).
-type_functor(event, moved(inst, dest1, dest2)).
+type_functor(event, moved(inst, dest1, verb, dest2)).
 
 
 
@@ -182,7 +187,8 @@ istate([
     goals([]),
     todo([look('player~1')]),
     inst('player~1'),
-    name('player~1'),
+    name('player~1')
+    /*,
     oper( put(Agent, Spatial, Thing, Relation, What), % in something else
            [ Thing \= Agent, What \= Agent, Where \= Agent, 
   Thing \= What, What \= Where, Thing \= Where,
@@ -190,7 +196,7 @@ istate([
            h_at(Spatial, in, What, Where, _), exists(Spatial, What), exists(Spatial, Where), 
            h_at(Spatial, in, Agent, Where, _)], 
            [ h_at(Spatial, Relation, Thing, What, _), 
-           ~ h_at(Spatial, held_by, Thing, Agent, _)] )
+           ~ h_at(Spatial, held_by, Thing, Agent, _)] )*/
   ]),
 
   % props(telnet, [inherit(telnet,t),isnt(console),inherit('player~1')]),
@@ -244,7 +250,7 @@ istate([
  inherit(place,t),
  % goto(Agent, Prep, Dir, dir, result) provides special handling for going in a direction.
  cant_go(Agent, up, 'You lack the ability to fly.'), 
- oper( /*garden, */ goto(Agent, _, north, _, _), 
+ oper( /*garden, */ goto(Agent, _, loc(Agent, south, _Prep, _Object)), 
    % precond(Test, FailureMessage)
    precond(getprop(screendoor, state(opened, t)), ['you must open the door first']),
    % body(clause)
@@ -463,18 +469,22 @@ extra_decl(T,P):-
   ]),
 
   % Places
-  type_props(place, [can_be(move, f), inherit(container,t), volume_capacity(10000), has_rel(Spatial, exit(_), t), has_rel(exit(_), t)]),
+  type_props(place, [
+     has_rel(Spatial, exit(_), t),
+     can_be(move, f), 
+     inherit(container,t), 
+     volume_capacity(10000)
+  ]),
 
   type_props(container, [
-   has_rel(Spatial, in, t), 
-   oper( put(Agent, Spatial, Thing, in, $self), 
+    has_rel(Spatial, in, t), 
+    oper( put(Agent, Spatial, Thing, in, $self), 
     % precond(Test, FailureMessage)
     precond(( ~(getprop(Thing, inherit(liquid,t)))), ['liquids would spill out']),
     % body(clause)
-    body(move(Agent, Spatial, Thing, in, $self))),
-    inherit(flask, f), 
-    adjs(flask, f),
-    nop(has_rel(Spatial, in))
+    body(move(Agent, Spatial, Thing, in, $self)))
+      % inherit(flask, f), 
+    % adjs(flask, f)
    ]),
 
  type_props(console, [adjs([]), nominals([console]), nouns([player])]), 

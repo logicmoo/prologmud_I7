@@ -70,8 +70,8 @@ cant( Agent, Action, cant( reach(Agent, Spatial, Thing)), State) :-
 
 cant( Action, getprop(Thing, can_be(Move, f)), State) :-
  act_verb_thing_model_sense(_Agent, Action, Verb, Thing, _Spatial, _Sense),
- psubsetof(Verb, move),
- getprop(Thing, can_be(move, f), State).
+ psubsetof(Verb, Move),
+ getprop(Thing, can_be(Move, f), State).
 
 cant( Action, musthave( Thing), State) :-
  act_verb_thing_model_sense(Agent, Action, Verb, Thing, Spatial, _Sense),
@@ -98,7 +98,6 @@ cant( throw(_Agent, Thing1, _Prep, Target), moibeus_relation( Thing1, Target), S
  related(_Spatial, descended, Target, Thing1, S0).
 
 
-
 cant( look(Agent, Spatial), TooDark, State) :-
  sensory_model_problem_solution(Sense, _Spatial, TooDark, _EmittingLight),
  % Perhaps this should return a logical description along the lines of
@@ -123,7 +122,7 @@ cant( examine(Agent, Sense, Thing), Why, State) :-
 
 
 cant( goto(Agent, _Walk, Dest), mustdrop(Target), State) :- 
- dest_object(Dest,Target),
+ dest_target(Dest,Target),
  nonvar(Target),
  related(_Spatial, descended, Target, Agent, State).
 
@@ -184,17 +183,19 @@ has_rel(Spatial, How, X, State) :-
 
 %related(_Spatial, How, _X, _Y, _State) :- assertion(nonvar(How)), fail.
 related(_Spatial, _How, _X, _Y, []) :- !, fail.
-related(Spatial, How, X, Y, State):- quietly(related_hl(Spatial, How, X, Y, State)).
+related(Spatial, How, X, Y, State):- related_hl(Spatial, How, X, Y, State).
 
 
 related_hl(Spatial, How, X, Y, State) :- declared(h(Spatial, How, X, Y), State).
 related_hl(_Spatial, How, _X, _Y, _State) :- var(How), !, fail.
 related_hl(Spatial, child, X, Y, State) :- subrelation(How, child), related_hl(Spatial, How, X, Y, State).
+
 related_hl(Spatial, descended, X, Z, State) :-
  related_hl(Spatial, child, X, Z, State).
 related_hl(Spatial, descended, X, Z, State) :-
  related_hl(Spatial, child, Y, Z, State),
  related_hl(Spatial, descended, X, Y, State).
+
 related_hl(Spatial, open_traverse(Traverse, Spatial), X, Z, State) :- (nonvar(X);nonvar(Z)),
  get_open_traverse(_Traverse, Spatial, open_traverse(Traverse, Spatial)),
  related_hl(Spatial, child, X, Z, State).
@@ -230,6 +231,19 @@ related_hl(Spatial, exit(escape), Inner, Outer, State) :-
 % CODE FILE SECTION
 :- nop(ensure_loaded('adv_action')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% relative_dest(Here, Prep, Dest, Src, Targ).
+relative_dest(Here, in, Dest, Src, Target, _State):- 
+  Src = Here,
+  ignore(Target = Dest).
+relative_dest(Here, Exit, Dest, Src, Target, State):-  
+  related(_Spatial, exit(Exit), Here, Target, State),
+   Src = Here,
+   ignore(Target = Dest).
+relative_dest(Agent, Prep, Dest, Src, Target, State):-
+  related(_Spatial, child, Agent, Here, State),
+  relative_dest(Here, Prep, Dest, Src, Target, State).
+
 
 moveto(Spatial, Object, Prep, Dest, Vicinity, Msg, State, S9) :-
  undeclare(h(Spatial, _, Object, Here), State, VoidState),
@@ -270,11 +284,16 @@ hit(_Spatial, _Target, _Thing, _Vicinity, S0, S0).
 
 
 
-act_verb_thing_model_sense(Agent, Action, Verb, Thing, Spatial, Sense):-
+act_verb_thing_model_sense(Agent, Action, Verb, Thing, Spatial, Sense):- 
  never_equal(Sense,Thing, Agent),
  notrace(act_verb_thing_model_sense0(Agent, Action, Verb, Thing, Spatial, Sense)), !.
 
-act_verb_thing_model_sense0(Agent, goto(Agent, _Walk, _Dir, _Rel, Thing), goto, Thing, spatial, see):-!.
+
+
+act_verb_thing_model_sense0(_Agent, Atom, Atom, _Target, spatial, Sense):- \+ compound(Atom), !, is_sense(Sense),!.
+
+act_verb_thing_model_sense0(Agent, goto(Agent, _Walk, loc(Agent, _Dir, _Rel, Thing)), goto, Thing, spatial, see):-!.
+act_verb_thing_model_sense0(_Agent, Action, _Look, _Star, _Spatial, _See):- assertion(ground(Action)),fail.
 act_verb_thing_model_sense0(Agent, look(Agent, spatial), look, *, spatial, see):-!.
 act_verb_thing_model_sense0(Agent, look(Agent, spatial, spatial), look, *, spatial, see):-!.
 act_verb_thing_model_sense0(Agent, look(Agent), look, *, spatial, see):-!.

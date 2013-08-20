@@ -242,8 +242,8 @@ make_atomic(Term, Atom) :-
 
 eng2txt(Agent, Person, Eng, Text) :- assertion(nonvar(Eng)),
  % Find subject, if any.
- findall(subj(Subject), findterm(subj(Subject), Eng), Context),
- compile_eng_txt([agent(Agent), person(Person)|Context], Eng, Text).
+ quietly((findall(subj(Subject), findterm(subj(Subject), Eng), Context),
+ compile_eng_txt([agent(Agent), person(Person)|Context], Eng, Text))).
 eng2txt(_Agent, _Person, Text, Text).
 
 compile_eng_txt(_Context, Done, '') :- Done == [], !.
@@ -460,8 +460,10 @@ logic2eng(Context, did(Action), [the(Agent), 'did: '|English] ) :-
  logic2eng(Context, Action, English ).
 
 %log2eng(_Agent, emote(Speaker, say, (*), Eng), [cap(subj(Speaker)), ': "', Text, '"']) :- eng2txt(Speaker, 'I', Eng, Text).
-logic2eng(_, emoted(Speaker, see, Audience, Eng),
- [a(Speaker), 'to', Audience, ', "', Text, '"']) :-
+logic2eng(_, emoted(Speaker, act, *, Eng), [the(Speaker), Text]) :-
+ eng2txt(Speaker, Speaker, Eng, Text).
+logic2eng(_, emoted(Speaker, act, Audience, Eng),
+ [Audience, notices, the(Speaker), Text]) :-
  eng2txt(Speaker, Speaker, Eng, Text).
 
 logic2eng(_Agent, emoted(Speaker,  Says, Audience, Eng),

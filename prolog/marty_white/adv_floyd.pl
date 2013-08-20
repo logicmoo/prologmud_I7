@@ -99,7 +99,7 @@ autonomous_decide_action(Agent, Mem0, Mem1) :-
  thought_model(ModelData, Mem0),
  in_model(h_at(Spatial, _Prep, Agent, Here, _T0), ModelData),
  in_model(h_at(Spatial, exit(Dir), Here, '<unexplored>', _T1), ModelData),
- add_todo( goto(Agent, walk, Dir, _To, _Place), Mem0, Mem1).
+ add_todo( goto(Agent, walk, loc(Agent, Dir, _To, _Place)), Mem0, Mem1).
 
 % Follow Player to adjacent rooms.
 autonomous_decide_action(Agent, Mem0, Mem1) :-
@@ -108,7 +108,7 @@ autonomous_decide_action(Agent, Mem0, Mem1) :-
  dif(Agent, Player), current_player(Player),
  in_model(h_at(Spatial, _, Player, There, _), ModelData),
  in_model(h_at(Spatial, exit(Dir), Here, There, _), ModelData),
- add_todo( goto(Agent, walk, Dir, _To, _Dest), Mem0, Mem1).
+ add_todo( goto(Agent, walk, loc(Agent,Dir, _To, _Dest)), Mem0, Mem1).
 
 autonomous_decide_action(Agent, Mem0, Mem1) :-
  0 is random(5),
@@ -142,9 +142,10 @@ consider_request(_Speaker, Agent, forget(goals), M0, M2) :-
  bugout('~w: forgetting goals.~n', [Agent], autonomous),
  forget_always(goals(_), M0, M1),
  memorize(goals([]), M1, M2).
-consider_request(_Speaker, Agent, goto(Self, How, Dir, Prep, Dest), M0, M1) :-
- bugout('Queueing action ~w~n', goto(Agent, How, Dir, Prep, Dest), autonomous),
- add_todo(goto(Self, How, Dir, _To, Dest), M0, M1).
+consider_request(_Speaker, Agent, Action, M0, M1) :- 
+ Action = goto(Agent, _How, _LOC), % LOC = loc(Agent, Dir, Prep, Dest),
+ bugout('Queueing action ~w~n', Action, autonomous),
+ add_todo(Action, M0, M1).
 consider_request(Speaker, _Agent, fetch(Spatial, Object), M0, M1) :-
  % Bring object back to Speaker.
  add_goal(h_at(Spatial, held_by, Object, Speaker, _), M0, M1).

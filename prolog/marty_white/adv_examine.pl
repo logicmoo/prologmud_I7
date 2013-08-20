@@ -45,9 +45,8 @@ act_examine(Agent, Sense, Object, S0, S2):-
 
 add_child_precepts(Sense,Agent,Object,S1,S2):- 
  findall(Relation, 
-     (getprop(Object,has_rel(Relation,t),S1);
-      getprop(Object,has_rel(_,Relation,t),S1);      
-      declared(h(_, Relation, _, Object),S1)), RelationList),
+     (getprop(Object,has_rel(_Domain1,Relation,t),S1);      
+      declared(h(_Domain2, Relation, _, Object),S1)), RelationList),
  list_to_set(RelationList,RelationSet),
  %dmsg(list_to_set(RelationList,RelationSet)),
  add_child_precepts_rel_list(Sense, Agent,Object,RelationSet,S1,S2).

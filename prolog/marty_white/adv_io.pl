@@ -400,8 +400,8 @@ current_player(Agent):- thread_self(Id),adv:console_info(Id,_Alias,_InStream,_Ou
 current_player('player~1').
 :- export(current_player/1).
 
-redraw_prompt(Agent):- (Agent \== 'floyd~1'),!, 
- player_format(Agent,'~w@spatial> ',[Agent]),!.
+redraw_prompt(Agent):- notrace(((Agent \== 'floyd~1'),!, 
+ player_format(Agent,'~w@spatial> ',[Agent]))),!.
 redraw_prompt(_Agent).
 
 player_format(Fmt,List):-
@@ -508,8 +508,8 @@ with_tty(In,Goal):-
  (set_stream(In, timeout(TWas)),set_stream(In, tty(Was)))),!.
          
 line_to_tokens([],_,[]):-!.
-line_to_tokens(NegOne,NegOne,[quit]):-!.
-line_to_tokens([NegOne],NegOne,[quit]):-!.
+line_to_tokens(NegOne,NegOne,end_of_file):-!.
+line_to_tokens([NegOne],NegOne,end_of_file):-!.
 line_to_tokens(LineCodes,_NegOne,Tokens) :- 
  append(NewLineCodes,[L],LineCodes),
  member(L,[46]),
@@ -517,11 +517,12 @@ line_to_tokens(LineCodes,_NegOne,Tokens) :-
   [syntax_errors(error),var_prefix(false),
   % variables(Vars),
   variable_names(_VNs),cycles(true),dotlists(true),singletons(_)])),_,fail),
- Tokens=[Term],!.
+ Tokens=Term,!.
 line_to_tokens(LineCodes,NegOne,Tokens) :- 
  append(NewLineCodes,[L],LineCodes),
- member(L,[10,13,32,46]),!,
+ member(L,[10,13,32]),!,
  line_to_tokens(NewLineCodes,NegOne,Tokens).
+
 line_to_tokens(LineCodes,_,Tokens):- 
  ignore(log_codes(LineCodes)),!,
  tokenize(LineCodes, TokenCodes),!,

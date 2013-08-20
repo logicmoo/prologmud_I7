@@ -77,7 +77,8 @@ undeclare_always(Fact, State, NewState) :- select_always(Fact, State, NewState).
 %declared(Fact, State) :- player_local(Fact, Player), !, declared(wishes(Player, Fact), State).
 
 :- export(declared/2).
-declared(Fact, State) :- is_list(State)->declared_list(Fact, State);declared_link(Fact, State).
+declared(Fact, State) :-
+  quietly(( is_list(State)->declared_list(Fact, State);declared_link(Fact, State))).
 
 declared_list(Fact, State) :- member(Fact, State).
 declared_list(Fact, State) :- member(link(VarName), State), declared_link(Fact, VarName).
@@ -106,7 +107,7 @@ must_input_state(S0):- notrace(assertion(is_list(S0);must_state(S0))).
 must_output_state(S0):- notrace(assertion(must_state(S0);is_list(S0))),notrace(check4bugs(S0)).
 must_state(S0):- is_list(S0), nb_setval(advstate,S0).
 
-get_objects(Spec, Set, State):- must_input_state(State), get_objects_(Spec, List, State, im(State)), !, list_to_set(List,Set).
+get_objects(Spec, Set, State):- quietly((must_input_state(State), get_objects_(Spec, List, State, im(State)), !, list_to_set(List,Set))).
 %get_objects(_Spec, [player1, floyd], _State):-!.
 
 get_objects_(_Spec, [], [], im(_)) :- !.

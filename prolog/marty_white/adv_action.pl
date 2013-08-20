@@ -86,8 +86,8 @@ psubsetof(A, C) :-
 maybe_pause(Agent):- console_player(CP),(Agent==CP -> wait_for_input([user_input],_,0) ; true).
 
 do_command(Agent, Action, S0, S1) :-
- do_metacmd(Agent, Action, S0, S1), !, 
- redraw_prompt(Agent).
+ quietly((do_metacmd(Agent, Action, S0, S1), 
+ redraw_prompt(Agent))),!.
 
 do_command(Agent, Action, _, _) :- set_last_action(Agent,Action), fail.
 do_command(Agent, Action, S0, S1) :-
@@ -133,20 +133,21 @@ do_todo(_Agent, S0, S0).
 % In TADS:
 % "verification" methods perferm tests only
 
-
+get_actor(Action,Agent):- \+ compound(Action),!,Agent = _ .
 get_actor(Action,Agent):- arg(1,Action,Agent),nonvar(Agent), \+ preposition(_,Agent),!.
 get_actor(Action,Agent):-
   dmust(act_verb_thing_model_sense(Agent, Action, _Verb, _Thing, _Spatial, _Sense)).
 
 
 do_action(Agent, Action, S0, S3) :-
+ quietly_must((
  undeclare(memories(Agent, Mem0), S0, S1),
  copy_term(Action,ActionG),
  numbervars(ActionG,999,_),
  memorize(did(ActionG), Mem0, Mem1),
- declare(memories(Agent, Mem1), S1, S2),
- must_act( Action, S2, S3), !,
- nop(redraw_prompt(Agent)).
+ declare(memories(Agent, Mem1), S1, S2))),
+ dmust_tracing(must_act( Action, S2, S3)), !.
+ 
 
 
 
@@ -175,9 +176,11 @@ apply_act( Action, State, NewState):- fail,
   queue_local_event(Spatial, [emoted(Agent, act, '*', ActionG)], [Here], S0, NewState).
   
 apply_act( Act, State, NewState):- ((cmd_workarround(Act, NewAct) -> Act\==NewAct)), !, apply_act( NewAct, State, NewState).
-apply_act( Action, State, State):- notrace((bugout(failed_act( Action), general))),!.
+apply_act( Action, State, State):- notrace((bugout(failed_act( Action), general))),!, \+ tracing,
+  current_player(Agent),
+  redraw_prompt(Agent).
 
-must_act( Action, State, NewState):- apply_act( Action, State, NewState) *-> ! ; fail.
+must_act( Action, State, NewState):- dmust_tracing(apply_act( Action, State, NewState)) *-> ! ; fail.
 % must_act( Action, S0, S1) :- rtrace(apply_act( Action, S0, S1)), !.
 must_act( Action, S0, S1) :-
  get_actor(Action,Agent), 
@@ -194,12 +197,6 @@ act( inventory(Agent), State, NewState) :- act( examine(Agent, Agent), State, Ne
  findall(What, related(Spatial, child, What, Agent, State), Inventory),
  queue_agent_percept(Agent, [carrying(Agent, Spatial, Inventory)], State, NewState).
 */
-act( Action, State, NewState) :-
- act_verb_thing_model_sense(Agent, Action, Verb, _Thing, Spatial, Sense),
- sensory_verb(Sense, Verb),
- related(Spatial, child, Agent, Here, State),
- act_examine(Agent, Sense, Here, State, NewState).
-
 act( examine(Agent), S0, S2) :- act( look(Agent), S0, S2) .
 act( examine(Agent, Object), S0, S2) :- act_examine(Agent, see, Object, S0, S2).
 act( examine(Agent, How, Object), S0, S2) :-
@@ -208,68 +205,19 @@ act( examine(Agent, How, Object), S0, S2) :-
 act( examine(Agent, Sense, Object), S0, S2) :- act_examine(Agent, Sense, Object, S0, S2).
  %declared(props(Object, PropList), S0),
 
+act( Action, State, NewState) :-
+ act_verb_thing_model_sense(Agent, Action, Verb, _Thing, Spatial, Sense),
+ sensory_verb(Sense, Verb), !, 
+ dmust(related(Spatial, child, Agent, Here, State)),
+ act_examine(Agent, Sense, Here, State, NewState).
+
 % Remember that Agent might be on the inside or outside of Object.
-act( goto(Agent, Walk, Dir, Relation, Place), S0, S1):- !,
- (act_goto( Agent, Walk, Dir, Relation, Place, S0, S1)-> !;
+act( goto(Agent, Walk, TO), S0, S1):- !,  % loc(Agent, Dir, Relation, Place)
+ (act_goto(Agent, Walk, TO, S0, S1)-> !;
  queue_agent_percept(Agent,
-    [failure(goto(Agent, Walk, Dir, Relation, Place), 'can\'t go that way')],
+    [failure( goto(Agent, Walk, TO), 'can\'t go that way')],
     S0, S1)).
 
-
-act_goto( Agent, Walk, _Dir, Relation, Object, S0, S9) :- nonvar(Object),   % go in/on object
- get_open_traverse(Walk, Spatial, OpenTraverse),
- has_rel(Spatial, Relation, Object, S0),
- related(Spatial, OpenTraverse, Agent, Here, S0),
- related(Spatial, OpenTraverse, Object, Here, S0),
- \+ is_state(~(open), Object, S0),
-
- moveto(Spatial, Agent, Relation, Object, [Here, Object],
- [subj(Agent), person(get, gets), Relation, the, Object, .], S0, S1),
- add_look(Agent, S1, S9).
-
-
-% go n/s/e/w/u/d/in/out
-act_goto( Agent, _Walk, Dir, _Relation, _Room, S0, S9) :- nonvar(Dir), 
- related(Spatial, child, Agent, Here, S0),
- related(Spatial, exit(Dir), Here, There, S0),!,
- %member(Relation, [*, to, at, through, thru]),
- has_rel(Spatial, PrepThere, There, S0),
- moveto(Spatial, Agent, PrepThere, There,
-   [Here],
-   [cap(subj(Agent)), person(go, goes), Dir],
-   S0, S1),
- (related(Spatial, exit(RDir), There, Here, S0)-> true ; reverse_dir(Dir,RDir,S0)),
- queue_local_event(Spatial, [moved( Agent, Here, PrepThere, There), 
-   msg([the(Agent), person(arrived, arrives),from,the, RDir])], [There], S1, S2),
- add_look(Agent, S2, S9).
-
-act_goto( Agent, _Walk, Dir, Relation, Room, S0, S9) :- nonvar(Room),   % go in (adjacent) room
- has_rel(Spatial, Relation, Room, S0),!,
- get_open_traverse(Relation, Spatial, OpenTraverse),
- related(Spatial, OpenTraverse, Agent, Here, S0),
- related(Spatial, exit(Dir), Here, Room, S0),
-
- moveto(Spatial, Agent, Relation, Room, [Room, Here],
- [cap(subj(Agent)), person(go, goes), Dir], S0, S1),
- add_look(Agent, S1, S9).
-
-act_goto( Agent, _Walk, Dir, _To, Room, S0, S9) :- nonvar(Room),    % go to (adjacent) room
- has_rel(Spatial, Relation, Room, S0),
- get_open_traverse(goto, Spatial, OpenTraverse),
- related(Spatial, OpenTraverse, Agent, Here, S0),
- related(Spatial, exit(Dir), Here, Room, S0),
-
- moveto(Spatial, Agent, Relation, Room, [Room, Here],
- [cap(subj(Agent)), person(go, goes), Dir], S0, S1),
- add_look(Agent, S1, S9).
-
-reverse_dir(Dir,RDir,S0):-
- related(Spatial, exit(Dir), Here, Room, S0),
- related(Spatial, exit(RDir), Room, Here, S0),!.
-reverse_dir(Dir,RDir,S0):- 
- related(Spatial, Dir, Here, Room, S0),
- related(Spatial, RDir, Room, Here, S0),!.
-reverse_dir(Dir,reverse(Dir),_).
 
 % sim(verb(args...), preconds, effects)
 % Agent is substituted for $self.
@@ -520,12 +468,74 @@ is_ignorable(at). is_ignorable(in). is_ignorable(to). is_ignorable(the). is_igno
 
 verb_alias(look, examine) :- fail.
 
-                                 
+
+
+
+act_goto( Agent, Walk, loc(Agent, Dir, Relation, Object), S0, S9):- 
+  dmust_tracing((act_goto( Agent, Walk, Dir, Relation, Object, S0, S9))).
+
+act_goto( Agent, Walk, _Dir, Relation, Object, S0, S9) :- nonvar(Object),   % go in/on object
+ get_open_traverse(Walk, Spatial, OpenTraverse),
+ has_rel(Spatial, Relation, Object, S0),
+ related(Spatial, OpenTraverse, Agent, Here, S0),
+ related(Spatial, OpenTraverse, Object, Here, S0),
+ \+ is_state(~(open), Object, S0),
+
+ moveto(Spatial, Agent, Relation, Object, [Here, Object],
+ [subj(Agent), person(get, gets), Relation, the, Object, .], S0, S1),
+ add_look(Agent, S1, S9).
+
+
+% go n/s/e/w/u/d/in/out
+act_goto( Agent, _Walk, Dir, _Relation, _Room, S0, S9) :- nonvar(Dir), 
+ related(Spatial, child, Agent, Here, S0),
+ related(Spatial, exit(Dir), Here, There, S0),!,
+ %member(Relation, [*, to, at, through, thru]),
+ dmust((has_rel(Spatial, PrepThere, There, S0),
+ moveto(Spatial, Agent, PrepThere, There,
+   [Here],
+   [cap(subj(Agent)), person(go, goes), Dir],
+   S0, S1),
+ (related(Spatial, exit(RDir), There, Here, S0)-> true ; reverse_dir(Dir,RDir,S0)),
+ queue_local_event(Spatial, [% moved( Agent, Here, PrepThere, There), 
+   emoted(Agent, act, '*', [person(arrived, arrives),from,the, RDir]) ], [There], S1, S2),
+ add_look(Agent, S2, S9))),!.
+
+act_goto( Agent, _Walk, Dir, Relation, Room, S0, S9) :- nonvar(Room),   % go in (adjacent) room
+ has_rel(Spatial, Relation, Room, S0),!,
+ get_open_traverse(Relation, Spatial, OpenTraverse),
+ related(Spatial, OpenTraverse, Agent, Here, S0),
+ related(Spatial, exit(Dir), Here, Room, S0),
+
+ moveto(Spatial, Agent, Relation, Room, [Room, Here],
+ [cap(subj(Agent)), person(go, goes), Dir], S0, S1),
+ add_look(Agent, S1, S9).
+
+act_goto( Agent, _Walk, Dir, _To, Room, S0, S9) :- nonvar(Room),    % go to (adjacent) room
+ has_rel(Spatial, Relation, Room, S0),
+ get_open_traverse(goto, Spatial, OpenTraverse),
+ related(Spatial, OpenTraverse, Agent, Here, S0),
+ related(Spatial, exit(Dir), Here, Room, S0),
+
+ moveto(Spatial, Agent, Relation, Room, [Room, Here],
+ [cap(subj(Agent)), person(go, goes), Dir], S0, S1),
+ add_look(Agent, S1, S9).
+
+reverse_dir(Dir,RDir,S0):-
+ related(Spatial, exit(Dir), Here, Room, S0),
+ related(Spatial, exit(RDir), Room, Here, S0),!.
+reverse_dir(Dir,RDir,S0):- 
+ related(Spatial, Dir, Here, Room, S0),
+ related(Spatial, RDir, Room, Here, S0),!.
+reverse_dir(Dir,reverse(Dir),_).
+
 add_agent_todo(Agent, Action, S0, S9):-  
   undeclare(memories(Agent, Mem0), S0, S1),
   add_todo(Action, Mem0, Mem1),
   declare(memories(Agent, Mem1), S1, S9).
 
-add_look(Agent, S0, S9):- add_agent_todo(Agent, look(Agent, spatial), S0, S9).
+add_look(Agent, S0, S9):- 
+  related(_Spatial, inside, Agent, _Somewhere, S0),
+  add_agent_todo(Agent, look(Agent, spatial), S0, S9).
 % add_look(Agent, S1, S9):- dmust(act( look(Agent, spatial), S1, S9)).
 

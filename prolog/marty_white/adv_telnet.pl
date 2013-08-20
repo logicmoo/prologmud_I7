@@ -199,6 +199,9 @@ adv_tlnet_words(_Id,_Alias,_InStream,_OutStream, _Host, _Peer, _Agent, ['You'|_]
 adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, [quit]):-
  nop(adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent)),
  asserta(adv:wants_quit(Id, InStream, Agent)).
+adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, end_of_file):-
+ nop(adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent)),
+ asserta(adv:wants_quit(Id, InStream, Agent)).
 
 adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, Words0):-
  nop(adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, Words0)),

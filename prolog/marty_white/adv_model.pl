@@ -107,9 +107,9 @@ update_model(Agent, moved( Agent, There, How, Here), Timestamp, Mem, M0, M2) :-
  in_model(h_at(Spatial, _, Agent, There, _T0), M0),
  % TODO: Handle goto(Agent, on, table)
  % How did I get Here?
- append(RecentMem, [did( goto(_, _HowGo,A,C,B))|OlderMem], Mem), % find figment
+ append(RecentMem, [did( goto(_, _HowGo, loc(_, A,C,B)))|OlderMem], Mem), % find figment
  member(ExitName,[A,B,C]),atom(ExitName),
- \+ member(did( goto(_, _, _, _, _)), RecentMem),   % guarrantee recentness
+ \+ member(did( goto(_, _, _)), RecentMem),   % guarrantee recentness
  memberchk(timestamp(_T1,_WhenNow), OlderMem),   % get associated stamp
 
  %player_format('~p moved: goto(Agent, ~p, ~p) from ~p leads to ~p~n',
