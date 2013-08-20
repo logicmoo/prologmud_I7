@@ -201,9 +201,22 @@ process_percept_auto(Agent, [Percept|Tail], Stamp, Mem0, Mem4) :-
  process_percept_auto(Agent, Percept, Stamp, Mem0, Mem1),
  process_percept_auto(Agent, Tail, Stamp, Mem1, Mem4).
 
+process_percept_auto(Agent, Percept, _Stamp, Mem0, Mem0) :- was_own_self(Agent, Percept),!.
+
+process_percept_auto(_Agent2, sense(Agent,_See, List), Timestamp, M0, M2) :- !, 
+ process_percept_auto(Agent, List, Timestamp, M0, M2).
+
+% Auto examine room items
+process_percept_auto(Agent, here_are(Agent, Sense, _Prep, _Here,Objects), _Stamp, Mem0, Mem2) :- 
+ thought_model(ModelData, Mem0),
+ findall( examine(Agent, Sense, Obj),
+   ( member(Obj, Objects),
+   \+ member(props_at(Obj, _, _), ModelData)),
+   ExamineNewObjects),
+ add_todo_all(ExamineNewObjects, Mem0, Mem2).
+
 process_percept_auto(_Agent, _Percept, _Timestamp, M0, M0):-  \+ declared(inherited(autonomous), M0),!.
 
-process_percept_auto(Agent, Percept, _Stamp, Mem0, Mem0) :- was_own_self(Agent, Percept),!.
 % Auto Answer
 process_percept_auto(Agent, emoted(Speaker,  _Say, Agent, Words), _Stamp, Mem0, Mem1) :-
  consider_text(Speaker, Agent, Words, Mem0, Mem1).
@@ -211,9 +224,6 @@ process_percept_auto(Agent, emoted(Speaker,  _Say, (*), WordsIn), _Stamp, Mem0, 
  addressing_whom(WordsIn, Whom, Words),
  Whom == Agent,
  consider_text(Speaker, Agent, Words, Mem0, Mem1).
-
-process_percept_auto(_Agent2, sense(Agent,_See, List), Timestamp, M0, M2) :- !, 
- process_percept_auto(Agent, List, Timestamp, M0, M2).
 
 % Auto take
 process_percept_auto(Agent, sense_props(Agent, Sense, Object, PropList), _Stamp, Mem0, Mem2) :-
@@ -223,15 +233,6 @@ process_percept_auto(Agent, sense_props(Agent, Sense, Object, PropList), _Stamp,
  thought_model(ModelData, Mem0),
  \+ related(_Spatial, descended, Object, Agent, ModelData), % Not holding it? 
  add_todo_all([take(Agent, Object), print_(Agent, 'My shiny precious!')], Mem0, Mem2).
-
-% Auto examine room items
-process_percept_auto(Agent, here_are(Agent, Sense, _Prep, _Here,Objects), _Stamp, Mem0, Mem2) :-
- thought_model(ModelData, Mem0),
- findall( examine(Agent, Sense, Obj),
-   ( member(Obj, Objects),
-   \+ member(props_at(Obj, _, _), ModelData)),
-   ExamineNewObjects),
- add_todo_all(ExamineNewObjects, Mem0, Mem2).
 
 
 process_percept_auto(_Agent, _Percept, _Stamp, Mem0, Mem0).

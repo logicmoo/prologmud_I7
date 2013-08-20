@@ -1856,7 +1856,7 @@ process_percept_list(_Agent, _, _Stamp, Mem0, Mem0) :-
 
 % -----------------------------------------------------------------------------
 :- dynamic(useragent/1).
-useragent(player).
+useragent('player~1').
 
 cmdalias(d, down).
 cmdalias(e, east).

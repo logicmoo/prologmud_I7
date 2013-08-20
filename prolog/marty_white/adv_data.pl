@@ -390,21 +390,27 @@ extra_decl(T,P):-
    adjs($class), 
     class_desc(['kind is corporial'])]),
 
-   type_props(object, [
-    can_be(examine, t), 
-    adjs([]), 
-    can_be(move, t), 
-    inherit(corporial, t), 
-    inherit(thinkable,t),
-    class_desc(['kind is an Movable Object'])]), 
+        type_props(object, [
+         can_be(examine, t), 
+         adjs(physical),
+         can_be(move, t), 
+         inherit(corporial, t), 
+         inherit(thinkable,t),
+         class_desc(['kind is an Movable Object'])]), 
+
+        type_props(immobile, [
+         adjs($class), 
+         can_be(move, f), 
+         class_desc(['kind is an Immobile Object'])]), 
+
 
    type_props(furnature, [
     can_be(examine, t), 
-    can_be(move, f),
+    inherit(immobile, t),
     inherit(corporial, t), 
     inherit(surface, t), 
     inherit(thinkable,t),
- 
+    adjs(physical),
     class_desc(['kind is furnature'])]),
 
   % People
@@ -449,6 +455,8 @@ extra_decl(T,P):-
     can_be(switch(off), f), state(powered, t)
    ]),
 
+  type_props(autonomous, [inherit(autoscan,t)]),
+
   type_props(robot, [
   can_do(eat, f),
   inherit(autonomous,t),
@@ -470,14 +478,15 @@ extra_decl(T,P):-
 
   % Places
   type_props(place, [
-     has_rel(Spatial, exit(_), t),
+     volume_capacity(10000),
+     has_rel(Spatial, in, t), 
      can_be(move, f), 
-     inherit(container,t), 
-     volume_capacity(10000)
+     has_rel(Spatial, exit(_), t),
+     inherit(container,t)
   ]),
 
   type_props(container, [
-    has_rel(Spatial, in, t), 
+    has_rel(Spatial, in, t),     
     oper( put(Agent, Spatial, Thing, in, $self), 
     % precond(Test, FailureMessage)
     precond(( ~(getprop(Thing, inherit(liquid,t)))), ['liquids would spill out']),
@@ -487,7 +496,7 @@ extra_decl(T,P):-
     % adjs(flask, f)
    ]),
 
- type_props(console, [adjs([]), nominals([console]), nouns([player])]), 
+ type_props(console, [adjs(physical), nominals([console]), nouns([player])]), 
  type_props(telnet, [adjs([remote]), nouns([player])]), 
   type_props(bag, [
    inherit(container,t),
@@ -499,7 +508,7 @@ extra_decl(T,P):-
   type_props(cup, [inherit(flask,t)]),
 
   type_props(flask, [
-     adjs([]), 
+    adjs(physical),
     oper( put(Agent, Spatial, Thing, in, $self), 
      % precond(Test, FailureMessage)
      precond(getprop(Thing, inherit(corporial,t)), ['non-physical would spill out']),
@@ -519,7 +528,7 @@ extra_decl(T,P):-
    desc('This is a modest glass cooking bowl with a yellow flower motif glazed into the outside surface.')
   ]),
   type_props(plate, [
-   inherit(surface, t), 
+   inherit(surface, t),
    inherit(object,t),
    volume_capacity(2),
    fragile(shards),
@@ -587,11 +596,11 @@ extra_decl(T,P):-
  effect(switch(off), true) % calls true(S0, S1) !
  ]),
 
-   type_props(surface, [has_rel(Spatial, on, t), inherit(flask, f)]), 
+   type_props(surface, [has_rel(Spatial, on, t),adjs(physical), inherit(flask, f)]), 
 
-   type_props(shelf, [inherit(surface, t), inherit(furnature, f)]), 
+   type_props(shelf, [inherit(surface, t),adjs(physical),inherit(furnature, t)]), 
 
-   type_props(table, [inherit(surface, t), has_rel(Spatial, reverse(on), t)]), 
+   type_props(table, [inherit(surface, t),adjs(physical),has_rel(Spatial, reverse(on), t)]), 
 
    type_props(wrench, [inherit(shiny,t)]),
    type_props(videocamera, [

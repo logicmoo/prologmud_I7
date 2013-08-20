@@ -205,7 +205,7 @@ decide_action(Agent, Mem0, Mem1) :-
      % Found = [some],
  % read_pending_codes(In,Codes,Missing), 
  (Found==[] -> (Mem0=Mem1) ; 
- (((console_decide_action(Agent, Mem0, Mem1))))).
+ quietly(((console_decide_action(Agent, Mem0, Mem1))))).
 
 % Autonomous
 decide_action(Agent, Mem0, Mem3) :-

@@ -35,9 +35,10 @@ create_new_suffixed_unlocated(Suffix, Type,Inst,S0,S2):-
 declare_inst_type(Inst,Type,S0,S2):- 
   assertion(nonvar(Inst)),
   assertion(nonvar(Type)),
-  object_props_or(Inst, PropList, [], S0),
+  object_props_or(Inst, PropList1, [], S0),
   undeclare_always(props(Inst,_), S0, S1),
-  list_to_set([inherit(Type,t),adjs([Type])|PropList],Set),
+  (member(adjs(_),PropList1)-> PropList1=PropList;  [nouns([Type])|PropList1]=PropList),
+  list_to_set([inherit(Type,t)|PropList],Set),
   declare(props(Inst,Set),S1,S2).
 
 % create_agent_conn(Agent,_Named, _Info, S0, S0) :- declared(agent(Agent,t), S0),!.
