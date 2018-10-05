@@ -5,9 +5,9 @@
 
 			   All Rights Reserved
 */
-:- mode terminal(?,+,?,+,?),
+:- mode((terminal(?,+,?,+,?),
         gap(+),
-        virtual(+,+,?).
+        virtual(+,+,?))).
 
 terminal(T,S,S,x(_,terminal,T,X),X).
 terminal(T,[T|S],S,X,X) :-

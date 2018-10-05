@@ -29,7 +29,7 @@ quantify(pred(Subj,Op,Head,Args),Above,Right,P) :-
    quantify(Subj,SQuants,[],P0),
    quantify_args(Args,AQuants,P1),
    split_quants(Op,AQuants,Up,Right,Here,[]),
-   conc(SQuants,Up,Above),
+   list_conc(SQuants,Up,Above),
    chain_apply(Here,(P0,Head,P1),P2),
    op_apply(Op,P2,P).
 quantify(~P,Q,Q,P).
@@ -187,10 +187,10 @@ det_apply(quant(Det,Type-X,P,_-Y),Q0,Q) :-
    apply(Det,Type,X,P,Y,Q0,Q).
 
 apply(generic,_,X,P,X,Q,X^(P,Q)).
-apply(proportion(Type-V),_,X,P,Y,Q,
+apply(proportion(_Type-V),_,X,P,Y,Q,
       S^(setof(X,P,S),
          N^(numberof(Y,(one_of(S,Y),Q),N),
-            M^(card(S,M),ratio(N,M,V))))).
+            M^(cardinality(S,M),ratio(N,M,V))))).
 apply(id,_,X,P,X,Q,(P,Q)).
 apply(void,_,X,P,X,Q,X^(P,Q)).
 apply(set,_,Index:X,P0,S,Q,S^(P,Q)) :-
@@ -228,7 +228,7 @@ all(each).
 all(any).
 
 some(a).
-some(the(sin)).
+some(the(sg)).
 some(some).
 
 apply_set([],X,true:P,S,setof(X,P,S)).
@@ -278,7 +278,7 @@ weak0(a).
 weak0(all).
 weak0(some).
 weak0(every).
-weak0(the(sin)).
+weak0(the(sg)).
 weak0(notall).
 
 lower(question(_),Q,quant(det(a),X,P,Y)) :-

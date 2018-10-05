@@ -1,3 +1,14 @@
+# SmallAdventureGames
+Small adventure Games Gleaned off the Web
+
+CIS 554 Programming Paradigms   http://www.cis.upenn.edu/~matuszek/cis554-2014/index.html
+Fall 2014, David Matuszek
+
+# Marty's Prolog Adventure Prototype
+Marty's Interactive Fiction Engine in Prolog under marty_white
+
+Featuring a chatbot named Floyd whom uses
+
 # The classical CHAT80 natural language system
 
 The CHAT80 system has been developed in the 70s and 80s by Fernando C.N.

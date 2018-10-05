@@ -91,13 +91,13 @@ int_art(what,X,_,int_det(X)).
 int_art(which,X,_,int_det(X)).
 
 det(the,No,the(No),def).
-det(a,sin,a,indef).
-det(an,sin,a,indef).
-det(every,sin,every,indef).
+det(a,sg,a,indef).
+det(an,sg,a,indef).
+det(every,sg,every,indef).
 det(some,_,some,indef).
 det(any,_,any,indef).
 det(all,plu,all,indef).
-det(each,sin,each,indef).
+det(each,sg,each,indef).
 det(no,_,no,indef).
 
 number(W,I,Nb) :-
@@ -116,7 +116,7 @@ tr_number(eight,8).
 tr_number(nine,9).
 tr_number(ten,10).
 
-ag_number(1,sin).
+ag_number(1,sg).
 ag_number(N,plu) :- N>1.
 
 quantifier_pron(everybody,every,person).
@@ -144,7 +144,7 @@ prep(into).
 prep(through).
 
 noun_form(Plu,Sin,plu) :- noun_plu(Plu,Sin).
-noun_form(Sin,Sin,sin) :- noun_sin(Sin).
+noun_form(Sin,Sin,sg) :- noun_sin(Sin).
 
 verb_form(V,V,inf,_) :- verb_root(V).
 verb_form(V,V,pres+fin,Agmt) :-
@@ -154,7 +154,7 @@ verb_form(V,V,pres+fin,Agmt) :-
 verb_form(Past,Root,past+_,_) :-
    regular_past(Past,Root).
 
-root_form(1+sin).
+root_form(1+sg).
 root_form(2+_).
 root_form(1+plu).
 root_form(3+plu).
@@ -163,13 +163,13 @@ verb_root(be).
 verb_root(have).
 verb_root(do).
 
-verb_form(am,be,pres+fin,1+sin).
-verb_form(are,be,pres+fin,2+sin).
-verb_form(is,be,pres+fin,3+sin).
+verb_form(am,be,pres+fin,1+sg).
+verb_form(are,be,pres+fin,2+sg).
+verb_form(is,be,pres+fin,3+sg).
 verb_form(are,be,pres+fin,_+plu).
-verb_form(was,be,past+fin,1+sin).
-verb_form(were,be,past+fin,2+sin).
-verb_form(was,be,past+fin,3+sin).
+verb_form(was,be,past+fin,1+sg).
+verb_form(were,be,past+fin,2+sg).
+verb_form(was,be,past+fin,3+sg).
 verb_form(were,be,past+fin,_+plu).
 verb_form(been,be,past+part,_).
 verb_form(being,be,pres+part,_).
@@ -180,14 +180,14 @@ regular_pres(have).
 
 regular_past(had,have).
 
-verb_form(has,have,pres+fin,3+sin).
+verb_form(has,have,pres+fin,3+sg).
 verb_form(having,have,pres+part,_).
 
 verb_type(have,aux+have).
 
 regular_pres(do).
 
-verb_form(does,do,pres+fin,3+sin).
+verb_form(does,do,pres+fin,3+sg).
 verb_form(did,do,past+fin,_).
 verb_form(doing,do,pres+part,_).
 verb_form(done,do,past+part,_).
@@ -198,24 +198,24 @@ rel_pron(who,subj).
 rel_pron(whom,compl).
 rel_pron(which,undef).
 
-poss_pron(my,_,1,sin).
+poss_pron(my,_,1,sg).
 poss_pron(your,_,2,_).
-poss_pron(his,masc,3,sin).
-poss_pron(her,fem,3,sin).
-poss_pron(its,neut,3,sin).
+poss_pron(his,masc,3,sg).
+poss_pron(her,fem,3,sg).
+poss_pron(its,neut,3,sg).
 poss_pron(our,_,1,plu).
 poss_pron(their,_,3,plu).
 
-pers_pron(i,_,1,sin,subj).
+pers_pron(i,_,1,sg,subj).
 pers_pron(you,_,2,_,_).
-pers_pron(he,masc,3,sin,subj).
-pers_pron(she,fem,3,sin,subj).
-pers_pron(it,neut,3,sin,_).
+pers_pron(he,masc,3,sg,subj).
+pers_pron(she,fem,3,sg,subj).
+pers_pron(it,neut,3,sg,_).
 pers_pron(we,_,1,plu,subj).
 pers_pron(them,_,3,plu,subj).
-pers_pron(me,_,1,sin,compl(_)).
-pers_pron(him,masc,3,sin,compl(_)).
-pers_pron(her,fem,3,sin,compl(_)).
+pers_pron(me,_,1,sg,compl(_)).
+pers_pron(him,masc,3,sg,compl(_)).
+pers_pron(her,fem,3,sg,compl(_)).
 pers_pron(us,_,1,plu,compl(_)).
 pers_pron(them,_,3,plu,compl(_)).
 
@@ -325,10 +325,11 @@ verb_root(drain).
 verb_root(exceed).
 verb_root(flow).
 verb_root(rise).
+verb_root(govern).
 
 regular_pres(rise).
 
-verb_form(rises,rise,pres+fin,3+sin).
+verb_form(rises,rise,pres+fin,3+sg).
 verb_form(rose,rise,past+fin,_).
 verb_form(risen,rise,past+part,_).
 
@@ -336,28 +337,35 @@ regular_pres(border).
 
 regular_past(bordered,border).
 
-verb_form(borders,border,pres+fin,3+sin).
+verb_form(borders,border,pres+fin,3+sg).
 verb_form(bordering,border,pres+part,_).
 
 regular_pres(contain).
 
 regular_past(contained,contain).
 
-verb_form(contains,contain,pres+fin,3+sin).
+verb_form(contains,contain,pres+fin,3+sg).
 verb_form(containing,contain,pres+part,_).
 
 regular_pres(drain).
 
 regular_past(drained,drain).
 
-verb_form(drains,drain,pres+fin,3+sin).
+verb_form(drains,drain,pres+fin,3+sg).
 verb_form(draining,drain,pres+part,_).
+
+regular_pres(govern).
+
+regular_past(governed,govern).
+
+verb_form(governs,govern,pres+fin,3+sg).
+verb_form(governing,govern,pres+part,_).
 
 regular_pres(exceed).
 
 regular_past(exceeded,exceed).
 
-verb_form(exceeds,exceed,pres+fin,3+sin).
+verb_form(exceeds,exceed,pres+fin,3+sg).
 verb_form(exceeding,exceed,pres+part,_).
 
 verb_type(rise,main+intrans).
@@ -365,12 +373,13 @@ verb_type(border,main+trans).
 verb_type(contain,main+trans).
 verb_type(drain,main+intrans).
 verb_type(exceed,main+trans).
+verb_type(govern,main+trans).
 
 regular_pres(flow).
 
 regular_past(flowed,flow).
 
-verb_form(flows,flow,pres+fin,3+sin).
+verb_form(flows,flow,pres+fin,3+sg).
 verb_form(flowing,flow,pres+part,_).
 
 verb_type(flow,main+intrans).

@@ -363,7 +363,9 @@ end(user) :- !.
 end(F) :-
    close(F).
 
-control([bye,'.']) :- !,
+control([W,'.']) :- 
+   (W==bye; W==quit; W==exit; W==done; W==thanks),
+   !,
    display('Cheerio.'),
    nl.
 control([trace,'.']) :- !,
@@ -391,9 +393,7 @@ process(U) :-
    statistics(runtime, [_, Et0]),
    report(E,'Parse',Et0,tree),
    statistics(runtime, [_, _]),
-   i_sentence(E,QT),
-   clausify(QT,UE),
-   simplify(UE,S),
+   logic(E,S),
    statistics(runtime, [_, Et1]),
    report(S,'Semantics',Et1,expr),
    statistics(runtime, [_, _]),
@@ -442,6 +442,10 @@ quote_amp('$VAR'(_)) :- !.
 quote_amp(R) :-
    quote(R).
 
+logic(S0,S) :-
+   i_sentence(S0,S1),
+   clausify(S1,S2),
+   simplify(S2,S).
 
 simplify(C,(P:-R)) :- !,
    unequalise(C,(P:-Q)),

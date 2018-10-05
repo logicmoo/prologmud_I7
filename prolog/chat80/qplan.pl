@@ -87,7 +87,7 @@ negate([P|L],Vl,[m(Vg,C,\+P)|L1]) :-
    negate(L,Vl,L1).
 
 negationcost(0,0) :- !.
-negationcost(V,1000).
+negationcost(_V,1000).
 
 setofcost(0,_,0) :- !.
 setofcost(_,C,C).
@@ -128,7 +128,7 @@ schedule1(m(V,C,P),Vg,Q) :-
    plan(P,V,C,Vg,Q0).
 
 maybe_cut(V,Vg,P,{P}) :- disjoint(V,Vg), !.
-maybe_cut(V,Vg,P,P).
+maybe_cut(_V,_Vg,P,P).
 
 plan(\+P,Vg,_,_,\+Q) :- !, Vg = 0,
    marked(P,V,C,P1),
@@ -159,7 +159,7 @@ freevars(m(V,_,_),V).
 best_goal((P1,P2),V,C,P0,V0,m(V,C,Q)) :- !,
    ( marked(P1,Va,C,Pa), Q=(Pb,P2) ; marked(P2,Va,C,Pa), Q=(P1,Pb) ), !,
    best_goal(Pa,Va,C,P0,V0,Pb).
-best_goal(P,V,C,P,V,true).
+best_goal(P,V,_C,P,V,true).
 
 instantiate(true,_,[]) :- !.
 instantiate(P,Vi,[P]) :- freevars(P,V), disjoint(V,Vi), !.
@@ -176,7 +176,7 @@ instantiate0(\+P,V,Vi,L) :- !,
 instantiate0(SQ,Vg,Vi,[m(V,C,SQ1)]) :- subquery(SQ,SQ1,X,P,_,Q), !,
    instantiate(P,Vi,L),
    L=[Q],   % Too bad about the general case!
-   marked(Q,Vq,C0,_),
+   marked(Q,Vg,C0,_),
    setminus(Vg,Vi,V),
    variables(X,0,Vx),
    setminus(V,Vx,V0),
@@ -199,13 +199,14 @@ incorporate(P0,V0,C0,P1,L1,L) :-
    setplus(V0,V1,V),
    minimum(C0,C1,C),
    incorporate0(m(V,C,(P0,P1)),V,C,L1,L).
-incorporate(P0,V0,C0,P1,[P2,L1],[P1|L]) :- incorporate(P0,V0,C0,G2,L1,L).
+incorporate(P0,V0,C0,P1,[P2|L1],[P1|L]) :- incorporate(P0,V0,C0,P2,L1,L).
+% JanW incorporate(P0,V0,C0,P1,[P2,L1],[P1|L]) :- incorporate(P0,V0,C0,G2,L1,L).
 
 incorporate0(P0,V0,C0,[P1|L1],L) :- incorporate(P0,V0,C0,P1,L1,L), !.
 incorporate0(P,_,_,L,[P|L]).
 
 minimum(N1,N2,N1) :- N1 =< N2, !.
-minimum(N1,N2,N2).
+minimum(_N1,N2,N2).
 
 add_keys([],[]).
 add_keys([P|L],[C-P|L1]) :- marked(P,_,C,_), add_keys(L,L1).
@@ -213,7 +214,7 @@ add_keys([P|L],[C-P|L1]) :- marked(P,_,C,_), add_keys(L,L1).
 strip_keys([],[]).
 strip_keys([X|L],[P|L1]) :- strip_key(X,P), strip_keys(L,L1).
 
-strip_key(C-P,P).
+strip_key(_C-P,P).
 
 variablise('$VAR'(N),VV,V) :- !, N1 is N+1, arg(N1,VV,V).
 variablise(T,_,T) :- atomic(T), !.
@@ -230,7 +231,7 @@ variablise(N,T,VV,T1) :- N1 is N-1,
    variablise(N1,T,VV,T1).
 
 cost(+P,0,N) :- !, cost(P,0,N).
-cost(+P,V,1000) :- !.
+cost(+_P,_V,1000) :- !.
 cost(P,V,N) :- functor(P,F,I), cost(I,F,P,V,N).
 
 cost(1,F,P,V,N) :-
@@ -298,7 +299,7 @@ setplus(V1,V2,V) :- V is V1 \/ V2.
 setminus(W1-V1,W2-V2,S) :- !, V is V1 /\ \(V2),
    setminus(W1,W2,W), mkset(W,V,S).
 setminus(W-V1,V2,W-V) :- !, V is V1 /\ \(V2).
-setminus(V1,W-V2,V) :- !, V is V1 /\ \(V2).
+setminus(V1,_W-V2,V) :- !, V is V1 /\ \(V2).
 setminus(V1,V2,V) :- V is V1 /\ \(V2).
 
 mkset(0,V,V) :- !.
@@ -309,17 +310,17 @@ setplusitem(W-V,N,W1-V) :- !, N1 is N-18, setplusitem(W,N1,W1).
 setplusitem(V,N,V1) :- N < 18, !, V1 is V \/ 1<<N.
 setplusitem(V,N,W-V) :- N1 is N-18, setplusitem(0,N1,W).
 
-setcontains(W-V,N) :- N < 18, !, V /\ 1<<N =\= 0.
-setcontains(W-V,N) :- !, N1 is N-18, setcontains(W,N1).
+setcontains(_W-V,N) :- N < 18, !, V /\ 1<<N =\= 0.
+setcontains(W-_V,N) :- !, N1 is N-18, setcontains(W,N1).
 setcontains(V,N) :- N < 18, V /\ 1<<N =\= 0.
 
 intersect(W1-V1,W2-V2) :- !, ( V1 /\ V2 =\= 0 ; intersect(W1,W2) ), !.
-intersect(W-V1,V2) :- !, V1 /\ V2 =\= 0.
-intersect(V1,W-V2) :- !, V1 /\ V2 =\= 0.
+intersect(_W-V1,V2) :- !, V1 /\ V2 =\= 0.
+intersect(V1,_W-V2) :- !, V1 /\ V2 =\= 0.
 intersect(V1,V2) :- V1 /\ V2 =\= 0.
 
 disjoint(W1-V1,W2-V2) :- !, V1 /\ V2 =:= 0, disjoint(W1,W2).
-disjoint(W-V1,V2) :- !, V1 /\ V2 =:= 0.
-disjoint(V1,W-V2) :- !, V1 /\ V2 =:= 0.
+disjoint(_W-V1,V2) :- !, V1 /\ V2 =:= 0.
+disjoint(V1,_W-V2) :- !, V1 /\ V2 =:= 0.
 disjoint(V1,V2) :- V1 /\ V2 =:= 0.
 

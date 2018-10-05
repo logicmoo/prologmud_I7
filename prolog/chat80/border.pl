@@ -1,9 +1,25 @@
 /* @(#)border.pl	24.1 2/23/88 */
 
 /* 
-	Copyright 1986, Fernando C.N. Pereira and David H.D. Warren,
 
-			   All Rights Reserved
+ _________________________________________________________________________
+|	Copyright (C) 1982						  |
+|									  |
+|	David Warren,							  |
+|		SRI International, 333 Ravenswood Ave., Menlo Park,	  |
+|		California 94025, USA;					  |
+|									  |
+|	Fernando Pereira,						  |
+|		Dept. of Architecture, University of Edinburgh,		  |
+|		20 Chambers St., Edinburgh EH1 1JZ, Scotland		  |
+|									  |
+|	This program may be used, copied, altered or included in other	  |
+|	programs only for academic purposes and provided that the	  |
+|	authorship of the initial program is aknowledged.		  |
+|	Use for commercial purposes without the previous written 	  |
+|	agreement of the authors is forbidden.				  |
+|_________________________________________________________________________|
+
 */
 % Facts about Europe.
 % ------------------

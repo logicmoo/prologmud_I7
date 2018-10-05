@@ -54,6 +54,7 @@ name_template(X,feature&place&seamass) :- seamass(X).
 trans(border,
       feature&place&_,X,feature&place&_,Y,borders(X,Y),[],_,_).
 trans(contain,feature&place&_,X,feature&_,Y,in(Y,X),[],_,_).
+trans(govern,feature&_,X,feature&place&country,Y,capital(Y,X),[],_,_).
 trans(exceed,measure&Type,X,measure&Type,Y,exceeds(X,Y),[],_,_).
 
 intrans(drain,feature&river,X,drains(X,Y),
@@ -75,7 +76,8 @@ restriction(european,feature&_,X,european(X)).
 
 attribute(large,feature&place&_,X,measure&area,Y,area(X,Y)).
 attribute(small,feature&place&_,X,measure&area,Y,area(X,Y)).
-attribute(great,measure&Type,X,measure&Type,Y,X=Y).
+attribute(great,measure&Type,X,measure&Type,Y,exceeds(X,Y)).
+% attribute(great,measure&Type,X,measure&Type,Y,X=Y).
 attribute(populous,feature&_,X,measure&heads,Y,population(Y,X)).
 
 aggr_adj(average,_,_,average).

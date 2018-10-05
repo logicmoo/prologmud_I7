@@ -29,7 +29,7 @@ readrest(46,[]):-!.
 readrest(63,[]):-!.
 readrest(33,[]):-!.
 readrest(K,[K1|U]):-K=<32,!,get(K1),readrest(K1,U).
-readrest(K1,[K2|U]):-get0(K2),readrest(K2,U).
+readrest(_K1,[K2|U]):-get0(K2),readrest(K2,U).
 
 words([V|U]) --> word(V),!,blanks,words(U).
 words([]) --> [].
@@ -53,7 +53,8 @@ blanks --> [].
 
 digit(K):-K>47,K<58.
 
-lc(K,K1):-K>64,K<91,!,K1 is K\/8'40.
+% Jan lc(K,K1):-K>64,K<91,!,K1 is K\/8'40.
+lc(K,K1):-K>64,K<91,!,K1 is K+32.
 lc(K,K):-K>96,K<123.
 
 to_nl :-

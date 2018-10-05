@@ -5,12 +5,14 @@
 
 			   All Rights Reserved
 */
+
 % Data for the World Database.
 % ---------------------------
 
 
-% Interface.
-% ---------
+
+:-op(600,xfy,--).
+
 
 % Interface.
 % ---------
@@ -18,7 +20,7 @@
 database(aggregate(X,Y,Z)) :- aggregate(X,Y,Z).
 database(one_of(X,Y)) :- one_of(X,Y).
 database(ratio(X,Y,Z)) :- ratio(X,Y,Z).
-database(card(X,Y)) :- card(X,Y).
+database(cardinality(X,Y)) :- cardinality(X,Y).
 database(african(X)) :- african(X).
 database(american(X)) :- american(X).
 database(area(X)) :- area(X).
@@ -66,15 +68,15 @@ ratio(million,thousand,1000,1).
 ratio(ksqmiles,sqmiles,1000,1).
 ratio(sqmiles,ksqmiles,1,1000).
 
-area(X--ksqmiles).
-capital(C) :- capital(X,C).
+area(_X--ksqmiles).
+capital(C) :- capital(_X,C).
 city(C) :- city(C,_,_).
-country(C) :- country(C,_,_,_,_,_,_,_,_,_).
-latitude(X--degrees).
-longitude(X--degrees).
+country(C) :- country(C,_, _,_,_, _,_,_, _,_).
+latitude(_X--degrees).
+longitude(_X--degrees).
 place(X) :- continent(X); region(X); seamass(X); country(X).
-population(X--million).
-population(X--thousand).
+population(_X--million).
+population(_X--thousand).
 region(R) :- in_continent(R,_).
 
 african(X) :- in(X,africa).
@@ -87,7 +89,7 @@ in(X,Y) :- in0(X,W), ( W=Y ; in(W,Y) ).
 
 in0(X,Y) :- in_continent(X,Y).
 in0(X,Y) :- city(X,Y,_).
-in0(X,Y) :- country(X,Y,_,_,_,_,_,_,_,_).
+in0(X,Y) :- country(X,Y,_,_,_, _,_,_, _,_).
 in0(X,Y) :- flows(X,Y).
 
 eastof(X1,X2) :- longitude(X1,L1), longitude(X2,L2), exceeds(L2,L1).
@@ -156,7 +158,7 @@ sea(mediterranean).
 sea(persian_gulf).
 sea(red_sea).
 
-river(R) :- river(R,L).
+river(R) :- river(R,_L).
 
 rises(R,C) :- river(R,L), last(L,C).
 

@@ -1,4 +1,26 @@
 /* @(#)chat.pl	24.1 2/23/88 */
+% load.pl : Load Chat-80, for Quintus Prolog
+
+/*
+ _________________________________________________________________________
+|	Copyright (C) 1982						  |
+|									  |
+|	David Warren,							  |
+|		SRI International, 333 Ravenswood Ave., Menlo Park,	  |
+|		California 94025, USA;					  |
+|									  |
+|	Fernando Pereira,						  |
+|		Dept. of Architecture, University of Edinburgh,		  |
+|		20 Chambers St., Edinburgh EH1 1JZ, Scotland		  |
+|									  |
+|	This program may be used, copied, altered or included in other	  |
+|	programs only for academic purposes and provided that the	  |
+|	authorship of the initial program is aknowledged.		  |
+|	Use for commercial purposes without the previous written 	  |
+|	agreement of the authors is forbidden.				  |
+|_________________________________________________________________________|
+
+*/
 
 /*
 	Copyright 1986, Fernando C.N. Pereira and David H.D. Warren,
@@ -12,7 +34,7 @@
 
    - include library Quintus for enhanced compatibility
    - put discontiguous between brackets
-   - rename plus/3 and index/1 to be my_plus; my_index
+   - rename plus/3 and index/1 to be ix_plus; my_index
    - remove last/2: system predicate with equivalent definition.
 */
 
@@ -22,12 +44,28 @@
 :- no_style_check(single_var).
 :- no_style_check((discontiguous)).
 
+ttynl:- format('~N'),flush_output.
+
+
+%:- ensure_loaded(als_chat).	% misc
+:- op(400, xfy, '&').
+:- op(400, xfy, '--').
+
 :- consult(chatops).
 
 :- consult(readin).		% sentence input, ASCII VERSION
 :- consult(ptree).		% print trees
 :- consult(xgrun).		% XG runtimes
-:- consult(newg).		% clone + lex
+
+:- consult(xgproc).             % XG generator
+
+:- load_plus_xg_file(chat80,'clone.xg').
+:- load_plus_xg_file(chat80,'lex.xg').
+
+:- compile_xg_clauses.
+% :- consult(newg).		% clone + lex
+
+
 :- consult(clotab).		% attachment tables
 :- consult(newdic).		% syntactic dictionary
 :- consult(slots).		% fits arguments into predicates

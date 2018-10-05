@@ -1,11 +1,30 @@
 /* @(#)aggreg.pl	24.1 2/23/88 */
 
 /* 
+ _________________________________________________________________________
+|	Copyright (C) 1982						  |
+|									  |
+|	David Warren,							  |
+|		SRI International, 333 Ravenswood Ave., Menlo Park,	  |
+|		California 94025, USA;					  |
+|									  |
+|	Fernando Pereira,						  |
+|		Dept. of Architecture, University of Edinburgh,		  |
+|		20 Chambers St., Edinburgh EH1 1JZ, Scotland		  |
+|									  |
+|	This program may be used, copied, altered or included in other	  |
+|	programs only for academic purposes and provided that the	  |
+|	authorship of the initial program is aknowledged.		  |
+|	Use for commercial purposes without the previous written 	  |
+|	agreement of the authors is forbidden.				  |
+|_________________________________________________________________________|
+
+
 	Copyright 1986, Fernando C.N. Pereira and David H.D. Warren,
 
 			   All Rights Reserved
 */
-:- public aggregate/3, one_of/2, ratio/3, card/2.
+:- public aggregate/3, one_of/2, ratio/3, cardinality/2.
 
 :- mode aggregate(+,+,?),
         dimensioned(+),
@@ -94,7 +113,7 @@ i_mins0([U:X|R],V,_,L,W) :-
 i_mins0([_|R],V,L0,L,W) :-
    i_mins0(R,V,L0,L,W).
 
-u_total([],0--U).
+u_total([],0--_U).
 u_total([V:_|R],T) :-
    u_total(R,T0),
    u_sum(T0,V,T).
@@ -145,6 +164,6 @@ one_of([_|R],X) :-
 
 ratio(N,M,R) :- R is (N*100)//M.
 
-card(S,N) :- length(S,N).
+cardinality(S,N) :- length(S,N).
 
 

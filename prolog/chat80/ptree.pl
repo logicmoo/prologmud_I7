@@ -1,4 +1,3 @@
-
 /* @(#)ptree.pl	24.1 2/24/88 */
 
 /* 
@@ -39,6 +38,8 @@ pl([A|As],I) :- !,
 
 as_is(A) :- atomic(A), !.
 as_is('$VAR'(_)) :- !.
+% In case
+as_is('_'(_)) :- !.
 as_is(X) :-
    quote(X).
 

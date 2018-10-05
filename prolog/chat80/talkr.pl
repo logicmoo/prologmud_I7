@@ -7,6 +7,10 @@
 */
 /* Simplifying and executing the logical form of a NL query. */
 
+:-op(500,xfy,--).
+:-op(359,xf,ject).
+
+
 :-public write_tree/1, answer/1, satisfy//2.
 
 :-mode write_tree(+).
@@ -27,9 +31,9 @@ wt((P:-Q),L) :- !, L1 is L+3,
    tab(L1), wt(Q,L1).
 wt((P,Q),L) :- !, L1 is L-2,
    wt(P,L), nl,
-   tab(L1), put("&"), tab(1), wt(Q,L).
+   tab(L1), put_char('&'), tab(1), wt(Q,L).
 wt({P},L) :- complex(P), !, L1 is L+2,
-   put("{"), tab(1), wt(P,L1), tab(1), put("}").
+   put_char('{'), tab(1), wt(P,L1), tab(1), put_char('}').
 wt(E,L) :- decomp(E,H,P), !, L1 is L+2,
    header(H), nl,
    tab(L1), wt(P,L1).
@@ -138,7 +142,7 @@ pickargs(N,P,P1) :- N1 is N-1,
    arg(N,P1,X),
    pickargs(N1,P,P1).
 
-pick([X|S],X).
+pick([X|_S],X).
 pick([_|S],X) :- !, pick(S,X).
 pick([],_) :- !, fail.
 pick(X,X).
