@@ -17,50 +17,54 @@
 % Interface.
 % ---------
 
-database(aggregate(X,Y,Z)) :- aggregate(X,Y,Z).
-database(one_of(X,Y)) :- one_of(X,Y).
-database(ratio(X,Y,Z)) :- ratio(X,Y,Z).
-database(cardinality(X,Y)) :- cardinality(X,Y).
-database(african(X)) :- african(X).
-database(american(X)) :- american(X).
-database(area(X)) :- area(X).
-database(area(X,Y)) :- area(X,Y).
-database(asian(X)) :- asian(X).
-database(borders(X,Y)) :- borders(X,Y).
-database(capital(X)) :- capital(X).
-database(capital(X,Y)) :- capital(X,Y).
-database(circle_of_latitude(X)) :- circle_of_latitude(X).
-database(city(X)) :- city(X).
-database(continent(X)) :- continent(X).
-database(country(X)) :- country(X).
-database(drains(X,Y)) :- drains(X,Y).
-database(eastof(X,Y)) :- eastof(X,Y).
-database(european(X)) :- european(X).
-database(exceeds(X,Y)) :- exceeds(X,Y).
-database(flows(X,Y)) :- flows(X,Y).
-database(flows(X,Y,Z)) :- flows(X,Y,Z).
-database(in(X,Y)) :- in(X,Y).
-database(latitude(X)) :- latitude(X).
-database(latitude(X,Y)) :- latitude(X,Y).
-database(longitude(X)) :- longitude(X).
-database(longitude(X,Y)) :- longitude(X,Y).
-database(northof(X,Y)) :- northof(X,Y).
-database(ocean(X)) :- ocean(X).
-database(place(X)) :- place(X).
-%database(person(X)) :- person(X).
-database(population(X)) :- population(X).
-database(population(X,Y)) :- population(X,Y).
-database(region(X)) :- region(X).
-database(rises(X,Y)) :- rises(X,Y).
-database(river(X)) :- river(X).
-database(sea(X)) :- sea(X).
-database(seamass(X)) :- seamass(X).
-database(southof(X,Y)) :- southof(X,Y).
-database(westof(X,Y)) :- westof(X,Y).
+database(X):- catch(database_u(X),E,(dbug(error(E,database_u(X))),trace,call(X))).
+
+database_u(aggregate(X,Y,Z)) :- aggregate(X,Y,Z).
+database_u(one_of(X,Y)) :- one_of(X,Y).
+database_u(ratio(X,Y,Z)) :- ratio(X,Y,Z).
+database_u(cardinality(X,Y)) :- cardinality(X,Y).
+database_u(african(X)) :- african(X).
+database_u(american(X)) :- american(X).
+database_u(area(X)) :- area(X).
+database_u(area(X,Y)) :- area(X,Y).
+database_u(asian(X)) :- asian(X).
+database_u(borders(X,Y)) :- borders(X,Y).
+database_u(capital(X)) :- capital(X).
+database_u(capital(X,Y)) :- capital(X,Y).
+database_u(circle_of_latitude(X)) :- circle_of_latitude(X).
+database_u(city(X)) :- city(X).
+database_u(continent(X)) :- continent(X).
+database_u(country(X)) :- country(X).
+database_u(drains(X,Y)) :- drains(X,Y).
+database_u(eastof(X,Y)) :- eastof(X,Y).
+database_u(european(X)) :- european(X).
+database_u(exceeds(X,Y)) :- exceeds(X,Y).
+database_u(flows(X,Y)) :- flows(X,Y).
+database_u(flows(X,Y,Z)) :- flows(X,Y,Z).
+database_u(in(X,Y)) :- in(X,Y).
+database_u(latitude(X)) :- latitude(X).
+database_u(latitude(X,Y)) :- latitude(X,Y).
+database_u(longitude(X)) :- longitude(X).
+database_u(longitude(X,Y)) :- longitude(X,Y).
+database_u(northof(X,Y)) :- northof(X,Y).
+database_u(ocean(X)) :- ocean(X).
+database_u(place(X)) :- place(X).
+%database_u(person(X)) :- person(X).
+database_u(population(X)) :- population(X).
+database_u(population(X,Y)) :- population(X,Y).
+database_u(region(X)) :- region(X).
+database_u(rises(X,Y)) :- rises(X,Y).
+database_u(river(X)) :- river(X).
+database_u(sea(X)) :- sea(X).
+database_u(seamass(X)) :- seamass(X).
+database_u(southof(X,Y)) :- southof(X,Y).
+database_u(westof(X,Y)) :- westof(X,Y).
 
 :-op(500,xfy,--).
 
-exceeds(X--U,Y--U) :- !, X > Y.
+% exceeds(X--U,Y--U) :- !, X > Y.
+exceeds(X--_,Y--_):- (var(X);var(Y)),!,fail.
+exceeds(X--U1,Y--U2) :- U1=U2, !, X > Y.
 exceeds(X1--U1,X2--U2) :- ratio(U1,U2,M1,M2), X1*M1 > X2*M2.
 
 ratio(thousand,million,1,1000).

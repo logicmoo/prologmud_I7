@@ -196,7 +196,7 @@ demo(main,List) :- ed(_,List,_).
 inform(L) :- nl, write('Question: '), inform1(L), nl, !.
 
 inform1([]).
-inform1([H|T]) :- write(H), put(0' ), inform1(T).
+inform1([H|T]) :- write(H), put(32), inform1(T).
 
 
 /* ----------------------------------------------------------------------

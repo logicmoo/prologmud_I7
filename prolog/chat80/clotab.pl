@@ -18,7 +18,7 @@
 |		Dept. of Architecture, University of Edinburgh,		  |
 |		20 Chambers St., Edinburgh EH1 1JZ, Scotland		  |
 |									  |
-|	This program may be used, copied, altered or_xmask included in other	  |
+|	This program may be used, copied, altered or included in other	  |
 |	programs only for academic purposes and provided that the	  |
 |	authorship of the initial program is aknowledged.		  |
 |	Use for commercial purposes without the previous written 	  |
