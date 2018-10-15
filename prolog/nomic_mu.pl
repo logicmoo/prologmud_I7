@@ -17,7 +17,7 @@
 %
 */
 
-:- module(nomic_mu, [srv/0]).
+:- module(nomic_mu, [srv_mu/0,run_mu/0]).
 
 :- dynamic(adv:wants_quit/4).
 :- dynamic(adv:console_info/7).
@@ -201,21 +201,24 @@ adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, Words0):-
   nop((format(OutStream, '~NYou: ~q~n', [adv:console_tokens(Agent, Words)]))), 
   !.
 
-srv :-  
-  make,
-  use_module(library(editline)),
-  ignore(notrace(catch(('$toplevel':setup_readline),_,true))),
+srv_mu :-  
+  %make,
+  %use_module(library(editline)),
+  %ignore(notrace(catch(('$toplevel':setup_readline),_,true))),
 
   % ensure_loaded('./marty_white/adv_telnet'), 
   adv_server(2666), 
   % thread_create(adventure,_),!,
   threads,
-  set_stream(user_output,alias(player1)),!, 
+  set_stream(user_output,alias(player1)),!,
   % set_stream(user_input,buffer_size(1)),
+  run_mu,
+  !.
+  
 
-  (dmust(adventure)->true;prolog).
+run_mu:- dmust(adventure),!.
 
 
 
-:- initialization(srv, main).
+:- initialization(srv_mu, main).
 
