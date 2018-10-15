@@ -214,8 +214,8 @@ run_agent_pass_2(Agent, S0, S0) :-
 
 /*
 with_agent_console(Agent,Goal):- 
-   adv:console_info(Id,Alias,InStream,OutStream, Slave, Host, Peer, Agent),
-   nop(adv:console_info(Id,Alias,InStream,OutStream, Slave, Host, Peer, Agent)),
+   adv:console_info(Id,Alias,InStream,OutStream, Host, Peer, Agent),
+   nop(adv:console_info(Id,Alias,InStream,OutStream, Host, Peer, Agent)),
    current_input(WasIn),
    InStream\==WasIn,!,
    setup_call_cleanup(set_input(InStream),with_agent_console(Agent,Goal),set_input(WasIn)).

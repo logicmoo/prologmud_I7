@@ -91,7 +91,7 @@ player_format(_, Fmt,List):- format(Fmt,List).
 
 
 agent_output(Agent,OutStream):- 
-  adv:console_info(_Id,_Alias,_InStream,OutStream,_Slave,_Host,_Peer, Agent).
+  adv:console_info(_Id,_Alias,_InStream,OutStream,_Host,_Peer, Agent).
 
 
 
@@ -209,7 +209,7 @@ clear_overwritten_chars(Agent):- agent_to_input(Agent,In),retractall(overwritten
 restore_overwritten_chars(Agent):- agent_to_input(Agent,In),overwritten_chars(In,SoFar),format('~s',[SoFar]).
 
 agent_to_input(Agent,In):- overwritten_chars(Agent,_SoFar),In=Agent.
-agent_to_input(Agent,In):- adv:console_info(_Id,_Alias,In,_OutStream, _Slave, _Host, _Peer, Agent),!.
+agent_to_input(Agent,In):- adv:console_info(_Id,_Alias,In,_OutStream,_Host, _Peer, Agent),!.
 agent_to_input(Agent,In):- stream_property(Agent,file_no(F)),stream_property(In,file_no(F)),stream_property(In,read),!.
 agent_to_input(_Agent,In):- current_input(In).
 

@@ -51,7 +51,7 @@ extra :-  true. % Fuller, but questionable if needed yet.
 
 :- thread_local(adv:current_agent/1).
 current_player(Agent):- adv:current_agent(Agent),!.
-current_player(Agent):- thread_self(Id),adv:console_info(Id,_Alias,_InStream,_OutStream,_Slave,_Host,_Peer, Agent).
+current_player(Agent):- thread_self(Id),adv:console_info(Id,_Alias,_InStream,_OutStream,_Host,_Peer, Agent).
 current_player(player1).
 :- export(current_player/1).
 
