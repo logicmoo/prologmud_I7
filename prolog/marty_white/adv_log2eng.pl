@@ -119,6 +119,7 @@ compile_eng(Context, [First|Rest], [First2|Rest2]) :-
   compile_eng(Context, First, First2),
   compile_eng(Context, Rest, Rest2).
 
+compile_eng(_Context, ly(spatial), '').
 compile_eng(_Context, ly(Spatial), Spatially) :- atom(Spatial),atom_concat(Spatial,ly,Spatially).
 
 compile_eng(_Context, Atom, Atom).
@@ -182,22 +183,53 @@ eng2txt(_Agent, _Person, Text, Text).
 list2eng([], ['<nothing>']).
 list2eng([Single], [Single]).
 list2eng([Last2, Last1], [Last2, 'and', Last1]).
-list2eng([Item|Items], [Item, ', '|Tail]) :-
+list2eng([Item|Items], [Item, ','|Tail]) :-
   list2eng(Items, Tail).
 
-prop2eng( Obj, EmittingLight, ['The', Obj, 'is glowing.']):- EmittingLight= emmiting(light).
-prop2eng(_Obj, can_be(Spatial, eat, t), ['It looks tasty ', ly(Spatial), '!']).
+prop2eng(_Obj, h(_Spatial, ExitDown, Object, Speaker), ['The', Object, 'has', Exit, Down, 'to', Speaker]):- ExitDown=..[Exit,Down].
+prop2eng(_Obj, h(_Spatial, Held_by, Object, Speaker), ['The', Object, 'is', Held_by, Speaker]).
+
+prop2eng( Obj, EmittingLight, ['The', Obj, 'is glowing.']):- EmittingLight == emmiting(light),!.
 prop2eng(_Obj, fragile(_), ['It looks fragile.']).
-prop2eng(_Obj, state(Spatial, Open, t), ['It is', Open , ly(Spatial)]).
-prop2eng(_Obj, state(Spatial, Open, f), ['It is not', Open , ly(Spatial)]).
 prop2eng(_Obj, shiny,  ['It\'s shiny!']).
+prop2eng( Obj, effect(_,_), Out):- prop2eng(Obj, adjs(special), Out),!.
+prop2eng(_Obj, desc(Out), Out):- !.
+prop2eng(_Obj, can_do(Spatial, Eat, t), ['Able to', Eat , ly(Spatial),'.']).
+prop2eng(_Obj, can_do(Spatial, Eat, f), ['Unable to', Eat , ly(Spatial),'.']).
+
+prop2eng(_Obj, can_be(Spatial, eat, t), ['It looks tasty ', ly(Spatial), '!']).
+prop2eng(_Obj, can_be(Spatial, Eat, t), ['Can be', tense(Eat,past), ly(Spatial),'.']).
+prop2eng(_Obj, can_be(Spatial, Eat, t), ['Can\'t be', tense(Eat,past), ly(Spatial),'.']).
+
+prop2eng(_Obj, state(Spatial, Open, t), ['It is', Open , ly(Spatial),'.']).
+prop2eng(_Obj, state(Spatial, Open, f), ['It is not', Open , ly(Spatial),'.']).
+prop2eng( Obj, inherit(Type), Out):-   prop2eng(Obj, adjs(Type), Out),!.
+prop2eng( Obj, inherited(Type), Out):- prop2eng(Obj, nouns(Type), Out),!.
+prop2eng(_Obj, adjs(Type), [cap(Type),'.']).
+prop2eng(_Obj, nouns(Type), [cap(Type),'.']).
+prop2eng(_Obj, Prop, [cap(N),is,V,'.']):- Prop =..[N,V].
 prop2eng(_Obj, _Prop,  []).
 
+prop2eng_txtl( Obj, Prop, UText1):- prop2eng(Obj, Prop, UText1), UText1 \==[], !.
+prop2eng_txtl(_Obj, Prop, Text):- reason2eng(Prop, Text)-> Prop\==Text, !.
+prop2eng_txtl(_Obj, Prop, [String]):- format(atom(String),' {{ ~q. }}  ',[Prop]),!.
+
+
+
 proplist2eng(_Obj, [], []).
-proplist2eng(Obj, [Prop|Tail], Text) :-
-  prop2eng(Obj, Prop, Text1),
-  proplist2eng(Obj, Tail, Text2),
-  append(Text1, Text2, Text).
+proplist2eng(Obj, [Prop|Tail], Text) :- !,
+  proplist2eng(Obj, Tail, UText2) ->
+  flatten([UText2],Text2),
+  prop2eng_txtl(Obj, Prop, UText1) ->   
+  flatten([UText1],Text1),
+  append_if_new(Text1, Text2, Text),!.
+proplist2eng(Obj, Prop, Text) :- prop2eng_txtl(Obj, Prop, Text),!.
+
+append_if_new1(Text1, Text2, Text):- flatten([Text1],TextF1),flatten([Text2],TextF2), append([_|TextF1],_,TextF2),!,Text=Text2.
+
+append_if_new(Text1, Text2, Text):- append_if_new1(Text1, Text2, Text),!.
+append_if_new(Text2, Text1, Text):- append_if_new1(Text1, Text2, Text),!.
+append_if_new(Text1, Text2, Text):- append(Text1, Text2, Text),!.
 
 %print_percept(Agent, sense(Sense, [you_are(Spatial, How, Here),
 %                         exits_are(Exits),
@@ -206,8 +238,14 @@ proplist2eng(Obj, [Prop|Tail], Text) :-
 %  player_format('You are ~p the ~p.  Exits are ~p.~nYou see: ~p.~n',
 %         [How, Here, Exits, OtherNearby]).
 
-logical2eng(Agent, sense(_See, Sensing), SensedText) :- is_list(Sensing),
-   maplist(logical2eng(Agent), Sensing, SensedText).
+logical2eng(_Agent, [], []).
+logical2eng(Agent, [Prop|Tail], Text) :- !,
+  logical2eng(Agent, Tail, UText2) ->
+  flatten([UText2],Text2),
+  logical2eng(Agent, Prop, UText1) ->   
+  flatten([UText1],Text1),
+  append_if_new(Text1, Text2, Text),!.
+
 logical2eng(Agent, sense(_See, Sensing), SensedText) :- logical2eng(Agent, Sensing, SensedText).
 
 logical2eng(Agent, you_are(_Spatial, How, Here), [cap(subj(Agent)), person(are, is), How, 'the', Here, '.', '\n']).
@@ -228,28 +266,42 @@ logical2eng(Agent, notice_children(Sense, Parent, How, List),
 logical2eng(_Agent, moved(Spatial, What, From, How, To),
             [cap(subj(What)), 'moves', ly(Spatial), ' from', From, 'to', How, To]).
 
+
 logical2eng(_Agent, transformed(Before, After), [Before, 'turns into', After, .]).
+
 logical2eng(_Agent, destroyed(Thing), [Thing, 'is destroyed.']).
-logical2eng(Agent, see_props(Object, PropList),
-            [cap(subj(Agent)), person(see, sees), Desc, '.'|PropDesc] ) :-
-  member(name(Desc), PropList),
-  proplist2eng(Object, PropList, PropDesc).
-logical2eng(Agent, see_props(Object, PropList),
-            [cap(subj(Agent)), person(see, sees), 'a', Object, '.'|PropDesc] ) :-
+
+logical2eng(Agent, sense_props(See, Object, PropList),
+            [cap(subj(Agent)), person(See, s(See)), Desc, '.'|PropDesc] ) :-
+  select(name(Desc), PropList, SubPropList),
+  proplist2eng(Object, SubPropList, PropDesc).
+
+logical2eng(Agent, sense_props(See, Object, PropList),
+            [cap(subj(Agent)), person(See, s(See)), 'a', Object, '.'|PropDesc] ) :-
   proplist2eng(Object, PropList, PropDesc).
 
-logical2eng(_Agent, emote(_Spatial, say, Speaker, (*), Eng), [cap(subj(Speaker)), ': "', Text, '"']) :-  eng2txt(Speaker, 'I', Eng, Text).
-logical2eng(_Agent, emote(_Spatial, say, Speaker, Audience, Eng),
-    [cap(subj(Speaker)), 'says to', Audience, ', "', Text, '"']) :-
+%logical2eng(_Agent, emote(_Spatial, say, Speaker, (*), Eng), [cap(subj(Speaker)), ': "', Text, '"']) :-  eng2txt(Speaker, 'I', Eng, Text).
+logical2eng(_Agent, emoted(_Spatial, Says, Speaker, Audience, Eng),
+    [cap(subj(Speaker)),s(Says),'to', Audience, ', "', Text, '"']) :-
   eng2txt(Speaker, 'I', Eng, Text).
+logical2eng(_Agent, emote(_Spatial, Says, Audience, Eng),
+    [cap(subj(do)),s(Says),'to', Audience, ', "', Text, '"']) :-
+  eng2txt(me, 'I', Eng, Text).
 
 logical2eng(_Agent, time_passes, []).
 % logical2eng(_Agent, time_passes, ['Time passes.']).
 logical2eng(_Agent, failure(Action), ['Action failed:', Action]).
-logical2eng(_Agent, Logical, ['percept:', Logical]).
 
-percept2txt(Agent, [_Logical, English|_], Text) :-
+logical2eng(Agent, PropList, [cap(subj(Agent)), person(see, sees), ':'|PropDesc] ) :-
+  dmust(proplist2eng(something, PropList, PropDesc)),!.
+
+% logical2eng(_Agent, Logical, ['percept:', Logical]).
+
+
+percept2txt(Agent, [_Logical, English], Text) :-
   eng2txt(Agent, you, English, Text).
+percept2txt(Agent, [_Logical, English|More], Text) :-
+  trace,eng2txt(Agent, you, [English|More], Text).
 percept2txt(Agent, [Logical|_], Text) :-
   logical2eng(Agent, Logical, Eng),
   eng2txt(Agent, you, Eng, Text).

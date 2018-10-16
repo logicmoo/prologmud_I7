@@ -161,6 +161,8 @@ reachable(Spatial, Thing, Agent, State) :-
 
 subrelation(in, child).
 subrelation(on, child).
+subrelation(under, in).
+subrelation(under, child).
 subrelation(worn_by, child).
 subrelation(held_by, child).
 
@@ -255,7 +257,7 @@ update_model(Spatial, Agent, carrying(Spatial, Objects), Timestamp, _Memory, M0,
 update_model(Spatial, _Agent, notice_children(Sense, Object, How, Children), Timestamp, _Mem, M0, M1) :-
   sensory_model(Sense, Spatial),
   update_relations(Spatial, How, Children, Object, Timestamp, M0, M1).
-update_model(_Spatial, _Agent, see_props(Object, PropList), Stamp, _Mem, M0, M2) :-
+update_model(_Spatial, _Agent, sense_props(see, Object, PropList), Stamp, _Mem, M0, M2) :-
   select_always(props(Object, _, _), M0, M1),
   append([props(Object, PropList, Stamp)], M1, M2).
 
@@ -267,6 +269,8 @@ update_model(Spatial, _Agent,
   update_relations(Spatial, How, Objects, Here, Timestamp, M0, M3), % Model objects seen Here
   findall(exit(E), member(E, Exits), ExitRelations),
   update_model_exits(Spatial, ExitRelations, Here, Timestamp, M3, M4).% Model exits from Here.
+
+
 update_model(Spatial, Agent, moved(Spatial, Agent, There, How, Here), Timestamp, Mem, M0, M2) :-
   % According to model, where was I?
   in_model(h(Spatial, _, Agent, There, _T0), M0),
@@ -279,9 +283,14 @@ update_model(Spatial, Agent, moved(Spatial, Agent, There, How, Here), Timestamp,
   %       [Agent, HowGo, Dest, There, Here]),
   update_model_exit(Spatial, exit(ExitName), There, Here, Timestamp, M0, M1), % Model the path.
   update_relation(Spatial, How, Agent, Here, Timestamp, M1, M2). % And update location.
+
 update_model(Spatial, _Agent, moved(Spatial, Object, _From, How, To), Timestamp, _Mem, M0, M1) :-
   update_relation(Spatial, How, Object, To, Timestamp, M0, M1).
-update_model(_Spatial, _Agent, _Percept, _Timestamp, _Memory, M, M).
+
+update_model(_Spatial, _Agent, failure(_), _Timestamp, _Mem, M0, M0) :- !.
+
+update_model(Spatial, Agent, Percept, Timestamp, Memory, M, M):-
+  dmsg(failed_update_model(Spatial, Agent, Percept, Timestamp, Memory)).
 
 % update_model_all(Spatial, Agent, PerceptsList, Stamp, ROMemory, OldModel, NewModel)
 update_model_all(_Spatial, _Agent, [], _Timestamp, _Memory, M, M).

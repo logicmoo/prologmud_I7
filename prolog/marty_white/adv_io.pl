@@ -77,7 +77,7 @@ pprint(_, _).
 
 redraw_prompt(Agent):- Agent == floyd,!. 
 redraw_prompt(Agent):-
-  player_format(Agent,'~w@mud> ',[Agent]),!.
+  player_format(Agent,'~w@spatial> ',[Agent]),!.
 redraw_prompt(_Agent).
 
 player_format(Fmt,List):-

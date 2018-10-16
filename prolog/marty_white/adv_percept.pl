@@ -25,11 +25,25 @@ stores_props(memories(Agent, PropList), Agent, PropList).
 stores_props(props(Object, PropList), Object, PropList).
 
 
-is_prop_public(_):-!.
 is_prop_public(P) :-
-  member(P, [has_rel(_Spatial, _), emitting(_Light), can_be(Spatial, eat, _), name(_), desc(_), fragile(_),
-             can_be(Spatial, move, _), can_be(Spatial, open, _), state(Spatial, open, _), can_be(Spatial, lock, t), state(Spatial, locked, _),
+  \+ \+ 
+  member(P, [
+             name(_),
+             desc(_),
+             fragile(_),emitting(_Light), 
+             %has_rel(_Spatial, _), 
+             
+             can_be(Spatial, eat, _), 
+             can_be(Spatial, move, _), 
+             can_be(Spatial, open, _), state(Spatial, open, _), 
+             can_be(Spatial, lock, t), state(Spatial, locked, _),
              inherit(shiny)]).
+
+is_prop_public(Prop):- is_prop_nonpublic(Prop),!,fail.
+is_prop_public(_):-!.
+
+is_prop_nonpublic(has_sense(_)).
+is_prop_nonpublic(_):- !, fail.
 
 has_sensory(Spatial, Sense, Agent, State) :-
   sensory_model_problem_solution(Sense, Spatial, TooDark, EmittingLight),
@@ -46,7 +60,7 @@ can_sense(Spatial, Sense, Thing, Agent, State) :-
   has_sensory(Spatial, Sense, Agent, State),
   related(Spatial, OpenTraverse, Agent, Here, State),
   (Thing=Here; related(Spatial, OpenTraverse, Thing, Here, State)).
-can_sense(Spatial, Sense, Thing, Agent, _State):- dbug(pretending_can_sense(Spatial, Sense, Thing, Agent)).
+can_sense(Spatial, Sense, Thing, Agent, _State):- dbug(pretending_can_sense(Spatial, Sense, Thing, Agent)),!.
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -166,9 +180,9 @@ problem_solution(noisy, hear, quiet).
 
 % Autonomous logical percept processing.
 process_percept_auto(Agent, [Same|_], _Stamp, Mem0, Mem0) :- was_own_self(Agent, Same).
-process_percept_auto(Agent, emote(_Spatial, _Say, Speaker, Agent, Words), _Stamp, Mem0, Mem1) :-
+process_percept_auto(Agent, emoted(_Spatial, _Say, Speaker, Agent, Words), _Stamp, Mem0, Mem1) :-
   consider_text(Speaker, Agent, Words, Mem0, Mem1).
-process_percept_auto(Agent, emote(_Spatial, _Say, Speaker, (*), WordsIn), _Stamp, Mem0, Mem1) :-
+process_percept_auto(Agent, emoted(_Spatial, _Say, Speaker, (*), WordsIn), _Stamp, Mem0, Mem1) :-
   addressing_whom(WordsIn, Whom, Words),
   Whom == Agent,
   consider_text(Speaker, Agent, Words, Mem0, Mem1).
@@ -176,9 +190,9 @@ process_percept_auto(Agent, Percept, _Stamp, Mem0, Mem0) :-
   Percept =.. [Functor|_],
   member(Functor, [talk, say]),
   bugout('~w: Ignoring ~p~n', [Agent, Percept], autonomous).
-process_percept_auto(Agent, see_props(Object, PropList), _Stamp, Mem0, Mem2) :-
-  bugout('~w: ~p~n', [Agent, see_props(Object, PropList)], autonomous),
-  member(shiny, PropList),
+process_percept_auto(Agent, sense_props(see, Object, PropList), _Stamp, Mem0, Mem2) :-
+  bugout('~w: ~p~n', [Agent, sense_props(see, Object, PropList)], autonomous),
+  (member(shiny, PropList),member(inherit(shiny), PropList)),
   member(model(Spatial, ModelData), Mem0),
   \+ related(Spatial, descended, Object, Agent, ModelData), % Not holding it?
   add_todo_all([take(Spatial, Object), print_('My shiny precious!')], Mem0, Mem2).
@@ -223,12 +237,13 @@ process_percept(Agent, Percept, Stamp, Mem0, Mem0):-
   bugout('~q FAILED!~n', [process_percept(Agent, Percept, Stamp)], general), !.
 
 process_percept_main(Agent, Percept, Stamp, Mem0, Mem3) :-
+ dmust((
   forget(model(Spatial, Model0), Mem0, Mem1),
   Percept = [LogicalPercept|IgnoredList],
   nop(ignore(((IgnoredList\==[], dmsg(ignored_model_update(Agent,IgnoredList)))))),
   update_model(Spatial, Agent, LogicalPercept, Stamp, Mem1, Model0, Model1),
   memorize(model(Spatial, Model1), Mem1, Mem2),
-  process_percept(Agent, Percept, Stamp, Mem2, Mem3).
+  process_percept(Agent, Percept, Stamp, Mem2, Mem3))).
 process_percept_main(_Agent, Percept, _Stamp, Mem0, Mem0) :-
   bugout('process_percept_main(~w) FAILED!~n', [Percept], general), !.
 

@@ -125,6 +125,8 @@ create_objprop(Object, [Prop|List], S0, S2):- !,
    create_objprop(Object, Prop, S1, S2).
 
 create_objprop(Object, inherit(Other), S0, S0):- getprop(Object,inherited(Other),S0),!.
+create_objprop(Object, inherit(Other), S0, S0):- getprop(Object,isnt(Other),S0),!.
+create_objprop(Object, inherit(Other), S0, S0):- Other==Object,!.
 
   % As events happen, percepts are entered in the percept queue of each agent.
   % Each agent empties their percept queue as they see fit.
@@ -235,7 +237,8 @@ getprop1(Object, Prop, State) :-
   getprop1(Delegate, Prop, State).
 
 % Replace or create Prop.
-setprop(Object, Prop, S0, S2) :-
+setprop(Object, Prop, S00, S2) :-
+  delprop_always(Object, Prop, S00, S0),
   assertion(compound(Prop)),
   functor(Prop,F,A),
   duplicate_term(Prop,Old),
@@ -285,7 +288,7 @@ updateprop(Object, Prop, S0, S2) :-
   undeclare(props(Object, PropList), S0, S1),
   (select(Old, PropList, PropList2) ->
       (upmerge_prop(F,A,Old,Prop,Merged) ->
-         (Old==Merged -> S2=S0 ; 
+         (Old==Merged -> S2=S0 ;  % no update
            (append([Merged], PropList2, PropList3),declare(props(Object, PropList3), S1, S2)));
         append([Prop], PropList, PropList3),declare(props(Object, PropList3), S1, S2));
    (append([Prop], PropList, PropList3),declare(props(Object, PropList3), S1, S2))).
@@ -298,4 +301,11 @@ delprop(Object, Prop, S0, S2) :-
   select(Prop, PropList, NewPropList),
   declare(props(Object, NewPropList), S1, S2))).
 
+
+delprop_always(Object, Prop, S0, S2) :-
+  assertion(\+ atom(Prop)),
+  undeclare(props(Object, PropList), S0, S1),
+  select(Prop, PropList, NewPropList),
+  declare(props(Object, NewPropList), S1, S2).
+delprop_always(_Object, _Prop, S0, S0).
 

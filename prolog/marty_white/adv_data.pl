@@ -69,6 +69,7 @@ istate([
   h(Spatial, in, mushroom, garden),
   h(Spatial, in, coins, bag),
   h(Spatial, in, table, kitchen),
+  h(Spatial, under, table, table_leg),
   h(Spatial, on, box, table),
   h(Spatial, in, bowl, box),
   h(Spatial, in, flour, bowl),
@@ -79,16 +80,16 @@ istate([
 
        props(unthinkable , [
           can_be(Spatial, examine(_), f),
-          desc(['It is normally unthinkable'])]),
+          class_desc(['It is normally unthinkable'])]),
 
        props(thinkable , [
           can_be(Spatial, examine(_), t),
-          desc(['It is normally thinkable'])]),
+          class_desc(['It is normally thinkable'])]),
 
        props(only_conceptual , [   
           can_be(Spatial, examine(Spatial), f),
           inherit(thinkable),
-          desc(['It is completely conceptual'])]),
+          class_desc(['It is completely conceptual'])]),
 
        props(noncorporial , [
           can_be(Spatial, examine(Spatial), f),
@@ -99,13 +100,13 @@ istate([
        props(partly_noncorporial, [
           inherit(corporial),
           inherit(noncorporial),
-          desc(['It is both partly corporial and non-corporial'])]),
+          class_desc(['It is both partly corporial and non-corporial'])]),
 
        props(corporial , [
           can_be(Spatial, touch, t),
           can_be(Spatial, examine(Spatial), t),
           inherit(thinkable),
-          desc(['It is corporial'])]),
+          class_desc(['It is corporial'])]),
 
   % People
    props(character , [

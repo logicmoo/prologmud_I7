@@ -202,7 +202,7 @@ act(Agent, examine(Sense, Object), S0, S2) :-
   ((
   findall(P, (getprop(Object, P, S0), is_prop_public(P)), PropListL),
   list_to_set(PropListL,PropList),
-  queue_percept(Agent, [see_props(Object, PropList)], S0, S1),
+  queue_percept(Agent, [sense_props(see, Object, PropList)], S0, S1),
   (has_rel(Spatial, How, Object, S1); How='<unrelatable>'),
   % Remember that Agent might be on the inside or outside of Object.
   findall(What,
@@ -390,7 +390,7 @@ act(Agent, emote(Spatial, SAYTO, Object, Message), S0, S1) :- !, % directed mess
   get_open_traverse(SAYTO, Spatial, OpenTraverse),
   can_sense(Spatial, Sense, Object, Agent, S0),
   related(Spatial, OpenTraverse, Agent, Here, S0),
-  queue_local_event(Spatial, [emote(Spatial, SAYTO, Agent, Object, Message)], [Here], S0, S1))).
+  queue_local_event(Spatial, [emoted(Spatial, SAYTO, Agent, Object, Message)], [Here,Object], S0, S1))).
 %act(Agent, say(Message), S0, S1) :-          % undirected message
 %  related(Spatial, OpenTraverse, Agent, Here, S0),
 %  queue_local_event(Spatial, [emote(Spatial, say, Agent, (*), Message)], [Here], S0, S1).

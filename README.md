@@ -6,6 +6,11 @@ Fall 2014, David Matuszek
 
 # Marty's Prolog Adventure Prototype
 Marty's Interactive Fiction Engine in Prolog under marty_white
+````
+?- ensure_loaded(library(nomic_mu)).
+
+````
+
 
 Featuring a chatbot named Floyd whom uses
 
