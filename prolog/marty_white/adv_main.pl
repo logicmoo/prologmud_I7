@@ -83,7 +83,8 @@ adventure_init :-
    player_format('=============================================~n', []),
    player_format('INIT STATE~n', []),
    player_format('=============================================~n', []),
-   sort(S1,SP), pprint(SP, general),!.
+   printable_state(S1,SP), 
+   pprint(SP, general),!.
 
 
 adventure:- 

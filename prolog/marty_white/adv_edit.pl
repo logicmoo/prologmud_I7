@@ -23,6 +23,8 @@
 %  CODE FILE SECTION
 :- nop(ensure_loaded('adv_main_commands')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%printable_state(L,S):- sort(L,S).
+printable_state(S,S).
 
 meta_pprint(D,K):- pprint(D,K).
 
@@ -46,7 +48,7 @@ do_metacmd(Echo, S0, S0) :-
   player_format('~w~n', [Args]).
 do_metacmd(state, S0, S0) :-
   wizard,
-  sort(S0,S),
+  printable_state(S0,S),
   meta_pprint(S, general).
 do_metacmd(make, S0, S0) :-
   wizard,

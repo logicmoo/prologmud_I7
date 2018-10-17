@@ -343,8 +343,8 @@ istate([
     %can_be(Spatial, open, t)
     state(Spatial, open, f)
   ]),
-  props(shelf, [has_rel(Spatial, on), can_be(Spatial, move, f)]),
-  props(table, [has_rel(Spatial, on), has_rel(Spatial, under)]),
+  class_props(shelf, [has_rel(Spatial, on), can_be(Spatial, move, f)]),
+  class_props(table, [has_rel(Spatial, on), has_rel(Spatial, under)]),
   class_props(wrench, [inherit(shiny)]),
   class_props(videocamera, [
     inherit(memorize),
