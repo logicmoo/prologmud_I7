@@ -122,19 +122,22 @@ create_objprop(Object, Prop, S0, S2):- dmust(updateprop(Object,Prop,S0, S2)).
 
 
 create_missing_instances(S0,S2):- 
-  create_instances('~1',S0,S0,S2).
+  create_instances('~1',S0,S0,S0,S2).
 
 may_contain_insts(h).
 
-create_instances(Suffix,Info,[Prop|S0],[NewProp|S2]):-
+create_instances(Suffix,Info,[Prop|TODO],S0,S3):-
  Prop =.. [F, Spatial, Pred | Objs], 
  may_contain_insts(F),member(Obj,Objs),compound(Obj),!,
- dmust((create_objs(Objs,NewObjs,Suffix,Info,S0,S1),
+ dmust((select(Prop,S0,S1))),
+ dmust((create_objs(Objs,NewObjs,Suffix,Info,S1,S2),
  NewProp =.. [F, Spatial, Pred | NewObjs],
- create_instances(Suffix,Info,S1,S2))).
-create_instances(Suffix,Info,[Prop|S0],[Prop|S2]):-
-   create_instances(Suffix,Info,S0,S2).
-create_instances(_Suffix,_Info,[],[]).
+ create_instances(Suffix,Info,TODO,[NewProp|S2],S3))).
+ 
+create_instances(Suffix,Info,[_|TODO],S0,S2):-
+   create_instances(Suffix,Info,TODO,S0,S2).
+create_instances(_Suffix,_Info,[],S0,S0).
+
 
 create_objs([Obj|Objs],[NewObj|NewObjs],Suffix,Info,S0,S2):-
   dmust(create_1obj(Suffix,Info,Obj,NewObj,S0,S1)),
