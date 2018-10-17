@@ -29,7 +29,6 @@
    pprint/2,
    init_logging/0,
    bug/1,
-   stream_to_alias/2,
    agent_to_input/2,
    get_overwritten_chars/2,
    restore_overwritten_chars/1]).
@@ -64,7 +63,8 @@ bugout(A, L, B) :-
   !,
   ansi_format([fg(cyan)], '~N% ', []),
   ansi_format([fg(cyan)], A, L),
-  redraw_prompt(player1).
+  dmust(console_player(Player)),
+  dmust(redraw_prompt(Player)),!.
   
 bugout(_, _, _).
 
@@ -75,19 +75,22 @@ pprint(Term, B) :-
   player_format('~N~@~N',[prolog_pretty_print:print_term(Term, [output(current_output)])]),!.
 pprint(_, _).
 
-redraw_prompt(Agent):- Agent == floyd,!. 
-redraw_prompt(Agent):-
+redraw_prompt(_Agent):- 
+  console_player(Player),
+   player_format(Player,'~w@spatial> ',[Player]),!.
+
+redraw_prompt(Agent):- (Agent \== 'floyd~1'),!, 
   player_format(Agent,'~w@spatial> ',[Agent]),!.
 redraw_prompt(_Agent).
 
 player_format(Fmt,List):-
   current_player(Agent) ->
-  player_format(Agent, Fmt,List).
+  notrace(player_format(Agent, Fmt,List)).
 
 player_format(Agent,Fmt,List):-
   agent_output(Agent,OutStream),
-  format(OutStream,Fmt,List),!.
-player_format(_, Fmt,List):- format(Fmt,List).
+  dmust(format(OutStream,Fmt,List)),!.
+player_format(_, Fmt,List):- dmust(format(Fmt,List)).
 
 
 agent_output(Agent,OutStream):- 
@@ -99,14 +102,18 @@ agent_output(Agent,OutStream):-
 
 
 
+identifer_code(Char) :- char_type(Char, csym).
+identifer_code(Char) :- char_type(Char,to_lower('~')).
+identifer_code(Char) :- memberchk(Char, `-'`).
+
+punct_code(Punct) :- memberchk(Punct, `,.?;:!&\"`), !.
+punct_code(Punct) :- \+ identifer_code(Punct), char_type(Punct, graph).
+
 % -- Split a list of chars into a leading identifier and the rest.
 % Fails if list does not start with a valid identifier.
 identifier([-1|_String], _, _) :- !, fail. % char_type pukes on -1 (EOF)
 identifier([Char|String], [Char|Tail], Rest) :-
-  char_type(Char, csym),
-  identifier1(String, Tail, Rest).
-identifier([Char|String], [Char|Tail], Rest) :-
-  memberchk(Char, `-'`),
+  identifer_code(Char),
   identifier1(String, Tail, Rest).
 
 identifier1(String, Id, Rest) :-
@@ -121,7 +128,7 @@ token(String, Token, Rest) :-
 %  identifier(String, Text, Rest), !, atom_codes(Atom,Text).
 token([Punct|Rest], [Punct], Rest) :-
   %char_type(Punct, punct), !.  % Is it a single char token?
-  memberchk(Punct, `,.?;:!&\"`), !.
+  punct_code(Punct), !. 
 
 % -- Completely tokenize a string.
 % Ignores unrecognized characters.
@@ -141,22 +148,21 @@ log_codes(LineCodes) :-
   adv:input_log(FH),
   format(FH, '>~w\n', [Line]).
 
-stream_to_alias(In,Alias):- stream_to_alias_direct(In,Alias),!.
-stream_to_alias(In,Alias):- stream_property(In,file_no(N)),stream_property(Out,file_no(N)),Out\==In,stream_to_alias_direct(Out,Alias).
-stream_to_alias_direct(In,Alias):- stream_property(In,alias(Alias)),!.
-stream_to_alias_direct(In,Alias):- stream_property(In,file_name(Alias)),!.
-stream_to_alias_direct(In,Alias):- stream_property(In,encoding(Alias)),!.
 % -- Input from stdin, convert to a list of atom-tokens.
 
 readtokens(Tokens) :- current_player(Agent),readtokens(Agent,[],Tokens).
-readtokens(Agent,Prev,Tokens) :- 
-  agent_to_input(Agent,In),
-  %stream_to_alias(In,Alias),format(atom(New),'<~w@~w> ~s',[Agent,Alias,Prev]),
+
+readtokens(In,Prev,Tokens):- 
+  is_stream(In),!,
   New = '',
   setup_call_cleanup(prompt(Old,New),
      read_line_to_tokens(In,Prev,Tokens),
      prompt(_,Old)),
   !.
+readtokens(Agent,Prev,Tokens) :- 
+  agent_to_input(Agent,In),
+  dmust(is_stream(In)),
+  readtokens(In,Prev,Tokens),!.
 
 read_line_to_tokens(In,Prev,Tokens):- 
   read_line_to_codes(In,LineCodesR), 
@@ -193,11 +199,12 @@ save_to_history(LineCodes):-
 
 
 
-
+/*
 readlist(Agent,L) :-  % return a line of input, split into a list of words.
   readline(Agent,CL),
   wordlist(L, CL, []),
   !.
+*/
 
 :- dynamic(overwritten_chars/2).
 
@@ -208,18 +215,18 @@ add_pending_input0(In,C):- assert(overwritten_chars(In,[C])).
 clear_overwritten_chars(Agent):- agent_to_input(Agent,In),retractall(overwritten_chars(In,_SoFar)).
 restore_overwritten_chars(Agent):- agent_to_input(Agent,In),overwritten_chars(In,SoFar),format('~s',[SoFar]).
 
-agent_to_input(Agent,In):- overwritten_chars(Agent,_SoFar),In=Agent.
+% agent_to_input(Agent,In):- overwritten_chars(Agent,_SoFar),In=Agent,
 agent_to_input(Agent,In):- adv:console_info(_Id,_Alias,In,_OutStream,_Host, _Peer, Agent),!.
-agent_to_input(Agent,In):- stream_property(Agent,file_no(F)),stream_property(In,file_no(F)),stream_property(In,read),!.
+% agent_to_input(Agent,In):- stream_or_alias(In,Alias), stream_property(Agent,file_no(F)),stream_property(In,file_no(F)),stream_property(In,read),!.
 agent_to_input(_Agent,In):- current_input(In).
 
-user:bi:- agent_to_input(telnet1,In),
+user:bi:- agent_to_input('telnet~1',In),
    forall(stream_property(In,P),dmsg(ins(P))),
    %line_position(In,LIn),
    %dmsg(ins(line_position(In,LIn))),
-   forall(stream_property(telnet1,P),dmsg(outs(P))),listing(overwritten_chars),
-   line_position(telnet1,LInOut),!,
-   dmsg(outs(line_position(telnet1,LInOut))),!.
+   forall(stream_property('telnet~1',P),dmsg(outs(P))),listing(overwritten_chars),
+   line_position('telnet~1',LInOut),!,
+   dmsg(outs(line_position('telnet~1',LInOut))),!.
 
 get_overwritten_chars(Agent,Chars):- agent_to_input(Agent,In),overwritten_chars(In,Chars).
 get_overwritten_chars(_Agent,[]).

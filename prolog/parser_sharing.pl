@@ -23,10 +23,12 @@ dbug(P):- notrace(ansi_format([fg(cyan)],'~N% ~p.~n',[P])).
 dmust((A,!,B)):-!,dmust(A),!,dmust(B).
 dmust((A,B)):-!,dmust(A),dmust(B).
 dmust((A;B)):-!,call(A),dmust(B).
-dmust(A):- call(A)*-> nortrace ; (failed_dmust(A),!,fail).
+dmust(A):- call(A)*-> true ; failed_dmust(A).
 
-failed_dmust(A):- notrace,nortrace, dbug(failed_dmust_start(A)),rtrace,(A->nortrace;nortrace),
-  notrace,trace,dbug(failed_dmust_end(A)).
+failed_dmust(once(A)):-!, failed_dmust(A),!.
+failed_dmust((A,B)):- !,dbug(dmust_start(A)),ignore(rtrace(A)),dbug(dmust_mid(A)), failed_dmust(B).
+failed_dmust(A):- dbug(failed_dmust_start(A)),ignore(rtrace(A)),dbug(failed_dmust_end(A)),
+  break,nortrace,notrace,trace.
 
 :- if(\+ current_module(pfc)).
 :- module_transparent(call_u/1).

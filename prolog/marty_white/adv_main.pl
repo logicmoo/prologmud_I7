@@ -31,8 +31,13 @@ extra :-  true. % Fuller, but questionable if needed yet.
 :- consult(adv_util).
 :- consult(adv_io).
 
+:- consult(adv_state).
+:- consult(adv_data).
+
 :- consult(adv_model).
 :- consult(adv_percept).
+
+:- consult(adv_inst).
 :- consult(adv_edit).
 
 :- consult(adv_action).
@@ -42,17 +47,24 @@ extra :-  true. % Fuller, but questionable if needed yet.
 :- consult(adv_log2eng).
 :- consult(adv_physics).
 :- consult(adv_plan).
-:- consult(adv_state).
-:- consult(adv_data).
+
 
 %:- consult(adv_test).
 %:- consult(adv_telnet).
 
+:- export(console_player/1).
+console_player(Agent):-
+  current_input(InStream),
+  adv:console_info(Id, _Alias, InStream, _OutStream, _Host, _Peer, Agent),
+  assertion(( thread_self(X), (number(Id)->thread_property(X, id(Id));thread_property(X, alias(Id))))), !.
+console_player(Agent):-
+  Agent = 'player~1',
+  (( \+ adv:console_info(_Id, _Alias, _InStream, _OutStream, _Host, _Peer, Agent))).
 
 :- thread_local(adv:current_agent/1).
 current_player(Agent):- adv:current_agent(Agent),!.
 current_player(Agent):- thread_self(Id),adv:console_info(Id,_Alias,_InStream,_OutStream,_Host,_Peer, Agent).
-current_player(player1).
+current_player('player~1').
 :- export(current_player/1).
 
 
@@ -83,8 +95,8 @@ adventure:-
   mainloop,
   %main_loop(S3),
   adv:input_log(FH),
-  close(FH),
-  notrace.
+  close(FH).
+
 adventure :-
   adv:input_log(FH),
   close(FH),
@@ -93,14 +105,16 @@ adventure :-
 
 
 main(S0, S9) :-
-  nb_setval(advstate,S0),
+  notrace((nb_setval(advstate,S0))),
   update_telnet_clients(S0,S1),
+  ((nb_setval(advstate,S1),
+  % pprint(S1,general),
   get_live_agents(LiveAgents, S1),
-  ttyflush,
+  ttyflush)),
   %dmsg(liveAgents = LiveAgents),
   apply_all(LiveAgents, run_agent_pass_1(), S1, S2),
   apply_all(LiveAgents, run_agent_pass_2(), S2, S9),
-  nb_setval(advstate,S9),
+  notrace((nb_setval(advstate,S9))),
   !. % Don't allow future failure to redo main.
 main(S0, S0) :-
   bugout('main FAILED~n', general).
@@ -109,7 +123,7 @@ main(S0, S0) :-
 
 update_telnet_clients(S0,S2):-
    retract(adv:agent_conn(Agent,Named,_Alias,Info)),
-   create_new_agent(Agent,Named,Info,S0,S1),
+   create_agent_conn(Agent,Named,Info,S0,S1),
    update_telnet_clients(S1,S2).
 update_telnet_clients(S0,S0).
 
@@ -134,67 +148,15 @@ telnet_decide_action(Agent, Mem, Mem) :-
 
 %:- if(\+ prolog_load_context(reloading, t)).
 :- initialization(adventure, main).
-%:- endif.
-
-%:- user:listing(adventure).
-
-
-filter_spec( \+ Spec, PropList):- !,
-  \+  filter_spec(Spec, PropList).
-filter_spec((Spec1;Spec2), PropList):- !, filter_spec(Spec1, PropList);filter_spec(Spec2, PropList).
-filter_spec((Spec1, Spec2), PropList):- !, filter_spec(Spec1, PropList), filter_spec(Spec2, PropList).
-filter_spec(    Spec, PropList):- member(Spec, PropList).
-
-
-init_objects(S0, S2) :-
-  must_input_state(S0),
-  dmust(call((get_objects(inherit('instance'), ObjectList, S0), ObjectList\==[]))),
-  dbug(iObjectList  = ObjectList),
-  apply_all(ObjectList, create_object(), S0, S2),
-  must_output_state(S2), !.
-
-
-get_sensing_agents(Sense, Agents, S0):-
-   get_some_agents(
-    (
-     (has_sense(Sense);inherit(memorize))), Agents, S0).
-
-get_some_agents(Precond, LiveAgents, S0):-
-  dmust((
-     current_spatial(Spatial),
-     once((get_objects(       
-     ( Precond,  inherit('instance'),
-        \+ state(Spatial, powered, f)), LiveAgents, S0),
-   LiveAgents = [_|_])))).
-
-get_live_agents(LiveAgents, S0):-
-  dmust((
-     current_spatial(Spatial),
-     once((get_objects(
-     (inherit('character'),
-      inherit('instance'),
-       \+ state(Spatial, powered, f) ) , LiveAgents, S0),
-   LiveAgents = [_|_])))).
-
-create_new_agent(Agent,Named,Info,S0,S2):- 
-   gensym(watch,Watch),
-   gensym(bag,Bag),
-   declare(
-     (props(Agent, [inherit(instance), name(['Telnet:',Named]), inherit(telnet), inherit(telnet_player), info(Info)]),
-               
-               h(Spatial, in, Agent, kitchen),
-               h(Spatial, worn_by, Watch, Agent),
-               h(Spatial, held_by, Bag, Agent)),S0,S1),
-   init_objects(S1,S2).
-
 
 
 mainloop :-
   repeat,
-    once((retract(advstate(S0)),
+    once(dmust((
+          retract(advstate(S0)),
           main(S0, S1),
           asserta(advstate(S1)),
-          check4bugs(S1))),
+          must_output_state(S1)))),
     declared(quit, S1),
   !. % Don't allow future failure to redo mainloop.
 
