@@ -99,8 +99,8 @@ istate([
   h(Spatial, exit(west), kitchen, living_room),
 
   h(Spatial, in, a(shelf), pantry), % shelf is in pantry
-  h(Spatial, in, a(table), kitchen), % a table is in kitchen
-  h(Spatial, on, a(lamp), a(table)), % a lamp is on a table
+       h(Spatial, in, a(table), kitchen), % a table is in kitchen
+       h(Spatial, on, a(lamp), the(table)), % a lamp is on the table
   h(Spatial, in, a(rock), garden),
   h(Spatial, in, a(mushroom), garden),
   h(Spatial, reverse(on), a(table), a(table_leg)),

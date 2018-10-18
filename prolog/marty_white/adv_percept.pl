@@ -250,7 +250,7 @@ process_percept(Agent, Percept, Stamp, Mem0, Mem1) :-
   
 process_percept(Agent, [LogicalPercept|_IgnoredList], Stamp, Mem0, Mem1) :-
   thought(inherit(autonomous,t), Mem0),
-  nop((ignore(((IgnoredList\==[], dmsg(ignored_process_percept_auto(Agent,IgnoredList))))))),
+  nop((ignore(((IgnoredList\==[], dbug(ignored_process_percept_auto(Agent,IgnoredList))))))),
   process_percept_auto(Agent, LogicalPercept, Stamp, Mem0, Mem1).
 
 process_percept(Agent, Percept, Stamp, Mem0, Mem0):- 
@@ -260,7 +260,7 @@ process_percept_main(Agent, Percept, Stamp, Mem0, Mem3) :-
  dmust((
   forget(model(Spatial, Model0), Mem0, Mem1),
   Percept = [LogicalPercept|IgnoredList],
-  nop(ignore(((IgnoredList\==[], dmsg(ignored_model_update(Agent,IgnoredList)))))),
+  nop(ignore(((IgnoredList\==[], dbug(ignored_model_update(Agent,IgnoredList)))))),
   update_model(Spatial, Agent, LogicalPercept, Stamp, Mem1, Model0, Model1),
   memorize(model(Spatial, Model1), Mem1, Mem2),
   process_percept(Agent, Percept, Stamp, Mem2, Mem3))).

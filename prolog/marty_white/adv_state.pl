@@ -61,6 +61,8 @@ select_always(_Item, ListWithoutItem, ListWithoutItem).
 % Manipulate simulation state
 %declare(Fact, State):- player_local(Fact, Player), !, declare(wishes(Player, Fact), State).
 declare((Fact1,Fact2), State, NewState) :- !,declare(Fact1, State, MidState),declare(Fact2, MidState, NewState).
+declare(props(Object,Props), State, NewState) :- select(props(Object,OldProps), State, MidState),!,
+  dmust((append(Props,OldProps,NewProps),!,declare(props(Object,NewProps), MidState, NewState))),!.
 declare(Fact, State, NewState) :- notrace(((assertion(var(NewState)),dmust(append([Fact], State, NewState))))).
 
 %undeclare(Fact, State):- player_local(Fact, Player), !, undeclare(wishes(Player, Fact), State).
@@ -128,8 +130,6 @@ getprop(Object, Prop, S0):-
 getprop2(Object, Prop, Memory):- member(state(S0), Memory), !,
   getprop1(Object, Prop, S0).
 
-% current_props(Object, PropList, S0):- atom(Object),atom_
-current_props(Object, PropList, S0):- declared(props(Object, PropList), S0).
 
 getiprop(Object, Prop, S0) :-
   current_props(Object, PropList, S0),
@@ -147,6 +147,8 @@ getprop_from_state(Object, Prop, Memory):-
   getprop1(Object, Prop, S0).
 
 % current_props(Object, PropList, S0):- atom(Object),atom_
+% current_props(Object, PropList, S0):- atom(Object),atom_
+%current_props(Object, PropList, S0):- declared(props(Object, PropList), S0).
 current_props(Object, PropList, S0):- 
   declared(props(Object, PropList), S0) 
     *-> true 

@@ -44,7 +44,7 @@ do_autonomous_cycle(Agent):-
   time_since_last_action(Other,When),
   Other \== Agent, When < 1, !, 
   retractall(adv:agent_last_action(Other,_,_)),
-  nop(dmsg(time_since_last_action_for(Other,When,Agent))).
+  nop(dbug(time_since_last_action_for(Other,When,Agent))).
 
 /*maybe_autonomous_decide_goal_action(Agent, Mem0, Mem0) :-
   % If actions are queued, no further thinking required.
@@ -105,7 +105,7 @@ autonomous_decide_action(Agent, Mem0, Mem1) :-
   random_noise(Agent, Msg),
   add_todo(emote(spatial, see, *, Msg), Mem0, Mem1).
 autonomous_decide_action(Agent, Mem0, Mem0) :-
-  bugout('~w: Can\'t think of anything to do.~n', [Agent], autonomous).% trace.
+  bugout('~w: Can\'t think of anything to do.~n', [Agent], autonomous+verbose).% trace.
 
 
 

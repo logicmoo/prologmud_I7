@@ -24,7 +24,7 @@
 :- use_module(library(socket)).
 
 adv_server(Port) :-
-  dmsg(adv_server(Port)),
+  dbug(adv_server(Port)),
   tcp_socket(ServerSocket), 
   tcp_setopt(ServerSocket, reuseaddr), 
   tcp_bind(ServerSocket, Port), 
@@ -106,17 +106,17 @@ adv_server_client(InStream, OutStream, _, _):-
   thread_detach(Id).
 */
 
-srv_catch(Goal):- catch(once(call(call,Goal)),E,((notrace(dmsg(error_srv_catch(E,Goal))),!,fail))).
+srv_catch(Goal):- catch(once(call(call,Goal)),E,((notrace(dbug(error_srv_catch(E,Goal))),!,fail))).
 ignore_srv_catch(Goal):- ignore(srv_catch(Goal)).
 
 adventure_client_cleanp(Id,Alias,InStream,OutStream):- 
  srv_catch((adv:console_info(Id,Alias,InStream,OutStream, Host, Peer, Agent) -> 
    ((assertz(adv:agent_discon(Agent)),
-    dmsg((adv:agent_discon(Agent))),
+    dbug((adv:agent_discon(Agent))),
     stream_property(Err,file_no(2)),
     set_stream(Err,alias(Agent)),
-    dmsg(adventure_client_cleanp_agent(Id,Alias,InStream,OutStream, Host, Peer, Agent)))) ;
-   dmsg(failed_adventure_client_cleanp(Id,Alias,InStream,OutStream)))),
+    dbug(adventure_client_cleanp_agent(Id,Alias,InStream,OutStream, Host, Peer, Agent)))) ;
+   dbug(failed_adventure_client_cleanp(Id,Alias,InStream,OutStream)))),
  retractall(adv:console_info(Id,Alias,InStream,OutStream, Host, Peer, Agent)),
  ignore_srv_catch(close(InStream)), 
  ignore_srv_catch(close(OutStream)),
@@ -193,7 +193,7 @@ adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, [quit]):-
 adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, Words0):-
   nop(adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, Words0)),
   (Words0==[]->Words=[wait];Words=Words0),
-  nop((dmsg('~NTelent: ~q~n', [adv:console_tokens(Agent, Words)]))),  
+  nop((dbug('~NTelent: ~q~n', [adv:console_tokens(Agent, Words)]))),  
   assertz(adv:console_tokens(Agent, Words)),
   nop((format(OutStream, '~NYou: ~q~n', [adv:console_tokens(Agent, Words)]))), 
   !.
@@ -328,11 +328,11 @@ kill_naughty_threads:-forall(thread_property(_,alias(ID)),sanify_thread(ID)).
 % ignore main thread
 sanify_thread(main):-!.
 sanify_thread(ID):- ( \+ atom_concat('httpd',_,ID)),!,
-   ignore(( thread_statistics(ID,local,Size),MSize is 200 * 1024, Size>MSize, dmsg(big_thread(ID,local,Size)))).
+   ignore(( thread_statistics(ID,local,Size),MSize is 200 * 1024, Size>MSize, dbug(big_thread(ID,local,Size)))).
 sanify_thread(ID):-
    ignore(( thread_statistics(ID,local,Size),MSize is 200 * 1024, Size>MSize,
      % thread_signal(ID,abort) maybe
-     dmsg(killing_big_thread(ID,local,Size)), thread_exit(ID) )).
+     dbug(killing_big_thread(ID,local,Size)), thread_exit(ID) )).
 
 
 % :- include(prologmud(mud_header)).
@@ -581,7 +581,7 @@ setup_stream_props(Name,Stream):-
    %set_stream_ice(Stream, buffer_size(1)),   
    (current_input(Stream)->set_stream_ice(Stream, newline(detect));true),
    set_stream_ice(Stream, tty(true)),
-   nop(forall(stream_property(Stream,Prop),dmsg(stream_info(Name,Stream,Prop)))))).
+   nop(forall(stream_property(Stream,Prop),dbug(stream_info(Name,Stream,Prop)))))).
    
    
 find_err_from_out(Out,Err):-
@@ -660,7 +660,7 @@ tick_tock:-
            scan_src_updates,!,fmt('tick tock',[]),sleep(0.1),!.
 
 scan_src_updates:- !.
-scan_src_updates:- ignore((thread_self_main,ignore((catch(make,E,dmsg(E)))))).
+scan_src_updates:- ignore((thread_self_main,ignore((catch(make,E,dbug(E)))))).
 
 
 % ===========================================================
@@ -900,7 +900,7 @@ prolog_tnet_server(Port, Options) :-
     tcp_listen(ServerSocket, 5),
     option(alias(Alias),Options,prolog_tnet_server),
     option(description(Desc),Options,Alias),
-    dmsg(Port=Desc),
+    dbug(Port=Desc),
     thread_create(mud_server_loop(ServerSocket, Options), _,
                   [ alias(Alias)
                   ]),!.
@@ -999,8 +999,8 @@ close_connection(In, Out) :-
 strm_info(Out,Name,Strm):-nl,write(Out,Name = Strm),forall(stream_property(Strm,P),'format'(Out,', ~q',[P])),nl(Out).
 
 
-set_stream_ice(Stream, Alias, NV):- catch(set_stream(Alias,NV),_,catch(set_stream(Stream,NV),E,nop(dmsg(E)))).
-set_stream_ice(Stream, NV):- catch(set_stream(Stream,NV),E,(dmsg(set_stream(Stream,NV,E)))).
+set_stream_ice(Stream, Alias, NV):- catch(set_stream(Alias,NV),_,catch(set_stream(Stream,NV),E,nop(dbug(E)))).
+set_stream_ice(Stream, NV):- catch(set_stream(Stream,NV),E,(dbug(set_stream(Stream,NV,E)))).
 
 
 

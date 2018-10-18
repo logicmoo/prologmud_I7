@@ -104,6 +104,8 @@
 :- multifile(adj_tr/3).
 
 
+when_chat80(_):- fail.
+%when_chat80(G):- call(chat80:G).
 
 clex_verb(Formed,Verb,iv,finsg):-iv_finsg(Formed,Verb).
 clex_verb(Formed,Verb,tv,finsg):-tv_finsg(Formed,Verb).
@@ -126,8 +128,8 @@ clex_noun(Noun,RootNoun,Type,SG, count):-clex_noun0(Noun,RootNoun,Type,SG),not(c
 clex_noun(Noun,RootNoun,unkown,SG, count):-clex_noun1(Noun,RootNoun,SG),not(clex_noun0(Noun,RootNoun,_,SG)),not(clex_mass_noun(Noun,_,_)).
    clex_noun0(Noun,RootNoun,Type,sg):- noun_sg(Noun, RootNoun, Type).
    clex_noun0(Noun,RootNoun,Type,pl):- noun_pl(Noun, RootNoun, Type).
-   clex_noun1(Noun,RootNoun,pl):- noun_plu_db(Noun,RootNoun).
-   clex_noun1(RootNoun,RootNoun,sg):- noun_sin_db(RootNoun).
+   clex_noun1(Noun,RootNoun,pl):- when_chat80(noun_plu_db(Noun,RootNoun)).
+   clex_noun1(RootNoun,RootNoun,sg):- when_chat80(noun_sin_db(RootNoun)).
 
 adj_prep0(Bigger,Big,Prep,comparitve):-adj_tr_comp(Bigger,Big,Prep).
 adj_prep0(Biggest,Big,Prep,superlative):-adj_tr_sup(Biggest,Big,Prep).
@@ -143,6 +145,8 @@ adv_itr0(Bigger,Big,comparitve):-adv_comp(Bigger,Big).
 adv_itr0(Biggest,Big,superlative):-adv_sup(Biggest,Big).
 clex_adv(Biggest,Big,Type):-adv_itr0(Biggest,Big,Type).
 clex_adv(Biggest,Big,unknown):-adv(Biggest,Big),not(adv_itr0(Biggest,_,_)).
+
+:- include(clex_lexicon_user1).
 
 % apply_fixes:- clex_verb(Formed,Verb,dv(Prep),PP)
 

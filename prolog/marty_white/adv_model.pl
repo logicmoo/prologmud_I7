@@ -110,15 +110,16 @@ update_model(Spatial, _Agent, moved(Spatial, Object, _From, How, To), Timestamp,
 update_model(_Spatial, _Agent, failure(_), _Timestamp, _Mem, M0, M0) :- !.
 
 update_model(Spatial, Agent, time_passes, Timestamp, _Memory, M, M):-
-  nop(dmsg(unused_update_model(Spatial, Agent, time_passes, Timestamp, M))).
+  nop(dbug(unused_update_model(Spatial, Agent, time_passes, Timestamp, M))).
 
 update_model(_Spatial, _Agent, [], _Timestamp, _Memory, M, M).
 update_model(Spatial, Agent, [Percept|Tail], Timestamp, Memory, M0, M2) :-
   update_model(Spatial, Agent, Percept, Timestamp, Memory, M0, M1),
   update_model_all(Spatial, Agent, Tail, Timestamp, Memory, M1, M2).
 
-update_model(Spatial, Agent, Percept, Timestamp, Memory, M, M):-
-  dmsg(failed_update_model(Spatial, Agent, Percept, Timestamp, Memory)).
+
+update_model(Spatial, Agent, Percept, Timestamp, _Memory, M, M):-
+  dbug(failed_update_model(Spatial, Agent, Percept, Timestamp)).
 
 % update_model_all(Spatial, Agent, PerceptsList, Stamp, ROMemory, OldModel, NewModel)
 update_model_all(_Spatial, _Agent, [], _Timestamp, _Memory, M, M).

@@ -14,7 +14,7 @@
    op(1150,fx,(shared_parser_data)),
    op(1150,fx,(dynamic_multifile_exported))]).
 
-:- op(900, fy, not).
+% :- op(900, fy, not).
 
 % Miscellaneous generic utility predicates.
 
@@ -36,7 +36,7 @@ call_u(Q):- notrace(current_predicate(_,Q)),call(call,Q).
 %call_u(P) :- call(call,P).
 :- endif.
 
-no_repeats_must(Call):-one_must(gripe_time(0.5,no_repeats(Call)),(fail,(dmsg(warn(show_failure(Call))),!,fail))).
+no_repeats_must(Call):-one_must(gripe_time(0.5,no_repeats(Call)),(fail,(dbug(warn(show_failure(Call))),!,fail))).
 
 :- module_transparent(loop_check_u/1).
 loop_check_u(P):- loop_check(call_u(P)).
@@ -192,7 +192,7 @@ define_shared_loadable_pred(M,P):- current_prolog_flag(access_level,system),!,se
 define_shared_loadable_pred(M,P):- % throw(old_code),
    '$current_source_module'(SM),'$current_typein_module'(CM),
    %mpred_ain(isBorked==>M:P),
-   functor(P,F,A),dmsg(def_parser_data(sm=SM,cm=CM,m=M,F/A)),
+   functor(P,F,A),dbug(def_parser_data(sm=SM,cm=CM,m=M,F/A)),
    dynamic(M:P),multifile(M:P),discontiguous(M:P).
 
 :- module_transparent(show_shared_pred_info/1).
@@ -202,9 +202,9 @@ show_shared_pred_info(FA):-
    functor(P,F,A),
    ((User:predicate_property(P,defined))->
        (predicate_property(P,number_of_clauses(N)),
-         (N<20 -> User:listing(FA) ; dmsg(big(User,F/A)));
-    dmsg(unkonw_number_of_clauses(User,F/A)));dmsg(undefined(User,F/A))),
-   findall(PP,User:predicate_property(P,PP),PPL),dmsg(FA=PPL),!.
+         (N<20 -> User:listing(FA) ; dbug(big(User,F/A)));
+    dbug(unkonw_number_of_clauses(User,F/A)));dbug(undefined(User,F/A))),
+   findall(PP,User:predicate_property(P,PP),PPL),dbug(FA=PPL),!.
 :- share_mp(show_shared_pred_info/1).
 
 

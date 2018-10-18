@@ -25,7 +25,7 @@ each_live_agent(NewGoal, S0, S2) :-
 each_sensing_agent(Sense, NewGoal, S0, S2) :-
  dmust((get_sensing_objects(Sense, List, S0),
       List\==[],
-      %dmsg(each_sensing_agent(Sense)=(List=NewGoal)),
+      %dbug(each_sensing_agent(Sense)=(List=NewGoal)),
  apply_all(List, NewGoal, S0, S2))).
 
 each_agent(Precond, NewGoal, S0, S2) :-
@@ -149,6 +149,23 @@ remember_whereis(Spatial, There, Answer, Memory) :-
 
 
 
+console_decide_action(Agent, Mem0, Mem1):- 
+  thought(timestamp(T0), Mem0),
+  %dbug(read_pending_codes(In,Codes,Found,Missing)),
+  repeat,
+   notrace((ttyflush,
+    player_format('[~p: ~p] ==> ', [T0, Agent]), ttyflush,
+    agent_to_input(Agent,In),
+    dmust(is_stream(In)),
+    readtokens(In,[], Words0),
+    read_pending_input(In,_,[]),
+    (Words0==[]->Words=[wait];Words=Words0))),
+    parse(Words, Action, Mem0),
+    !,
+  (Action =.. Words; player_format('~w~n', [Action])),
+  add_todo(Action, Mem0, Mem1), ttyflush, !.
+
+
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  CODE FILE SECTION
 :- dbug(ensure_loaded('adv_agents')).
@@ -166,24 +183,9 @@ decide_action(Agent, Mem0, Mem1) :-
   current_input(In), % agent_to_input(Agent,In),
   (tracing->catch(sleep(3),_,(nortrace,notrace,break));true),
   wait_for_input([In,user_input],Found,0.5),
-  
   % read_pending_codes(In,Codes,Missing), 
   (Found==[] -> (Mem0=Mem1) ; 
-  ((  
-  thought(timestamp(T0), Mem0),
-  %dmsg(read_pending_codes(In,Codes,Found,Missing)),
-  repeat,
-   notrace((ttyflush,
-    player_format('[~p: ~p] ==> ', [T0, Agent]), ttyflush,
-    agent_to_input(Agent,In),
-    dmust(is_stream(In)),
-    readtokens(In,[], Words0),
-    read_pending_input(In,_,[]),
-    (Words0==[]->Words=[wait];Words=Words0))),
-    parse(Words, Action, Mem0),
-    !,
-  (Action =.. Words; player_format('~w~n', [Action])),
-  add_todo(Action, Mem0, Mem1), ttyflush))), !.
+    (((notrace,console_decide_action(Agent, Mem0, Mem1))))).
 
 % Autonomous
 decide_action(Agent, Mem0, Mem3) :-
@@ -233,7 +235,7 @@ run_agent_pass_1_0(Agent, S0, S) :-
   decide_action(Agent, Mem3, Mem4),
   declare(memories(Agent, Mem4), S2, S3),
   declare(perceptq(Agent, []), S3, S4),
-  % dmsg(timestamp(Agent, T1)),
+  % dbug(timestamp(Agent, T1)),
   apply_first_arg_state(Agent, do_todo(), S4, S),
   % pprint(S, general),
   

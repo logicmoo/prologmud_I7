@@ -54,8 +54,7 @@ extra :-  true. % Fuller, but questionable if needed yet.
 :- export(console_player/1).
 console_player(Agent):-
   current_input(InStream),
-  adv:console_info(Id, _Alias, InStream, _OutStream, _Host, _Peer, Agent),
-  assertion(( thread_self(X), (number(Id)->thread_property(X, id(Id));thread_property(X, alias(Id))))), !.
+  adv:console_info(_Id, _Alias, InStream, _OutStream, _Host, _Peer, Agent),!.
 console_player(Agent):-
   Agent = 'player~1',
   (( \+ adv:console_info(_Id, _Alias, _InStream, _OutStream, _Host, _Peer, Agent))).
@@ -111,7 +110,7 @@ main(S0, S9) :-
   % pprint(S1,general),
   get_live_agents(LiveAgents, S1),
   ttyflush)),
-  %dmsg(liveAgents = LiveAgents),
+  %dbug(liveAgents = LiveAgents),
   apply_all(LiveAgents, run_agent_pass_1(), S1, S2),
   apply_all(LiveAgents, run_agent_pass_2(), S2, S9),
   notrace((nb_setval(advstate,S9))),

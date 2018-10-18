@@ -15,7 +15,9 @@
 %
 */
 
-
+:- if(exists_source(library(nldata/clex_iface))).
+:- ensure_loaded(library(nldata/clex_iface)).
+:- endif.
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  CODE FILE SECTION
 % :- ensure_loaded('adv_eng2cmd').

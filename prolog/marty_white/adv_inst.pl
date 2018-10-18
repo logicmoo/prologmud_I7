@@ -42,7 +42,7 @@ create_agent_conn(Agent,Named,Info,S0,S9):-
                % h(Spatial, worn_by, Watch, Agent),
                %h(Spatial, in, Bag, Coins),
                %h(Spatial, held_by, Bag, Agent),
-               h(Spatial, in, Agent, kitchen)))],S0,S1),
+               h(spatial, in, Agent, kitchen)))],S0,S1),
    init_objects(S1,S9).
 
 
@@ -61,7 +61,7 @@ init_objects(S0, S2) :-
                    
 create_object(Object, S0, S0) :- declared(object(Object,t), S0),!.
 create_object(Object, S0, S2) :- 
-   dmsg(create_object(Object)),
+   dbug(create_object(Object)),
    declare(object(Object,t), S0, S1),
    (declared(props(Object, PropList), S0);PropList=[]),!,
    %visit_existing(Object, PropList,S1, S2).
@@ -148,17 +148,16 @@ create_objs([],[],_Suffix,_Info,S0,S0).
 create_1obj(Suffix,_Info,a(Type),Inst,S0,S2):- !, 
   dmust(create_new_suffixed_unlocated(Suffix,Type,Inst,S0,S2)).
 
-create_1obj(Suffix,_Info,the(Type),Inst,S0,S2):- !, dmust(find_recent(Suffix,Type,Inst,S0,S2)).
+create_1obj(Suffix,Info,the(Type),Inst,S0,S2):-  find_recent(Suffix,Type,Inst,S0,S2)->true;create_1obj(Suffix,Info,Type,Inst,S0,S2).
 create_1obj(_Suffix,_Info,I,I, S0,S0):- atom_contains(I,'~').
 create_1obj(_Suffix,_Info,I,I, S0,S0):- assertion(atom(I)),!.
 
 find_recent(_Suffix,Type,Inst,S0,S0):- member(props(Inst,PropList),S0),member(instance(Type),PropList).
 
-/*
 inst_of(I,C,N):- compound(I),!,I=..[C,N|_].
 inst_of(I,C,N):- atom(I),!, atomic_list_concat([C,NN],'~',I),atom_number(NN,N).
 inst_of(I,C,N):- atom(C),atomic_list_concat([C,NN],'~',I),atom_number(NN,N).
-*/
+
 
 
 

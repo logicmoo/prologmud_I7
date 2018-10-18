@@ -61,12 +61,34 @@ bugout(_, _).
 bugout(A, L, B) :-
   bug(B),
   !,
+  dmust(maplist(simplify_dbug, L, LA)),
   ansi_format([fg(cyan)], '~N% ', []),
-  ansi_format([fg(cyan)], A, L),
-  nop(dmust(console_player(Player))),
-  nop(dmust(redraw_prompt(Player))),!.
-  
+  ansi_format([fg(cyan)], A, LA),
+  dmust((console_player(Player),redraw_prompt(Player))),!.
 bugout(_, _, _).
+
+
+:- export(simplify_dbug/2).
+simplify_dbug(G,GG):- \+ compound(G),!,GG=G.
+simplify_dbug({O},{O}):- !.
+simplify_dbug(List,O):-
+ ( is_list(List) -> clip_cons(List,'...'(_),O) ;
+   ( List = [_|_], append(LeftSide,Open,List),
+     Open \= [_|_], !, assertion(is_list(LeftSide)),
+   clip_cons(LeftSide,'...'(Open),O))).
+simplify_dbug(G,GG):- compound_name_arguments(G,F,GL), F\==sense_props, !,
+  maplist(simplify_dbug,GL,GGL),!,compound_name_arguments(GG,F,GGL).
+simplify_dbug(G,G).
+is_state_list(G,_):- \+ compound(G),!,fail.
+is_state_list([G1|_],{GG,'...'}):- compound(G1),G1=structure_label(GG),!.
+is_state_list([_|G],GG):- is_state_list(G,GG).
+clip_cons(G,GG):- is_state_list(G,GG),!.
+clip_cons(List,ClipTail,{Len,Left,ClipTail}):- 
+   length(List,Len),
+   MaxLen = 5, Len>MaxLen,
+   length(Left,MaxLen),
+   append(Left,_,List),!.
+clip_cons(List,_,List).
 
 
 pprint(Term, B) :-
@@ -221,12 +243,12 @@ agent_to_input(Agent,In):- adv:console_info(_Id,_Alias,In,_OutStream,_Host, _Pee
 agent_to_input(_Agent,In):- current_input(In).
 
 user:bi:- agent_to_input('telnet~1',In),
-   forall(stream_property(In,P),dmsg(ins(P))),
+   forall(stream_property(In,P),dbug(ins(P))),
    %line_position(In,LIn),
-   %dmsg(ins(line_position(In,LIn))),
-   forall(stream_property('telnet~1',P),dmsg(outs(P))),listing(overwritten_chars),
+   %dbug(ins(line_position(In,LIn))),
+   forall(stream_property('telnet~1',P),dbug(outs(P))),listing(overwritten_chars),
    line_position('telnet~1',LInOut),!,
-   dmsg(outs(line_position('telnet~1',LInOut))),!.
+   dbug(outs(line_position('telnet~1',LInOut))),!.
 
 get_overwritten_chars(Agent,Chars):- agent_to_input(Agent,In),overwritten_chars(In,Chars).
 get_overwritten_chars(_Agent,[]).
