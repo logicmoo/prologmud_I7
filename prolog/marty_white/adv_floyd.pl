@@ -53,15 +53,15 @@ do_autonomous_cycle(Agent):-
   bugout('~w @ ~w: was about to: ~w~n', [Agent, Here, Action], autonomous),fail.
 */
 
-maybe_autonomous_decide_goal_action(Agent, Mem0, Mem1) :- do_autonomous_cycle(Agent),
-  set_last_action(Agent,[auto]),
+maybe_autonomous_decide_goal_action(Agent, Mem0, Mem1) :- notrace((do_autonomous_cycle(Agent),
+  set_last_action(Agent,[auto]))),
   autonomous_decide_goal_action(Agent, Mem0, Mem1).
 maybe_autonomous_decide_goal_action(_Agent, Mem0, Mem0).
 
 
 autonomous_decide_goal_action(Agent, Mem0, Mem3) :-
   forget(goals(Goals), Mem0, Mem1),
-  thought(model(spatial, ModelData), Mem1),
+  thought(model(ModelData), Mem1),
   select_unsatisfied_conditions(Goals, Unsatisfied, ModelData),
   memorize(goals(Unsatisfied), Mem1, Mem2),
   autonomous_decide_action(Agent, Mem2, Mem3).
@@ -87,13 +87,13 @@ autonomous_decide_action(Agent, Mem0, Mem2) :-
   bugout('~w: Can\'t solve goals.  Forgetting them.~n', [Agent], autonomous).
 autonomous_decide_action(Agent, Mem0, Mem1) :-
   % If no actions or goals, but there's an unexplored exit here, go that way.
-  thought(model(Spatial, ModelData), Mem0),
+  thought(model(ModelData), Mem0),
   in_model(h(Spatial, _How, Agent, Here, _), ModelData),
   in_model(h(Spatial, exit(ExitName), Here, '<unexplored>', _), ModelData),
   add_todo(goto(Spatial, (*), ExitName), Mem0, Mem1).
 autonomous_decide_action(Agent, Mem0, Mem1) :-
   % Follow Player to adjacent rooms.
-  thought(model(Spatial, ModelData), Mem0),
+  thought(model(ModelData), Mem0),
   in_model(h(Spatial, _, Agent, Here, _), ModelData),
   dif(Agent, Player), current_player(Player),
   in_model(h(Spatial, _, Player, There, _), ModelData),

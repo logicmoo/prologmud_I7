@@ -63,8 +63,8 @@ bugout(A, L, B) :-
   !,
   ansi_format([fg(cyan)], '~N% ', []),
   ansi_format([fg(cyan)], A, L),
-  nop(dmust(console_player(Player))),
-  nop(dmust(redraw_prompt(Player))),!.
+  dmust(console_player(Player)),
+  dmust(redraw_prompt(Player)),!.
   
 bugout(_, _, _).
 

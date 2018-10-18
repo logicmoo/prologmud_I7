@@ -23,7 +23,7 @@ each_live_agent(NewGoal, S0, S2) :-
  apply_all(List, NewGoal, S0, S2).
 
 each_sensing_agent(Sense, NewGoal, S0, S2) :-
- get_sensing_agents(Sense, List, S0),
+ get_sensing_objects(Sense, List, S0),
  apply_all(List, NewGoal, S0, S2).
 
 each_agent(Precond, NewGoal, S0, S2) :-
@@ -54,7 +54,7 @@ each_agent(Precond, NewGoal, S0, S2) :-
 %   timestamp(T)    - agent may add a new timestamp whenever a sequence point
 %                     is desired.
 %   [percept]       - received perceptions.
-%   model(Spatial, [...])    - Agent's internal model of the Spatial world.
+%   model([...])    - Agent's internal model of the Spatial world.
 %                     Model is a collection of timestampped relations.
 %   goals([...])    - states the agent would like to achieve, or
 %                     acts the agent would like to be able to do.
@@ -62,16 +62,6 @@ each_agent(Precond, NewGoal, S0, S2) :-
 %   affect(...)     - Agent's current affect.
 % Multiple plans, goals, models, affects, etc. may be stored, for introspection
 %   about previous internal states.
-
-% Manipulate memories (M stands for Memories)
-memorize(Figment, M0, M1) :- append([Figment], M0, M1).
-memorize_list(FigmentList, M0, M1) :- must_be(list,FigmentList),dmust(append(FigmentList, M0, M1)).
-forget(Figment, M0, M1) :- select(Figment, M0, M1).
-forget_always(Figment, M0, M1) :- select_always(Figment, M0, M1).
-%forget_default(Figment, Default, M0, M1) :-
-%  select_default(Figment, Default, M0, M1).
-thought(Figment, M) :- member(Figment, M).
-
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  CODE FILE SECTION
@@ -109,7 +99,7 @@ add_todo_all([Action|Rest], Mem0, Mem2) :-
 % do_introspect(Query, Answer, Memory)
 do_introspect(path(Spatial, There), Answer, Memory) :-
   thought(inst(Agent), Memory),
-  thought(model(Spatial, ModelData), Memory),
+  thought(model(ModelData), Memory),
   in_model(h(Spatial, _How, Agent, Here, _T), ModelData),
   find_path(Spatial, Here, There, Route, ModelData),
   Answer = ['Model is', ModelData, '\nShortest path is', Route].
@@ -134,23 +124,23 @@ do_introspect(whatis(_Spatial, X), [X, is, X, .], _Memory).
 
 remember_whereis(Spatial, Thing, Answer, Memory) :-
   thought(inst(Agent), Memory),
-  thought(model(Spatial, ModelData), Memory),
+  thought(model(ModelData), Memory),
   in_model(h(Spatial, How, Thing, Where, T), ModelData),
   How \= exit(_),
   Answer = ['At time', T, subj(Agent), 'saw the', Thing, How, the, Where, .].
 remember_whereis(Spatial, Here, Answer, Memory) :-
   thought(inst(Agent), Memory),
-  thought(model(Spatial, ModelData), Memory),
+  thought(model(ModelData), Memory),
   in_model(h(Spatial, _How, Agent, Here, _T), ModelData),
   Answer = 'Right here.'.
 remember_whereis(Spatial, There, Answer, Memory) :-
   thought(inst(Agent), Memory),
-  thought(model(Spatial, ModelData), Memory),
+  thought(model(ModelData), Memory),
   in_model(h(Spatial, _How, Agent, Here, _T), ModelData),
   find_path(Spatial, Here, There, Route, ModelData),
   Answer = ['To get to the', There, ', ', Route].
 remember_whereis(Spatial, There, Answer, Memory) :-
-  thought(model(Spatial, ModelData), Memory),
+  thought(model(ModelData), Memory),
   ( in_model(h(Spatial, exit(_), _, There, _T), ModelData);
     in_model(h(Spatial, exit(_), There, _, _T), ModelData)),
   Answer = 'Can''t get there from here.'.
@@ -164,13 +154,13 @@ remember_whereis(Spatial, There, Answer, Memory) :-
 
 % Telnet client
 decide_action(Agent, Mem0, Mem1) :-
-  thought(inherit(telnet), Mem0),
+  notrace(thought(inherit(telnet,t), Mem0)),!,
   dmust(telnet_decide_action(Agent, Mem0, Mem1)).
 
 
 % Stdin Client
 decide_action(Agent, Mem0, Mem1) :-
-  notrace(thought(inherit(console), Mem0)),!,
+  notrace(thought(inherit(console,t), Mem0)),!,
   current_input(In), % agent_to_input(Agent,In),
   (tracing->catch(sleep(3),_,(nortrace,notrace,break));true),
   wait_for_input([In,user_input],Found,0.5),
@@ -195,11 +185,11 @@ decide_action(Agent, Mem0, Mem1) :-
 
 % Autonomous
 decide_action(Agent, Mem0, Mem3) :-
-  thought(inherit(autonomous), Mem0),
+  thought(inherit(autonomous,t), Mem0),
   maybe_autonomous_decide_goal_action(Agent, Mem0, Mem3).
 
 decide_action(_Agent, Mem, Mem) :-
-  thought(inherit(memorize), Mem), !.  % recorders don't decide much.
+  thought(inherit(memorize,t), Mem), !.  % recorders don't decide much.
 decide_action(Agent, Mem0, Mem0) :-
   bugout('decide_action(~w) FAILED!~n', [Agent], general).
 
@@ -242,7 +232,7 @@ run_agent_pass_1_0(Agent, S0, S) :-
   declare(memories(Agent, Mem4), S2, S3),
   declare(perceptq(Agent, []), S3, S4),
   % dmsg(timestamp(Agent, T1)),
-  apply_first_arg(Agent, do_todo(), S4, S),
+  apply_first_arg_state(Agent, do_todo(), S4, S),
   % pprint(S, general),
   
   notrace(must_output_state(S)),!.
@@ -250,7 +240,7 @@ run_agent_pass_1_0(Agent, S0, S) :-
 run_agent_pass_2_0(_Agent, S0, S0):-!.
 run_agent_pass_2_0(Agent, S0, S) :-
   must_input_state(S0),
-  apply_first_arg(Agent, do_todo(), S0, S),
+  apply_first_arg_state(Agent, do_todo(), S0, S),
   notrace(must_output_state(S)),!.
   
 % --------

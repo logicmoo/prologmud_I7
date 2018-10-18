@@ -23,6 +23,8 @@
 %  CODE FILE SECTION
 :- nop(ensure_loaded('adv_main_commands')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%printable_state(L,S):- sort(L,S).
+printable_state(S,S).
 
 meta_pprint(D,K):- pprint(D,K).
 
@@ -30,6 +32,8 @@ meta_pprint(D,K):- pprint(D,K).
 do_metacmd(quit, S0, S1) :-
   declare(quit, S0, S1),
   player_format('Bye!~n', []).
+do_metacmd(rtrace, S0, S0) :- admin, rtrace.
+do_metacmd( nortrace, S0, S0) :- admin, nortrace.
 do_metacmd(trace, S0, S0) :- admin, trace.
 do_metacmd( notrace, S0, S0) :- admin, notrace.
 do_metacmd(spy(Pred), S0, S0) :- admin, spy(Pred).
@@ -44,7 +48,7 @@ do_metacmd(Echo, S0, S0) :-
   player_format('~w~n', [Args]).
 do_metacmd(state, S0, S0) :-
   wizard,
-  sort(S0,S),
+  printable_state(S0,S),
   meta_pprint(S, general).
 do_metacmd(make, S0, S0) :-
   wizard,
@@ -58,10 +62,10 @@ do_metacmd(memory(Agent), S0, S0) :-
   declared(memories(Agent, Memory), S0),
   meta_pprint(Memory, general).
 
-do_metacmd(model(Spatial, Agent), S0, S0) :-
+do_metacmd(model(Agent), S0, S0) :-
   wizard,
   declared(memories(Agent, Memory), S0),
-  thought(model(Spatial, ModelData), Memory),
+  thought(model(ModelData), Memory),
   meta_pprint(ModelData, general).
 
 do_metacmd(model(Agent), S0, S0) :-
@@ -96,7 +100,7 @@ do_metacmd(DelProp, S0, S1) :-
   player_format('Deleted.~n', []).
 do_metacmd(properties(Object), S0, S0) :-
   wizard,
-  declared(props(Object, PropList), S0),
+  (declared(props(Object, PropList), S0);declared(class_props(Object, PropList), S0)),!,
   player_format('Properties of ~p are now ~w~n', [Object, PropList]).
 do_metacmd(undo, S0, S1) :-
   declare(undo, S0, S1),
@@ -104,7 +108,9 @@ do_metacmd(undo, S0, S1) :-
 do_metacmd(save(Basename), S0, S0) :-
   atom_concat(Basename, '.adv', Filename),
   save_term(Filename, S0).
-do_metacmd(WA, S0, S1) :- cmd_workarround(WA, WB) -> WB\==WA, !, do_metacmd(WB, S0, S1).
+
+do_metacmd(WA, S0, S1) :- 
+   ((cmd_workarround(WA, WB) -> WB\==WA)), !, do_metacmd(WB, S0, S1).
 
 
 

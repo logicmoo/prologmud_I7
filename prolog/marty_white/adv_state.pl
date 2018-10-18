@@ -28,127 +28,10 @@
 advstate([]).
 
 
-
-get_objects(Spec, Set, State):- get_objects(Spec, List, State, State), !, list_to_set(List,Set).
-%get_objects(_Spec, [player1, floyd], _State):-!.
-
-get_objects(Spec, OutList, [Store|StateList], S0):- !,
-  (( stores_props(Store, Object, PropList) -> filter_spec(Spec, PropList))
-    ->  OutList = [Object|MidList]
-    ; OutList = MidList), !,
-   get_objects(Spec, MidList, StateList, S0).
-get_objects(_Spec, [], [], _) :- !.
-
-
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  CODE FILE SECTION
 :- nop(ensure_loaded('adv_state')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% Some Inform properties:
-%   light - rooms that have light in them
-%   can_be(Spatial, eat, t) - can be eaten
-%   static - can't be taken or moved
-%   scenery - assumed to be in the room description (implies static)
-%   concealed - obscured, not listed, not part of 'all', but there
-%   found_in - lists places where scenery objects are seen
-%   absent - hides object entirely
-%   clothing - can be worn
-%   worn - is being worn
-%   container
-%   state(Spatial, open, t) - container is state(Spatial, open, t) (must be state(Spatial, open, t) to be used. there is no "closed").
-%   can_be(Spatial, open, t) - can be opened and closed
-%   capacity(N) - number of objects a container or supporter can hold
-%   state(Spatial, locked, t) - cannot be opened
-%   can_be(Spatial, lock, t), with_key
-%   enterable
-%   supporter
-%   article - specifies indefinite article ('a', 'le')
-%   cant_go
-%   daemon - called each turn, if it is enabled for this object
-%   description
-%   inside_description
-%   invent - code for inventory listing of that object
-%   list_together - way to handle "5 fish"
-%   plural - pluralized-name if different from singular
-%   when_closed - description when closed
-%   when_open - description when state(Spatial, open, t)
-%   when_on, when_off - like when_closed, etc.
-% Some TADS properties:
-%   thedesc
-%   pluraldesc
-%   is_indistinguishable
-%   is_visible(vantage)
-%   is_reachable(actor)
-%   valid(verb) - is object seeable, reachable, etc.
-%   verification(verb) - is verb logical for this object
-% Parser disambiguation:
-%   eliminate objs not see, reachable, etc.
-%   check preconditions for acting on a candidate object
-
-% TODO: change agent storage into a term:
-%   mind(AgentName, AgentType, History, ModelData, Goals /*, ToDo*/)
-
-
-%create_object(Agent, S0, S2) :- declared(perceptq(Agent, []), S0), !,
-%  dbug(existingAgent=Agent),
-%  S2=S0.
-                   
-create_object(Object, S0, S0) :- declared(object(Object,t), S0),!.
-create_object(Object, S0, S2) :- 
-   declare(object(Object,t), S0, S1),
-   (declared(props(Object, PropList), S0);PropList=[]),!,
-   visit_existing(Object, PropList, S1, S2).
-
-visit_existing(_Object, [], S0, S0) :-!.
-visit_existing(Object, [Prop|List], S0, S2):- !,  
-   visit_existing(Object, List, S0, S1),
-   visit_existing(Object, Prop, S1, S2).
-
-%visit_existing(Object, Prop, S1, S2):- dmust(create_objprop(Object, Prop, S1, S2)).
-
-visit_existing(Object, Prop, S1, S2):- Prop=inherit(_),!,dmust(create_objprop(Object, Prop, S1, S2)).
-visit_existing(Object, Prop, S0, S2):- dmust(updateprop(Object,Prop,S0, S2)).
-  
-
-create_objprop(_Object, [], S0, S0).
-create_objprop(Object, [Prop|List], S0, S2):- !,
-   create_objprop(Object, List, S0, S1),
-   create_objprop(Object, Prop, S1, S2).
-
-create_objprop(Object, inherit(Other), S0, S0):- getprop(Object,inherited(Other),S0),!.
-create_objprop(Object, inherit(Other), S0, S0):- getprop(Object,isnt(Other),S0),!.
-create_objprop(Object, inherit(Other), S0, S0):- Other==Object,!.
-
-  % As events happen, percepts are entered in the percept queue of each agent.
-  % Each agent empties their percept queue as they see fit.
-create_objprop(Object, inherit(perceptq), S0, S0):- declared(perceptq(Object,_),S0),!.
-create_objprop(Object, inherit(perceptq), S0, S1):- !,
-   declare(perceptq(Object, []), S0, S1).
-
-  % Most agents store memories of percepts, world model, goals, etc.
-create_objprop(Object, inherit(memorize), S0, S0):- declared(memories(Object,_),S0),!.
-create_objprop(Object, inherit(memorize), S0, S2):- !,
-  declared(props(Object, PropList), S0),
-  copy_term(PropList,PropListC),!,
-  % =(PropList,PropListC),!,
-  declare(memories(Object, [
-    timestamp(0),
-    model(spatial, []),
-    goals([]),
-    todo([look]),
-    inst(Object)|PropListC]), S0, S2).
-
-
-create_objprop(Object, inherit(Other), S0, S9):- 
-   (declared(props(Other, PropList), S0); PropList=[]),
-   copy_term(PropList,PropListC),!,
-   dmust(setprop(Object, inherited(Other), S0, S1)), !,
-   dmust(create_objprop(Object, PropListC, S1, S2)),
-   dmust(setprop(Object, inherit(Other), S2, S9)), !,
-   !.
-   
-create_objprop(Object, Prop, S0, S2):- dmust(updateprop(Object,Prop,S0, S2)).
 
 % -----------------------------------------------------------------------------
 % State may be implemented differently in the future (as a binary tree or
@@ -178,10 +61,11 @@ select_always(_Item, ListWithoutItem, ListWithoutItem).
 % Manipulate simulation state
 %declare(Fact, State):- player_local(Fact, Player), !, declare(wishes(Player, Fact), State).
 declare((Fact1,Fact2), State, NewState) :- !,declare(Fact1, State, MidState),declare(Fact2, MidState, NewState).
-declare(Fact, State, NewState) :- assertion(var(NewState)),dmust(append([Fact], State, NewState)).
+declare(Fact, State, NewState) :- notrace(((assertion(var(NewState)),dmust(append([Fact], State, NewState))))).
 
 %undeclare(Fact, State):- player_local(Fact, Player), !, undeclare(wishes(Player, Fact), State).
-undeclare(Fact, State, NewState) :- copy_term(State, Copy), select(Fact, State, NewState),
+undeclare(Fact, State, NewState):- notrace(undeclare_(Fact, State, NewState)).
+undeclare_(Fact, State, NewState) :- copy_term(State, Copy), select(Fact, State, NewState),
     assertion( \+ member(Copy , NewState)).
 
 %undeclare_always(Fact, State):- player_local(Fact, Player), !, undeclare_always(wishes(Player, Fact), State).
@@ -209,10 +93,25 @@ is_declared_thread_player(undo).
 % TODO:
 %   store initial state as clauses which are collected up and put into a list,
 %     like the operators are, to provide proper prolog variable management.
-
-must_input_state(S0):- assertion(is_list(S0);must_state(S0)).
-must_output_state(S0):- notrace(assertion(must_state(S0);is_list(S0))),check4bugs(S0).
+must_input_state(S0):- notrace(assertion(is_list(S0);must_state(S0))).
+must_output_state(S0):- notrace(assertion(must_state(S0);is_list(S0))),notrace(check4bugs(S0)).
 must_state(S0):- is_list(S0), nb_setval(advstate,S0).
+
+get_objects(Spec, Set, State):- must_input_state(State), get_objects_(Spec, List, State, im(State)), !, list_to_set(List,Set).
+%get_objects(_Spec, [player1, floyd], _State):-!.
+
+get_objects_(_Spec, [], [], im(_)) :- !.
+get_objects_(Spec, OutList, [Store|StateList], im(S0)):-     
+  (( stores_props(Store, Object, PropList) -> filter_spec(Spec, PropList))
+    ->  OutList = [Object|MidList]
+    ; OutList = MidList), !,
+   get_objects_(Spec, MidList, StateList, im(S0)).
+
+stores_props(perceptq(Agent, PropList), Agent, PropList).
+%stores_props(class_props(Agent, PropList), Agent, PropList).
+stores_props(memories(Agent, PropList), Agent, PropList).
+stores_props(props(Object, PropList), Object, PropList).
+
 
 
 % Retrieve Prop.
@@ -221,42 +120,58 @@ must_state(S0):- is_list(S0), nb_setval(advstate,S0).
 % MAYBE getprop(Object, Prop, State):- atom(Prop), getprop1(Object, state(Spatial, Prop, t), State).
 % MAYBE getprop(Object, Prop, State):- atom(Prop), getprop1(Object, state(Spatial, Prop, f), State), !, fail.
 
-getprop(Object, Prop, State):-
-  quietly((assertion(\+ atom(Prop)), getprop1(Object, Prop, State)))
-    *-> true; getprop2(Object, Prop, State).
 
-getprop2(Object, Prop, Memory):- member(state(_Spatial, State), Memory), !,
-  getprop1(Object, Prop, State).
+get_all_props(Object, AllProps, S0):- findall(Prop,getprop(Object, Prop, S0),AllProps).
 
-% current_props(Object, PropList, State):- atom(Object),atom_
-current_props(Object, PropList, State):- declared(props(Object, PropList), State).
+getprop(Object, Prop, S0):- quietly((assertion(\+ atom(Prop)), getprop1(Object, Prop, S0))).
 
-getiprop(Object, Prop, State) :-
-  current_props(Object, PropList, State),
+getiprop(Object, Prop, S0) :-
+  current_props(Object, PropList, S0),
   member(Prop, PropList).
 
-getprop1(Object, Prop, State) :- getiprop(Object, Prop, State).
-getprop1(Object, Prop, State) :- 
-  current_props(Object, PropList, State),  
-  \+ member(inherit(instance), PropList),  
-  member(inherit(Delegate), PropList),
+getprop1(Object, Prop, S0) :- getiprop(Object, Prop, S0).
+getprop1(Object, Prop, S0) :- \+ member(object(Object,t), S0),
+  current_props(Object, PropList, S0),  
+  member(inherit(Delegate,t), PropList),
   \+ member(inherited(Delegate), PropList),
-  getprop1(Delegate, Prop, State).
+  getprop1(Delegate, Prop, S0).
+
+getprop_from_state(Object, Prop, Memory):-
+  member(state(S0), Memory), !,
+  getprop1(Object, Prop, S0).
+
+% current_props(Object, PropList, S0):- atom(Object),atom_
+current_props(Object, PropList, S0):- 
+  declared(props(Object, PropList), S0) 
+    *-> true 
+      ; declared(class_props(Object, PropList), S0).
+
+current_props_or(Object,PropList, Default, S0) :-
+  declared(props(Object,PropList),S0)*->true; PropList=Default.
 
 % Replace or create Prop.
-setprop(Object, Prop, S00, S2) :-
-  delprop_always(Object, Prop, S00, S0),
+setprop(Object, Prop, S0, S2) :- notrace((setprop_(Object, Prop, S0, S2))).
+
+
+setprop_(Object, Prop, S0, S2) :- 
   assertion(compound(Prop)),
+
+  current_props_or(Object, PropList, [], S0),
+  undeclare_always(props(Object, _), S0, S1),
+
   functor(Prop,F,A),
   duplicate_term(Prop,Old),
   nb_setarg(A,Old,_),
-  undeclare(props(Object, PropList), S0, S1),
+
   (select(Old, PropList, PropList2) ->
       (upmerge_prop(F,A,Old,Prop,Merged) ->
-         (Old==Merged -> S2=S0 ; 
+         ((Old==Merged,fail) -> S2=S0 ; 
            (append([Merged], PropList2, PropList3),declare(props(Object, PropList3), S1, S2)));
         append([Prop], PropList, PropList3),declare(props(Object, PropList3), S1, S2));
    (append([Prop], PropList, PropList3),declare(props(Object, PropList3), S1, S2))).
+
+
+%     delprop_always(Object, Prop, S0U, S0a),
 
 /*setprop(Object, Prop, S0, S2) :-
   %dmust((
@@ -287,18 +202,25 @@ merge_value(_,1,_,_,_):- !,fail.
 merge_value(_F,_,_B,A,R):- R = A.
 
 % Replace or create Prop.
-updateprop(Object, Prop, S0, S2) :-
+updateprop(Object, Prop, S00, S2) :- notrace((updateprop_(Object, Prop, S00, S2))).
+
+updateprop_(Object, Prop, S0, S2) :- 
   assertion(compound(Prop)),
+
+  current_props_or(Object, PropList, [], S0),
+  undeclare_always(props(Object, _), S0, S1),
+
   functor(Prop,F,A),
   duplicate_term(Prop,Old),
   nb_setarg(A,Old,_),
-  undeclare(props(Object, PropList), S0, S1),
+
   (select(Old, PropList, PropList2) ->
       (upmerge_prop(F,A,Old,Prop,Merged) ->
-         (Old==Merged -> S2=S0 ;  % no update
+         ((Old==Merged,fail) -> S2=S0 ; % no update
            (append([Merged], PropList2, PropList3),declare(props(Object, PropList3), S1, S2)));
         append([Prop], PropList, PropList3),declare(props(Object, PropList3), S1, S2));
    (append([Prop], PropList, PropList3),declare(props(Object, PropList3), S1, S2))).
+
 
 % Remove Prop.
 delprop(Object, Prop, S0, S2) :-
