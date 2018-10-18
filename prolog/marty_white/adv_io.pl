@@ -63,8 +63,8 @@ bugout(A, L, B) :-
   !,
   ansi_format([fg(cyan)], '~N% ', []),
   ansi_format([fg(cyan)], A, L),
-  dmust(console_player(Player)),
-  dmust(redraw_prompt(Player)),!.
+  nop(dmust(console_player(Player))),
+  nop(dmust(redraw_prompt(Player))),!.
   
 bugout(_, _, _).
 
@@ -75,10 +75,14 @@ pprint(Term, B) :-
   player_format('~N~@~N',[prolog_pretty_print:print_term(Term, [output(current_output)])]),!.
 pprint(_, _).
 
-redraw_prompt(_Agent):- 
-  console_player(Player),
-   player_format(Player,'~w@spatial> ',[Player]),!.
+/*
+redraw_prompt(Agent):- (Agent == 'floyd~1'),
 
+redraw_prompt(_Agent):- 
+ % console_player(Player),
+   current_player(Player),
+   player_format(Player,'~w@spatial> ',[Player]),!.
+*/
 redraw_prompt(Agent):- (Agent \== 'floyd~1'),!, 
   player_format(Agent,'~w@spatial> ',[Agent]),!.
 redraw_prompt(_Agent).
@@ -153,16 +157,12 @@ log_codes(LineCodes) :-
 readtokens(Tokens) :- current_player(Agent),readtokens(Agent,[],Tokens).
 
 readtokens(In,Prev,Tokens):- 
-  is_stream(In),!,
+  assertion(is_stream(In)),!,
   New = '',
   setup_call_cleanup(prompt(Old,New),
      read_line_to_tokens(In,Prev,Tokens),
      prompt(_,Old)),
   !.
-readtokens(Agent,Prev,Tokens) :- 
-  agent_to_input(Agent,In),
-  dmust(is_stream(In)),
-  readtokens(In,Prev,Tokens),!.
 
 read_line_to_tokens(In,Prev,Tokens):- 
   read_line_to_codes(In,LineCodesR), 

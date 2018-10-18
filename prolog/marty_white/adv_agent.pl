@@ -54,7 +54,7 @@ each_agent(Precond, NewGoal, S0, S2) :-
 %   timestamp(T)    - agent may add a new timestamp whenever a sequence point
 %                     is desired.
 %   [percept]       - received perceptions.
-%   model([...])    - Agent's internal model of the Spatial world.
+%   model(Spatial, [...])    - Agent's internal model of the Spatial world.
 %                     Model is a collection of timestampped relations.
 %   goals([...])    - states the agent would like to achieve, or
 %                     acts the agent would like to be able to do.
@@ -62,6 +62,16 @@ each_agent(Precond, NewGoal, S0, S2) :-
 %   affect(...)     - Agent's current affect.
 % Multiple plans, goals, models, affects, etc. may be stored, for introspection
 %   about previous internal states.
+
+% Manipulate memories (M stands for Memories)
+memorize(Figment, M0, M1) :- append([Figment], M0, M1).
+memorize_list(FigmentList, M0, M1) :- must_be(list,FigmentList),dmust(append(FigmentList, M0, M1)).
+forget(Figment, M0, M1) :- select(Figment, M0, M1).
+forget_always(Figment, M0, M1) :- select_always(Figment, M0, M1).
+%forget_default(Figment, Default, M0, M1) :-
+%  select_default(Figment, Default, M0, M1).
+thought(Figment, M) :- member(Figment, M).
+
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  CODE FILE SECTION
@@ -99,7 +109,7 @@ add_todo_all([Action|Rest], Mem0, Mem2) :-
 % do_introspect(Query, Answer, Memory)
 do_introspect(path(Spatial, There), Answer, Memory) :-
   thought(inst(Agent), Memory),
-  thought(model(ModelData), Memory),
+  thought(model(Spatial, ModelData), Memory),
   in_model(h(Spatial, _How, Agent, Here, _T), ModelData),
   find_path(Spatial, Here, There, Route, ModelData),
   Answer = ['Model is', ModelData, '\nShortest path is', Route].
@@ -124,23 +134,23 @@ do_introspect(whatis(_Spatial, X), [X, is, X, .], _Memory).
 
 remember_whereis(Spatial, Thing, Answer, Memory) :-
   thought(inst(Agent), Memory),
-  thought(model(ModelData), Memory),
+  thought(model(Spatial, ModelData), Memory),
   in_model(h(Spatial, How, Thing, Where, T), ModelData),
   How \= exit(_),
   Answer = ['At time', T, subj(Agent), 'saw the', Thing, How, the, Where, .].
 remember_whereis(Spatial, Here, Answer, Memory) :-
   thought(inst(Agent), Memory),
-  thought(model(ModelData), Memory),
+  thought(model(Spatial, ModelData), Memory),
   in_model(h(Spatial, _How, Agent, Here, _T), ModelData),
   Answer = 'Right here.'.
 remember_whereis(Spatial, There, Answer, Memory) :-
   thought(inst(Agent), Memory),
-  thought(model(ModelData), Memory),
+  thought(model(Spatial, ModelData), Memory),
   in_model(h(Spatial, _How, Agent, Here, _T), ModelData),
   find_path(Spatial, Here, There, Route, ModelData),
   Answer = ['To get to the', There, ', ', Route].
 remember_whereis(Spatial, There, Answer, Memory) :-
-  thought(model(ModelData), Memory),
+  thought(model(Spatial, ModelData), Memory),
   ( in_model(h(Spatial, exit(_), _, There, _T), ModelData);
     in_model(h(Spatial, exit(_), There, _, _T), ModelData)),
   Answer = 'Can''t get there from here.'.
@@ -154,7 +164,7 @@ remember_whereis(Spatial, There, Answer, Memory) :-
 
 % Telnet client
 decide_action(Agent, Mem0, Mem1) :-
-  notrace(thought(inherit(telnet), Mem0)),!,
+  thought(inherit(telnet), Mem0),
   dmust(telnet_decide_action(Agent, Mem0, Mem1)).
 
 
@@ -173,9 +183,9 @@ decide_action(Agent, Mem0, Mem1) :-
   repeat,
    notrace((ttyflush,
     player_format('[~p: ~p] ==> ', [T0, Agent]), ttyflush,
-    readtokens(Agent,[], Words0),
     agent_to_input(Agent,In),
     dmust(is_stream(In)),
+    readtokens(In,[], Words0),
     read_pending_input(In,_,[]),
     (Words0==[]->Words=[wait];Words=Words0))),
     parse(Words, Action, Mem0),

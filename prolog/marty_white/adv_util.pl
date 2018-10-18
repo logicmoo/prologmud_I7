@@ -38,8 +38,8 @@ complex(C, R, I):- freeze(C, complex(C, R, I)), freeze(R, complex(C, R, I)), fre
 apply_all([], _Goal, S0, S0) :- !.
 apply_all([Arg], Goal, S0, S2) :- !, apply_first_arg(Arg, Goal, S0, S2).
 
-apply_all(List, Goal, S0, S2) :- notrace((list_to_set(List,Set), 
-   List\==Set)), !,
+apply_all(List, Goal, S0, S2) :- list_to_set(List,Set), 
+   List\==Set, !,
    apply_all(Set, Goal, S0, S2).
 
 apply_all([Arg|ArgTail], Goal, S0, S2) :-
@@ -53,43 +53,10 @@ runnable_goal(Goal, Goal) :- ground(Goal), !.
 runnable_goal(Goal, Goal).
 
 apply_first_arg(Arg, Goal, S0, S2) :-
-   notrace((compound_name_arguments(Goal, F, GoalL),
+   compound_name_arguments(Goal, F, GoalL),
    append(GoalL, [S0, S2], NewGoalL),
    must_input_state(S0),
-   Call=..[F, Arg|NewGoalL])),
-   dmust(Call),
-   must_output_state(S2).
-
-apply_state(Goal,S0,S0):- Goal==[],!.
-apply_state(rtrace(Goal), S0, S2) :- !, rtrace(apply_state(Goal, S0, S2)). 
-apply_state(dmust(Goal), S0, S2) :- !, dmust(apply_state(Goal, S0, S2)).
-apply_state(must(Goal), S0, S2) :- !, must(apply_state(Goal, S0, S2)). 
-apply_state(nop(_), S0, S2) :- !, S0=S2.
-apply_state({Goal}, S0, S0) :- !, call(Goal).
-apply_state([G1|G2], S0, S2) :- !,
-  apply_state(G1, S0, S1),
-  apply_state(G2, S1, S2).
-apply_state((G1,G2), S0, S2) :- !,
-  apply_state(G1, S0, S1),
-  apply_state(G2, S1, S2).
-apply_state((G1;G2), S0, S2) :- !,
-  apply_state(G1, S0, S2);
-  apply_state(G2, S0, S2).
-
-apply_state(s(Goal), S0, S2) :- !,
-   notrace((compound_name_arguments(Goal, F, GoalL),
-   append(GoalL, [S0], NewGoalL),
-   must_input_state(S0),
-   Call=..[F|NewGoalL])),
-   dmust(Call),
-   S0 = S2,
-   must_output_state(S2).
-
-apply_state(Goal, S0, S2) :-
-   notrace((compound_name_arguments(Goal, F, GoalL),
-   append(GoalL, [S0, S2], NewGoalL),
-   must_input_state(S0),
-   Call=..[F|NewGoalL])),
+   Call=..[F, Arg|NewGoalL],
    dmust(Call),
    must_output_state(S2).
 

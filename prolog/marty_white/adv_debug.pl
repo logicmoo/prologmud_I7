@@ -33,6 +33,11 @@ never_trace(Spec):- '$hide'(Spec),'$iso'(Spec),trace(Spec, -all).
 %:- never_trace(lists:member(_,_)).
 %:- never_trace(lists:append(_,_,_)).
 
+found_bug(S0,duplicated_object(X,R,L)) :-
+  append(Left,[prop(X,R)|_],S0),
+  member(prop(X,L),Left).
+
+check4bugs(S0) :- found_bug(S0,Bug),throw(check4bugs_failed(Bug)).
 check4bugs(_S0) :-
   !, true.
 check4bugs(S0) :-

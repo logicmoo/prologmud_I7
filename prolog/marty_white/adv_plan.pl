@@ -526,10 +526,11 @@ depth_planning_loop(PlannerGoals, Operators, SeedPlan, FullPlan,
                       Depth, Timeout).
 
 generate_plan(FullPlan, Mem0) :-
+  equals_efffectly(model, Spatial, _),
   thought(inst(Agent), Mem0),
   initial_operators(Agent, Operators),
   bugout('OPERATORS are:~n', planner), pprint(Operators, planner),
-  thought(model(Model0), Mem0),
+  thought(model(Spatial, Model0), Mem0),
   %bugout('CURRENT STATE is ~w~n', [Model0], planner),
   thought(goals(Goals), Mem0),
   new_plan(Agent, Model0, Goals, SeedPlan),

@@ -179,11 +179,12 @@ adv_tlnet_readloop(Id,Alias):-
   wait_for_input([In,InStream,user_input],Found,0.5),
   Found\==[],  
   %format(OutStream, '~N[~p: ~p] ==> ', [Alias, Agent]),
-  readtokens(Agent,[],Words),
+     readtokens(user_input,[],Words),
   dmust(adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, Words)).
 
 
 adv_tlnet_words(_Id,_Alias,_InStream,_OutStream, _Host, _Peer, _Agent, [prolog]):- !, prolog.
+adv_tlnet_words(_Id,_Alias,_InStream,_OutStream, _Host, _Peer, _Agent, ['You'|_]):- !, trace,prolog.
 
 adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, [quit]):-
  nop(adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent)),
@@ -204,6 +205,49 @@ adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, Words0):-
 
 
 end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+end_of_file.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -19,34 +19,10 @@
 
 %:- nop(ensure_loaded('adv_chat80')).
 %:- ensure_loaded(adv_main).
-%:- endif.
 
-%:- user:listing(adventure).
-
-
-get_sensing_agents(Sense, Agents, S0):-
-   get_some_agents(
-    (
-     (has_sense(Sense);inherit(memorize))), Agents, S0).
-
-get_some_agents(Precond, LiveAgents, S0):-
-  dmust((
-     current_spatial(Spatial),
-     get_objects(       
-     ( Precond,  inherit('instance'),
-        \+ state(Spatial, powered, f)), LiveAgents, S0),
-   LiveAgents = [_|_])).
-
-get_live_agents(LiveAgents, S0):-
-  LiveAgents =[_|_],
-  dmust((
-     current_spatial(Spatial),
-     once((get_objects(
-     (inherit('character'),
-      inherit('instance'),
-       \+ state(Spatial, powered, f) ) , LiveAgents, S0),
-   LiveAgents = [_|_])))).
-
+stores_props(perceptq(Agent, PropList), Agent, PropList).
+stores_props(memories(Agent, PropList), Agent, PropList).
+stores_props(props(Object, PropList), Object, PropList).
 
 
 is_prop_public(P) :-
@@ -214,18 +190,17 @@ process_percept_auto(Agent, Percept, _Stamp, Mem0, Mem0) :-
   Percept =.. [Functor|_],
   member(Functor, [talk, say]),
   bugout('~w: Ignoring ~p~n', [Agent, Percept], autonomous).
-process_percept_auto(Agent, sense_props(Sense, Object, PropList), _Stamp, Mem0, Mem2) :-
-  sensory_model(Sense, Spatial),
-  bugout('~w: ~p~n', [Agent, sense_props(Sense, Object, PropList)], autonomous),
+process_percept_auto(Agent, sense_props(see, Object, PropList), _Stamp, Mem0, Mem2) :-
+  bugout('~w: ~p~n', [Agent, sense_props(see, Object, PropList)], autonomous),
   (member(shiny, PropList),member(inherit(shiny), PropList)),
-  member(model(ModelData), Mem0),
+  member(model(Spatial, ModelData), Mem0),
   \+ related(Spatial, descended, Object, Agent, ModelData), % Not holding it?
   add_todo_all([take(Spatial, Object), print_('My shiny precious!')], Mem0, Mem2).
 
 process_percept_auto(_Agent,
-    sense(Sense, [you_are(_How, _Here), exits_are(_Exits), here_are(Objects)]),
+    sense(Sense, [you_are(Spatial, _How, _Here), exits_are(_Exits), here_are(Objects)]),
     _Stamp, Mem0, Mem2) :-
-  member(model(ModelData), Mem0),
+  member(model(Spatial, ModelData), Mem0),
   findall(examine(Sense, Obj),
           ( member(Obj, Objects),
             \+ member(props(Obj, _, _), ModelData)),
@@ -244,12 +219,12 @@ process_percept_player(Agent, Percept, _Stamp, Mem0, Mem0) :-
   player_format('~N~w~n', [Text]),!,
   redraw_prompt(Agent).
 process_percept_player(Agent, Percept, _Stamp, Mem0, Mem0) :-
-  player_format('~N~q~n', [Agent:Percept]),
-  dmust(redraw_prompt(Agent)),!.
+  player_format('~N~w~n', [Agent:Percept]),
+  redraw_prompt(Agent).
 
 
 process_percept(Agent, Percept, Stamp, Mem0, Mem1) :-
- once(( notrace((thought(inherit(console), Mem0);thought(inherit(player), Mem0);thought(inherit(telnet), Mem0))),
+ once(( (thought(inherit(console), Mem0);thought(inherit(player), Mem0);thought(inherit(telnet), Mem0)),
   process_percept_player(Agent, Percept, Stamp, Mem0, Mem1))),
   \+ thought(inherit(autonomous), Mem1),!.
   
@@ -263,11 +238,11 @@ process_percept(Agent, Percept, Stamp, Mem0, Mem0):-
 
 process_percept_main(Agent, Percept, Stamp, Mem0, Mem3) :-
  dmust((
-  forget(model(Model0), Mem0, Mem1),
+  forget(model(Spatial, Model0), Mem0, Mem1),
   Percept = [LogicalPercept|IgnoredList],
   nop(ignore(((IgnoredList\==[], dmsg(ignored_model_update(Agent,IgnoredList)))))),
-  update_model(Agent, LogicalPercept, Stamp, Mem1, Model0, Model1),
-  memorize(model(Model1), Mem1, Mem2),
+  update_model(Spatial, Agent, LogicalPercept, Stamp, Mem1, Model0, Model1),
+  memorize(model(Spatial, Model1), Mem1, Mem2),
   process_percept(Agent, Percept, Stamp, Mem2, Mem3))).
 process_percept_main(_Agent, Percept, _Stamp, Mem0, Mem0) :-
   bugout('process_percept_main(~w) FAILED!~n', [Percept], general), !.

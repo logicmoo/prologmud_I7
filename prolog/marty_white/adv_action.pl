@@ -104,7 +104,7 @@ do_command(Agent, Action, S0, S3) :-
   nop(redraw_prompt(Agent)).
 do_command(Agent, Action, S0, S0) :-
   player_format('Failed or No Such Command: ~w~n', Action), !,
-  nop(redraw_prompt(Agent)).
+  redraw_prompt(Agent).
 
 % --------
 
@@ -142,7 +142,7 @@ do_todo(_Agent, S0, S0).
 % In TADS:
 %   "verification" methods perferm tests only
 
-no_debug_cant('floyd~1', _).
+no_debug_cant(floyd, _).
 no_debug_cant(_, _).
 
 apply_act(Agent, examine(How, Thing), State, NewState) :-
@@ -186,7 +186,7 @@ act(Agent, Action, State, NewState) :-
   findall(Direction, related(Spatial, exit(Direction), Here, _, State), Exits),
   !,
   queue_percept(Agent,
-                [sense(Sense, [you_are(How, Here), exits_are(Exits), here_are(Nearby)])],
+                [sense(Sense, [you_are(Spatial, How, Here), exits_are(Exits), here_are(Nearby)])],
                 State, NewState).
 
 act(Agent, inventory, State, NewState) :- Spatial = spatial,
@@ -409,7 +409,7 @@ act(_Agent, true, S, S).
 
 cmd_workarround(VerbObj, VerbObj2):-
   VerbObj=..VerbObjL,
-  notrace(cmd_workarround_l(VerbObjL, VerbObjL2)),
+  cmd_workarround_l(VerbObjL, VerbObjL2),
   VerbObj2=..VerbObjL2.
 
 cmd_workarround_l([Verb|ObjS], [Verb|ObjS2]):-
@@ -423,7 +423,7 @@ cmd_workarround_l([Verb, Prep|ObjS], [Verb|ObjS]):- is_ignorable(Prep), !.
 % look(Spatial) at screen door
 cmd_workarround_l([Verb1|ObjS], [Verb2|ObjS]):- verb_alias(Verb1, Verb2), !.
 
-is_ignorable(at). is_ignorable(in). is_ignorable(to). is_ignorable(the). is_ignorable(a). is_ignorable(spatial).
+is_ignorable(at). is_ignorable(in). is_ignorable(to). is_ignorable(the). is_ignorable(a).
 
 verb_alias(look, examine) :- fail.
 

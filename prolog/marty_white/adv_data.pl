@@ -17,73 +17,36 @@
 %
 */
 
-% Some Inform properties:
-%   light - rooms that have light in them
-%   can_be(Spatial, eat, t) - can be eaten
-%   static - can't be taken or moved
-%   scenery - assumed to be in the room description (implies static)
-%   concealed - obscured, not listed, not part of 'all', but there
-%   found_in - lists places where scenery objects are seen
-%   absent - hides object entirely
-%   clothing - can be worn
-%   worn - is being worn
-%   container
-%   state(Spatial, open, t) - container is state(Spatial, open, t) (must be state(Spatial, open, t) to be used. there is no "closed").
-%   can_be(Spatial, open, t) - can be opened and closed
-%   capacity(N) - number of objects a container or supporter can hold
-%   state(Spatial, locked, t) - cannot be opened
-%   can_be(Spatial, lock, t), with_key
-%   enterable
-%   supporter
-%   article - specifies indefinite article ('a', 'le')
-%   cant_go
-%   daemon - called each turn, if it is enabled for this object
-%   description
-%   inside_description
-%   invent - code for inventory listing of that object
-%   list_together - way to handle "5 fish"
-%   plural - pluralized-name if different from singular
-%   when_closed - description when closed
-%   when_open - description when state(Spatial, open, t)
-%   when_on, when_off - like when_closed, etc.
-% Some TADS properties:
-%   thedesc
-%   pluraldesc
-%   is_indistinguishable
-%   is_visible(vantage)
-%   is_reachable(actor)
-%   valid(verb) - is object seeable, reachable, etc.
-%   verification(verb) - is verb logical for this object
-% Parser disambiguation:
-%   eliminate objs not see, reachable, etc.
-%   check preconditions for acting on a candidate object
 
+% Entire state of simulation & agents is held in one list, so it can be easy
+% to roll back.  The state of the simulation consists of:
+%   object properties
+%   object relations
+%   percept queues for agents
+%   memories for agents (actually logically distinct from the simulation)
+% Note that the simulation does not maintain any history.
+% TODO: change state into a term:
+%   ss(Objects, Relationships, PerceptQueues, AgentMinds)
+% TODO:
+%   store initial state as clauses which are collected up and put into a list,
+%     like the operators are, to provide proper prolog variable management.
 
 :- op(900, xfx, props).
 :- op(900, fy, '~').
 
 istate([
-       structure_label(initial_state),
-       
-       props('floyd~1', [inherit(instance), name('Floyd the robot'), inherit(autonomous), 
-	% can_do(Spatial, eat, f), 
-              inherit(robot), inherit(instance)]),
-       props('player~1', [inherit(instance), name($self),inherit(console), inherit(humanoid)]),
-	
-       % props(telnet, [inherit(instance), inherit(telnet),isnt(console),inherit('player~1')]),
-	
-	
-       h(Spatial, in, 'floyd~1', pantry),
-	
-	
-	h(Spatial, in, 'player~1', kitchen),
-	h(Spatial, worn_by, 'watch~1', 'player~1'),
-	h(Spatial, held_by, 'bag~1', 'player~1'),
-	
-       h(Spatial, in, 'coins~1', 'bag~1'),
-       h(Spatial, held_by, 'wrench~1', 'floyd~1'),
+  props(floyd, [inherit(instance), name('Floyd the robot'), inherit(autonomous), 
+    % can_do(Spatial, eat, f), 
+    inherit(floyd_ish), inherit(instance)]),
+  props(player1, [inherit(instance), name('Player#1'),inherit(console), inherit(console_player)]),
 
-  props('coins~1',[inherit(coins),inherit(instance)]),
+  h(Spatial, in, floyd, pantry),
+      
+       h(Spatial, in, player1, kitchen),
+       h(Spatial, worn_by, watch, player1),
+       h(Spatial, held_by, bag, player1),
+
+
   % Relationships
 
   h(Spatial, exit(south), pantry, kitchen), % pantry exits south to kitchen
@@ -99,52 +62,54 @@ istate([
   h(Spatial, exit(south), living_room, kitchen),
   h(Spatial, exit(west), kitchen, living_room),
 
-  h(Spatial, in, a(shelf), pantry), % shelf is in pantry
-  h(Spatial, in, a(table), kitchen), % a table is in kitchen
-  h(Spatial, on, a(lamp), a(table)), % a lamp is on a table
-  h(Spatial, in, a(rock), garden),
-  h(Spatial, in, a(mushroom), garden),
-  h(Spatial, under, a(table), a(table_leg)),
-  h(Spatial, on, a(box), a(table)),
-  h(Spatial, in, a(bowl), a(box)),
-  h(Spatial, in, a(flour), a(bowl)),
-  h(Spatial, in, a(shovel), basement), % FYI shovel has not props (this is a lttle test to see what happens)
-  h(Spatial, in, a(videocamera), living_room),
+  h(Spatial, in, shelf, pantry), % shelf is in pantry
+  h(Spatial, on, lamp, table),
+  h(Spatial, held_by, wrench, floyd),
+  h(Spatial, in, rock, garden),
+  h(Spatial, in, mushroom, garden),
+  h(Spatial, in, coins, bag),
+  h(Spatial, in, table, kitchen),
+  h(Spatial, under, table, table_leg),
+  h(Spatial, on, box, table),
+  h(Spatial, in, bowl, box),
+  h(Spatial, in, flour, bowl),
+  h(Spatial, in, shovel, basement), % FYI shovel has not props
+  h(Spatial, in, videocamera, living_room),
   h(Spatial, in, screendoor, kitchen),
   h(Spatial, in, screendoor, garden),
 
-       class_props(unthinkable, [
+       props(unthinkable , [
           can_be(Spatial, examine(_), f),
           class_desc(['It is normally unthinkable'])]),
 
-       class_props(thinkable, [
+       props(thinkable , [
           can_be(Spatial, examine(_), t),
           class_desc(['It is normally thinkable'])]),
 
-       class_props(only_conceptual, [   
+       props(only_conceptual , [   
           can_be(Spatial, examine(Spatial), f),
           inherit(thinkable),
           class_desc(['It is completely conceptual'])]),
 
-       class_props(noncorporial, [
+       props(noncorporial , [
           can_be(Spatial, examine(Spatial), f),
           can_be(Spatial, touch, f),
           inherit(thinkable),
           desc(['It is completely non-corporial'])]),
 
-       class_props(partly_noncorporial, [
+       props(partly_noncorporial, [
           inherit(corporial),
           inherit(noncorporial),
           class_desc(['It is both partly corporial and non-corporial'])]),
 
-       class_props(corporial, [
+       props(corporial , [
           can_be(Spatial, touch, t),
           can_be(Spatial, examine(Spatial), t),
           inherit(thinkable),
           class_desc(['It is corporial'])]),
 
   % People
-   class_props(character, [
+   props(character , [
        has_rel(Spatial, held_by),
        has_rel(Spatial, worn_by),
        % overridable defaults
@@ -158,7 +123,7 @@ istate([
        iherit(partly_noncorporial)
    ]),
 
-      class_props(natural_force, [
+      props(natural_force , [
           ~has_rel(Spatial, held_by),
           ~has_rel(Spatial, worn_by),
           can_do(Spatial, eat, f),
@@ -169,7 +134,7 @@ istate([
           iherit(character)
       ]),
 
-       class_props(humanoid, [
+       props(console_player, [
          can_do(Spatial, eat, t),
            volume(50), % liters     (water is 1 kilogram per liter)
            mass(50), % kilograms
@@ -177,10 +142,22 @@ istate([
             inherit(memorize),
             inherit(player),
             % players use power but cant be powered down
-            can_be(Spatial, switch, f), state(Spatial, powered, t)
+            can_be(Spatial, switch, f), state(Spatial, powered, t),
+         inherit(console)
+      ]),
+       props(telnet_player, [
+         can_do(Spatial, eat, t),
+           volume(50), % liters     (water is 1 kilogram per liter)
+           mass(50), % kilograms
+            inherit(character),
+            inherit(memorize),
+            inherit(player),
+            % players use power but cant be powered down
+            can_be(Spatial, switch, f), state(Spatial, powered, t),
+         inherit(telnet)
       ]),
 
-  class_props(robot, [
+  props(floyd_ish, [
     can_do(Spatial, eat, f),
     inherit(autonomous),
     EmittingLight,
@@ -193,15 +170,15 @@ istate([
     inherit(shiny),
     inherit(character),
     state(Spatial, powered, t),
-    % TODO: 'floyd~1' should `look(Spatial)` when turned back on.
+    % TODO: floyd should `look(Spatial)` when turned back on.
         effect(switch(Spatial, on), setprop($self, state(Spatial, powered, t))),
         effect(switch(Spatial, off), setprop($self, state(Spatial, powered, f)))
   ]),
 
   % Places
-  class_props(place, [can_be(Spatial, move, f), inherit(container), volume_capacity(10000), has_rel(exit(_), t)]),
+  props(place , [can_be(Spatial, move, f), inherit(container), volume_capacity(10000), has_rel(exit(_), t)]),
 
-  class_props(container, [
+  props(container, [
 
          oper(put(Spatial, Thing, in, $self),
             % precond(Test, FailureMessage)
@@ -211,7 +188,7 @@ istate([
          has_rel(Spatial, in)
        ]),
 
-  class_props(flask, [
+  props(flask, [
 
            oper(put(Spatial, Thing, in, $self),
               % precond(Test, FailureMessage)
@@ -254,12 +231,12 @@ istate([
 
   % Things
   
-  class_props(bag, [
+  props(bag, [
     inherit(container),
     volume_capacity(10),
     TooDark
   ]),
-  class_props(bowl, [
+  props(bowl, [
     inherit(container),
     volume_capacity(2),
     fragile(shards),
@@ -267,7 +244,7 @@ istate([
     name('porcelain bowl'),
     desc('This is a modest glass cooking bowl with a yellow flower motif glazed into the outside surface.')
   ]),
-  class_props(box, [
+  props(box, [
     inherit(container),
     volume_capacity(15),
     fragile(splinters),
@@ -278,14 +255,10 @@ istate([
     TooDark
   ]),
 
-  class_props(measurable,[has_rel(quantity,ammount,t)]),
-  
-  % shiny things are corporial
-  class_props(shiny, [adjs(shiny), inherit(corporial)]),
-
-  class_props(coins, [inherit(shiny),inherit(measurable)]),
-  class_props(flour,[can_be(Spatial, eat, t),inherit(measurable)]),
-  class_props(lamp, [
+  props(shiny , [adjs(shiny), inherit(corporial)]),
+  props(coins , [inherit(shiny)]),
+  flour props [can_be(Spatial, eat, t)],
+  props(lamp, [
     name('shiny brass lamp'),
     nouns(light),
     nominals(brass),
@@ -297,7 +270,7 @@ istate([
     effect(switch(Spatial, off), delprop($self, EmittingLight)),
     fragile(broken_lamp)
   ]),
-  class_props(broken_lamp, [
+  props(broken_lamp , [
     name('dented brass lamp'),
     % TODO: prevent user from referring to 'broken_lamp'
     nouns(light),
@@ -308,21 +281,20 @@ istate([
     effect(switch(Spatial, off), true) % calls true(S0, S1) !
   ]),
        props(iLamp, [
-         inherit(broken), 
+         inherit(lamp), inherit(broken),
          effect(switch(Spatial, on), print_("Switch is flipped")),
-         effect(hit, ['print_'("Hit iLamp"), setprop($self, inherit(broken))]),
-         inherit(lamp)
+         effect(hit, ['print_'("Hit iLamp"), setprop($self, inherit(broken))])
        ]),
-       class_props(broken, [
+       props(broken, [
           effect(switch(Spatial, on), true),
           effect(switch(Spatial, off), true),
           can_be(Spatial, switch, t),
           adjs(broken)
        ]),
-  class_props(mushroom, [
+  mushroom props [
     % Sense DM4
     name('speckled mushroom'),
-    % singular,
+    singular,
     nouns([mushroom, fungus, toadstool]),
     adjs([speckled]),
     % initial(description used until initial state changes)
@@ -335,7 +307,7 @@ istate([
     before(eat, (random(100) =< 30, die('It was poisoned!'); 'yuck!')),
     after(take,
           (initial, 'You pick the mushroom, neatly cleaving its thin stalk.'))
-  ]),
+  ],
   props(screendoor, [
     can_be(Spatial, move, f),
     % see DM4
@@ -343,10 +315,10 @@ istate([
     %can_be(Spatial, open, t)
     state(Spatial, open, f)
   ]),
-  class_props(shelf, [has_rel(Spatial, on), can_be(Spatial, move, f)]),
-  class_props(table, [has_rel(Spatial, on), has_rel(Spatial, under)]),
-  class_props(wrench, [inherit(shiny)]),
-  class_props(videocamera, [
+  props(shelf , [has_rel(Spatial, on), can_be(Spatial, move, f)]),
+  props(table , [has_rel(Spatial, on), has_rel(Spatial, under)]),
+  props(wrench , [inherit(shiny)]),
+  props(videocamera , [
     inherit(memorize),
     inherit(perceptq),
     inherit('instance'),
@@ -357,8 +329,9 @@ istate([
     has_sense(Sense),
     fragile(broken_videocam)
   ]),
-  class_props(broken_videocam, [can_be(Spatial, switch, f),state(Spatial, powered, f), inherit(videocamera)])
+  props(broken_videocam , [can_be(Spatial, switch, f),state(Spatial, powered, f), inherit(videocamera)]),
          
+  end_of_list
 ]) :-
   sensory_model_problem_solution(Sense, Spatial, TooDark, EmittingLight).
 

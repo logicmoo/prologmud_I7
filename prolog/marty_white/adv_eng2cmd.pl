@@ -87,7 +87,7 @@ parse2logical([talk, Object | Msg], emote(Spatial, say, Object, Msg), _M):- curr
 parse2logical([say|Msg], emote(Spatial, say, *, Msg), _M):- current_spatial(Spatial).
 parse2logical([emote|Msg], emote(Spatial, emote, *, Msg), _M):- current_spatial(Spatial).
 parse2logical([Object, ', ' | Msg], emote(Spatial, say, Object, Msg), Mem) :- current_spatial(Spatial),
-  thought(model(ModelData), Mem),
+  thought(model(Spatial, ModelData), Mem),
   in_model(h(Spatial, _, Object, _, _), ModelData).
 parse2logical(Words, Action, Mem) :- Words \== [i], % Dont interfere with inventory
   % If not talking to someone else, substitute Agent for 'self'.
@@ -99,7 +99,7 @@ parse2logical(Words, Action, Mem) :- Words \== [i], % Dont interfere with invent
 
 
 parse2logical([dig, Hole], dig(Spatial, Hole, Where, Tool), Mem) :-
-  thought(model(ModelData), Mem),
+  thought(model(Spatial, ModelData), Mem),
   thought(inst(Agent), Mem),
   in_model(h(Spatial, _, Agent, Where, _), ModelData),
   Tool=shovel.
@@ -118,10 +118,10 @@ parse2logical([go, Dir], goto(Spatial, (*), Dir), _Mem) :-
 parse2logical([go, Prep], goto(Spatial, (*), Prep), _Mem) :-
   preposition(Spatial, Prep).
 parse2logical([go, ExitName], goto(Spatial, (*), ExitName), Mem) :-
-  thought(model(ModelData), Mem),
+  thought(model(Spatial, ModelData), Mem),
   in_model(h(Spatial, exit(ExitName), _, _, _), ModelData).
 parse2logical([go, Dest], goto(Spatial, (*), Dest), Mem) :-
-  thought(model(ModelData), Mem),
+  thought(model(Spatial, ModelData), Mem),
   in_model(h(Spatial, _, _, Dest, _), ModelData).
   % getprop(Dest, has_rel(Spatial, How), ModelData).
 
@@ -144,7 +144,7 @@ parse2logical([Prep], goto(Spatial, (*), Prep), _Mem) :- preposition(Spatial, Pr
 parse2logical([Dir], Logic, Mem):- (compass_direction(Dir);Dir==escape), !, parse2logical([go, Dir], Logic, Mem).
 
 parse2logical([ExitName], goto(Spatial, (*), ExitName), Mem) :-
-  thought(model(ModelData), Mem),
+  thought(model(Spatial, ModelData), Mem),
   in_model(h(Spatial, exit(ExitName), _, _, _), ModelData).
 
 parse2logical([Verb|Args], Action, _M) :- Args\==[], Args\==['.'], action_model(Verb, Spatial),
