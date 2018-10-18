@@ -62,10 +62,10 @@ do_metacmd(memory(Agent), S0, S0) :-
   declared(memories(Agent, Memory), S0),
   meta_pprint(Memory, general).
 
-do_metacmd(model(Agent), S0, S0) :-
+do_metacmd(model(Spatial, Agent), S0, S0) :-
   wizard,
   declared(memories(Agent, Memory), S0),
-  thought(model(ModelData), Memory),
+  thought_model(Spatial,ModelData, Memory),
   meta_pprint(ModelData, general).
 
 do_metacmd(model(Agent), S0, S0) :-

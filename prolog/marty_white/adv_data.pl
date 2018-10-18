@@ -63,12 +63,12 @@
 :- op(900, fy, '~').
 
 istate([
-       structure_label(initial_state),
-       
+       structure_label(istate),
+
        props('floyd~1', [name('Floyd the robot'), inherit(autonomous,t),  % can_do(Spatial, eat, f), 
            inherit(robot,t)]),
        props('player~1', [name($self),inherit(console,t), inherit(humanoid,t)]),
-	
+
        % props(telnet, [inherit(telnet,t),isnt(console),inherit('player~1')]),
 	
 	

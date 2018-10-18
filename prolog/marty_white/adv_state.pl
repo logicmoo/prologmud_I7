@@ -112,8 +112,6 @@ stores_props(perceptq(Agent, PropList), Agent, PropList).
 stores_props(memories(Agent, PropList), Agent, PropList).
 stores_props(props(Object, PropList), Object, PropList).
 
-
-
 % Retrieve Prop.
 % NOPE getprop(Object, state(Spatial, Prop, Value), State):- atom(Prop), !, getprop1(Object, state(Spatial, Prop, Value), State).
 % NOPE getprop(Object, Prop, State):- getprop1(Object, Prop, state(Spatial, State, f)), !, fail.
@@ -123,7 +121,15 @@ stores_props(props(Object, PropList), Object, PropList).
 
 get_all_props(Object, AllProps, S0):- findall(Prop,getprop(Object, Prop, S0),AllProps).
 
-getprop(Object, Prop, S0):- quietly((assertion(\+ atom(Prop)), getprop1(Object, Prop, S0))).
+getprop(Object, Prop, S0):-
+  quietly((assertion(\+ atom(Prop)), getprop1(Object, Prop, S0)))
+    *-> true; getprop2(Object, Prop, S0).
+
+getprop2(Object, Prop, Memory):- member(state(S0), Memory), !,
+  getprop1(Object, Prop, S0).
+
+% current_props(Object, PropList, S0):- atom(Object),atom_
+current_props(Object, PropList, S0):- declared(props(Object, PropList), S0).
 
 getiprop(Object, Prop, S0) :-
   current_props(Object, PropList, S0),
@@ -204,7 +210,7 @@ merge_value(_F,_,_B,A,R):- R = A.
 % Replace or create Prop.
 updateprop(Object, Prop, S00, S2) :- notrace((updateprop_(Object, Prop, S00, S2))).
 
-updateprop_(Object, Prop, S0, S2) :- 
+updateprop_(Object, Prop, S0, S2) :-
   assertion(compound(Prop)),
 
   current_props_or(Object, PropList, [], S0),

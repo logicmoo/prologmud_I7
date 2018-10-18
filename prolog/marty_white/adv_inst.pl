@@ -33,15 +33,15 @@ create_new_suffixed_unlocated(Suffix, Type,Inst,S0,S2):-
 
 % create_agent_conn(Agent,_Named, _Info, S0, S0) :- declared(agent(Agent,t), S0),!.
 create_agent_conn(Agent,Named,Info,S0,S9):- 
-   apply_state([create_new_unlocated('watch',Watch),
-                create_new_unlocated('bag',Bag),
-                create_new_unlocated('coins',Coins),
+   apply_state([%create_new_unlocated('watch',Watch),
+                %create_new_unlocated('bag',Bag),
+                %create_new_unlocated('coins',Coins),
    declare(
      (props(Agent, [name(['Telnet:',Named]), inherit(telnet,t), inherit(humanoid,t), inherit(player,t), info(Info)]),               
                
-              % h(Spatial, worn_by, Watch, Agent),
-              % h(Spatial, in, Bag, Coins),
-              % h(Spatial, held_by, Bag, Agent),
+               % h(Spatial, worn_by, Watch, Agent),
+               %h(Spatial, in, Bag, Coins),
+               %h(Spatial, held_by, Bag, Agent),
                h(Spatial, in, Agent, kitchen)))],S0,S1),
    init_objects(S1,S9).
 
@@ -68,15 +68,15 @@ create_object(Object, S0, S2) :-
    create_objprop(Object, PropList,S1, S2).
 /*
 visit_existing(_Object, [], S0, S0) :-!.
-visit_existing(Object, [Prop|List],S0, S2):- !,  
-   visit_existing(Object,List, S0, S1),
+visit_existing(Object, [Prop|List], S0, S2):- !,  
+   visit_existing(Object, List, S0, S1),
    visit_existing(Object, Prop, S1, S2).
 
 %visit_existing(Object, Prop, S1, S2):- dmust(create_objprop(Object, Prop, S1, S2)).
 
 visit_existing(Object, Prop, S1, S2):- Prop=inherit(_,t),!,dmust(create_objprop(Object, Prop, S1, S2)).
 visit_existing(Object, Prop, S0, S2):- dmust(updateprop(Object,Prop,S0, S2)).
-*/
+*/  
 
 create_objprop(_Object, [], S0, S0).
 create_objprop(Object, [Prop|List], S0, S2):- !,
@@ -93,17 +93,16 @@ create_objprop(Object, inherit(perceptq,t), S0, S0):- declared(perceptq(Object,_
 create_objprop(Object, inherit(perceptq,t), S0, S1):- !,
    declare(perceptq(Object, []), S0, S1).
 
-
-% Most agents store memories of percepts, world model, goals, etc.
+  % Most agents store memories of percepts, world model, goals, etc.
 create_objprop(Object, inherit(memorize,t), S0, S0):- declared(memories(Object,_),S0),!.
 create_objprop(Object, inherit(memorize,t), S0, S2):- !,
   (declared(props(Object, PropList), S0);declared(class_props(Object, PropList), S0)),
   copy_term(PropList,PropListC),!,
   % =(PropList,PropListC),!,
   declare(memories(Object, [
-    structure_label(initial_memories),
+    structure_label(mem(Object)),
     timestamp(0),
-    model([]),
+    model(spatial,[]),
     goals([]),
     todo([look]),
     inst(Object)|PropListC]), S0, S2).

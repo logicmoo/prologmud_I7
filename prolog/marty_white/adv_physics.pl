@@ -19,7 +19,13 @@
 
 
 in_model(E, L):- member(E, L).
+thought_model(Spatial, E, L):- in_model(model(Spatial, E), L).
 
+
+get_open_traverse(Open, Sense, Traverse, Spatial, OpenTraverse):- get_open_traverse(Traverse, Spatial, OpenTraverse),
+  nop((ignore(Open=open), ignore(Sense=see))).
+
+get_open_traverse(_Need, Spatial, OpenTraverse):- ignore(OpenTraverse = open_traverse(_How, Spatial)).
 
 %% equals_efffectly(Type, Model, Value).
 equals_efffectly(sense, see, _).
@@ -63,8 +69,10 @@ cant(_Agent, Action, cant(move(Spatial, Thing)), State) :-
   getprop(Thing, can_be(Spatial, move, f), State).
 
 cant(Agent, Action, musthave(Spatial, Thing), State) :-
-  psubsetof(Action, drop),
-  \+ related(Spatial, open_traverse(), Thing, Agent, State).
+  act_verb_thing_model_sense(Action, Verb, Thing, Spatial, _Sense),
+  get_open_traverse(Verb, Spatial, OpenTraverse),
+  psubsetof(Verb, drop),
+  \+ related(Spatial, OpenTraverse, Thing, Agent, State).
 
 cant(Agent, Action, cant(manipulate(Spatial, self)), _) :-
   Action =.. [Verb, Agent |_],
@@ -127,7 +135,7 @@ related_with_prop(Spatial, How, Object, Place, Prop, State) :-
   related(Spatial, How, Object, Place, State),
   getprop(Object, Prop, State).
 
-is_state(Spatial, ~(Open), Object, State) :- !,dmust(ground(Open)),
+is_state(Spatial, ~(Open), Object, State) :- ground(Open),!,
   getprop(Object, state(Spatial, Open, f), State).
 is_state(Spatial, Open, Object, State) :-
   getprop(Object, state(Spatial, Open, t), State).
@@ -136,14 +144,16 @@ is_state(Spatial, Open, Object, State) :-
 
 in_scope(_Spatial, Thing, _Agent, _State) :- Thing == '*', !.
 in_scope(Spatial, Thing, Agent, State) :-
-  related(Spatial, open_traverse(), Agent, Here, State),
-  (Thing=Here; related(Spatial, open_traverse(), Thing, Here, State)).
+   get_open_traverse(_Open, _See, _Traverse, Spatial, OpenTraverse),
+  related(Spatial, OpenTraverse, Agent, Here, State),
+  (Thing=Here; related(Spatial, OpenTraverse, Thing, Here, State)).
 in_scope(Spatial, Thing, Agent, _State):- dbug(pretending_in_scope(Spatial, Thing, Agent)).
 
 reachable(_Spatial, Star, _Agent, _State) :- Star == '*', ! .
 reachable(Spatial, Thing, Agent, State) :-
+  get_open_traverse(touch, Spatial, OpenTraverse),
   related(Spatial, child, Agent, Here, State), % can't reach out of boxes, etc.
-  (Thing=Here; related(Spatial, open_traverse(), Thing, Here, State)).
+  (Thing=Here; related(Spatial, OpenTraverse, Thing, Here, State)).
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -167,49 +177,44 @@ has_rel(Spatial, How, X, State) :-
 
 %related(_Spatial, How, _X, _Y, _State) :- assertion(nonvar(How)), fail.
 related(_Spatial, _How, _X, _Y, []) :- !, fail.
-related(Spatial, How, X, Y, State):-  /*quietly*/ (related_hl(Spatial, How, X, Y, State)).
+related(Spatial, How, X, Y, State):-  quietly(related_hl(Spatial, How, X, Y, State)).
 
 
-related_hl(Spatial, child, X, Y, State) :- !, 
-  subrelation(How, child), 
-  related_hl(Spatial, How, X, Y, State).
-
+related_hl(Spatial, How, X, Y, State) :- declared(h(Spatial, How, X, Y), State).
+related_hl(_Spatial, How, _X, _Y, _State) :- var(How), !, fail.
+related_hl(Spatial, child, X, Y, State) :- subrelation(How, child), related_hl(Spatial, How, X, Y, State).
 related_hl(Spatial, descended, X, Z, State) :-
   related_hl(Spatial, child, X, Z, State).
-related_hl(Spatial, descended, X, Z, State) :- !,
+related_hl(Spatial, descended, X, Z, State) :-
   related_hl(Spatial, child, Y, Z, State),
   related_hl(Spatial, descended, X, Y, State).
-
-related_hl(Spatial, open_traverse(), X, Z, State) :-
+related_hl(Spatial, open_traverse(Traverse, Spatial), X, Z, State) :-
+ get_open_traverse(_Traverse, Spatial, open_traverse(Traverse, Spatial)),
   related_hl(Spatial, child, X, Z, State).
-related_hl(Spatial, open_traverse(), X, Z, State) :- !,
+related_hl(Spatial, open_traverse(Traverse, Spatial), X, Z, State) :-
+ get_open_traverse(Open, _See, _Traverse, Spatial, open_traverse(Traverse, Spatial)),
   related_hl(Spatial, child, Y, Z, State),
-  Open = open,
-   \+ is_state(Spatial, ~(Open), Y, State),
-  related_hl(Spatial, open_traverse(), X, Y, State).
-
+  \+ is_state(Spatial, ~(Open), Y, State),
+  related_hl(Spatial, open_traverse(Traverse, Spatial), X, Y, State).
 related_hl(Spatial, inside, X, Z, State) :- related_hl(Spatial, in, X, Z, State).
-related_hl(Spatial, inside, X, Z, State) :- !, related_hl(Spatial, in, Y, Z, State),
+related_hl(Spatial, inside, X, Z, State) :- related_hl(Spatial, in, Y, Z, State),
                                 related_hl(Spatial, descended, X, Y, State).
-
-
-related_hl(Spatial, exit(escape), Inner, Outer, State) :-  !,
-  related_hl(Spatial, child, Inner, Outer, State),
-  has_rel(Spatial, child, Inner, State),
-  has_rel(Spatial, child, Outer, State).
-related_hl(Spatial, exit(out), Inner, Outer, State) :- !,
+related_hl(Spatial, exit(out), Inner, Outer, State) :-
   related_hl(Spatial, child, Inner, Outer, State),
   has_rel(Spatial, in, Inner, State),
   has_rel(Spatial, child, Outer, State),
-  Open = open,
+  get_open_traverse(Open, _See, _Traverse, Spatial, _OpenTraverse),
   \+ is_state(Spatial, ~(Open), Inner, State).
-related_hl(Spatial, exit(off), Inner, Outer, State) :- !,
+related_hl(Spatial, exit(off), Inner, Outer, State) :-
   related_hl(Spatial, child, Inner, Outer, State),
   has_rel(Spatial, on, Inner, State),
   has_rel(Spatial, child, Outer, State).
+related_hl(Spatial, exit(escape), Inner, Outer, State) :-
+  related_hl(Spatial, child, Inner, Outer, State),
+  has_rel(Spatial, child, Inner, State),
+  has_rel(Spatial, child, Outer, State).
 
-related_hl(Spatial, How, X, Y, State) :- declared(h(Spatial, How, X, Y), State).
-%related_hl(_Spatial, How, _X, _Y, _State) :- var(How), !, fail.
+
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

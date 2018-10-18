@@ -72,17 +72,17 @@ update_model_exits(Spatial, [Exit|Tail], From, Timestamp, M0, M2) :-
 %  append(RecentMemory, [Figment|_Tail], Memory),
 %  \+ member(FreshFigment, RecentMemory).
 
-update_model(Agent, carrying(Spatial, Objects), Timestamp, _Memory, M0, M1) :-
+update_model(Spatial, Agent, carrying(Spatial, Objects), Timestamp, _Memory, M0, M1) :-
   update_relations(Spatial, held_by, Objects, Agent, Timestamp, M0, M1).
-update_model(_Agent, notice_children(Sense, Object, How, Children), Timestamp, _Mem, M0, M1) :-
+update_model(Spatial, _Agent, notice_children(Sense, Object, How, Children), Timestamp, _Mem, M0, M1) :-
   sensory_model(Sense, Spatial),
   update_relations(Spatial, How, Children, Object, Timestamp, M0, M1).
-update_model(_Agent, sense_props(see, Object, PropList), Stamp, _Mem, M0, M2) :-
+update_model(_Spatial, _Agent, sense_props(see, Object, PropList), Stamp, _Mem, M0, M2) :-
   select_always(props(Object, _, _), M0, M1),
   append([props(Object, PropList, Stamp)], M1, M2).
 
-update_model(_Agent,
-             sense(Sense, [you_are(How, Here), exits_are(Exits), here_are(Objects)]),
+update_model(Spatial, _Agent,
+             sense(Sense, [you_are(Spatial, How, Here), exits_are(Exits), here_are(Objects)]),
              Timestamp, _Mem, M0, M4) :-
   sensory_model(Sense, Spatial),
   % Don't update map here, it's better done in the moved(Spatial, ) clause.
@@ -91,7 +91,7 @@ update_model(_Agent,
   update_model_exits(Spatial, ExitRelations, Here, Timestamp, M3, M4).% Model exits from Here.
 
 
-update_model(Agent, moved(Spatial, Agent, There, How, Here), Timestamp, Mem, M0, M2) :-
+update_model(Spatial, Agent, moved(Spatial, Agent, There, How, Here), Timestamp, Mem, M0, M2) :-
   % According to model, where was I?
   in_model(h(Spatial, _, Agent, There, _T0), M0),
   % TODO: Handle goto(Spatial, on, table)
@@ -104,21 +104,26 @@ update_model(Agent, moved(Spatial, Agent, There, How, Here), Timestamp, Mem, M0,
   update_model_exit(Spatial, exit(ExitName), There, Here, Timestamp, M0, M1), % Model the path.
   update_relation(Spatial, How, Agent, Here, Timestamp, M1, M2). % And update location.
 
-update_model(_Agent, moved(Spatial, Object, _From, How, To), Timestamp, _Mem, M0, M1) :-
+update_model(Spatial, _Agent, moved(Spatial, Object, _From, How, To), Timestamp, _Mem, M0, M1) :-
   update_relation(Spatial, How, Object, To, Timestamp, M0, M1).
 
-update_model(_Agent, failure(_), _Timestamp, _Mem, M0, M0) :- !.
+update_model(_Spatial, _Agent, failure(_), _Timestamp, _Mem, M0, M0) :- !.
 
-update_model(Agent, time_passes, Timestamp, Memory, M, M):-
-  nop(dmsg(unused_update_model(Agent, time_passes, Timestamp, Memory))).
+update_model(Spatial, Agent, time_passes, Timestamp, _Memory, M, M):-
+  nop(dmsg(unused_update_model(Spatial, Agent, time_passes, Timestamp, M))).
 
-update_model(Agent, Percept, Timestamp, Memory, M, M):-
-  dmsg(failed_update_model(Agent, Percept, Timestamp, Memory)).
+update_model(_Spatial, _Agent, [], _Timestamp, _Memory, M, M).
+update_model(Spatial, Agent, [Percept|Tail], Timestamp, Memory, M0, M2) :-
+  update_model(Spatial, Agent, Percept, Timestamp, Memory, M0, M1),
+  update_model_all(Spatial, Agent, Tail, Timestamp, Memory, M1, M2).
+
+update_model(Spatial, Agent, Percept, Timestamp, Memory, M, M):-
+  dmsg(failed_update_model(Spatial, Agent, Percept, Timestamp, Memory)).
 
 % update_model_all(Spatial, Agent, PerceptsList, Stamp, ROMemory, OldModel, NewModel)
 update_model_all(_Spatial, _Agent, [], _Timestamp, _Memory, M, M).
 update_model_all(Spatial, Agent, [Percept|Tail], Timestamp, Memory, M0, M2) :-
-  update_model(Agent, Percept, Timestamp, Memory, M0, M1),
+  update_model(Spatial, Agent, Percept, Timestamp, Memory, M0, M1),
   update_model_all(Spatial, Agent, Tail, Timestamp, Memory, M1, M2).
 
 

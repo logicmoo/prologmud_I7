@@ -31,9 +31,6 @@ extra :-  true. % Fuller, but questionable if needed yet.
 :- consult(adv_util).
 :- consult(adv_io).
 
-:- consult(adv_state).
-:- consult(adv_data).
-
 :- consult(adv_model).
 :- consult(adv_percept).
 
@@ -47,10 +44,12 @@ extra :-  true. % Fuller, but questionable if needed yet.
 :- consult(adv_log2eng).
 :- consult(adv_physics).
 :- consult(adv_plan).
-
+:- consult(adv_state).
+:- consult(adv_data).
 
 %:- consult(adv_test).
 %:- consult(adv_telnet).
+
 
 :- export(console_player/1).
 console_player(Agent):-
@@ -149,7 +148,7 @@ telnet_decide_action(Agent, Mem, Mem) :-
 
 %:- if(\+ prolog_load_context(reloading, t)).
 :- initialization(adventure, main).
-
+%:- endif.
 
 mainloop :-
   repeat,

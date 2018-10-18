@@ -204,6 +204,7 @@ prop2eng(_Obj, can_be(Spatial, Eat, t), ['Can\'t be', tense(Eat,past), ly(Spatia
 prop2eng(_Obj, state(Spatial, Open, t), ['It is', Open , ly(Spatial),'.']).
 prop2eng(_Obj, state(Spatial, Open, f), ['It is not', Open , ly(Spatial),'.']).
 prop2eng( Obj, inherit(Type,t), Out):-   prop2eng(Obj, adjs(Type), Out),!.
+prop2eng( Obj, inherit(Type), Out):-   prop2eng(Obj, adjs(Type), Out),!.
 prop2eng( Obj, inherited(Type), Out):- prop2eng(Obj, nouns(Type), Out),!.
 prop2eng(_Obj, adjs(Type), [cap(Type),'.']).
 prop2eng(_Obj, nouns(Type), [cap(Type),'.']).
@@ -231,7 +232,7 @@ append_if_new(Text1, Text2, Text):- append_if_new1(Text1, Text2, Text),!.
 append_if_new(Text2, Text1, Text):- append_if_new1(Text1, Text2, Text),!.
 append_if_new(Text1, Text2, Text):- append(Text1, Text2, Text),!.
 
-%print_percept(Agent, sense(Sense, [you_are(How, Here),
+%print_percept(Agent, sense(Sense, [you_are(Spatial, How, Here),
 %                         exits_are(Exits),
 %                         here_are(Nearby)...])) :-
 %  findall(X, (member(X, Nearby), X\=Agent), OtherNearby),
@@ -249,6 +250,7 @@ logical2eng(Agent, [Prop|Tail], Text) :- !,
 logical2eng(Agent, sense(_See, Sensing), SensedText) :- logical2eng(Agent, Sensing, SensedText).
 
 logical2eng(Agent, you_are(How, Here), [cap(subj(Agent)), person(are, is), How, 'the', Here, '.', '\n']).
+logical2eng(Agent, you_are(_Spatial, How, Here), [cap(subj(Agent)), person(are, is), How, 'the', Here, '.', '\n']).
 logical2eng(_Agent, exits_are(Exits), ['Exits are', ExitText, '.', '\n']):- list2eng(Exits, ExitText).
 logical2eng(Agent, here_are(Nearby), [cap(subj(Agent)), person(see, sees), ':', SeeText, '.']):-
   findall(X, (member(X, Nearby), X\=Agent), OtherNearby),

@@ -85,6 +85,9 @@ apply_state(Goal, S0, S2) :-
    dmust(Call),
    must_output_state(S2).
 
+
+
+
 apply_first_arg_state(Arg, Goal, S0, S2) :-
    notrace((compound_name_arguments(Goal, F, GoalL),
    append(GoalL, [S0, S2], NewGoalL),
@@ -92,6 +95,9 @@ apply_first_arg_state(Arg, Goal, S0, S2) :-
    Call=..[F, Arg|NewGoalL])),
    dmust(Call),
    must_output_state(S2).
+
+apply_first_arg(Arg, Goal, S0, S2):- 
+   apply_first_arg_state(Arg, Goal, S0, S2).
 
 % --------
 

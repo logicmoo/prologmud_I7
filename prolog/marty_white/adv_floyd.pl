@@ -61,7 +61,7 @@ maybe_autonomous_decide_goal_action(_Agent, Mem0, Mem0).
 
 autonomous_decide_goal_action(Agent, Mem0, Mem3) :-
   forget(goals(Goals), Mem0, Mem1),
-  thought(model(ModelData), Mem1),
+  thought_model(_Spatial,(ModelData), Mem1),
   select_unsatisfied_conditions(Goals, Unsatisfied, ModelData),
   memorize(goals(Unsatisfied), Mem1, Mem2),
   autonomous_decide_action(Agent, Mem2, Mem3).
@@ -87,22 +87,23 @@ autonomous_decide_action(Agent, Mem0, Mem2) :-
   bugout('~w: Can\'t solve goals.  Forgetting them.~n', [Agent], autonomous).
 autonomous_decide_action(Agent, Mem0, Mem1) :-
   % If no actions or goals, but there's an unexplored exit here, go that way.
-  thought(model(ModelData), Mem0),
+  thought_model(Spatial,ModelData, Mem0),
   in_model(h(Spatial, _How, Agent, Here, _), ModelData),
   in_model(h(Spatial, exit(ExitName), Here, '<unexplored>', _), ModelData),
   add_todo(goto(Spatial, (*), ExitName), Mem0, Mem1).
 autonomous_decide_action(Agent, Mem0, Mem1) :-
   % Follow Player to adjacent rooms.
-  thought(model(ModelData), Mem0),
+  thought_model(Spatial,ModelData, Mem0),
   in_model(h(Spatial, _, Agent, Here, _), ModelData),
   dif(Agent, Player), current_player(Player),
   in_model(h(Spatial, _, Player, There, _), ModelData),
   in_model(h(Spatial, exit(ExitName), Here, There, _), ModelData),
   add_todo(goto(Spatial, (*), ExitName), Mem0, Mem1).
+
 autonomous_decide_action(Agent, Mem0, Mem1) :-
-  0 is random(5),
+ 0 is random(5),
   random_noise(Agent, Msg),
-  add_todo(print_(Msg), Mem0, Mem1).
+  add_todo(emote(spatial, see, *, Msg), Mem0, Mem1).
 autonomous_decide_action(Agent, Mem0, Mem0) :-
   bugout('~w: Can\'t think of anything to do.~n', [Agent], autonomous).% trace.
 
@@ -126,7 +127,7 @@ consider_request(_Speaker, Agent, take(Spatial, Object), M0, M1) :-
 consider_request(Requester, _Agent, Query, M0, M1) :-
   do_introspect(Query, Answer, M0),
   %add_todo(print_(Answer), M0, M1).
-  add_todo(emote(spatial, say, Requester, Answer), M0, M1).
+   add_todo(emote(spatial, say, Requester, Answer), M0, M1).
 consider_request(_Speaker, Agent, forget(goals), M0, M2) :-
   bugout('~w: forgetting goals.~n', [Agent], autonomous),
   forget_always(goals(_), M0, M1),
