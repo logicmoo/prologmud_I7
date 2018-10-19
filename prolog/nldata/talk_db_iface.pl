@@ -122,6 +122,7 @@ talk_db(noun1, Sing, Sing):-talk_db(noun2, Sing).
 % =================================
 % some random talk_db/2-7s from the other file (to help see the meanings)
 % =================================
+/*
 
 talk_db(adj,aaronic).
 talk_db(adj,aaronical).
@@ -306,3 +307,5 @@ talk_db(transitive,absorb,absorbs,absorbed,absorbing,absorbed).
 talk_db(transitive,twit,twits,twitted,twitting,twitted).
 talk_db(transitive,twitter,twitters,twittered,twittering,twittered).
 talk_db(verb,abray).
+
+*/

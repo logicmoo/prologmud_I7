@@ -26,7 +26,7 @@
  clex_adj/3,
     adj_itr_sup/2,
     adj_itr_comp/2,
-    adj_itr/2
+    adj_itr/2,
 
  clex_noun/5,
      noun_sg/3,
