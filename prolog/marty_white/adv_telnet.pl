@@ -29,8 +29,9 @@ adv_server(Port) :-
   tcp_setopt(ServerSocket, reuseaddr), 
   tcp_bind(ServerSocket, Port), 
   tcp_listen(ServerSocket, 5), 
+  atom_concat('mu_', Port, Alias),
   thread_create(adv_server_loop(Port, ServerSocket), _, 
-         [ alias(adv_server)
+         [ alias(Alias)
          ]).
 
 peer_alias(Prefix,Peer, Host, Alias):- 
@@ -151,12 +152,18 @@ prompt_for_agent(Id,Alias,InStream,OutStream, Host, Peer, Agent,Name):-
  asserta(adv:console_info(Id,Alias,InStream,OutStream, Host, Peer, Agent)), 
  assertz(adv:agent_conn(Agent,Name,Alias,adventure_client_process(Id,Alias,InStream,OutStream, Host, Peer))),!.
 
+welcome_adv_tnet(OutStream):- 
+     format(OutStream, '==============================================~n', []),
+     format(OutStream, 'Welcome to Marty\'s Prolog Adventure Prototype~n', []),
+     format(OutStream, '==============================================~n', []),
+     !.
 
 adventure_client_process(Id,Alias,InStream,OutStream, Host, Peer):- 
  prompt_for_agent(Id,Alias,InStream,OutStream, Host, Peer, Agent,_Name),
  retractall(adv:wants_quit(_,Alias,_,_)),
  retractall(adv:wants_quit(Id,_,_,_)),
  retractall(adv:wants_quit(_,_,InStream,_)),
+ welcome_adv_tnet(OutStream),
  redraw_prompt(Agent),
  repeat,  
   srv_catch(adv_tlnet_readloop(Id,Alias)),
