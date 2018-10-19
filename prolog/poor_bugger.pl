@@ -1,12 +1,12 @@
 % ===================================================================
 % File 'poor_bugger.pl'
-% Purpose: For SWI-Prolog  
-% This implementation is incomplete
+% Purpose: a small number of debugging utils
+% The original debugging package that I created had too many interdependencies
 % Maintainer: Douglas Miles
 % Contact: $Author: dmiles $@users.sourceforge.net ;
 % Version: 'poor_bugger.pl' 1.0.0
-% Revision:  $Revision: 1.3 $
-% Revised At:   $Date: 2002/06/06 15:43:15 $
+% Revision:  $Revision: 1.1 $
+% Revised At:   $Date: 2035/06/06 15:43:15 $
 % ===================================================================
 
 
@@ -16,12 +16,15 @@
 %
 nop(_).
 
-update_mu :-
+update_deps :-
    pack_install(each_call_cleanup,[url('https://github.com/TeamSPoon/each_call_cleanup.git'),upgrade(true),interactive(false)]),
    pack_install(no_repeats,[url('https://github.com/TeamSPoon/no_repeats.git'),upgrade(true),interactive(false)]),
    pack_install(loop_check,[url('https://github.com/TeamSPoon/loop_check.git'),upgrade(true),interactive(false)]),
-   nop(pack_install(must_trace,[url('https://github.com/TeamSPoon/must_trace.git'),upgrade(true),interactive(false)])),
-   pack_install(small_adventure_games,[url('https://github.com/TeamSPoon/small_adventure_games.git'),upgrade(true),interactive(true)]).
+   % The whole point of me making Poor_bugger is to not need to install must_trace :)
+   nop(pack_install(must_trace,[url('https://github.com/TeamSPoon/must_trace.git'),upgrade(true),interactive(true)])),
+   % hoses developement 
+   nop(pack_install(small_adventure_games,[url('https://github.com/TeamSPoon/small_adventure_games.git'),upgrade(true),interactive(true)])),
+   !.
 
 
 /*
@@ -330,10 +333,9 @@ deterministically_must(G):- call(call,G),deterministic(YN),true,
 %
 % Start RTracer.
 %
-
 rtrace:- start_rtrace,trace.
 
-:- 'totally_hide'(rtrace/0).
+:- totally_hide(rtrace/0).
 
 start_rtrace:-
       leash(-all),
@@ -345,7 +347,7 @@ start_rtrace:-
       visible(+exception),
       maybe_leash(+exception).
 
-:- 'totally_hide'(start_rtrace/0).
+:- totally_hide(start_rtrace/0).
 
 %! srtrace is det.
 %
@@ -369,7 +371,7 @@ stop_rtrace:-
   retractall(t_l:rtracing),
   !.
 
-:- 'totally_hide'(stop_rtrace/0).
+:- totally_hide(stop_rtrace/0).
 :- system:import(stop_rtrace/0).
 
 nortrace:- stop_rtrace,ignore(pop_tracer).
@@ -474,7 +476,7 @@ set_leash_vis(OldL,OldV):- '$leash'(_, OldL),'$visible'(_, OldV),!.
 :- totally_hide(set_leash_vis/2).
 
 next_rtrace:- (nortrace;(rtrace,trace,notrace(fail))).
-:- 'totally_hide'(next_rtrace/0).
+:- totally_hide(next_rtrace/0).
 
 
 rtrace(Goal):- notrace(tracing)-> rtrace0((trace,Goal)) ; 
@@ -506,8 +508,8 @@ rtrace_break(Goal):- stop_rtrace,trace,debugCallWhy(rtrace_break(Goal),Goal).
 
 
 :- '$hide'(quietly/1).
-%:- if_may_hide('totally_hide'(notrace/1,  hide_childs, 1)).
-%:- if_may_hide('totally_hide'(notrace/1)).
+%:- if_may_hide(totally_hide(notrace/1,  hide_childs, 1)).
+%:- if_may_hide(totally_hide(notrace/1)).
 :- totally_hide(system:tracing/0).
 :- totally_hide(system:notrace/0).
 :- totally_hide(system:notrace/1).
