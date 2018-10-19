@@ -55,7 +55,7 @@ runnable_goal(Goal, Goal).
 apply_state(Goal,S0,S0):- Goal==[],!.
 apply_state(rtrace(Goal), S0, S2) :- !, rtrace(apply_state(Goal, S0, S2)). 
 apply_state(dmust(Goal), S0, S2) :- !, dmust(apply_state(Goal, S0, S2)).
-apply_state(must(Goal), S0, S2) :- !, must(apply_state(Goal, S0, S2)). 
+apply_state(must(Goal), S0, S2) :- !, dmust(apply_state(Goal, S0, S2)). 
 apply_state(nop(_), S0, S2) :- !, S0=S2.
 apply_state({Goal}, S0, S0) :- !, call(Goal).
 apply_state([G1|G2], S0, S2) :- !,

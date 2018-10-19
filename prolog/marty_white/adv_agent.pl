@@ -182,7 +182,7 @@ decide_action(Agent, Mem0, Mem1) :-
   notrace(thought(inherit(console,t), Mem0)),!,
   current_input(In), % agent_to_input(Agent,In),
   (tracing->catch(sleep(3),_,(nortrace,notrace,break));true),
-  wait_for_input([In,user_input],Found,0.5),
+  wait_for_input([In,user_input],Found,0.1),
   % read_pending_codes(In,Codes,Missing), 
   (Found==[] -> (Mem0=Mem1) ; 
     (((notrace,console_decide_action(Agent, Mem0, Mem1))))).

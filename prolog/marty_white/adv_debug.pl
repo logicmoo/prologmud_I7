@@ -17,6 +17,8 @@
 %
 */
 
+:- user:ensure_loaded(library(poor_bugger)).
+
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  CODE FILE SECTION
 :- nop(ensure_loaded('adv_debug')).
@@ -50,6 +52,5 @@ check4bugs(S0) :-
 :- dynamic(user:portray/1).
 :- discontiguous(user:portray/1).
 % user:portray
-
 
 

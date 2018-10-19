@@ -16,7 +16,8 @@
 */
 
 :- if(exists_source(library(nldata/clex_iface))).
-:- ensure_loaded(library(nldata/clex_iface)).
+% being in user is just to help debugging from console
+:- user:ensure_loaded(library(nldata/clex_iface)).
 :- endif.
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  CODE FILE SECTION
@@ -50,7 +51,7 @@ strip_noise_words([to|Tokens], NewTokens) :- strip_noise_words(Tokens, NewTokens
 strip_noise_words(Tokens, NewTokens) :-
   findall(Token,
           ( member(Token, Tokens),
-            \+ member(Token, ['please', 'the', 'a', 'an'])),
+            \+ member(Token, ['please', 'the', 'a', 'an', 'some', 'thee'])),
           NewTokens).
 
 convert_reflexive(Agent, Words, NewWords) :-

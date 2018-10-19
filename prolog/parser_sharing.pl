@@ -18,28 +18,8 @@
 
 % Miscellaneous generic utility predicates.
 
-dbug(P):- notrace(ansi_format([fg(cyan)],'~N% ~p.~n',[P])).
-:- module_transparent(dmust/1).
-dmust((A,!,B)):-!,dmust(A),!,dmust(B).
-dmust((A,B)):-!,dmust(A),dmust(B).
-dmust((A;B)):-!,call(A),dmust(B).
-dmust(A):- call(A)*-> true ; failed_dmust(A).
+:- user:ensure_loaded(library(poor_bugger)).
 
-failed_dmust(once(A)):-!, failed_dmust(A),!.
-failed_dmust((A,B)):- !,dbug(dmust_start(A)),ignore(rtrace(A)),dbug(dmust_mid(A)), failed_dmust(B).
-failed_dmust(A):- dbug(failed_dmust_start(A)),ignore(rtrace(A)),dbug(failed_dmust_end(A)),
-  break,nortrace,notrace,trace.
-
-:- if(\+ current_module(pfc)).
-:- module_transparent(call_u/1).
-call_u(Q):- notrace(current_predicate(_,Q)),call(call,Q).
-%call_u(P) :- call(call,P).
-:- endif.
-
-no_repeats_must(Call):-one_must(gripe_time(0.5,no_repeats(Call)),(fail,(dbug(warn(show_failure(Call))),!,fail))).
-
-:- module_transparent(loop_check_u/1).
-loop_check_u(P):- loop_check(call_u(P)).
 
 :- module_transparent(only_pfc/1).
 only_pfc(P):- assertion(ignore(ground(P))), !.
@@ -248,7 +228,7 @@ is_leave_alone(H):- compound(H),functor(H,F,A),is_leave_alone(F,A).
 %is_leave_alone('-->',_).
 is_leave_alone(A,_):- upcase_atom(A,A).
 
-:- fixup_exports.
+% :- fixup_exports.
 
 %:- multifile(parser_sharing:term_expansion/4).
 %:- rtrace.
