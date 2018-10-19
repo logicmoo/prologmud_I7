@@ -16,12 +16,12 @@
 %
 nop(_).
 
-:- pack_install(each_call_cleanup,[url('https://github.com/TeamSPoon/each_call_cleanup.git'),upgrade(true),interactive(false)]).
-:- pack_install(no_repeats,[url('https://github.com/TeamSPoon/no_repeats.git'),upgrade(true),interactive(false)]).
-:- pack_install(loop_check,[url('https://github.com/TeamSPoon/loop_check.git'),upgrade(true),interactive(false)]).
-
-:- nop(pack_install(must_trace,[url('https://github.com/TeamSPoon/must_trace.git'),upgrade(true),interactive(false)])).
-:- nop(pack_install(small_adventure_games,[url('https://github.com/TeamSPoon/small_adventure_games.git'),upgrade(true),interactive(false)])).
+update_mu :-
+   pack_install(each_call_cleanup,[url('https://github.com/TeamSPoon/each_call_cleanup.git'),upgrade(true),interactive(false)]),
+   pack_install(no_repeats,[url('https://github.com/TeamSPoon/no_repeats.git'),upgrade(true),interactive(false)]),
+   pack_install(loop_check,[url('https://github.com/TeamSPoon/loop_check.git'),upgrade(true),interactive(false)]),
+   nop(pack_install(must_trace,[url('https://github.com/TeamSPoon/must_trace.git'),upgrade(true),interactive(false)])),
+   pack_install(small_adventure_games,[url('https://github.com/TeamSPoon/small_adventure_games.git'),upgrade(true),interactive(true)]).
 
 
 /*
@@ -69,8 +69,11 @@ dbug(P):- notrace(ansi_format([fg(cyan)],'~N% ~p.~n',[P])).
 dmust((A,!,B)):-!,dmust(A),!,dmust(B).
 dmust((A,B)):-!,dmust(A),dmust(B).
 dmust((A;B)):-!,call(A),dmust(B).
+dmust((A->B;C)):-!,call(A)->dmust(B);dmust(C).
+dmust((A*->B;C)):-!,call(A)*->dmust(B);dmust(C).
 dmust(A):- call(A)*-> true ; failed_dmust(A).
 
+:- module_transparent(failed_dmust/1).
 failed_dmust(once(A)):-!, failed_dmust(A),!.
 failed_dmust((A,B)):- !,dbug(dmust_start(A)),ignore(rtrace(A)),dbug(dmust_mid(A)), failed_dmust(B).
 failed_dmust(A):- dbug(failed_dmust_start(A)),ignore(rtrace(A)),dbug(failed_dmust_end(A)),
@@ -137,7 +140,7 @@ parser_sharing:term_expansion(G,I,GG,O):- nonvar(I),compound(G),importing_clause
 :-thread_local(t_l:wasguitracer/1).
 :-thread_local(t_l:wastracer/1).
 
-:- 'meta_predicate'(call_call(0)).
+:- meta_predicate(call_call(0)).
 call_call(G):-call(G).
 
 
@@ -145,8 +148,7 @@ call_call(G):-call(G).
    rtrace(0),
    restore_trace(0),
    on_x_debug(0),
-   on_f_rtrace(0),  
-   
+   on_f_rtrace(0),   
    rtrace_break(0),
    quietly(0),
    ftrace(0).
@@ -202,7 +204,7 @@ with_unlocked_pred(MP,Goal):- strip_module(MP,M,P),Pred=M:P,
  setup_call_cleanup('$set_predicate_attribute'(Pred, system, 0),
    catch(Goal,E,throw(E)),'$set_predicate_attribute'(Pred, system, 1))))).
 
-unhide(Pred):- '$set_predicate_attribute'(Pred, trace, true),'$set_predicate_attribute'(Pred, hide_childs, 0).
+unhide(Pred):- '$set_predicate_attribute'(Pred, trace, 1),'$set_predicate_attribute'(Pred, hide_childs, 0).
 
 
 /*
@@ -222,7 +224,7 @@ maybe_leash(Some):- notrace((maybe_leash->leash(Some);true)).
 
 maybe_leash:- notrace((\+ current_prolog_flag(runtime_must,keep_going), \+ non_user_console)).
 
-non_user_console:- !,fail.
+%non_user_console:- !,fail.
 non_user_console:- \+ stream_property(current_input, tty(true)),!.
 non_user_console:- \+ stream_property(current_input,close_on_abort(false)).
 
@@ -236,10 +238,7 @@ get_trace_reset((notrace,set_prolog_flag(debug,WasDebug),CC3,'$visible'(_, OldV)
      (current_prolog_flag(debug,true)->WasDebug=true;WasDebug=false),     
      (current_prolog_flag(gui_tracer, GWas)->CC3=set_prolog_flag(gui_tracer, GWas);CC3=true),!,
      RestoreTrace.
-
 :- totally_hide(get_trace_reset/1).
-:- totally_hide(get_trace_reset/1).
-
 
 
 %! push_guitracer is nondet.
