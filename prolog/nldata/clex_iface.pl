@@ -146,6 +146,8 @@ adv_itr0(Biggest,Big,superlative):-adv_sup(Biggest,Big).
 clex_adv(Biggest,Big,Type):-adv_itr0(Biggest,Big,Type).
 clex_adv(Biggest,Big,unknown):-adv(Biggest,Big),not(adv_itr0(Biggest,_,_)).
 
+:- set_prolog_flag(encoding,iso_latin_1).
+
 :- include(clex_lexicon_user1).
 
 % apply_fixes:- clex_verb(Formed,Verb,dv(Prep),PP)

@@ -21,6 +21,7 @@ nop(_).
 :- pack_install(loop_check,[url('https://github.com/TeamSPoon/loop_check.git'),upgrade(true),interactive(false)]).
 
 :- nop(pack_install(must_trace,[url('https://github.com/TeamSPoon/must_trace.git'),upgrade(true),interactive(false)])).
+:- nop(pack_install(small_adventure_games,[url('https://github.com/TeamSPoon/small_adventure_games.git'),upgrade(true),interactive(false)])).
 
 
 /*
