@@ -2124,9 +2124,9 @@ extra_look_around(Agent, S0, S9) :-
 
 random_noise(Agent, [cap(subj(Agent)),Msg]) :-
   random_member([
-    'hums quietly to himself.',
-    'checks his inspection cover.',
-    'buffs his chestplate.',
+    'hums quietly to themself.',
+    'checks their inspection cover.',
+    'buffs their chestplate.',
     'fidgets uncomfortably.'
     ], Msg).
 

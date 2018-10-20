@@ -58,8 +58,9 @@ adv_server_loop(Prefix, ServerSocket) :-
   !, 
   adv_server_loop(Prefix, ServerSocket).
 
-setup_IO_props(InStream, _OutStream):- 
+setup_IO_props(InStream, OutStream):- 
   set_stream(InStream, tty(true)), 
+  set_stream(OutStream, tty(true)), 
   % set_prolog_flag(tty_control, false), % JanW
   % set_prolog_flag(tty_control, true), 
   current_prolog_flag(encoding, Enc), 
@@ -165,6 +166,7 @@ adventure_client_process(Id,Alias,InStream,OutStream, Host, Peer):-
  retractall(adv:wants_quit(_,_,InStream,_)),
  welcome_adv_tnet(OutStream),
  redraw_prompt(Agent),
+ setup_console,
  repeat,  
   srv_catch(adv_tlnet_readloop(Id,Alias)),
   adv:wants_quit(Id,Alias,_InStream,_OutStream),!.  
@@ -181,12 +183,12 @@ adv_tlnet_readloop(Id,Alias):-
 adv_tlnet_readloop(Id,Alias):-  
   srv_catch(adv:console_info(Id,Alias,InStream,OutStream, Host, Peer, Agent)), 
   tflush(OutStream),
- % 
-  current_input(In), % agent_to_input(Agent,In),
-  wait_for_input([In,InStream,user_input],Found,0.5),
+  current_input(In), wait_for_input([In,InStream,user_input],Found,0.2),
   Found\==[],  
   %format(OutStream, '~N[~p: ~p] ==> ', [Alias, Agent]),
-     readtokens(user_input,[],Words),
+  tflush(OutStream),
+  read_line_to_tokens(Agent,InStream,[],Words),
+  tflush(OutStream),
   dmust(adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, Words)).
 
 

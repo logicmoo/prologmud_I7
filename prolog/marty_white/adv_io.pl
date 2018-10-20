@@ -17,9 +17,9 @@
 %
 */
 % Marty's Tokenizer/Scanner/Lexer, written in Prolog.
-:- module(adv_io,[readtokens/3,readline/2,
+:- module(adv_io,[
+   read_line_to_tokens/4,
    clear_overwritten_chars/1,
-   readtokens/1,
    redraw_prompt/1,
    player_format/2,
    player_format/3,
@@ -31,10 +31,28 @@
    bug/1,
    agent_to_input/2,
    get_overwritten_chars/2,
-   restore_overwritten_chars/1]).
+   restore_overwritten_chars/1,
+   setup_console/0,setup_console/1]).
 
-:- use_module(library(editline)).
-:- initialization('$toplevel':setup_readline,now).
+
+user:setup_console :- current_input(In),setup_console(In).
+
+:- dynamic(adv:has_setup_setup_console/1).
+
+setup_console(In):- adv:has_setup_setup_console(In),!.
+setup_console(In):-
+  
+   assert(adv:has_setup_setup_console(In)),
+   set_prolog_flag(color_term, true),
+   ensure_loaded(library(prolog_history)),
+   (current_prolog_flag(readline,X)-> ensure_loaded(library(X));ensure_loaded(library(editline))),
+   %ensure_loaded(library(editline)),
+    '$toplevel':(
+          
+     setup_colors,
+     setup_history,
+     setup_readline),!.
+
 
 :- dynamic(adv:input_log/1).
 init_logging :-
@@ -170,28 +188,47 @@ tokenize([_BadChar|Tail], Rest) :-
 
 log_codes([-1]).
 log_codes(LineCodes) :-
-  atom_codes(Line, LineCodes),
+  ignore(notrace(catch((atom_codes(Line, LineCodes),
   adv:input_log(FH),
-  format(FH, '>~w\n', [Line]).
+  format(FH, '>~w\n', [Line])),_,true))).
+
+
+%!  skip_to_nl(+Input) is det.
+%
+%   Read input after the term. Skips   white  space and %... comment
+%   until the end of the line or a non-blank character.
+
+skip_to_nl(In) :-
+    repeat,
+    peek_char(In, C),
+    (   C == '%'
+    ->  skip(In, '\n')
+    ;   char_type(C, space)
+    ->  get_char(In, _),
+        C == '\n'
+    ;   true
+    ),
+    !.
 
 % -- Input from stdin, convert to a list of atom-tokens.
 
-readtokens(Tokens) :- current_player(Agent),readtokens(Agent,[],Tokens).
-
-readtokens(In,Prev,Tokens):- 
-  assertion(is_stream(In)),!,
-  New = '',
-  setup_call_cleanup(prompt(Old,New),
-     read_line_to_tokens(In,Prev,Tokens),
-     prompt(_,Old)),
-  !.
-
-read_line_to_tokens(In,Prev,Tokens):- 
-  read_line_to_codes(In,LineCodesR), 
-  append(Prev,LineCodesR,LineCodes),
-  NegOne is -1,     
-  dmust(line_to_tokens(LineCodes,NegOne,Tokens0)),!,
-  dmust(Tokens0=Tokens).
+read_line_to_tokens(_Agent,In,Prev,Tokens):-  
+ stream_property(In,tty(Was)),
+ setup_call_cleanup((  
+  set_stream(In, tty(true))),
+  ((setup_console(In),
+    %skip_to_nl(In),
+     New = '',
+    % format(atom(New),'~w@spatial> ',[Agent]),
+     setup_call_cleanup(prompt(Old,New),
+     read_line_to_codes(In,LineCodesR),
+     prompt(_,Old)), 
+    read_pending_input(In,_,[]),
+    append(Prev,LineCodesR,LineCodes),
+    NegOne is -1,     
+    dmust(line_to_tokens(LineCodes,NegOne,Tokens0)),!,
+    dmust(Tokens0=Tokens))),
+  set_stream(In, tty(Was))),!.
 
 line_to_tokens([],_,[]):-!.
 line_to_tokens(NegOne,NegOne,[quit]):-!.
@@ -215,18 +252,16 @@ line_to_tokens(LineCodes,_,Tokens):-
   save_to_history(LineCodes),
   !.
 
-save_to_history(LineCodes):- 
-  ignore(notrace((atom_codes(AtomLineCodes, LineCodes), 
-  catch(prolog:history(current_input, add(AtomLineCodes)), _, fail)))).
+:- multifile(prolog:history/2).
+save_to_history(LineCodes):-   
+  ignore(notrace((
+  atom_string(AtomLineCodes,LineCodes), 
+  current_input(In),
+  % dmsg(LineCodes->AtomLineCodes),
+  ignore(catch('$save_history_line'(AtomLineCodes),_,true)),
+  ignore(catch(prolog:history(user_input, add(AtomLineCodes)), _, true)),
+  ignore(catch(prolog:history(In, add(AtomLineCodes)), _, true))))).
 
-
-
-/*
-readlist(Agent,L) :-  % return a line of input, split into a list of words.
-  readline(Agent,CL),
-  wordlist(L, CL, []),
-  !.
-*/
 
 :- dynamic(overwritten_chars/2).
 
@@ -253,27 +288,6 @@ user:bi:- agent_to_input('telnet~1',In),
 get_overwritten_chars(Agent,Chars):- agent_to_input(Agent,In),overwritten_chars(In,Chars).
 get_overwritten_chars(_Agent,[]).
 
-% readline(Agent,[]):- agent_to_input(Agent,In),at_end_of_stream(In),clear_overwritten_chars(Agent).
-readline(Agent,L) :-  % return a line of input as a list of ASCII codes.
-  % current_input(X),(overwritten_chars(In,Chars)->true;Chars=[]),
-  clear_overwritten_chars(Agent),
-  agent_to_input(Agent,In),
-  stream_property(In,buffer(Was)),
-  set_stream(In,buffer(false)),
-  call_cleanup(((
-  get0(In,C), add_pending_input(Agent,C),
-    readlinetail(Agent,C, L))),
-    set_stream(In,buffer(Was))),!.  
-
-readlinetail(Agent,13, []):- clear_overwritten_chars(Agent).
-readlinetail(Agent,10, []):- clear_overwritten_chars(Agent).
-readlinetail(Agent,-1, [-1]) :- nl,clear_overwritten_chars(Agent).
-% readlinetail(Agent,C, [C]):- at_end_of_stream,!, clear_overwritten_chars(Agent).
-readlinetail(Agent,C, [C|X]) :-
-  agent_to_input(Agent,In),
-  get0(In,C2),
-  add_pending_input(Agent,C2),
-  readlinetail(Agent,C2, X).
 
 wordlist(List) --> optional_ws, wordlist1(List), optional_ws.
 optional_ws --> whitespace.
@@ -300,4 +314,6 @@ whitespace --> whsp.
 
 whsp --> [X], {X<48}.
 
+:- initialization(setup_console,program).
 
+:- initialization(setup_console,restore).

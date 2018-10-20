@@ -94,12 +94,12 @@ update_model(Spatial, _Agent,
 update_model(Spatial, Agent, moved(Spatial, Agent, There, How, Here), Timestamp, Mem, M0, M2) :-
   % According to model, where was I?
   in_model(h(Spatial, _, Agent, There, _T0), M0),
-  % TODO: Handle goto(Spatial, on, table)
+  % TODO: Handle goto(on, table)
   % How did I get Here?
-  append(RecentMem, [did(goto(Spatial, _HowGo, ExitName))|OlderMem], Mem), % find figment
-  \+ member(did(goto(Spatial, _, _)), RecentMem),          % guarrantee recentness
+  append(RecentMem, [did(goto(_HowGo, ExitName))|OlderMem], Mem), % find figment
+  \+ member(did(goto(_, _)), RecentMem),          % guarrantee recentness
   memberchk(timestamp(_T1), OlderMem),          % get associated stamp
-  %player_format('~p moved: goto(Spatial, ~p, ~p) from ~p leads to ~p~n',
+  %player_format('~p moved: goto(~p, ~p) from ~p leads to ~p~n',
   %       [Agent, HowGo, Dest, There, Here]),
   update_model_exit(Spatial, exit(ExitName), There, Here, Timestamp, M0, M1), % Model the path.
   update_relation(Spatial, How, Agent, Here, Timestamp, M1, M2). % And update location.

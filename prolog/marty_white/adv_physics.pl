@@ -68,7 +68,7 @@ cant(_Agent, Action, cant(move(Spatial, Thing)), State) :-
   psubsetof(Verb, move),
   getprop(Thing, can_be(Spatial, move, f), State).
 
-cant(Agent, Action, musthave(Spatial, Thing), State) :-
+cant(Agent, Action, musthave( Thing), State) :-
   act_verb_thing_model_sense(Action, Verb, Thing, Spatial, _Sense),
   get_open_traverse(Verb, Spatial, OpenTraverse),
   psubsetof(Verb, drop),
@@ -77,16 +77,16 @@ cant(Agent, Action, musthave(Spatial, Thing), State) :-
 cant(Agent, Action, cant(manipulate(Spatial, self)), _) :-
   Action =.. [Verb, Agent |_],
   psubsetof(Verb, touch(Spatial)).
-cant(Agent, take(Spatial, Thing), alreadyhave(Thing), State) :-
-  related(Spatial, descended, Thing, Agent, State).
-cant(Agent, take(Spatial, Thing), mustgetout(Thing), State) :-
-  related(Spatial, descended, Agent, Thing, State).
-cant(_Agent, put(Spatial, Thing1, _How, Thing1), self_relation(Spatial, Thing1), _S0).
-cant(_Agent, put(Spatial, Thing1, _How, Thing2), moibeus_relation(Spatial, Thing1, Thing2), S0) :-
+cant(Agent, take( Thing), alreadyhave(Thing), State) :-
+  related(_Spatial, descended, Thing, Agent, State).
+cant(Agent, take( Thing), mustgetout(Thing), State) :-
+  related(_Spatial, descended, Agent, Thing, State).
+cant(_Agent, put(_Spatial, Thing1, _How, Thing1), self_relation( Thing1), _S0).
+cant(_Agent, put(Spatial, Thing1, _How, Thing2), moibeus_relation( Thing1, Thing2), S0) :-
   related(Spatial, descended, Thing2, Thing1, S0).
-cant(_Agent, throw(Spatial, Thing1, _How, Thing1), self_relation(Spatial, Thing1), _S0).
-cant(_Agent, throw(Spatial, Thing1, _How, Thing2), moibeus_relation(Spatial, Thing1, Thing2), S0) :-
-  related(Spatial, descended, Thing2, Thing1, S0).
+cant(_Agent, throw( Thing1, _How, Thing1), self_relation( Thing1), _S0).
+cant(_Agent, throw( Thing1, _How, Thing2), moibeus_relation( Thing1, Thing2), S0) :-
+  related(_Spatial, descended, Thing2, Thing1, S0).
 
 
 
@@ -112,8 +112,8 @@ cant(Agent, examine(Sense, Thing), cant(sense(Spatial, Sense, Thing, Why)), Stat
   (Why = ( \+ can_sense(Spatial, Sense, Thing, Agent, State))).
 
 
-cant(Agent, goto(Spatial, _Relation, Object), mustdrop(Spatial, Object), State) :-
-  related(Spatial, descended, Object, Agent, State).
+cant(Agent, goto(_Relation, Object), mustdrop(Object), State) :-
+  related(_Spatial, descended, Object, Agent, State).
 
 cant(Agent, EatCmd, cantdothat(EatCmd), State) :-
   action_model(EatCmd, Spatial),
@@ -238,17 +238,18 @@ disgorge(Spatial, Container, How, Here, Vicinity, Msg, S0, S9) :-
   moveallto(Spatial, Contents, How, Here, Vicinity, Msg, S0, S9).
 disgorge(_Spatial, _Container, _How, _Here, _Vicinity, _Msg, S0, S0).
 
-thrown(Spatial, Thing, _Target, How, Here, Vicinity, S0, S9) :-
+thrown( Thing, _Target, How, Here, Vicinity, S0, S9) :-
   getprop(Thing, fragile(Broken), S0),
   bugout('object ~p is fragile~n', [Thing], general),
   undeclare(h(Spatial, _, Thing, _), S0, S1),
   declare(h(Spatial, How, Broken, Here), S1, S2),
   queue_local_event(Spatial, [transformed(Thing, Broken)], Vicinity, S2, S3),
   disgorge(Spatial, Thing, How, Here, Vicinity, 'Something falls out.', S3, S9).
-thrown(Spatial, Thing, _Target, How, Here, Vicinity, S0, S9) :-
-  moveto(Spatial, Thing, How, Here, Vicinity, 'Thrown.', S0, S9).
+thrown( Thing, _Target, How, Here, Vicinity, S0, S9) :-
+  moveto(spatial, Thing, How, Here, Vicinity, 'Thrown.', S0, S9).
 
-hit(Spatial, Target, _Thing, Vicinity, S0, S9) :-
+hit( Target, _Thing, Vicinity, S0, S9) :-
+  Spatial = spatial,
   getprop(Target, fragile(Broken), S0),
   bugout('target ~p is fragile~n', [Target], general),
   undeclare(h(Spatial, How, Target, Here), S0, S1),
@@ -264,7 +265,7 @@ act_verb_thing_model_sense(Action, Verb, Thing, Spatial, Sense):-
     cant_be(Sense,Thing),
     notrace(act_verb_thing_model_sense0(Action, Verb, Thing, Spatial, Sense)), !.
 
-act_verb_thing_model_sense0(goto(Spatial, *, Thing), goto, Thing, Spatial, see):-!.
+act_verb_thing_model_sense0(goto(*, Thing), goto, Thing, spatial, see):-!.
 act_verb_thing_model_sense0(look(spatial), look, *, spatial, see):-!.
 act_verb_thing_model_sense0(look(spatial, spatial), look, *, spatial, see):-!.
 act_verb_thing_model_sense0(look, look, *, spatial, see):-!.

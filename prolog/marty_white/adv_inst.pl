@@ -154,7 +154,7 @@ create_1obj(_Suffix,_Info,I,I, S0,S0):- assertion(atom(I)),!.
 
 find_recent(_Suffix,Type,Inst,S0,S0):- member(props(Inst,PropList),S0),member(instance(Type),PropList).
 
-inst_of(I,C,N):- compound(I),!,I=..[C,N|_].
+inst_of(I,C,N):- compound(I),!,I=..[C,N|_],number(N).
 inst_of(I,C,N):- atom(I),!, atomic_list_concat([C,NN],'~',I),atom_number(NN,N).
 inst_of(I,C,N):- atom(C),atomic_list_concat([C,NN],'~',I),atom_number(NN,N).
 

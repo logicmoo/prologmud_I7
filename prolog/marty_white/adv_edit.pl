@@ -56,7 +56,10 @@ do_metacmd(make, S0, S0) :-
 do_metacmd(prolog, S0, S0) :-
   wizard,
   prolog.
-do_metacmd(CLS, S0, S0) :- wizard, current_predicate(_, CLS), call(CLS), !.
+
+do_metacmd(CLS, S0, S0) :- wizard, 
+  current_predicate(_, CLS), catch(CLS,_,fail), !.
+
 do_metacmd(memory(Agent), S0, S0) :-
   wizard,
   declared(memories(Agent, Memory), S0),

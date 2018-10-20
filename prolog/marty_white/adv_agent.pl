@@ -81,7 +81,7 @@ add_goals(Goals, Mem0, Mem2) :-
   append(Goals, OldGoals, NewGoals),
   memorize(goals(NewGoals), Mem1, Mem2).
 
-add_todo(Auto, Mem0, Mem3) :- Auto = a,
+add_todo(Auto, Mem0, Mem3) :- Auto = auto,
   member(inst(Agent), Mem0),
   autonomous_decide_goal_action(Agent, Mem0, Mem3),!.
 add_todo(Action, Mem0, Mem2) :-
@@ -106,61 +106,65 @@ do_introspect(path(Spatial, There), Answer, Memory) :-
   find_path(Spatial, Here, There, Route, ModelData),
   Answer = ['Model is', ModelData, '\nShortest path is', Route].
 
-do_introspect(whereis(Spatial, X), Answer, Memory) :-
-  remember_whereis(Spatial, X, Answer, Memory).
-do_introspect(whereis(Spatial, X), Answer, Memory) :-
+
+do_introspect(whereis(X), Answer, Memory) :-
+  remember_whereis(X, Answer, Memory).
+do_introspect(whereis(X), Answer, Memory) :- !,
   thought(inst(Agent), Memory),
-  sensory_model(Sense, Spatial),
+  sensory_model(Sense, spatial),
   Answer = [subj(Agent), person('don\'t', 'doesn\'t'),
             'recall ever ', ing(Sense), ' a "', X, '".'].
-
-do_introspect(whois(Spatial, X), Answer, Memory) :-
-  remember_whereis(Spatial, X, Answer, Memory).
-do_introspect(whois(_Spatial, X), [X, is, X, .], _Memory).
-
-do_introspect(whatis(Spatial, X), Answer, Memory) :-
-  remember_whereis(Spatial, X, Answer, Memory).
-do_introspect(whatis(_Spatial, X), [X, is, X, .], _Memory).
+do_introspect(whereis(X), Answer, Memory):-
+ do_introspect(whereis(spatial,X), Answer, Memory).
 
 
+do_introspect(whois(X), Answer, Memory) :-
+  remember_whereis(X, Answer, Memory).
+do_introspect(whois( X), [X, is, X, .], _Memory).
 
-remember_whereis(Spatial, Thing, Answer, Memory) :-
+do_introspect(whatis( X), Answer, Memory) :-
+  remember_whereis(X, Answer, Memory).
+do_introspect(whatis( X), [X, is, X, .], _Memory).
+
+
+
+remember_whereis(Thing, Answer, Memory) :-
   thought(inst(Agent), Memory),
   thought_model(Spatial,ModelData, Memory),
   in_model(h(Spatial, How, Thing, Where, T), ModelData),
   How \= exit(_),
   Answer = ['At time', T, subj(Agent), 'saw the', Thing, How, the, Where, .].
-remember_whereis(Spatial, Here, Answer, Memory) :-
+remember_whereis(Here, Answer, Memory) :-
   thought(inst(Agent), Memory),
   thought_model(Spatial,ModelData, Memory),
   in_model(h(Spatial, _How, Agent, Here, _T), ModelData),
   Answer = 'Right here.'.
-remember_whereis(Spatial, There, Answer, Memory) :-
+remember_whereis(There, Answer, Memory) :-
   thought(inst(Agent), Memory),
   thought_model(Spatial,ModelData, Memory),
   in_model(h(Spatial, _How, Agent, Here, _T), ModelData),
   find_path(Spatial, Here, There, Route, ModelData),
   Answer = ['To get to the', There, ', ', Route].
-remember_whereis(Spatial, There, Answer, Memory) :-
+remember_whereis(There, Answer, Memory) :-
   thought_model(Spatial,ModelData, Memory),
-  ( in_model(h(Spatial, exit(_), _, There, _T), ModelData);
+  (in_model(h(Spatial, exit(_), _, There, _T), ModelData);
     in_model(h(Spatial, exit(_), There, _, _T), ModelData)),
   Answer = 'Can''t get there from here.'.
 
 
 
 console_decide_action(Agent, Mem0, Mem1):- 
-  thought(timestamp(T0), Mem0),
+  %thought(timestamp(T0), Mem0),
   %dbug(read_pending_codes(In,Codes,Found,Missing)),
   repeat,
    notrace((ttyflush,
-    player_format('[~p: ~p] ==> ', [T0, Agent]), ttyflush,
+    %player_format('[~p: ~p] ==> ', [T0, Agent]), ttyflush,
     agent_to_input(Agent,In),
     dmust(is_stream(In)),
-    readtokens(In,[], Words0),
-    read_pending_input(In,_,[]),
-    (Words0==[]->Words=[wait];Words=Words0))),
-    parse(Words, Action, Mem0),
+    setup_console,
+    read_line_to_tokens(Agent, In,[], Words0),    
+    (Words0==[]->(Words=[wait],make);Words=Words0))),
+    parse(Words, Action, Mem0),                       
     !,
   (Action =.. Words; player_format('~w~n', [Action])),
   add_todo(Action, Mem0, Mem1), ttyflush, !.
@@ -176,16 +180,17 @@ decide_action(Agent, Mem0, Mem1) :-
   notrace(thought(inherit(telnet,t), Mem0)),!,
   dmust(telnet_decide_action(Agent, Mem0, Mem1)).
 
-
 % Stdin Client
 decide_action(Agent, Mem0, Mem1) :-
   notrace(thought(inherit(console,t), Mem0)),!,
-  current_input(In), % agent_to_input(Agent,In),
-  (tracing->catch(sleep(3),_,(nortrace,notrace,break));true),
-  wait_for_input([In,user_input],Found,0.1),
+ % agent_to_input(Agent,In),
+   (tracing->catch(sleep(3),_,(nortrace,notrace,break));true),
+
+   (current_input(In), wait_for_input([In,user_input],Found,0.1)),
+                  %   Found = [some],
   % read_pending_codes(In,Codes,Missing), 
   (Found==[] -> (Mem0=Mem1) ; 
-    (((notrace,console_decide_action(Agent, Mem0, Mem1))))).
+    (((console_decide_action(Agent, Mem0, Mem1))))).
 
 % Autonomous
 decide_action(Agent, Mem0, Mem3) :-

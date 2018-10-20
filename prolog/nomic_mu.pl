@@ -31,26 +31,19 @@ srv_mu(TwoSixSixSix) :-
   threads, !.
 
 srv_mu(TwoSixSixSix) :- 
-  %make,
-  use_module(library(editline)),
-  ignore(notrace(catch(('$toplevel':setup_readline),_,true))),
-  % ensure_loaded('./marty_white/adv_telnet'),
   adv_server(TwoSixSixSix),
   format('~NServer is starting on port ~w~n',[TwoSixSixSix]),
-  % thread_create(adventure,_),!,
   threads,
-  % set_stream(user_output,alias('player~1')),!,
-  % set_stream(user_input,buffer_size(1)),  
   !.
   
-
-
 srv_mu:-
   mu_port(TwoSixSixSix),
   srv_mu(TwoSixSixSix),
   run_mu.
 
-run_mu:- dmust(adventure),!.
+run_mu:- 
+   setup_console,
+   dmust(adventure),!.
 
 
 usage_mu:- format('~N

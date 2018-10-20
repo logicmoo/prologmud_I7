@@ -23,9 +23,6 @@ extra :-  true. % Fuller, but questionable if needed yet.
 
 :- op(200,fx,'$').
 
-:- use_module(library(editline)).
-:- initialization('$toplevel':setup_readline,now).
-
 :- user:ensure_loaded((.. / parser_sharing)).
 :- consult(adv_debug).
 :- consult(adv_util).
@@ -67,8 +64,6 @@ current_player('player~1').
 
 
 adventure_init :-
- use_module(library(editline)),
- ignore(notrace(catch(('$toplevel':setup_readline),_,true))),
   %guitracer,
  dmust((
   test_ordering,

@@ -30,9 +30,9 @@ extra_look_around(Agent, S0, S9) :-
 
 random_noise(Agent, [cap(subj(Agent)), Msg]) :-
   random_member(Msg, [
-    'hums quietly to himself.',
-    'checks his inspection cover.',
-    'buffs his chestplate.',
+    'hums quietly to themself.',
+    'checks their inspection cover.',
+    'buffs their chestplate.',
     'fidgets uncomfortably.'
     ]).
 
@@ -90,7 +90,7 @@ autonomous_decide_action(Agent, Mem0, Mem1) :-
   thought_model(Spatial,ModelData, Mem0),
   in_model(h(Spatial, _How, Agent, Here, _), ModelData),
   in_model(h(Spatial, exit(ExitName), Here, '<unexplored>', _), ModelData),
-  add_todo(goto(Spatial, (*), ExitName), Mem0, Mem1).
+  add_todo(goto((*), ExitName), Mem0, Mem1).
 autonomous_decide_action(Agent, Mem0, Mem1) :-
   % Follow Player to adjacent rooms.
   thought_model(Spatial,ModelData, Mem0),
@@ -98,7 +98,7 @@ autonomous_decide_action(Agent, Mem0, Mem1) :-
   dif(Agent, Player), current_player(Player),
   in_model(h(Spatial, _, Player, There, _), ModelData),
   in_model(h(Spatial, exit(ExitName), Here, There, _), ModelData),
-  add_todo(goto(Spatial, (*), ExitName), Mem0, Mem1).
+  add_todo(goto((*), ExitName), Mem0, Mem1).
 
 autonomous_decide_action(Agent, Mem0, Mem1) :-
  0 is random(5),
@@ -122,26 +122,26 @@ consider_text(Speaker, Agent, Words, Mem0, Mem1):-
 consider_request(_Speaker, Agent, Action, _M0, _M1) :-
   bugout('~w: considering request: ~w.~n', [Agent, Action], autonomous),
   fail.
-consider_request(_Speaker, Agent, take(Spatial, Object), M0, M1) :-
-  add_goal(h(Spatial, held_by, Object, Agent, _), M0, M1).
+consider_request(_Speaker, Agent, take( Object), M0, M1) :-
+  add_goal(h(_Spatial, held_by, Object, Agent, _), M0, M1).
 consider_request(Requester, _Agent, Query, M0, M1) :-
   do_introspect(Query, Answer, M0),
   %add_todo(print_(Answer), M0, M1).
-   add_todo(emote(spatial, say, Requester, Answer), M0, M1).
+   add_todo(emote( say, Requester, Answer), M0, M1).
 consider_request(_Speaker, Agent, forget(goals), M0, M2) :-
   bugout('~w: forgetting goals.~n', [Agent], autonomous),
   forget_always(goals(_), M0, M1),
   memorize(goals([]), M1, M2).
-consider_request(_Speaker, _Agent, goto(Spatial, (*), ExitName), M0, M1) :-
-  bugout('Queueing action ~w~n', goto(Spatial, (*), ExitName), autonomous),
-  add_todo(goto(Spatial, (*), ExitName), M0, M1).
+consider_request(_Speaker, _Agent, goto((*), ExitName), M0, M1) :-
+  bugout('Queueing action ~w~n', goto((*), ExitName), autonomous),
+  add_todo(goto((*), ExitName), M0, M1).
 consider_request(Speaker, _Agent, fetch(Spatial, Object), M0, M1) :-
   % Bring object back to Speaker.
   add_goal(h(Spatial, held_by, Object, Speaker, _), M0, M1).
 consider_request(_Speaker, _Agent, put(Spatial, Thing, Relation, Where), M0, M) :-
   add_goal(h(Spatial, Relation, Thing, Where, _), M0, M).
-consider_request(_Speaker, Agent, take(Spatial, Thing), M0, M) :-
-  add_goal(h(Spatial, held_by, Thing, Agent, _), M0, M).
+consider_request(_Speaker, Agent, take( Thing), M0, M) :-
+  add_goal(h(_Spatial, held_by, Thing, Agent, _), M0, M).
 consider_request(_Speaker, Agent, Action, M0, M1) :-
   bugout('Finding goals for action: ~w~n', [Action], autonomous),
   initial_operators(Agent, Operators),

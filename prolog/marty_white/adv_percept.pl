@@ -196,9 +196,9 @@ problem_solution(noisy, hear, quiet).
 
 % Autonomous logical percept processing.
 process_percept_auto(Agent, [Same|_], _Stamp, Mem0, Mem0) :- was_own_self(Agent, Same).
-process_percept_auto(Agent, emoted(_Spatial, _Say, Speaker, Agent, Words), _Stamp, Mem0, Mem1) :-
+process_percept_auto(Agent, emoted( _Say, Speaker, Agent, Words), _Stamp, Mem0, Mem1) :-
   consider_text(Speaker, Agent, Words, Mem0, Mem1).
-process_percept_auto(Agent, emoted(_Spatial, _Say, Speaker, (*), WordsIn), _Stamp, Mem0, Mem1) :-
+process_percept_auto(Agent, emoted( _Say, Speaker, (*), WordsIn), _Stamp, Mem0, Mem1) :-
   addressing_whom(WordsIn, Whom, Words),
   Whom == Agent,
   consider_text(Speaker, Agent, Words, Mem0, Mem1).
@@ -211,7 +211,7 @@ process_percept_auto(Agent, sense_props(see, Object, PropList), _Stamp, Mem0, Me
   (member(shiny, PropList),member(inherit(shiny,t), PropList)),
   member(model(Spatial, ModelData), Mem0),
   \+ related(Spatial, descended, Object, Agent, ModelData), % Not holding it?
-  add_todo_all([take(Spatial, Object), print_('My shiny precious!')], Mem0, Mem2).
+  add_todo_all([take( Object), print_('My shiny precious!')], Mem0, Mem2).
 
 process_percept_auto(_Agent,
     sense(Sense, [you_are(Spatial, _How, _Here), exits_are(_Exits), here_are(Objects)]),
@@ -226,7 +226,7 @@ process_percept_auto(_Agent, _Percept, _Stamp, Mem0, Mem0).
 
 
 %was_own_self(Agent, say(Agent, _)).
-was_own_self(Agent, emote(_Spatial, _, Agent, _, _)):- fail.
+was_own_self(Agent, emote( _, Agent, _, _)):- fail.
 
 % Ignore own speech.
 % process_percept_player(Agent, [Same|_], _Stamp, Mem0, Mem0) :- was_own_self(Agent, Same).
@@ -245,7 +245,7 @@ is_non_player(Agent):- Agent == 'floyd~1'.
 
 process_percept(Agent, Percept, Stamp, Mem0, Mem1) :-
   once(is_player(Agent)),
-  once(notrace(process_percept_player(Agent, Percept, Stamp, Mem0, Mem1))),
+  once((process_percept_player(Agent, Percept, Stamp, Mem0, Mem1))),
   \+ thought(inherit(autonomous,t), Mem1),!.
   
 process_percept(Agent, [LogicalPercept|_IgnoredList], Stamp, Mem0, Mem1) :-
@@ -254,7 +254,7 @@ process_percept(Agent, [LogicalPercept|_IgnoredList], Stamp, Mem0, Mem1) :-
   process_percept_auto(Agent, LogicalPercept, Stamp, Mem0, Mem1).
 
 process_percept(Agent, Percept, Stamp, Mem0, Mem0):- 
-  bugout('~q FAILED!~n', [process_percept(Agent, Percept, Stamp)], general), !.
+  bugout('~q FAILED!~n', [bprocess_percept(Agent, Percept, Stamp)], general), !.
 
 process_percept_main(Agent, Percept, Stamp, Mem0, Mem3) :-
  dmust((

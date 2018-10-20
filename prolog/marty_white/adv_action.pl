@@ -194,10 +194,6 @@ act(Agent, inventory, State, NewState) :- Spatial = spatial,
   findall(What, related(Spatial, child, What, Agent, State), Inventory),
   queue_percept(Agent, [carrying(Spatial, Inventory)], State, NewState).
 
-act(Agent, inventory(Spatial), State, NewState) :-
-  findall(What, related(Spatial, child, What, Agent, State), Inventory),
-  queue_percept(Agent, [carrying(Spatial, Inventory)], State, NewState).
-
 act(Agent, examine(Sense, Object), S0, S2) :-
   %declared(props(Object, PropList), S0),
   ((
@@ -215,7 +211,7 @@ act(Agent, examine(Sense, Object), S0, S2) :-
 
 
 
-act(Agent, goto(Spatial, _How, ExitName), S0, S9) :-         % go n/s/e/w/u/d/in/out
+act(Agent, goto(_How, ExitName), S0, S9) :-         % go n/s/e/w/u/d/in/out
   related(Spatial, child, Agent, Here, S0),
   related(Spatial, exit(ExitName), Here, There, S0),
   %member(How, [*, to, at, through, thru]),
@@ -226,7 +222,7 @@ act(Agent, goto(Spatial, _How, ExitName), S0, S9) :-         % go n/s/e/w/u/d/in
          S0, S1),
   must_act(Agent, look(Spatial), S1, S9).
 
-act(Agent, goto(Spatial, How, Room), S0, S9) :-              % go in (adjacent) room
+act(Agent, goto(How, Room), S0, S9) :-              % go in (adjacent) room
   get_open_traverse(How, Spatial, OpenTraverse),
   has_rel(Spatial, How, Room, S0),
   related(Spatial, OpenTraverse, Agent, Here, S0),
@@ -235,7 +231,7 @@ act(Agent, goto(Spatial, How, Room), S0, S9) :-              % go in (adjacent) 
     [cap(subj(Agent)), person(go, goes), ExitName], S0, S1),
   must_act(Agent, look(Spatial), S1, S9).
 
-act(Agent, goto(Spatial, (*), Room), S0, S9) :-              % go to (adjacent) room
+act(Agent, goto((*), Room), S0, S9) :-              % go to (adjacent) room
   has_rel(Spatial, How, Room, S0),
   get_open_traverse(goto, Spatial, OpenTraverse),
   related(Spatial, OpenTraverse, Agent, Here, S0),
@@ -243,7 +239,7 @@ act(Agent, goto(Spatial, (*), Room), S0, S9) :-              % go to (adjacent) 
   moveto(Spatial, Agent, How, Room, [Room, Here],
     [cap(subj(Agent)), person(go, goes), ExitName], S0, S1),
   must_act(Agent, look(Spatial), S1, S9).
-act(Agent, goto(Spatial, How, Object), S0, S2) :-            % go in/on object
+act(Agent, goto(How, Object), S0, S2) :-            % go in/on object
  get_open_traverse(goto(How), Spatial, OpenTraverse),
   has_rel(Spatial, How, Object, S0),
   related(Spatial, OpenTraverse, Agent, Here, S0),
@@ -252,9 +248,9 @@ act(Agent, goto(Spatial, How, Object), S0, S2) :-            % go in/on object
   moveto(Spatial, Agent, How, Object, [Here],
     [subj(Agent), person(get, gets), How, the, Object, .], S0, S1),
   must_act(Agent, look(Spatial), S1, S2).
-act(Agent, goto(Spatial, How, Dest), S0, S1) :-
+act(Agent, goto(How, Dest), S0, S1) :-
   queue_percept(Agent,
-                [failure(goto(Spatial, How, Dest)), 'You can\'t go that way'],
+                [failure(goto(How, Dest)), 'You can\'t go that way'],
                 S0, S1).
 
 %  sim(verb(args...), preconds, effects)
@@ -274,19 +270,22 @@ act(Agent, goto(Spatial, How, Dest), S0, S1) :-
 %      [cap(subj($self)), person('put the', 'puts a'),
 %        Thing, Relation, the, Where, '.'])).
 
-act(Agent, take(Spatial, Thing), S0, S1) :-
+act(Agent, take( Thing), S0, S1) :-
   get_open_traverse(touch, Spatial, OpenTraverse),
   related(Spatial, OpenTraverse, Agent, Here, S0),     % Where is Agent now?
   moveto(Spatial, Thing, held_by, Agent, [Here],
     [silent(subj(Agent)), person('Taken.', [cap(Agent), 'grabs the', Thing, '.'])],
     S0, S1).
 %act(Agent, get(Thing), State, NewState) :-
-%  act(Agent, take(Spatial, Thing), State, NewState).
-act(Agent, drop(Spatial, Thing), State, NewState) :-
+%  act(Agent, take( Thing), State, NewState).
+act(Agent, drop(Thing), State, NewState) :-
   related(Spatial, How, Agent, Here, State),
   has_rel(Spatial, How, Here, State),
   moveto(Spatial, Thing, How, Here, [Here],
     [cap(subj(Agent)), person('drop the', 'drops a'), Thing, '.'], State, NewState).
+
+act(Agent, put(Thing1, Relation, Thing2), State, NewState) :-
+  act(Agent, put(spatial, Thing1, Relation, Thing2), State, NewState).
 act(Agent, put(Spatial, Thing1, Relation, Thing2), State, NewState) :-
   has_rel(Spatial, Relation, Thing2, State),
    get_open_traverse(Open, _See, _Traverse, Spatial, OpenTraverse),
@@ -298,7 +297,7 @@ act(Agent, put(Spatial, Thing1, Relation, Thing2), State, NewState) :-
       [cap(subj(Agent)), person('put the', 'puts a'), Thing1,
           Relation, the, Thing2, '.'],
       State, NewState).
-act(Agent, give(Spatial, Thing, Recipient), S0, S9) :-
+act(Agent, give( Thing, Recipient), S0, S9) :-
   has_rel(Spatial, held_by, Recipient, S0),
   reachable(Spatial, Recipient, Agent, S0),
   get_open_traverse(give, Spatial, OpenTraverse),
@@ -307,26 +306,26 @@ act(Agent, give(Spatial, Thing, Recipient), S0, S9) :-
   moveto(Spatial, Thing, held_by, Recipient, [Here],
     [cap(subj(Agent)), person([give, Recipient, the], 'gives you a'), Thing, '.'],
     S0, S9).
-act(Agent, throw(Spatial, Thing, at, Target), S0, S9) :-
+act(Agent, throw( Thing, at, Target), S0, S9) :-
   equals_efffectly(sense, Sense, see),
   can_sense(Spatial, Sense, Target, Agent, S0),
   get_open_traverse(_Open, Sense, throw, Spatial, _OpenTraverse),
   % OK, throw it
   related(Spatial, How, Agent, Here, S0),
-  thrown(Spatial, Thing, Target, How, Here, [Here], S0, S1),
-  hit(Spatial, Target, Thing, [Here], S1, S9).
-act(Agent, throw(Spatial, Thing, ExitName), S0, S9) :-
+  thrown( Thing, Target, How, Here, [Here], S0, S1),
+  hit( Target, Thing, [Here], S1, S9).
+act(Agent, throw( Thing, ExitName), S0, S9) :-
   related(Spatial, _How, Agent, Here, S0),
   related(Spatial, exit(ExitName), Here, There, S0),
   has_rel(Spatial, HowThere, There, S0),
-  thrown(Spatial, Thing, There, HowThere, There, [Here, There], S0, S9).
+  thrown( Thing, There, HowThere, There, [Here, There], S0, S9).
 
-act(Agent, hit(Spatial, Thing), S0, S9) :-
-  related(Spatial, _How, Agent, Here, S0),
-  hit(Spatial, Thing, Agent, [Here], S0, S1),
+act(Agent, hit( Thing), S0, S9) :-
+  related(spatial, _How, Agent, Here, S0),
+  hit( Thing, Agent, [Here], S0, S1),
   queue_percept(Agent, [true, 'OK.'], S1, S9).
 
-act(Agent, dig(Spatial, Hole, Where, Tool), S0, S9) :-
+act(Agent, dig( Hole, Where, Tool), S0, S9) :-
   memberchk(Hole, [hole, trench, pit, ditch]),
   memberchk(Where, [garden]),
   memberchk(Tool, [shovel, spade]),
@@ -345,24 +344,24 @@ act(Agent, dig(Spatial, Hole, Where, Tool), S0, S9) :-
       [cap(subj(Agent)), person(dig, digs), 'a', Hole, 'in the', Where, '.']],
     S8, S9))).
 
-act(Agent, eat(Spatial, Thing), S0, S9) :-
+act(Agent, eat( Thing), S0, S9) :-
   getprop(Thing, can_be(Spatial, eat, t), S0),
   undeclare(h(Spatial, _, Thing, _), S0, S1),
   queue_percept(Agent, [destroyed(Thing), 'Mmmm, good!'], S1, S9).
-act(Agent, eat(Spatial, Thing), S0, S9) :-
-  queue_percept(Agent, [failure(eat(Spatial, Thing)), 'It''s inedible!'], S0, S9).
+act(Agent, eat( Thing), S0, S9) :-
+  queue_percept(Agent, [failure(eat( Thing)), 'It''s inedible!'], S0, S9).
 
 
-act(Agent, switch(Spatial, OnOff, Thing), S0, S) :-
+act(Agent, switch(OnOff, Thing), S0, S) :-
   reachable(Spatial, Thing, Agent, S0),
   getprop(Thing, can_be(Spatial, switch, t), S0),
-  getprop(Thing, effect(switch(Spatial, OnOff), Term0), S0),
+  getprop(Thing, effect(switch(OnOff), Term0), S0),
   subst(equivalent, $self, Thing, Term0, Term),
   call(Term, S0, S1),
   queue_percept(Agent, [true, 'OK'], S1, S).
 
 
-act(Agent, open(Spatial, Thing), S0, S) :-
+act(Agent, open(Thing), S0, S) :-
   reachable(Spatial, Thing, Agent, S0),
   %getprop(Thing, can_be(Spatial, open, S0),
   %\+ getprop(Thing, state(Spatial, open, t), S0),
@@ -373,7 +372,7 @@ act(Agent, open(Spatial, Thing), S0, S) :-
   related(Spatial, OpenTraverse, Agent, Here, S2),
   queue_local_event(Spatial, [setprop(Thing, state(Spatial, Open, t)), 'is now open'(Open)], [Here], S2, S).
 
-act(Agent, close(Spatial, Thing), S0, S) :-
+act(Agent, close( Thing), S0, S) :-
   reachable(Spatial, Thing, Agent, S0),
   %getprop(Thing, can_be(Spatial, open, S0),
   %getprop(Thing, state(Spatial, open, t), S0),
@@ -384,21 +383,21 @@ act(Agent, close(Spatial, Thing), S0, S) :-
   related(Spatial, OpenTraverse, Agent, Here, S2),
   queue_local_event(Spatial, [setprop(Thing, state(Spatial, Open, f)), 'is now closed'(~(Open))], [Here], S2, S).
 
-act(Agent, emote(Spatial, SAYTO, Object, Message), S0, S1) :- !, % directed message
+act(Agent, emote( SAYTO, Object, Message), S0, S1) :- !, % directed message
   dmust((
   action_sensory(SAYTO, Sense),
   sensory_model(Sense, Spatial),
   get_open_traverse(SAYTO, Spatial, OpenTraverse),
   can_sense(Spatial, Sense, Object, Agent, S0),
   related(Spatial, OpenTraverse, Agent, Here, S0),  
-  queue_local_event(Spatial, [emoted(Spatial, SAYTO, Agent, Object, Message)], [Here,Object], S0, S1))).
+  queue_local_event(Spatial, [emoted( SAYTO, Agent, Object, Message)], [Here,Object], S0, S1))).
 %act(Agent, say(Message), S0, S1) :-          % undirected message
 %  related(Spatial, OpenTraverse, Agent, Here, S0),
-%  queue_local_event(Spatial, [emoted(Spatial, say, Agent, (*), Message)], [Here], S0, S1).
+%  queue_local_event(Spatial, [emoted( say, Agent, (*), Message)], [Here], S0, S1).
 
 %act(Agent, touch(Spatial, _Thing), S0, S9) :-
 %  queue_percept(Agent, [true, 'OK.'], S0, S9).
-act(Agent, Wait, State, NewState) :- Wait == wait,
+act(Agent, Wait, State, NewState) :- Wait == wait, make,
   queue_percept(Agent, [time_passes], State, NewState).
 act(Agent, print_(Msg), S0, S1) :-
   related(Spatial, descended, Agent, Here, S0),

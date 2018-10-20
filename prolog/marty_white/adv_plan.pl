@@ -36,38 +36,38 @@ precond_matches_effects(Cond, Effects) :-
   precond_matches_effect(Cond, E).
 
 % oper(Action, Preconds, Effects)
-oper(goto(Spatial, (*), ExitName),
+oper(goto((*), ExitName),
      [ Here \= $self, There \= $self,
        h(Spatial, in, $self, Here, _),
        h(Spatial, exit(ExitName), Here, There, _)], % path(Spatial, Here, There)
      [ h(Spatial, in, $self, There, _),
        ~ h(Spatial, in, $self, Here, _)]).
-oper(take(Spatial, Thing), % from same room
+oper(take( Thing), % from same room
      [ Thing \= $self, exists(Spatial, Thing),
        There \= $self,
        h(Spatial, At, Thing, There, _),
        h(Spatial, At, $self, There, _)],
      [ h(Spatial, held_by, Thing, $self, _),
        ~ h(Spatial, At, Thing, There, _)]).
-oper(take(Spatial, Thing), % from something else
+oper(take( Thing), % from something else
      [ Thing \= $self, exists(Spatial, Thing),
        h(Spatial, How, Thing, What, _),
        h(Spatial, At, What, There, _),
        h(Spatial, At, $self, There, _) ],
      [ h(Spatial, held_by, Thing, $self, _),
        ~ h(Spatial, How, Thing, There, _)]):- extra.
-oper(drop(Spatial, Thing),
+oper(drop(Thing),
      [ Thing \= $self, exists(Spatial, Thing),
        h(Spatial, held_by, Thing, $self, _)],
      [ ~ h(Spatial, held_by, Thing, $self, _)] ).
-oper(emote(Spatial, say, Player, [please, give, me, the, Thing]),
+oper(emote( say, Player, [please, give, me, the, Thing]),
      [ Thing \= $self, exists(Spatial, Thing),
        h(Spatial, held_by, Thing, Player, _),
        h(Spatial, How, Player, Where, _),
        h(Spatial, How, $self, Where, _) ],
      [ h(Spatial, held_by, Thing, $self, _),
        ~ h(Spatial, held_by, Thing, Player, _)] ):- extra.
-oper(give(Spatial, Thing, Recipient),
+oper(give( Thing, Recipient),
      [ Thing \= $self, Recipient \= $self,
        exists(Spatial, Thing), exists(Spatial, Recipient),
        Where \= $self,
@@ -551,16 +551,16 @@ generate_plan(FullPlan, Mem0) :-
 % ----
 
 
-path2directions([Here, There], [goto(Spatial, (*), ExitName)], ModelData) :-
+path2directions(Spatial, [Here, There], [goto((*), ExitName)], ModelData) :-
   in_model(h(Spatial, exit(ExitName), Here, There, _), ModelData).
-path2directions([Here, There], [goto(Spatial, in, There)], ModelData) :-
+path2directions(Spatial, [Here, There], [goto(in, There)], ModelData) :-
   in_model(h(Spatial, descended, Here, There, _), ModelData).
-path2directions([Here, Next|Trail], [goto(Spatial, (*), ExitName)|Tail], ModelData) :-
+path2directions(Spatial, [Here, Next|Trail], [goto((*), ExitName)|Tail], ModelData) :-
   in_model(h(Spatial, exit(ExitName), Here, Next, _), ModelData),
-  path2directions([Next|Trail], Tail, ModelData).
-path2directions([Here, Next|Trail], [goto(Spatial, in, Next)|Tail], ModelData) :-
+  path2directions(Spatial, [Next|Trail], Tail, ModelData).
+path2directions(Spatial, [Here, Next|Trail], [goto(in, Next)|Tail], ModelData) :-
   in_model(h(Spatial, descended, Here, Next, _), ModelData),
-  path2directions([Next|Trail], Tail, ModelData).
+  path2directions(Spatial, [Next|Trail], Tail, ModelData).
 
 find_path1(_Spatial, [First|_Rest], Dest, First, _ModelData) :-
   First = [Dest|_].
@@ -573,7 +573,7 @@ find_path1(Spatial, [[Last|Trail]|Others], Dest, Route, ModelData) :-
 find_path(Spatial, Start, Dest, Route, ModelData) :-
   find_path1(Spatial, [[Start]], Dest, R, ModelData),
   reverse(R, RR),
-  path2directions(RR, Route, ModelData).
+  path2directions(Spatial, RR, Route, ModelData).
 
 
 

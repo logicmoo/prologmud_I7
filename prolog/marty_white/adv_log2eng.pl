@@ -30,7 +30,7 @@ reason2eng(mustgetout(_It), ['You must get out/off it first.']).
 reason2eng(self_relation(_Spatial, _It), ['Can\'t put thing inside itself!']).
 reason2eng(moibeus_relation(Spatial, _, _), ['Topological error', ly(Spatial), '!']).
 reason2eng(state(Spatial, Dark, t),        ['It''s too ', Dark, ' to ', ly(Sense), ly(Spatial), '!']):- problem_solution(Dark, Sense, _Light).
-reason2eng(mustdrop(Spatial, It), [ 'You will have to drop', It, ' first', ly(Spatial), '.']).
+reason2eng(mustdrop(It), [ 'You will have to drop', It, ' first.']).
 reason2eng(cant(move(Spatial, _Thing)), ['Sorry, it\'s immobile', ly(Spatial), '.']).
 reason2eng(cantdothat(EatCmd),    [ 'Sorry, you can\'t do: ', EatCmd, '.']).
 reason2eng(R, R).
@@ -124,10 +124,14 @@ compile_eng(Context, cap(Eng), Compiled) :-
 compile_eng(_Context, silent(_Eng), '').
 
 compile_eng(_Context, ly(spatial), '').
-compile_eng(Context, ly(Word), Spatially) :-
+compile_eng(Context, ly(Word), Spatially) :- !,
   compile_eng(Context, Word, Spatial),
   atom(Spatial),
   atom_concat(Spatial, "ly", Spatially).
+compile_eng(Context, ing(Word), Spatially) :- !,
+  compile_eng(Context, Word, Spatial),
+  atom(Spatial),
+  atom_concat(Spatial, "ing", Spatially).
 
 compile_eng(Context, s(Word), Spatially) :- % TODO make actually plural
   compile_eng(Context, Word, Spatial),
@@ -320,7 +324,7 @@ logical2eng(Agent, sense_props(Sense, Object, PropList),
   proplist2eng(Object, PropList, PropDesc).
 
 %logical2eng(_Agent, emote(_Spatial, say, Speaker, (*), Eng), [cap(subj(Speaker)), ': "', Text, '"']) :-  eng2txt(Speaker, 'I', Eng, Text).
-logical2eng(_Agent, emoted(_Spatial, Says, Speaker, Audience, Eng),
+logical2eng(_Agent, emoted( Says, Speaker, Audience, Eng),
     [cap(subj(Speaker)), s(Says), 'to', Audience, ', "', Text, '"']) :-
   eng2txt(Speaker, 'I', Eng, Text).
 logical2eng(_Agent, emote(_Spatial, Says, Audience, Eng),

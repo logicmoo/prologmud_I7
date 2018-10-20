@@ -26,9 +26,9 @@
 
 % '$hide'(Pred) :- '$set_predicate_attribute'(Pred, trace, false).
 never_trace(Spec):- '$hide'(Spec),'$iso'(Spec),trace(Spec, -all).
-:- never_trace(list_to_set/2).
 :- use_module(library(lists)).
-%:- never_trace(lists:append(_,_,_)).
+:- never_trace(lists:append(_,_,_)).
+:- never_trace(lists:list_to_set/2).
 :- never_trace(lists:member_(_,_,_)).
 :- never_trace(prolog_debug:assertion(_)).
 

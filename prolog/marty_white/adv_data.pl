@@ -193,8 +193,8 @@ istate([
     inherit(character,t),
     state(Spatial, powered, t),
     % TODO: 'floyd~1' should `look(Spatial)` when turned back on.
-        effect(switch(Spatial, on), setprop($self, state(Spatial, powered, t))),
-        effect(switch(Spatial, off), setprop($self, state(Spatial, powered, f)))
+        effect(switch(on), setprop($self, state(Spatial, powered, t))),
+        effect(switch(off), setprop($self, state(Spatial, powered, f)))
   ]),
 
   % Places
@@ -229,17 +229,17 @@ istate([
   props(dining_room, [inherit(place,t)]),
   props(garden, [
     inherit(place,t),
-    % goto(Spatial, dir, result) provides special handling for going in a direction.
-    goto(Spatial, up, 'You lack the ability to fly.'),
-    effect(goto(Spatial, _, north), getprop(screendoor, state(Spatial, open, t))),
-    oper(/*garden, */ goto(Spatial, _, north),
+    % goto(dir, result) provides special handling for going in a direction.
+    goto(up, 'You lack the ability to fly.'),
+    effect(goto(_, north), getprop(screendoor, state(Spatial, open, t))),
+    oper(/*garden, */ goto(_, north),
          % precond(Test, FailureMessage)
          precond(getprop(screendoor, state(Spatial, open, t)), ['you must open the door first']),
          % body(clause)
          body(inherited)
     ),
     % cant_go provides last-ditch special handling for Go.
-    cant_goto(Spatial, 'The fence surrounding the garden is too tall and solid to pass.')
+    cant_goto('The fence surrounding the garden is too tall and solid to pass.')
   ]),
   props(kitchen, [inherit(place,t)]),
   props(living_room, [inherit(place,t)]),
@@ -292,8 +292,8 @@ istate([
     can_be(Spatial, switch, t),
     state(Spatial, powered, t),
     EmittingLight,
-    effect(switch(Spatial, on), setprop($self, EmittingLight)),
-    effect(switch(Spatial, off), delprop($self, EmittingLight)),
+    effect(switch(on), setprop($self, EmittingLight)),
+    effect(switch(off), delprop($self, EmittingLight)),
     fragile(broken_lamp)
   ]),
   class_props(broken_lamp, [
@@ -303,18 +303,18 @@ istate([
     nominals(brass),
     adjs(dented),
     can_be(Spatial, switch, t),
-    effect(switch(Spatial, on), true),
-    effect(switch(Spatial, off), true) % calls true(S0, S1) !
+    effect(switch(on), true),
+    effect(switch(off), true) % calls true(S0, S1) !
   ]),
        props(iLamp, [
          inherit(broken,t), 
-         effect(switch(Spatial, on), print_("Switch is flipped")),
+         effect(switch(on), print_("Switch is flipped")),
          effect(hit, ['print_'("Hit iLamp"), setprop($self, inherit(broken,t))]),
          inherit(lamp,t)
        ]),
        class_props(broken, [
-          effect(switch(Spatial, on), true),
-          effect(switch(Spatial, off), true),
+          effect(switch(on), true),
+          effect(switch(off), true),
           can_be(Spatial, switch, t),
           adjs(broken)
        ]),
@@ -349,8 +349,8 @@ istate([
     inherit(memorize,t),
     inherit(perceptq,t),    
     can_be(Spatial, switch, t),
-        effect(switch(Spatial, on), setprop($self, state(Spatial, powered, t))),
-        effect(switch(Spatial, off), setprop($self, state(Spatial, powered, f))),
+        effect(switch(on), setprop($self, state(Spatial, powered, t))),
+        effect(switch(off), setprop($self, state(Spatial, powered, f))),
     state(Spatial, powered, t),
     has_sense(Sense),
     fragile(broken_videocam)
