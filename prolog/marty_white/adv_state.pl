@@ -110,7 +110,7 @@ get_objects_(Spec, OutList, [Store|StateList], im(S0)):-
    get_objects_(Spec, MidList, StateList, im(S0)).
 
 stores_props(perceptq(Agent, PropList), Agent, PropList).
-%stores_props(class_props(Agent, PropList), Agent, PropList).
+%stores_props(type_props(Agent, PropList), Agent, PropList).
 stores_props(memories(Agent, PropList), Agent, PropList).
 stores_props(props(Object, PropList), Object, PropList).
 
@@ -152,7 +152,7 @@ getprop_from_state(Object, Prop, Memory):-
 current_props(Object, PropList, S0):- 
   declared(props(Object, PropList), S0) 
     *-> true 
-      ; declared(class_props(Object, PropList), S0).
+      ; declared(type_props(Object, PropList), S0).
 
 current_props_or(Object,PropList, Default, S0) :-
   declared(props(Object,PropList),S0)*->true; PropList=Default.

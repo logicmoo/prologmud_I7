@@ -196,7 +196,7 @@ act(Agent, inventory, State, NewState) :- Spatial = spatial,
   findall(What, related(Spatial, child, What, Agent, State), Inventory),
   queue_percept(Agent, [carrying(Spatial, Inventory)], State, NewState).
 
-act(Agent, examine(Sense, Object), S0, S2) :-
+act(Agent, examine(Object), S0, S2) :-
   %declared(props(Object, PropList), S0),
   ((
   findall(P, (getprop(Object, P, S0), is_prop_public(Sense,P)), PropListL),
@@ -210,7 +210,6 @@ act(Agent, examine(Sense, Object), S0, S2) :-
           ChildrenL),
   list_to_set(ChildrenL,Children),
   queue_percept(Agent, [notice_children(Sense, Object, How, Children)], S1, S2))).
-
 
 
 act(Agent, goto(_How, ExitName), S0, S9) :-         % go n/s/e/w/u/d/in/out
@@ -404,7 +403,7 @@ unless_reason(Agent,_Then,Msg):- player_format(Agent,'~N~p~n',Msg),!,fail.
 
 act(Agent, OpenThing, S0, S) :- 
    act_to_cmd_thing(OpenThing,Open, Thing), 
-   act_change_state(Open, Locked, TF),!,
+   act_change_state(Open, Opened, TF),!,
  dshow_fail((
    reachable(Spatial, Thing, Agent, S0),
    %getprop(Thing, can_be(Spatial, open, S0),

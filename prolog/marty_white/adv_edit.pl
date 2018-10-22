@@ -103,7 +103,7 @@ do_metacmd(DelProp, S0, S1) :-
   player_format('Deleted.~n', []).
 do_metacmd(properties(Object), S0, S0) :-
   wizard,
-  (declared(props(Object, PropList), S0);declared(class_props(Object, PropList), S0)),!,
+  (declared(props(Object, PropList), S0);declared(type_props(Object, PropList), S0)),!,
   player_format('Properties of ~p are now ~w~n', [Object, PropList]).
 do_metacmd(undo, S0, S1) :-
   declare(undo, S0, S1),
