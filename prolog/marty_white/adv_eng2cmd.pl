@@ -218,15 +218,37 @@ parse2object([Det| Type], TheThing, Mem):-
    (nth0(_N, [(unknown), the, thee, old, some, a], Det)), !,
    parse2object(Type, TheThing, Mem).
 
-parse2object([TheThing], Thing, Mem):- atom(TheThing), atom_of(TheThing, Thing, Mem).
-parse2object([Thing], Thing, _Mem).
+as1object([TheThing], Thing, Mem):- !, as1object(TheThing, Thing, Mem).
+as1object(TheThing, Thing, Mem):- as1object(TheThing, Thing, Mem).
+
+as1object(TheThing, Thing, _Mem):- \+ atom(TheThing),!, TheThing=Thing.
+as1object(TheThing, Thing, Mem):-  atom_of(inst, TheThing, Thing, Mem).
+as1object(TheThing, Thing, _Mem):- advstate(Mem), atom_of(inst, TheThing, Thing, Mem).
+as1object(Thing, Thing, _Mem).
+
 
 args2logical(TheArgs, [Thing], Mem):- parse2object(TheArgs, Thing, Mem),TheArgs\==[Thing],!.
 args2logical(TheArgs, TheArgs, _M).
   
 quietly_talk_db(L):- notrace(talk_db(L)).
 
-atom_of(TheThing,Thing,Mem):- sub_term(Thing,Mem),atom(Thing),TheThing==Thing,!.
-atom_of(TheThing,Thing,Mem):- sub_term(Thing,Mem),atom(Thing),atom_concat(TheThing,_,Thing),!.
-atom_of(TheThing,Thing,Mem):- sub_term(Thing,Mem),atom(Thing),atom_concat(_,TheThing,Thing),!.
-atom_of(TheThing,Thing,Mem):- sub_term(Thing,Mem),atom(Thing),atom_contains(Thing,TheThing),!.
+is_kind(Thing,inst):- b_getval(advstate,Mem), member(props(Thing,_),Mem).
+is_kind(Thing,type):- b_getval(advstate,Mem), member(type_props(Thing,_),Mem).
+%is_kind(Thing,inst):- b_getval(advstate,Mem), \+ member(type_props(Thing,_),Mem).
+
+atom_of(Kind,TheThing,Thing,Mem):- sub_term_atom(Thing,Mem),is_kind(Thing,Kind),TheThing==Thing,!.
+atom_of(Kind,TheThing,Thing,Mem):- sub_term_atom(Thing,Mem),is_kind(Thing,Kind),atom_concat(TheThing,_,Thing),!.
+atom_of(Kind,TheThing,Thing,Mem):- sub_term_atom(Thing,Mem),is_kind(Thing,Kind),atom_concat(_,TheThing,Thing),!.
+atom_of(Kind,TheThing,Thing,Mem):- sub_term_atom(Thing,Mem),is_kind(Thing,Kind),atom_contains(Thing,TheThing),!.
+
+
+sub_term_atom(Term, TermO):- \+ compound(Term), !, atom(Term), TermO = Term.
+sub_term_atom(Term, [Head|_]) :- nonvar(Head),
+  sub_term_atom(Term, Head).
+sub_term_atom(Term, [_|Tail]) :- !, nonvar(Tail),
+  sub_term_atom(Term, Tail).
+sub_term_atom(Term, T) :-
+  \+ is_list(T),
+  T =.. List,
+  sub_term_atom(Term, List).
+

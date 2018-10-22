@@ -27,7 +27,7 @@ get_sensing_objects(Objects, S0):-
    setof(O,member(perceptq(O,_),S0),Objects).
 
 get_sensing_objects(Sense, Agents, S0):-
-   get_objects((has_sense(Sense);inherit(memorize,t)), Agents, S0).
+   get_objects((has_sense(Sense);inherited(memorize)), Agents, S0).
 
 get_live_agents(LiveAgents, S0):-
   get_some_agents( \+ state(_Spatial, powered, f), LiveAgents, S0).
@@ -35,7 +35,7 @@ get_live_agents(LiveAgents, S0):-
 get_some_agents(Precond, LiveAgents, S0):-
   dmust((
      get_objects(     
-      (inherit(character,t),Precond), LiveAgents, S0),
+      (inherited(character),Precond), LiveAgents, S0),
    LiveAgents = [_|_])).
 
 
@@ -206,8 +206,8 @@ process_percept_auto(Agent, Percept, _Stamp, Mem0, Mem0) :-
   Percept =.. [Functor|_],
   member(Functor, [talk, say]),
   bugout('~w: Ignoring ~p~n', [Agent, Percept], autonomous).
-process_percept_auto(Agent, sense_props(see, Object, PropList), _Stamp, Mem0, Mem2) :-
-  bugout('~w: ~p~n', [Agent, sense_props(see, Object, PropList)], autonomous),
+process_percept_auto(Agent, sense_props(Sense, Object, PropList), _Stamp, Mem0, Mem2) :-
+  bugout('~w: ~p~n', [Agent, sense_props(Sense, Object, PropList)], autonomous),
   (member(shiny, PropList),member(inherit(shiny,t), PropList)),
   member(model(Spatial, ModelData), Mem0),
   \+ related(Spatial, descended, Object, Agent, ModelData), % Not holding it?
@@ -272,7 +272,7 @@ process_percept_main(_Agent, Percept, _Stamp, Mem0, Mem0) :-
 process_percept_list(_Agent, [], _Stamp, Mem0, Mem0).
 % caller memorizes PerceptList
 process_percept_list(_Agent, _, _Stamp, Mem, Mem) :-
-  thought(inherit(no_perceptq), Mem),
+  thought(inherit(no_perceptq, t), Mem),
   !.
 process_percept_list(Agent, [Percept|Tail], Stamp, Mem0, Mem4) :-
   %bugout('process_percept_list([~w|_])~n', [Percept], autonomous),

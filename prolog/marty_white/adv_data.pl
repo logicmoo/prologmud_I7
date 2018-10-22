@@ -79,8 +79,8 @@ istate([
 	h(Spatial, worn_by, 'watch~1', 'player~1'),
 	h(Spatial, held_by, 'bag~1', 'player~1'),
 	
-       h(Spatial, in, 'coins~1', 'bag~1'),
-       h(Spatial, held_by, 'wrench~1', 'floyd~1'),
+        h(Spatial, in, 'coins~1', 'bag~1'),
+        h(Spatial, held_by, 'wrench~1', 'floyd~1'),
 
   props('coins~1',[inherit(coins,t)]),
   % Relationships
@@ -111,7 +111,7 @@ istate([
   h(Spatial, in, a(videocamera), living_room),
   h(Spatial, in, screendoor, kitchen),
   h(Spatial, in, screendoor, garden),
-  h(Spatial, in, ilamp, garden),
+  h(Spatial, in, blamp, garden),
 
        type_props(unthinkable, [
           can_be(Spatial, examine(_), f),
@@ -177,7 +177,7 @@ istate([
             inherit(memorize,t),
             inherit(player,t),
             % players use power but cant be powered down
-            can_be(Spatial, switch, f), state(Spatial, powered, t)
+            can_be(Spatial, switch(off), f), state(Spatial, powered, t)
       ]),
 
   type_props(robot, [
@@ -253,7 +253,8 @@ istate([
   ]),
 
   % Things
-  
+  props('bag~1', [inherit(bag,t)]),
+
   type_props(bag, [
     inherit(container,t),
     volume_capacity(10),
@@ -295,7 +296,7 @@ istate([
     EmittingLight,
     effect(switch(on), setprop($self, EmittingLight)),
     effect(switch(off), delprop($self, EmittingLight)),
-    fragile(broken_lamp)
+    fragile(inherit(broken_lamp,t))
   ]),
   type_props(broken_lamp, [
     name('dented brass lamp'),
@@ -307,13 +308,15 @@ istate([
     effect(switch(on), true),
     effect(switch(off), true) % calls true(S0, S1) !
   ]),
-       props(ilamp, [
+       props(blamp, [
          inherit(broken,t), 
+         name('possibly broken lamp'),
          effect(switch(on), print_("Switch is flipped")),
-         effect(hit, ['print_'("Hit ilamp"), setprop($self, inherit(broken,t))]),
+         effect(hit, ['print_'("Hit blamp"), setprop($self, inherit(broken,t))]),
          inherit(lamp,t)
        ]),
        type_props(broken, [
+          name('definately broken'),
           effect(switch(on), true),
           effect(switch(off), true),
           can_be(Spatial, switch, t),

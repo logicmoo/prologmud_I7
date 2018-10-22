@@ -75,9 +75,9 @@ update_model_exits(Spatial, [Exit|Tail], From, Timestamp, M0, M2) :-
 update_model(Spatial, Agent, carrying(Spatial, Objects), Timestamp, _Memory, M0, M1) :-
   update_relations(Spatial, held_by, Objects, Agent, Timestamp, M0, M1).
 update_model(Spatial, _Agent, notice_children(Sense, Object, How, Children), Timestamp, _Mem, M0, M1) :-
-  sensory_model(Sense, Spatial),
+  dmust(sensory_model(Sense, Spatial)),
   update_relations(Spatial, How, Children, Object, Timestamp, M0, M1).
-update_model(_Spatial, _Agent, sense_props(see, Object, PropList), Stamp, _Mem, M0, M2) :-
+update_model(_Spatial, _Agent, sense_props(_Sense, Object, PropList), Stamp, _Mem, M0, M2) :-
   select_always(props(Object, _, _), M0, M1),
   append([props(Object, PropList, Stamp)], M1, M2).
 

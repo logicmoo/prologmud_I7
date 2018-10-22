@@ -50,6 +50,18 @@ do_metacmd(state, S0, S0) :-
   wizard,
   printable_state(S0,S),
   meta_pprint(S, general).
+do_metacmd(props, S0, S0) :-
+  wizard,
+  printable_state(S0,S),
+  include(@=<(props(_,_)),S,SP),
+  reverse(SP,SPR),
+  meta_pprint(SPR, general).
+do_metacmd(mem, S0, S0) :-
+  wizard,
+  printable_state(S0,S),
+  include(@>=(props(_,_)),S,SP),
+  reverse(SP,SPR),
+  meta_pprint(SPR, general).
 do_metacmd(make, S0, S0) :-
   wizard,
   thread_signal(main,make).

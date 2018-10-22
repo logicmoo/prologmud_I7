@@ -101,12 +101,13 @@ is_state_list(G,_):- \+ compound(G),!,fail.
 is_state_list([G1|_],{GG,'...'}):- compound(G1),G1=structure_label(GG),!.
 is_state_list([_|G],GG):- is_state_list(G,GG).
 clip_cons(G,GG):- is_state_list(G,GG),!.
-clip_cons(List,ClipTail,{Len,Left,ClipTail}):- 
+clip_cons(List,ClipTail,{Len,LeftS,ClipTail}):- 
    length(List,Len),
    MaxLen = 5, Len>MaxLen,
    length(Left,MaxLen),
-   append(Left,_,List),!.
-clip_cons(List,_,List).
+   append(Left,_,List),!,
+   maplist(simplify_dbug,Left,LeftS).
+clip_cons(Left,_,List):-maplist(simplify_dbug,Left,List).
 
 
 pprint(Term, B) :-

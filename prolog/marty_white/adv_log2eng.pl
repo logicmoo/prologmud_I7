@@ -162,6 +162,7 @@ pasitfy_word(make,made).
 pasitfy_word(move,moved).
 pasitfy_word(eat,ate).
 pasitfy_word(eat,ate).
+pasitfy_word(Verb,Compiled):- \+ atom(Verb),!,Compiled=Verb.
 pasitfy_word(Verb,Compiled):- atomic_concat(Verb,'ed', Compiled).
 
 

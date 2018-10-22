@@ -16,6 +16,7 @@
 % Main file.
 %
 */
+%:- use_module(library(pfc)).
 
 admin :- true.  % Potential security hazzard.
 wizard :- true. % Potential to really muck up game.

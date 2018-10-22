@@ -115,36 +115,32 @@ stores_props(memories(Agent, PropList), Agent, PropList).
 stores_props(props(Object, PropList), Object, PropList).
 
 % Retrieve Prop.
-% NOPE getprop(Object, state(Spatial, Prop, Value), State):- atom(Prop), !, getprop1(Object, state(Spatial, Prop, Value), State).
-% NOPE getprop(Object, Prop, State):- getprop1(Object, Prop, state(Spatial, State, f)), !, fail.
-% MAYBE getprop(Object, Prop, State):- atom(Prop), getprop1(Object, state(Spatial, Prop, t), State).
-% MAYBE getprop(Object, Prop, State):- atom(Prop), getprop1(Object, state(Spatial, Prop, f), State), !, fail.
+% NOPE getprop(Object, state(Spatial, Prop, Value), State):- atom(Prop), !, getprop1(Also, Object, state(Spatial, Prop, Value), State).
+% NOPE getprop(Object, Prop, State):- getprop1(Also, Object, Prop, state(Spatial, State, f)), !, fail.
+% MAYBE getprop(Object, Prop, State):- atom(Prop), getprop1(Also, Object, state(Spatial, Prop, t), State).
+% MAYBE getprop(Object, Prop, State):- atom(Prop), getprop1(Also, Object, state(Spatial, Prop, f), State), !, fail.
 
 
 get_all_props(Object, AllProps, S0):- findall(Prop,getprop(Object, Prop, S0),AllProps).
 
-getprop(Object, Prop, S0):-
-  quietly((assertion(\+ atom(Prop)), getprop1(Object, Prop, S0)))
-    *-> true; getprop2(Object, Prop, S0).
+getprop(Object, Prop, S0):-  
+  quietly((assertion(\+ atom(Prop)), getprop1([], Object, Prop, S0)))
+    *-> true; getprop_from_state(Object, Prop, S0).
 
-getprop2(Object, Prop, Memory):- notrace(member(state(S0), Memory)), !,
-  getprop1(Object, Prop, S0).
+getprop_from_state(Object, Prop, Memory):- 
+  member(state(S0), Memory), !, getprop1([], Object, Prop, S0).
 
-
-getiprop(Object, Prop, S0) :-
+getprop1(Also, Object, Prop, S0) :- 
   current_props(Object, PropList, S0),
-  member(Prop, PropList).
+  (member(Prop,PropList)*-> true ;
+  (member(inherit(Delegate,t), PropList),
+   \+ member(inherited(Delegate), PropList),
+   \+ member(isnt(Delegate), PropList),
+   \+ member(inherited(Delegate), Also),
+   \+ member(isnt(Delegate), Also),
+   append(Also,PropList,AllPropList),
+  getprop1(AllPropList, Delegate, Prop, S0))).
 
-getprop1(Object, Prop, S0) :- getiprop(Object, Prop, S0).
-getprop1(Object, Prop, S0) :- \+ member(object(Object,t), S0),
-  current_props(Object, PropList, S0),  
-  member(inherit(Delegate,t), PropList),
-  \+ member(inherited(Delegate), PropList),
-  getprop1(Delegate, Prop, S0).
-
-getprop_from_state(Object, Prop, Memory):-
-  member(state(S0), Memory), !,
-  getprop1(Object, Prop, S0).
 
 % current_props(Object, PropList, S0):- atom(Object),atom_
 % current_props(Object, PropList, S0):- atom(Object),atom_
@@ -155,6 +151,9 @@ current_props(Object, PropList, S0):-
       ; declared(type_props(Object, PropList), S0).
 
 current_props_or(Object,PropList, Default, S0) :-
+  current_props(Object, PropList, S0)*->true; PropList=Default.
+
+declared_props_or(Object,PropList, Default, S0) :-
   declared(props(Object,PropList),S0)*->true; PropList=Default.
 
 % Replace or create Prop.
@@ -212,22 +211,25 @@ merge_value(_F,_,_B,A,R):- R = A.
 % Replace or create Prop.
 updateprop(Object, Prop, S00, S2) :- notrace((updateprop_(Object, Prop, S00, S2))).
 
-updateprop_(Object, Prop, S0, S2) :-
+updateprop_(Object, Prop, S0, S2) :- 
   assertion(compound(Prop)),
-
   current_props_or(Object, PropList, [], S0),
-  undeclare_always(props(Object, _), S0, S1),
+  (member(Prop,PropList)
+     ->  S0=S2;
+   (undeclare_always(props(Object, _), S0, S1),
+     updateprop_1(Object, Prop, PropList, S1, S2))).
 
+updateprop_1(Object, Prop, PropList, S0, S2) :-
   functor(Prop,F,A),
   duplicate_term(Prop,Old),
   nb_setarg(A,Old,_),
 
   (select(Old, PropList, PropList2) ->
       (upmerge_prop(F,A,Old,Prop,Merged) ->
-         ((Old==Merged,fail) -> S2=S0 ; % no update
-           (append([Merged], PropList2, PropList3),declare(props(Object, PropList3), S1, S2)));
-        append([Prop], PropList, PropList3),declare(props(Object, PropList3), S1, S2));
-   (append([Prop], PropList, PropList3),declare(props(Object, PropList3), S1, S2))).
+         ((Old==Merged,fail) -> declare(props(Object, PropList), S0, S2) ; % no update
+           (append([Merged], PropList2, PropList3),declare(props(Object, PropList3), S0, S2)));
+        append([Prop], PropList, PropList3),declare(props(Object, PropList3), S0, S2));
+   (append([Prop], PropList, PropList3),declare(props(Object, PropList3), S0, S2))).
 
 
 % Remove Prop.

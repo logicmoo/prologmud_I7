@@ -60,12 +60,13 @@ init_objects(S0, S2) :-
 %  S2=S0.
                    
 create_object(Object, S0, S0) :- declared(object(Object,t), S0),!.
-create_object(Object, S0, S2) :- 
-   dbug(create_object(Object)),
-   declare(object(Object,t), S0, S1),
-   (declared(props(Object, PropList), S0);PropList=[]),!,
-   %visit_existing(Object, PropList,S1, S2).
-   create_objprop(Object, PropList,S1, S2).
+create_object(Object, S0, S9) :- 
+   declared_props_or(Object, PropList,[], S0),!,
+   dbug(create_object(Object,PropList)),
+   declare(object(Object,PropList), S0, S1),
+   undeclare_always(props(Object,_), S1, S2),
+   declare(props(Object,[]), S2, S3),
+   create_objprop(Object, PropList, S3, S9).   
 /*
 visit_existing(_Object, [], S0, S0) :-!.
 visit_existing(Object, [Prop|List], S0, S2):- !,  
@@ -78,7 +79,7 @@ visit_existing(Object, Prop, S1, S2):- Prop=inherit(_,t),!,dmust(create_objprop(
 visit_existing(Object, Prop, S0, S2):- dmust(updateprop(Object,Prop,S0, S2)).
 */  
 
-create_objprop(_Object, [], S0, S0).
+create_objprop(_Object, [], S0, S0):- !.
 create_objprop(Object, [Prop|List], S0, S2):- !,
    create_objprop(Object, List, S0, S1),
    create_objprop(Object, Prop, S1, S2).
@@ -96,25 +97,24 @@ create_objprop(Object, inherit(perceptq,t), S0, S1):- !,
   % Most agents store memories of percepts, world model, goals, etc.
 create_objprop(Object, inherit(memorize,t), S0, S0):- declared(memories(Object,_),S0),!.
 create_objprop(Object, inherit(memorize,t), S0, S2):- !,
-  (declared(props(Object, PropList), S0);declared(type_props(Object, PropList), S0)),
-  copy_term(PropList,PropListC),!,
-  % =(PropList,PropListC),!,
+  dmust(declared(object(Object,PropList),S0)),
   declare(memories(Object, [
     structure_label(mem(Object)),
     timestamp(0),
     model(spatial,[]),
     goals([]),
     todo([look]),
-    inst(Object)|PropListC]), S0, S2).
+    inst(Object)|PropList]), S0, S2).
 
 
+create_objprop(_Object, inherit(Other,t), S0, S0):- current_props(Other, PropList, S0), member(no_copy(t),PropList),!.
 create_objprop(Object, inherit(Other,t), S0, S9):- 
-   (declared(props(Other, PropList), S0);declared(type_props(Other, PropList), S0); PropList=[]),!,
+   current_props_or(Other, PropList, [], S0),
    copy_term(PropList,PropListC),!,
-   dmust(setprop(Object, inherited(Other), S0, S1)), !,
-   dmust(create_objprop(Object, PropListC, S1, S2)),
-   dmust(setprop(Object, inherit(Other,t), S2, S3)), !,
-   dmust(setprop(Object, inherited(Other), S3, S9)),
+  % dmust(updateprop(Object, inherit(Other,t), S5, S9)), !,
+   dmust(updateprop(Object, inherited(Other), S0, S2)), !,
+   dmust(create_objprop(Object, PropListC, S2, S9)),
+   %dmust(setprop(Object, inherited(Other), S3, S9)),
    !.
    
 create_objprop(Object, Prop, S0, S2):- dmust(updateprop(Object,Prop,S0, S2)).

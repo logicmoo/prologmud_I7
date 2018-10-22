@@ -196,12 +196,14 @@ act(Agent, inventory, State, NewState) :- Spatial = spatial,
   findall(What, related(Spatial, child, What, Agent, State), Inventory),
   queue_percept(Agent, [carrying(Spatial, Inventory)], State, NewState).
 
-act(Agent, examine(Object), S0, S2) :-
+act(Agent, examine(Object), S0, S2) :- act(Agent, examine(see, Object), S0, S2).
+
+act(Agent, examine(Sense, Object), S0, S2) :-
   %declared(props(Object, PropList), S0),
   ((
   findall(P, (getprop(Object, P, S0), is_prop_public(Sense,P)), PropListL),
   list_to_set(PropListL,PropList),
-  queue_percept(Agent, [sense_props(see, Object, PropList)], S0, S1),
+  queue_percept(Agent, [sense_props(Sense, Object, PropList)], S0, S1),
   (has_rel(Spatial, How, Object, S1); How='<unrelatable>'),
   % Remember that Agent might be on the inside or outside of Object.
   findall(What,
@@ -377,10 +379,12 @@ act(Agent, switch(OnOff, Thing), S0, S) :-
 act_required_posses('lock','key',$agent).
 act_required_posses('unlock','key',$agent).
 
+act_change_opposite('lock','unlock').
+act_change_opposite('open','close').
+
 act_change_state('lock','locked',t).
-act_change_state('unlock','locked',f).
 act_change_state('open','opened',t).
-act_change_state('close','opened',f).
+act_change_state(Unlock,Locked,f):- act_change_state(Lock,Locked,t),act_change_opposite(Lock,Unlock).
 act_change_state(switch(on),'powered',t).
 act_change_state(switch(off),'powered',f).
 
@@ -400,40 +404,45 @@ maybe_when(If,Then):- If -> Then ; true.
 unless_reason(_Agent, Then,_Msg):- Then,!.
 unless_reason(Agent,_Then,Msg):- player_format(Agent,'~N~p~n',Msg),!,fail.
 
+required_reason(_Agent, Required):- Required,!.
+required_reason(Agent, Required):- simplify_reason(Required,CUZ), player_format(Agent,'~N~p~n',cant(cuz(CUZ))),!,fail.
+
+simplify_reason(Required, CUZ):- simplify_dbug(Required, CUZ).
 
 act(Agent, OpenThing, S0, S) :- 
    act_to_cmd_thing(OpenThing,Open, Thing), 
    act_change_state(Open, Opened, TF),!,
  dshow_fail((
-   reachable(Spatial, Thing, Agent, S0),
+
+   maybe_when(psubsetof(Open, touch),
+      required_reason(Agent, reachable(Spatial, Thing, Agent, S0))),
+   
    %getprop(Thing, can_be(Spatial, open, S0),
    %\+ getprop(Thing, state(Spatial, open, t), S0),
 
-   \+ getprop(Thing, can_be(Spatial, Open, f), S0),
+   required_reason(Agent, \+ getprop(Thing, can_be(Spatial, Open, f), S0)),
+
    ignore(dshow_fail(getprop(Thing, can_be(Spatial, Open, t), S0))),
    
-  \+ call((act_prevented_by(Open,Locked,t), 
-          unless_reason(Agent, \+ getprop(Thing, state(Spatial, Locked, t), S0),
-            cant(cuz(Thing, state(Spatial, Locked, t)))))),
+   forall(act_prevented_by(Open,Locked,Prevented), 
+          required_reason(Agent, \+ getprop(Thing, state(Spatial, Locked, Prevented), S0))),
 
 
      %act_verb_thing_model_sense(OpenThing, Verb, Thing, Spatial, _Sense),
-   maybe_when(psubsetof(Open, touch),
-     unless_reason(Agent, reachable(Spatial, Thing, Agent, S0),
-          cant(reach(Spatial, Thing)))),
 
    %delprop(Thing, state(Spatial, Open, f), S0, S1),
    %setprop(Thing, state(Spatial, open, t), S0, S1),
    get_open_traverse(Open, Spatial, OpenTraverse),
-   related(Spatial, OpenTraverse, Agent, Here, S0),
+      related(Spatial, OpenTraverse, Agent, Here, S0),
 
    apply_forall(
-     (getprop(Thing, effect(Open, Term0), S0),subst(equivalent, $self, Thing, Term0, Term)),
+     (getprop(Thing, effect(Open, Term0), S0),
+       subst(equivalent,$self, Thing, Term0, Term1),subst(equivalent,$agent, Agent, Term1, Term2),subst(equivalent,$here, Here, Term2, Term)),
        call(Term),S0,S1),
 
    setprop(Thing, state(Spatial, Opened, TF), S1, S2),
 
-   queue_local_event(Spatial, [setprop(Thing, state(Spatial, Open, TF)),[Open,is,TF]], [Here, Thing], S2, S))),!.
+   queue_local_event(Spatial, [setprop(Thing, state(Spatial, Opened, TF)),[Open,is,TF]], [Here, Thing], S2, S))),!.
 
 % used mainly to debug if things are reachable
 act(Agent, touch(Thing), S0, S9) :-

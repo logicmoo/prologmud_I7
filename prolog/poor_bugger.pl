@@ -9,12 +9,7 @@
 % Revised At:   $Date: 2035/06/06 15:43:15 $
 % ===================================================================
 
-
-%! nop( :Goal) is det.
-%
-%  Comments out code without losing syntax
-%
-nop(_).
+% :- set_prolog_flag(gc,false).
 
 update_deps :-
    pack_install(each_call_cleanup,[url('https://github.com/TeamSPoon/each_call_cleanup.git'),upgrade(true),interactive(false)]),
@@ -25,6 +20,33 @@ update_deps :-
    % hoses developement 
    nop(pack_install(small_adventure_games,[url('https://github.com/TeamSPoon/small_adventure_games.git'),upgrade(true),interactive(true)])),
    !.
+
+dbug(P):- notrace(ansi_format([fg(cyan)],'~N% ~p.~n',[P])).
+:- module_transparent(dmust/1).
+dmust((A,!,B)):-!,dmust(A),!,dmust(B).
+dmust((A,B)):-!,dmust(A),dmust(B).
+dmust((A;B)):-!,call(A),dmust(B).
+dmust((A->B;C)):-!,call(A)->dmust(B);dmust(C).
+dmust((A*->B;C)):-!,call(A)*->dmust(B);dmust(C).
+dmust(A):- call(A)*-> true ; failed_dmust(A).
+
+:- module_transparent(failed_dmust/1).
+failed_dmust(once(A)):-!, failed_dmust(A),!.
+failed_dmust((A,B)):- !,dbug(dmust_start(A)),ignore(rtrace(A)),dbug(dmust_mid(A)), failed_dmust(B).
+failed_dmust(A):- dbug(failed_dmust_start(A)),ignore(rtrace(A)),dbug(failed_dmust_end(A)),
+  break,nortrace,notrace,trace.
+
+no_repeats_must(Call):-
+ gripe_time(0.5,no_repeats(Call)) *-> true;
+  (fail,(dbug(warn(show_failure(Call))),!,fail)).
+
+%! nop( :Goal) is det.
+%
+%  Comments out code without losing syntax
+%
+:- if(\+ current_module(must_trace)).
+
+nop(_).
 
 
 /*
@@ -67,35 +89,15 @@ scce_orig(Setup0,Goal,Cleanup0):-
      Cleanup,
      (DET == true -> ! ; (true;(Setup,fail))).
 
-dbug(P):- notrace(ansi_format([fg(cyan)],'~N% ~p.~n',[P])).
-:- module_transparent(dmust/1).
-dmust((A,!,B)):-!,dmust(A),!,dmust(B).
-dmust((A,B)):-!,dmust(A),dmust(B).
-dmust((A;B)):-!,call(A),dmust(B).
-dmust((A->B;C)):-!,call(A)->dmust(B);dmust(C).
-dmust((A*->B;C)):-!,call(A)*->dmust(B);dmust(C).
-dmust(A):- call(A)*-> true ; failed_dmust(A).
 
-:- module_transparent(failed_dmust/1).
-failed_dmust(once(A)):-!, failed_dmust(A),!.
-failed_dmust((A,B)):- !,dbug(dmust_start(A)),ignore(rtrace(A)),dbug(dmust_mid(A)), failed_dmust(B).
-failed_dmust(A):- dbug(failed_dmust_start(A)),ignore(rtrace(A)),dbug(failed_dmust_end(A)),
-  break,nortrace,notrace,trace.
-
-:- if(\+ current_module(pfc)).
+% :- if(\+ current_module(pfc)).
 :- module_transparent(call_u/1).
 call_u(Q):- notrace(current_predicate(_,Q)),call(call,Q).
 %call_u(P) :- call(call,P).
-:- endif.
 
 
 asserta_if_new(A):- clause(A,true)->true;asserta(A).
 atom_contains(Atom,SubAtom):- atomic_list_concat([_,_|_],SubAtom,Atom).
-
-
-no_repeats_must(Call):-
- gripe_time(0.5,no_repeats(Call)) *-> true;
-  (fail,(dbug(warn(show_failure(Call))),!,fail)).
 
 %% gripe_time( +TooLong, :Goal) is nondet.
 %
@@ -196,11 +198,11 @@ totally_hide(MP):- strip_module(MP,M,P),Pred=M:P,
   '$with_unlocked_pred_local'(Pred,
    (('$set_predicate_attribute'(Pred, trace, false),'$set_predicate_attribute'(Pred, hide_childs, true)))).
 
-%% with_unlocked_pred( ?Pred, :Goal) is semidet.
+%% with_unlocked_pred_b( ?Pred, :Goal) is semidet.
 %
 % Using Unlocked Predicate.
 %
-with_unlocked_pred(MP,Goal):- strip_module(MP,M,P),Pred=M:P,
+with_unlocked_pred_b(MP,Goal):- strip_module(MP,M,P),Pred=M:P,
    (predicate_property(Pred,foreign)-> true ;
   (
  ('$get_predicate_attribute'(Pred, system, 0) -> Goal ;
@@ -212,7 +214,7 @@ unhide(Pred):- '$set_predicate_attribute'(Pred, trace, 1),'$set_predicate_attrib
 
 /*
 mpred_trace_childs(W) :- forall(match_predicates(W,M,Pred,_,_),(
-   with_unlocked_pred(M:Pred,(
+   with_unlocked_pred_b(M:Pred,(
    '$set_predicate_attribute'(M:Pred, trace, 0),
    %'$set_predicate_attribute'(M:Pred, noprofile, 0),
    '$set_predicate_attribute'(M:Pred, hide_childs, 0))))).   
@@ -541,4 +543,6 @@ ftrace(Goal):- restore_trace((
 :- totally_hide('$toplevel':save_debug).
 :- totally_hide('$toplevel':no_lco).
 
+
+:- endif.
 
