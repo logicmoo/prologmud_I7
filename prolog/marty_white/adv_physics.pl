@@ -58,10 +58,12 @@ cant(Agent, Action, cant(sense(Spatial, Sense, Thing, Why)), State) :-
   \+ can_sense(Spatial, Sense, Thing, Agent, State),
   (Why = ( \+ can_sense(Spatial, Sense, Thing, Agent))).
 
+/*
 cant(Agent, Action, cant(reach(Spatial, Thing)), State) :-
   act_verb_thing_model_sense(Action, Verb, Thing, Spatial, _Sense),
   psubsetof(Verb, touch),
   \+ reachable(Spatial, Thing, Agent, State).
+*/
 
 cant(_Agent, Action, cant(move(Spatial, Thing)), State) :-
   act_verb_thing_model_sense(Action, Verb, Thing, Spatial, _Sense),

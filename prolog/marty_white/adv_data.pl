@@ -28,7 +28,7 @@
 %   clothing - can be worn
 %   worn - is being worn
 %   container
-%   state(Spatial, open, t) - container is state(Spatial, open, t) (must be state(Spatial, open, t) to be used. there is no "closed").
+%   state(Spatial, opened, t) - container is open (must be opened) to be used. there is no "closed").
 %   can_be(Spatial, open, t) - can be opened and closed
 %   capacity(N) - number of objects a container or supporter can hold
 %   state(Spatial, locked, t) - cannot be opened
@@ -44,7 +44,7 @@
 %   list_together - way to handle "5 fish"
 %   plural - pluralized-name if different from singular
 %   when_closed - description when closed
-%   when_open - description when state(Spatial, open, t)
+%   when_open - description when state(Spatial, opened, t)
 %   when_on, when_off - like when_closed, etc.
 % Some TADS properties:
 %   thedesc
@@ -231,10 +231,10 @@ istate([
     inherit(place,t),
     % goto(dir, result) provides special handling for going in a direction.
     goto(up, 'You lack the ability to fly.'),
-    effect(goto(_, north), getprop(screendoor, state(Spatial, open, t))),
+    effect(goto(_, north), getprop(screendoor, state(Spatial, opened, t))),
     oper(/*garden, */ goto(_, north),
          % precond(Test, FailureMessage)
-         precond(getprop(screendoor, state(Spatial, open, t)), ['you must open the door first']),
+         precond(getprop(screendoor, state(Spatial, opened, t)), ['you must open the door first']),
          % body(clause)
          body(inherited)
     ),
@@ -271,7 +271,7 @@ istate([
     volume_capacity(15),
     fragile(splinters),
     %can_be(Spatial, open, t),
-    state(Spatial, open, f),
+    state(Spatial, opened, f),
     %can_be(Spatial, lock, t),
     state(Spatial, locked, t),
     TooDark
@@ -335,13 +335,17 @@ istate([
     after(take,
           (initial, 'You pick the mushroom, neatly cleaving its thin stalk.'))
   ]),
+
   props(screendoor, [
     can_be(Spatial, move, f),
+    can_be(Spatial, open, t),
+    can_be(Spatial, close, t),
     % see DM4
+    door_to(kitchen),
     door_to(garden),
-    %can_be(Spatial, open, t)
-    state(Spatial, open, f)
+    state(Spatial, opened, f)
   ]),
+
   class_props(shelf, [has_rel(Spatial, on), can_be(Spatial, move, f)]),
   class_props(table, [has_rel(Spatial, on), has_rel(Spatial, under)]),
   class_props(wrench, [inherit(shiny,t)]),

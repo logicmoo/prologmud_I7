@@ -173,6 +173,8 @@ must_act(Agent, Action, S0, S1) :-
   queue_percept(Agent, [failure(Action), Message], S0, S1).
 
 
+:- discontiguous act/4.
+
 act(Agent, Action, State, NewState) :-
   act_verb_thing_model_sense(Action, Verb, _Thing, Spatial, Sense),
   sensory_verb(Sense, Verb),
@@ -351,37 +353,95 @@ act(Agent, eat( Thing), S0, S9) :-
 act(Agent, eat( Thing), S0, S9) :-
   queue_percept(Agent, [failure(eat( Thing)), 'It''s inedible!'], S0, S9).
 
-
-act(Agent, switch(OnOff, Thing), S0, S) :-
-  reachable(Spatial, Thing, Agent, S0),
-  getprop(Thing, can_be(Spatial, switch, t), S0),
-  getprop(Thing, effect(switch(OnOff), Term0), S0),
-  subst(equivalent, $self, Thing, Term0, Term),
-  call(Term, S0, S1),
-  queue_percept(Agent, [true, 'OK'], S1, S).
-
-
-act(Agent, open(Thing), S0, S) :-
+/*
+act(Agent, switch(Open, Thing), S0, S) :-
+  act_prevented_by(Open, TF),
   reachable(Spatial, Thing, Agent, S0),
   %getprop(Thing, can_be(Spatial, open, S0),
   %\+ getprop(Thing, state(Spatial, open, t), S0),
   Open = open, get_open_traverse(Open, Spatial, OpenTraverse),
-  delprop(Thing, state(Spatial, Open, f), S0, S1),
+  %delprop(Thing, state(Spatial, Open, f), S0, S1),
   %setprop(Thing, state(Spatial, open, t), S0, S1),
-  setprop(Thing, state(Spatial, Open, t), S1, S2),
+  setprop(Thing, state(Spatial, Open, TF), S0, S2),
   related(Spatial, OpenTraverse, Agent, Here, S2),
-  queue_local_event(Spatial, [setprop(Thing, state(Spatial, Open, t)), 'is now open'(Open)], [Here], S2, S).
+  queue_local_event(Spatial, [setprop(Thing, state(Spatial, Open, TF)),[Open,is,TF]], [Here, Thing], S2, S).
 
-act(Agent, close( Thing), S0, S) :-
+act(Agent, switch(OnOff, Thing), S0, S) :-
   reachable(Spatial, Thing, Agent, S0),
-  %getprop(Thing, can_be(Spatial, open, S0),
-  %getprop(Thing, state(Spatial, open, t), S0),
-  Open = open, get_open_traverse(Open, Spatial, OpenTraverse),
-  delprop(Thing, state(Spatial, Open, t), S0, S1),
-  %delprop(Thing, state(Spatial, open, t), S0, S1),
-  setprop(Thing, state(Spatial, Open, f), S1, S2),
-  related(Spatial, OpenTraverse, Agent, Here, S2),
-  queue_local_event(Spatial, [setprop(Thing, state(Spatial, Open, f)), 'is now closed'(~(Open))], [Here], S2, S).
+  getprop(Thing, can_be(Spatial, switch, t), S0),
+   getprop(Thing, effect(switch(OnOff), Term0), S0),
+   subst(equivalent, $self, Thing, Term0, Term),
+   call(Term, S0, S1),
+  queue_percept(Agent, [true, 'OK'], S1, S).
+*/
+% todo
+act_required_posses('lock','key',$agent).
+act_required_posses('unlock','key',$agent).
+
+act_change_state('lock','locked',t).
+act_change_state('unlock','locked',f).
+act_change_state('open','opened',t).
+act_change_state('close','opened',f).
+act_change_state(switch(on),'powered',t).
+act_change_state(switch(off),'powered',f).
+
+act_change_state(switch(Open),Opened,TF):- nonvar(Open), act_change_state(Open,Opened,TF).
+
+% act_prevented_by(Open,Opened,TF):- act_change_state(Open,Opened,TF).
+act_prevented_by('open','locked',t).
+act_prevented_by('close','locked',t).
+
+act_to_cmd_thing(OpenThing, Open, Thing) :- 
+  OpenThing =.. [Open, Thing],!.
+act_to_cmd_thing(SwitchOnThing, SwitchOn, Thing) :- 
+  SwitchOnThing =.. [Switch, On, Thing],!,
+  SwitchOn=.. [Switch,On].
+
+maybe_when(If,Then):- If -> Then ; true.
+unless_reason(_Agent, Then,_Msg):- Then,!.
+unless_reason(Agent,_Then,Msg):- player_format(Agent,'~N~p~n',Msg),!,fail.
+
+
+act(Agent, OpenThing, S0, S) :- 
+   act_to_cmd_thing(OpenThing,Open, Thing), 
+   act_change_state(Open, Locked, TF),!,
+ dshow_fail((
+   reachable(Spatial, Thing, Agent, S0),
+   %getprop(Thing, can_be(Spatial, open, S0),
+   %\+ getprop(Thing, state(Spatial, open, t), S0),
+
+   \+ getprop(Thing, can_be(Spatial, Open, f), S0),
+   ignore(dshow_fail(getprop(Thing, can_be(Spatial, Open, t), S0))),
+   
+  \+ call((act_prevented_by(Open,Locked,t), 
+          unless_reason(Agent, \+ getprop(Thing, state(Spatial, Locked, t), S0),
+            cant(cuz(Thing, state(Spatial, Locked, t)))))),
+
+
+     %act_verb_thing_model_sense(OpenThing, Verb, Thing, Spatial, _Sense),
+   maybe_when(psubsetof(Open, touch),
+     unless_reason(Agent, reachable(Spatial, Thing, Agent, S0),
+          cant(reach(Spatial, Thing)))),
+
+   %delprop(Thing, state(Spatial, Open, f), S0, S1),
+   %setprop(Thing, state(Spatial, open, t), S0, S1),
+   get_open_traverse(Open, Spatial, OpenTraverse),
+   related(Spatial, OpenTraverse, Agent, Here, S0),
+
+   apply_forall(
+     (getprop(Thing, effect(Open, Term0), S0),subst(equivalent, $self, Thing, Term0, Term)),
+       call(Term),S0,S1),
+
+   setprop(Thing, state(Spatial, Opened, TF), S1, S2),
+
+   queue_local_event(Spatial, [setprop(Thing, state(Spatial, Open, TF)),[Open,is,TF]], [Here, Thing], S2, S))),!.
+
+% used mainly to debug if things are reachable
+act(Agent, touch(Thing), S0, S9) :-
+  unless_reason(Agent, reachable(Spatial, Thing, Agent, S0),
+          cant(reach(Spatial, Thing))),
+  queue_percept(Agent, [true, 'OK.'], S0, S9).
+
 
 act(Agent, emote( SAYTO, Object, Message), S0, S1) :- !, % directed message
   dmust((
@@ -395,9 +455,7 @@ act(Agent, emote( SAYTO, Object, Message), S0, S1) :- !, % directed message
 %  related(Spatial, OpenTraverse, Agent, Here, S0),
 %  queue_local_event(Spatial, [emoted( say, Agent, (*), Message)], [Here], S0, S1).
 
-%act(Agent, touch(Spatial, _Thing), S0, S9) :-
-%  queue_percept(Agent, [true, 'OK.'], S0, S9).
-act(Agent, Wait, State, NewState) :- Wait == wait, make,
+act(Agent, Wait, State, NewState) :- Wait == wait,
   queue_percept(Agent, [time_passes], State, NewState).
 act(Agent, print_(Msg), S0, S1) :-
   related(Spatial, descended, Agent, Here, S0),

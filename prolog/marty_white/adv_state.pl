@@ -127,7 +127,7 @@ getprop(Object, Prop, S0):-
   quietly((assertion(\+ atom(Prop)), getprop1(Object, Prop, S0)))
     *-> true; getprop2(Object, Prop, S0).
 
-getprop2(Object, Prop, Memory):- member(state(S0), Memory), !,
+getprop2(Object, Prop, Memory):- notrace(member(state(S0), Memory)), !,
   getprop1(Object, Prop, S0).
 
 

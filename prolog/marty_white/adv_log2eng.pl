@@ -28,7 +28,7 @@ reason2eng(cant(manipulate(Spatial, self)), [ 'You can''t manipulate yourself li
 reason2eng(alreadyhave(It), ['You already have the', It, '.']).
 reason2eng(mustgetout(_It), ['You must get out/off it first.']).
 reason2eng(self_relation(_Spatial, _It), ['Can\'t put thing inside itself!']).
-reason2eng(moibeus_relation(Spatial, _, _), ['Topological error', ly(Spatial), '!']).
+reason2eng(moibeus_relation( _, _), ['Topological error!']).
 reason2eng(state(Spatial, Dark, t),        ['It''s too ', Dark, ' to ', ly(Sense), ly(Spatial), '!']):- problem_solution(Dark, Sense, _Light).
 reason2eng(mustdrop(It), [ 'You will have to drop', It, ' first.']).
 reason2eng(cant(move(Spatial, _Thing)), ['Sorry, it\'s immobile', ly(Spatial), '.']).
@@ -324,9 +324,14 @@ logical2eng(Agent, sense_props(Sense, Object, PropList),
   proplist2eng(Object, PropList, PropDesc).
 
 %logical2eng(_Agent, emote(_Spatial, say, Speaker, (*), Eng), [cap(subj(Speaker)), ': "', Text, '"']) :-  eng2txt(Speaker, 'I', Eng, Text).
+logical2eng(_Agent, emoted( see, Speaker, Audience, Eng),
+    ['to', Audience, ', "', Text, '"']) :-
+  eng2txt(Speaker, Speaker, Eng, Text).
+
 logical2eng(_Agent, emoted( Says, Speaker, Audience, Eng),
     [cap(subj(Speaker)), s(Says), 'to', Audience, ', "', Text, '"']) :-
   eng2txt(Speaker, 'I', Eng, Text).
+
 logical2eng(_Agent, emote(_Spatial, Says, Audience, Eng),
     [cap(subj(do)), s(Says), 'to', Audience, ', "', Text, '"']) :-
   eng2txt(me, 'I', Eng, Text).

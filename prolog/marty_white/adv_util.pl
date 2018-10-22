@@ -52,6 +52,15 @@ runnable_goal(Goal, Goal) :- ground(Goal), !.
 %runnable_goal(Goal, Goal_Copy):- copy_term(Goal, Goal_Copy).
 runnable_goal(Goal, Goal).
 
+apply_forall(Forall,Apply,S0,S1):-
+  findall(Forall,Forall,Frames),
+  apply_forall_frames(Frames,Forall,Apply,S0,S1).
+
+apply_forall_frames([],_Forall,_Apply,S0,S0).
+apply_forall_frames([Frame|Frames],Forall,Apply,S0,S2):-
+  Frame=Forall,apply_state(Apply,S0,S1),
+  apply_forall_frames(Frames,Forall,Apply,S1,S2).
+
 apply_state(Goal,S0,S0):- Goal==[],!.
 apply_state(rtrace(Goal), S0, S2) :- !, rtrace(apply_state(Goal, S0, S2)). 
 apply_state(dmust(Goal), S0, S2) :- !, dmust(apply_state(Goal, S0, S2)).
