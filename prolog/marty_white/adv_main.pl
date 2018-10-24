@@ -145,13 +145,17 @@ telnet_decide_action(Agent, Mem, Mem) :-
 :- initialization(adventure, main).
 %:- endif.
 
-mainloop :-
-  repeat,
-    once(dmust((
+main_once:- 
+    dmust((
           retract(advstate(S0)),
           main(S0, S1),
           asserta(advstate(S1)),
-          must_output_state(S1)))),
+          must_output_state(S1))
+    ),!.
+
+mainloop :-
+  repeat,
+    once(main_once),
     declared(quit, S1),
   !. % Don't allow future failure to redo mainloop.
 
