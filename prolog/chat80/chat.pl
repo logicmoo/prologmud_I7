@@ -46,7 +46,8 @@
 
 ttynl:- format('~N'),flush_output.
 
-:- user:ensure_loaded((.. / parser_sharing)).	% misc
+:- user:ensure_loaded(library(parser_sharing)).	% misc
+:- user:ensure_loaded(library(with_thread_local)).	% misc
 
 
 %:- ensure_loaded(als_chat).	% misc

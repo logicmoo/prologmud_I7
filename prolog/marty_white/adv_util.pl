@@ -35,6 +35,7 @@ complex(C, R, I):- freeze(C, complex(C, R, I)), freeze(R, complex(C, R, I)), fre
 :- nop(ensure_loaded('adv_util_subst')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
 apply_all([], _Goal, S0, S0) :- !.
 apply_all([Arg], Goal, S0, S2) :- !, apply_first_arg_state(Arg, Goal, S0, S2).
 
@@ -52,15 +53,22 @@ runnable_goal(Goal, Goal) :- ground(Goal), !.
 %runnable_goal(Goal, Goal_Copy):- copy_term(Goal, Goal_Copy).
 runnable_goal(Goal, Goal).
 
+% :- meta_predicate nomic_mu:maybe_when(0,0).
+% :- meta_predicate nomic_mu:required_reason(*,0).
+% :- meta_predicate nomic_mu:unless_reason(*,0,*).
+% :- meta_predicate nomic_mu:with_agent_console(*,0).
+:- meta_predicate(apply_forall(0,2,+,-)).
 apply_forall(Forall,Apply,S0,S1):-
   findall(Forall,Forall,Frames),
   apply_forall_frames(Frames,Forall,Apply,S0,S1).
 
+:- meta_predicate(apply_forall_frames(*,*,2,+,*)).
 apply_forall_frames([],_Forall,_Apply,S0,S0).
 apply_forall_frames([Frame|Frames],Forall,Apply,S0,S2):-
   Frame=Forall,apply_state(Apply,S0,S1),
   apply_forall_frames(Frames,Forall,Apply,S1,S2).
 
+:- meta_predicate(apply_state(2,+,-)).
 apply_state(Goal,S0,S0):- Goal==[],!.
 apply_state(rtrace(Goal), S0, S2) :- !, rtrace(apply_state(Goal, S0, S2)). 
 apply_state(dmust(Goal), S0, S2) :- !, dmust(apply_state(Goal, S0, S2)).
@@ -96,7 +104,7 @@ apply_state(Goal, S0, S2) :-
 
 
 
-
+%:- meta_predicate(apply_first_arg_state(+,3,+,-)).
 apply_first_arg_state(Arg, Goal, S0, S2) :-
    notrace((compound_name_arguments(Goal, F, GoalL),
    append(GoalL, [S0, S2], NewGoalL),
@@ -105,6 +113,7 @@ apply_first_arg_state(Arg, Goal, S0, S2) :-
    dmust(Call),
    must_output_state(S2).
 
+%:- meta_predicate(apply_first(+,3,+,-)).
 apply_first_arg(Arg, Goal, S0, S2):- 
    apply_first_arg_state(Arg, Goal, S0, S2).
 

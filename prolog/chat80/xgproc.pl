@@ -15,9 +15,10 @@
 
 
 abolish_xg(Prop):- ignore(tlxgproc:current_xg_module(M)),
-  doall((user:current_xg_pred(M,F,N,Props),member(Prop,Props),member(Prop,Props),
-                 ignore((memberchk(xg_pred=P,Props),dmsg(abolising(current_xg_pred(M,F,N,Props))),predicate_property(P,number_of_clauses(NC)),flag(xg_assertions,A,A-NC))),
-                 abolish(F,N),retractall(user:current_xg_pred(M,F,N,_)))).
+  ignore((((user:current_xg_pred(M,F,N,Props),member(Prop,Props),member(Prop,Props),
+                 ignore((memberchk(xg_pred=P,Props),dbug(abolising(current_xg_pred(M,F,N,Props))),
+                   predicate_property(P,number_of_clauses(NC)),flag(xg_assertions,A,A-NC))),
+                 abolish(F,N),retractall(user:current_xg_pred(M,F,N,_)))),fail)).
 
 new_pred(P):- dmust(tlxgproc:current_xg_module(M)),new_pred(M,P).
 new_pred(M,P0):- functor(P0,F,A),functor(P,F,A),new_pred(M,P,F,A),!.
@@ -36,7 +37,7 @@ new_pred(_,P,_,_):- recorded(P,'xg.pred',_), !.
 new_pred(M,P,F,A) :-   
    share_mp(M:F/A),
    findall(K=V,(((K=xg_source,tlxgproc:current_xg_filename(V));(prolog_load_context(K,V),not(member(K,[stream,directory,variable_names])));((seeing(S),member(G,[(K=file,P=file_name(V)),(K=position,P=position(V))]),G,stream_property(S,P))))),Props),
-   assert_if_new(user:current_xg_pred(M,F,A,[xg_source=F,xg_ctx=M,xg_fa=(F/A),xg_pred=P|Props])),
+   asserta_if_new(user:current_xg_pred(M,F,A,[xg_source=F,xg_ctx=M,xg_fa=(F/A),xg_pred=P|Props])),
    recordz(P,'xg.pred',_),
    recordz('xg.pred',P,_).
 
@@ -138,7 +139,7 @@ xg_process(P,Mode) :-
    new_pred(P),
    xg_assertz(P).
 
-xg_assertz(P):- flag(xg_assertions,A,A+1),dmust((tlxgproc:current_xg_module(M),nop(dmsg(M:xg_assertz(P))),M:assertz(P))),!.
+xg_assertz(P):- flag(xg_assertions,A,A+1),dmust((tlxgproc:current_xg_module(M),nop(dbug(M:xg_assertz(P))),M:assertz(P))),!.
 
 xg_erase_safe(_,H):- erase(H).
 
@@ -146,7 +147,7 @@ xg_complete(_F) :-
    recorded('xg.usurped',P,R0), xg_erase_safe(recorded('xg.usurped',P,R0),R0),
    recorded(P,'xg.usurped',R1), xg_erase_safe(recorded(P,'xg.usurped',R1),R1),
    fail.
-xg_complete(F):- flag(read_terms,T,T),dmsg(info(read(T,F))),nl,nl.
+xg_complete(F):- flag(read_terms,T,T),dbug(info(read(T,F))),nl,nl.
 
 usurping(+,_) :- !.
 usurping(-,P) :-

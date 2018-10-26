@@ -24,6 +24,10 @@
 :- nop(ensure_loaded('adv_debug')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+ :- meta_predicate dshow_true(0).
+ :- meta_predicate dshow_call(0).
+ :- meta_predicate dshow_fail(0).
+
 % '$hide'(Pred) :- '$set_predicate_attribute'(Pred, trace, false).
 never_trace(Spec):- '$hide'(Spec),'$iso'(Spec),trace(Spec, -all).
 :- use_module(library(lists)).

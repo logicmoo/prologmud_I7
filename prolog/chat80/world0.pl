@@ -16,13 +16,15 @@
 
 % Interface.
 % ---------
+:- export(database80/1).
+database80(X):- catch(database_u(X),E,(dbug(error(E,database_u(X))),trace,database_u(X))).
 
-database(X):- catch(database_u(X),E,(dbug(error(E,database_u(X))),trace,call(X))).
+database_t(aggregate(X,Y,Z)) :- aggregate(X,Y,Z).
+database_t(one_of(X,Y)) :- one_of(X,Y).
+database_t(ratio(X,Y,Z)) :- ratio(X,Y,Z).
+database_t(cardinality(X,Y)) :- cardinality(X,Y).
 
-database_u(aggregate(X,Y,Z)) :- aggregate(X,Y,Z).
-database_u(one_of(X,Y)) :- one_of(X,Y).
-database_u(ratio(X,Y,Z)) :- ratio(X,Y,Z).
-database_u(cardinality(X,Y)) :- cardinality(X,Y).
+database_u(X):- nonvar(X),database_t(X).
 database_u(african(X)) :- african(X).
 database_u(american(X)) :- american(X).
 database_u(area(X)) :- area(X).

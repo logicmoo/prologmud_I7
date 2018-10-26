@@ -40,6 +40,20 @@ no_repeats_must(Call):-
  gripe_time(0.5,no_repeats(Call)) *-> true;
   (fail,(dbug(warn(show_failure(Call))),!,fail)).
 
+:- ensure_loaded(library(no_repeats)).
+:- ensure_loaded(library(loop_check)).
+:- use_module(library(must_trace)).
+
+:- if(\+ current_module(pfc)).
+:- module_transparent(call_u/1).
+call_u(Q):- notrace(current_predicate(_,Q)),call(call,Q).
+%call_u(P) :- call(call,P).
+:- endif.
+
+
+asserta_if_new(A):- clause(A,true)->true;asserta(A).
+atom_contains(Atom,SubAtom):- atomic_list_concat([_,_|_],SubAtom,Atom).
+
 %! nop( :Goal) is det.
 %
 %  Comments out code without losing syntax
@@ -90,14 +104,6 @@ scce_orig(Setup0,Goal,Cleanup0):-
      (DET == true -> ! ; (true;(Setup,fail))).
 
 
-% :- if(\+ current_module(pfc)).
-:- module_transparent(call_u/1).
-call_u(Q):- notrace(current_predicate(_,Q)),call(call,Q).
-%call_u(P) :- call(call,P).
-
-
-asserta_if_new(A):- clause(A,true)->true;asserta(A).
-atom_contains(Atom,SubAtom):- atomic_list_concat([_,_|_],SubAtom,Atom).
 
 %% gripe_time( +TooLong, :Goal) is nondet.
 %

@@ -1,0 +1,126 @@
+There|EX|O are|VBP|O boxes|NNS|O on|IN|O the|DT|O floor|NN|O .|.|O
+How|WRB|O many|JJ|O ?|.|O
+Only|RB|O Five|CD|I-DAT .|.|O
+Ok|NNP|I-PER ,|,|O there|EX|O are|VBP|O 5|CD|O boxes|NNS|O on|IN|O the|DT|O floor|NN|O .|.|O
+She|PRP|O opens|VBZ|O a|DT|O box|NN|O .|.|O
+There|EX|O are|VBP|O books|NNS|O in|IN|O the|DT|O box|NN|O .|.|O
+She|PRP|O takes|VBZ|O out|RP|O the|DT|O books|NNS|O .|.|O
+She|PRP|O puts|VBZ|O the|DT|O books|NNS|O on|IN|O the|DT|O bookshelf|NN|O .|.|O
+She|PRP|O opens|VBZ|O another|DT|O box|NN|O .|.|O
+There|EX|O are|VBP|O plates|NNS|O in|IN|O the|DT|O box|NN|O .|.|O
+She|PRP|O takes|VBZ|O out|RP|O the|DT|O plates|NNS|O .|.|O
+She|PRP|O puts|VBZ|O them|PRP|O in|IN|O the|DT|O kitchen|NN|O cabinet|NN|O .|.|O
+
+Player~1|NNP|I-LOC is|VBZ|O in|IN|O the|DT|O kitchen|NN|O .|.|O
+There|EX|O are|VBP|O boxes|NNS|O on|IN|O the|DT|O floor|NN|O .|.|O
+
+Player~1|NNP|I-LOC opens|VBZ|O a|DT|O box|NN|O .|.|O
+There|EX|O are|VBP|O books|NNS|O in|IN|O the|DT|O box|NN|O .|.|O
+
+Player~1|NNP|I-LOC wishes|VBZ|O to|TO|O take|VB|O out|RP|O the|DT|O books|NNS|O .|.|O
+So|RB|O then|RB|O Player~1|NNP|I-LOC can|MD|O put|VB|O the|DT|O books|NNS|O on|IN|O the|DT|O bookshelf|NN|O .|.|O
+Player~1|NNP|I-LOC opens|VBZ|O another|DT|O box|NN|O .|.|O
+There|EX|O are|VBP|O plates|NNS|O in|IN|O the|DT|O box|NN|O .|.|O
+Player~1|NNP|I-LOC takes|VBZ|O out|RP|O the|DT|O plates|NNS|O .|.|O
+Player~1|NNP|I-LOC puts|VBZ|O them|PRP|O in|IN|O the|DT|O kitchen|NN|O cabinet|NN|O .|.|O
+
+
+He|PRP|O stands|VBZ|O on|IN|O the|DT|O corner|NN|O .|.|O
+He|PRP|O sells|VBZ|O purses|NNS|O .|.|O
+He|PRP|O says|VBZ|O ,|,|O "|LQU|O Ten|CD|O Dollars|NNS|O "|RQU|O over|IN|O and|CC|O over|IN|O .|.|O
+Many|JJ|O women|NNS|O stop|VBP|O .|.|O
+They|PRP|O look|VBP|O at|IN|O all|PDT|O the|DT|O purses|NNS|O .|.|O
+They|PRP|O pick|VBP|O up|RP|O the|DT|O purses|NNS|O .|.|O
+They|PRP|O look|VBP|O inside|IN|O the|DT|O purses|NNS|O .|.|O
+They|PRP|O put|VBD|O the|DT|O purses|NNS|O on|IN|O their|PRP$|O shoulders|NNS|O .|.|O
+Many|JJ|O women|NNS|O buy|VBP|O a|DT|O purse|NN|O .|.|O
+Some|DT|O women|NNS|O buy|VBP|O two|CD|O purses|NNS|O .|.|O
+
+
+She|PRP|O is|VBZ|O in|IN|O her|PRP$|O pajamas|NNS|O .|.|O
+She|PRP|O lies|VBZ|O down|RB|O .|.|O
+She|PRP|O puts|VBZ|O her|PRP$|O head|NN|O on|IN|O the|DT|O pillow|NN|O .|.|O
+She|PRP|O moves|VBZ|O the|DT|O pillow|NN|O around|IN|O a|DT|O little|JJ|O bit|NN|O .|.|O
+It|PRP|O is|VBZ|O more|RBR|O comfortable|JJ|O now|RB|O .|.|O
+The|DT|O lamp|NN|O is|VBZ|O still|RB|O on|IN|O .|.|O
+She|PRP|O turns|VBZ|O off|RP|O the|DT|O lamp|NN|O .|.|O
+Her|PRP$|O bedroom|NN|O is|VBZ|O dark|JJ|O .|.|O
+She|PRP|O puts|VBZ|O her|PRP$|O head|NN|O back|RB|O on|IN|O the|DT|O pillow|NN|O .|.|O
+She|PRP|O goes|VBZ|O to|TO|O sleep|VB|O .|.|O
+
+She|PRP|O opens|VBZ|O the|DT|O envelope|NN|O .|.|O
+She|PRP|O reads|VBZ|O the|DT|O letter|NN|O .|.|O
+The|DT|O letter|NN|O is|VBZ|O from|IN|O her|PRP$|O cousin|NN|O .|.|O
+Her|PRP$|O cousin|NN|O is|VBZ|O in|IN|O Europe|NNP|I-LOC .|.|O
+Her|PRP$|O cousin|NN|O likes|VBZ|O Europe|NNP|I-LOC .|.|O
+She|PRP|O finishes|VBZ|O the|DT|O letter|NN|O .|.|O
+She|PRP|O writes|VBZ|O a|DT|O letter|NN|O to|TO|O her|PRP$|O cousin|NN|O .|.|O
+She|PRP|O tells|VBZ|O her|PRP$|O cousin|NN|O all|PDT|O the|DT|O latest|JJS|O news|NN|O at|IN|O home|NN|O .|.|O
+She|PRP|O thanks|NNS|O her|PRP$|O cousin|NN|O for|IN|O the|DT|O letter|NN|O .|.|O
+
+
+She|PRP|O is|VBZ|O a|DT|O model|NN|O .|.|O
+She|PRP|O walks|VBZ|O up|RB|O and|CC|O down|RB|O the|DT|O runway|NN|O .|.|O
+She|PRP|O models|NNS|O clothes|NNS|O .|.|O
+She|PRP|O models|NNS|O expensive|JJ|O clothes|NNS|O .|.|O
+Famous|JJ|O designers|NNS|O design|NN|O her|PRP$|O clothes|NNS|O .|.|O
+The|DT|O clothes|NNS|O look|VBP|O good|JJ|O on|IN|O her|PRP|O .|.|O
+People|NNS|O watch|VBP|O her|PRP$|O model|NN|O clothes|NNS|O .|.|O
+People|NNS|O spend|VBP|O lots|NNS|O of|IN|O money|NN|O on|IN|O the|DT|O clothes|NNS|O .|.|O
+People|NNS|O buy|VBP|O the|DT|O clothes|NNS|O .|.|O
+She|PRP|O never|RB|O buys|VBZ|O the|DT|O clothes|NNS|O .|.|O
+She|PRP|O just|RB|O wears|VBZ|O them|PRP|O .|.|O
+
+
+The|DT|O baby|NN|O cries|NNS|O .|.|O
+She|PRP|O looks|VBZ|O at|IN|O it|PRP|O .|.|O
+She|PRP|O talks|VBZ|O to|TO|O it|PRP|O .|.|O
+The|DT|O baby|NN|O cries|VBZ|O some|DT|O more|RBR|O .|.|O
+She|PRP|O picks|VBZ|O it|PRP|O up|RP|O .|.|O
+She|PRP|O holds|VBZ|O it|PRP|O .|.|O
+She|PRP|O pats|VBZ|O the|DT|O baby|NN|O on|IN|O the|DT|O back|NN|O .|.|O
+The|DT|O baby|NN|O burps|NNS|O .|.|O
+She|PRP|O puts|VBZ|O the|DT|O baby|NN|O down|RB|O .|.|O
+She|PRP|O looks|VBZ|O at|IN|O it|PRP|O .|.|O
+The|DT|O baby|NN|O looks|VBZ|O at|IN|O her|PRP|O .|.|O
+It|PRP|O smiles|VBZ|O at|IN|O her|PRP|O .|.|O
+
+
+He|PRP|O has|VBZ|O a|DT|O secret|NN|O .|.|O
+He|PRP|O keeps|VBZ|O his|PRP$|O secret|NN|O .|.|O
+He|PRP|O shares|VBZ|O it|PRP|O with|IN|O nobody|DT|O .|.|O
+He|PRP|O tells|VBZ|O it|PRP|O to|TO|O nobody|DT|O .|.|O
+A|DT|O secret|NN|O is|VBZ|O a|DT|O secret|NN|O .|.|O
+He|PRP|O loves|VBZ|O his|PRP$|O teacher|NN|O .|.|O
+That|DT|O is|VBZ|O his|PRP$|O secret|NN|O .|.|O
+His|PRP$|O teacher|NN|O is|VBZ|O beautiful|JJ|O .|.|O
+She|PRP|O is|VBZ|O smart|JJ|O .|.|O
+She|PRP|O likes|VBZ|O him|PRP|O too|RB|O .|.|O
+She|PRP|O gives|VBZ|O him|PRP|O A's|VBZ|O on|IN|O his|PRP$|O homework|NN|O .|.|O
+She|PRP|O gives|VBZ|O him|PRP|O gold|NN|O stars|NNS|O for|IN|O his|PRP$|O class|NN|O work|NN|O .|.|O
+
+It|PRP|O is|VBZ|O winter|NN|O .|.|O
+It|PRP|O is|VBZ|O early|JJ|I-TIM morning|NN|I-TIM .|.|O
+He|PRP|O goes|VBZ|O to|TO|O the|DT|O park|NN|O .|.|O
+He|PRP|O puts|VBZ|O on|IN|O his|PRP$|O ice|NN|O skates|NNS|O .|.|O
+He|PRP|O skates|VBZ|O on|IN|O the|DT|O pond|NN|O .|.|O
+He|PRP|O skates|VBZ|O round|NN|O and|CC|O round|NN|O .|.|O
+Nobody|DT|O else|RB|O is|VBZ|O on|IN|O the|DT|O pond|NN|O .|.|O
+He|PRP|O has|VBZ|O it|PRP|O all|DT|O to|TO|O himself|PRP|O .|.|O
+It|PRP|O is|VBZ|O quiet|JJ|O on|IN|O the|DT|O pond|NN|O .|.|O
+The|DT|O only|JJ|O sound|NN|O is|VBZ|O his|PRP$|O skates|NNS|O on|IN|O the|DT|O ice|NN|O .|.|O
+
+
+He|PRP|O has|VBZ|O a|DT|O pocketknife|NN|O .|.|O
+It|PRP|O has|VBZ|O two|CD|O parts|NNS|O .|.|O
+It|PRP|O has|VBZ|O a|DT|O knife|NN|O .|.|O
+The|DT|O knife|NN|O is|VBZ|O two|CD|O inches|NNS|O long|RB|O .|.|O
+It|PRP|O is|VBZ|O sharp|JJ|O .|.|O
+He|PRP|O cuts|VBZ|O rope|NN|O with|IN|O the|DT|O knife|NN|O .|.|O
+He|PRP|O cuts|VBZ|O wood|NN|O with|IN|O the|DT|O knife|NN|O .|.|O
+The|DT|O other|JJ|O part|NN|O is|VBZ|O a|DT|O file|NN|O .|.|O
+The|DT|O file|NN|O is|VBZ|O two|CD|O inches|NNS|O long|RB|O .|.|O
+He|PRP|O files|VBZ|O his|PRP$|O nails|NNS|O with|IN|O the|DT|O file|NN|O .|.|O
+
+
+

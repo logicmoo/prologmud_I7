@@ -125,14 +125,14 @@ satisfy(X<Y, X<Y) --> !.
 satisfy(X=<Y, X=<Y) --> !.
 satisfy(X>=Y, X>=Y) --> !.
 satisfy(X>Y, X>Y) --> !.
-satisfy(P, database(P)) --> [].
+satisfy(P, database80(P)) --> [].
 
 exceptionto(P) :-
    functor(P,F,N), functor(P1,F,N),
    pickargs(N,P,P1),
    exception(P1).
 
-exception(P) :- database(P), !, fail.
+exception(P) :- database80(P), !, fail.
 exception(P).
 
 pickargs(0,_,_) :- !.

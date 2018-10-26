@@ -44,7 +44,8 @@
 	i_mins0(+,+,+,?,?),
 	u_lt(+,+).
 
-aggregate(Fn,Set,Val) :-
+aggregate(Fn, _S, _V) :- var(Fn),!,fail.
+aggregate(Fn,Set,Val) :- 
    dimensioned(Set), !,
    u_aggr(Fn,Set,Val).
 aggregate(Fn,Set,Val) :-
@@ -156,11 +157,14 @@ u_lt(A,X--U) :-
    u_sum(A,Y--U,Z--_),
    Z<0.
 
+dimensioned(Var):- var(Var),!,fail.
 dimensioned([(_--_):_|_]).
 
+one_of([Var|_],_):- var(Var),!,fail.
 one_of([X|_],X).
 one_of([_|R],X) :-
    one_of(R,X).
+
 
 ratio(N,M,R) :- R is (N*100)//M.
 

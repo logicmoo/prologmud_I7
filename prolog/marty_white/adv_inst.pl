@@ -32,17 +32,15 @@ create_new_suffixed_unlocated(Suffix, Type,Inst,S0,S2):-
   declare(props(Inst,[inherit(Type,t)]),S0,S2).
 
 % create_agent_conn(Agent,_Named, _Info, S0, S0) :- declared(agent(Agent,t), S0),!.
-create_agent_conn(Agent,Named,Info,S0,S9):- 
-   apply_state([%create_new_unlocated('watch',Watch),
+ %create_new_unlocated('watch',Watch),
                 %create_new_unlocated('bag',Bag),
                 %create_new_unlocated('coins',Coins),
-   declare(
-     (props(Agent, [name(['Telnet:',Named]), inherit(telnet,t), inherit(humanoid,t), inherit(player,t), info(Info)]),               
-               
-               % h(Spatial, worn_by, Watch, Agent),
+                 % h(Spatial, worn_by, Watch, Agent),
                %h(Spatial, in, Bag, Coins),
                %h(Spatial, held_by, Bag, Agent),
-               h(spatial, in, Agent, kitchen)))],S0,S1),
+create_agent_conn(Agent,Named,Info,S0,S9):- 
+   apply_state((  declare(((props(Agent, [name(['Telnet:',Named]), inherit(telnet,t), inherit(humanoid,t), inherit(player,t), info(Info)]),
+               h(spatial, in, Agent, kitchen))))),S0,S1),
    init_objects(S1,S9).
 
 

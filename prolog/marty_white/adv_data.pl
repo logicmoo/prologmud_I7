@@ -101,17 +101,18 @@ istate([
   h(Spatial, in, a(shelf), pantry), % shelf is in pantry
        h(Spatial, in, a(table), kitchen), % a table is in kitchen
        h(Spatial, on, a(lamp), the(table)), % a lamp is on the table
-  h(Spatial, in, a(rock), garden),
+       h(Spatial, in, a(rock), garden),
+       h(Spatial, in, a(fountain), garden),
   h(Spatial, in, a(mushroom), garden),
   h(Spatial, reverse(on), a(table), a(table_leg)),
   h(Spatial, on, a(box), a(table)),
   h(Spatial, in, a(bowl), a(box)),
   h(Spatial, in, a(flour), a(bowl)),
-  h(Spatial, in, a(shovel), basement), % FYI shovel has not props (this is a lttle test to see what happens)
+  h(Spatial, in, a(shovel), basement), % FYI shovel has no props (this is a lttle test to see what happens)
   h(Spatial, in, a(videocamera), living_room),
   h(Spatial, in, screendoor, kitchen),
   h(Spatial, in, screendoor, garden),
-  h(Spatial, in, blamp, garden),
+  h(Spatial, in, brklamp, garden),
 
        type_props(unthinkable, [
           can_be(Spatial, examine(_), f),
@@ -142,6 +143,18 @@ istate([
           can_be(Spatial, examine(Spatial), t),
           inherit(thinkable,t),
           class_desc(['It is corporial'])]),
+
+       type_props(object, [
+          can_be(Spatial, touch, t),
+          can_be(Spatial, examine(Spatial), t),
+          inherit(thinkable,t),
+          class_desc(['It is an Object'])]),
+
+       type_props(object, [
+          can_be(Spatial, touch, t),
+          can_be(Spatial, examine(Spatial), t),
+          inherit(thinkable,t),
+          class_desc(['It is an Object'])]),
 
   % People
    type_props(character, [
@@ -218,7 +231,7 @@ istate([
               precond(getprop(Thing, inherit(corporial,t)), ['non-physical would spill out']),
              % body(clause)
               body(move(Spatial, Thing, in, $self))),
-
+           inherit(object,t),
            inherit(container,t)
        ]),
 
@@ -257,11 +270,13 @@ istate([
 
   type_props(bag, [
     inherit(container,t),
+    inherit(object,t),
     volume_capacity(10),
     TooDark
   ]),
   type_props(bowl, [
     inherit(container,t),
+    inherit(object,t),
     volume_capacity(2),
     fragile(shards),
     inherit(flask,t),
@@ -270,6 +285,7 @@ istate([
   ]),
   type_props(box, [
     inherit(container,t),
+    inherit(object,t),
     volume_capacity(15),
     fragile(splinters),
     %can_be(Spatial, open, t),
@@ -282,10 +298,11 @@ istate([
   type_props(measurable,[has_rel(quantity,ammount,t)]),
   
   % shiny things are corporial
-  type_props(shiny, [adjs(shiny), inherit(corporial,t)]),
+  type_props(shiny, [adjs(shiny),inherit(object,t), inherit(corporial,t)]),
 
   type_props(coins, [inherit(shiny,t),inherit(measurable,t)]),
-  type_props(flour,[can_be(Spatial, eat, t),inherit(measurable,t)]),
+       type_props(food,[can_be(Spatial, eat, t),inherit(object,t),inherit(measurable,t)]),
+       type_props(flour,[inherit(food,t),inherit(measurable,t)]),
   type_props(lamp, [
     name('shiny brass lamp'),
     nouns(light),
@@ -293,6 +310,7 @@ istate([
     inherit(shiny,t),
     can_be(Spatial, switch, t),
     state(Spatial, powered, t),
+    inherit(object,t),
     EmittingLight,
     effect(switch(on), setprop($self, EmittingLight)),
     effect(switch(off), delprop($self, EmittingLight)),
@@ -308,24 +326,27 @@ istate([
     effect(switch(on), true),
     effect(switch(off), true) % calls true(S0, S1) !
   ]),
-       props(blamp, [
+       props(brklamp, [
          inherit(broken,t), 
          name('possibly broken lamp'),
          effect(switch(on), print_("Switch is flipped")),
-         effect(hit, ['print_'("Hit blamp"), setprop($self, inherit(broken,t))]),
+         effect(hit, ['print_'("Hit brklamp"), setprop($self, inherit(broken,t))]),
          inherit(lamp,t)
        ]),
+
        type_props(broken, [
           name('definately broken'),
           effect(switch(on), true),
           effect(switch(off), true),
           can_be(Spatial, switch, t),
+          adjs(dented),
           adjs(broken)
        ]),
   type_props(mushroom, [
     % Sense DM4
     name('speckled mushroom'),
     % singular,
+    inherit(food,t),
     nouns([mushroom, fungus, toadstool]),
     adjs([speckled]),
     % initial(description used until initial state changes)

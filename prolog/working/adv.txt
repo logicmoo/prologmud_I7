@@ -1,0 +1,126 @@
+There are boxes on the floor.
+How many?
+Only Five.
+Ok, there are 5 boxes on the floor.
+She opens a box.
+There are books in the box.
+She takes out the books.
+She puts the books on the bookshelf.
+She opens another box.
+There are plates in the box.
+She takes out the plates.
+She puts them in the kitchen cabinet.
+
+Player~1 is in the kitchen.
+There are boxes on the floor.
+
+Player~1 opens a box.
+There are books in the box.
+
+Player~1 wishes to take out the books.
+So then Player~1 can put the books on the bookshelf.
+Player~1 opens another box.
+There are plates in the box.
+Player~1 takes out the plates.
+Player~1 puts them in the kitchen cabinet.
+  
+ 
+He stands on the corner.
+He sells purses.
+He says, "Ten Dollars" over and over.
+Many women stop.
+They look at all the purses.
+They pick up the purses.
+They look inside the purses.
+They put the purses on their shoulders.
+Many women buy a purse.
+Some women buy two purses.
+   
+ 
+She is in her pajamas.
+She lies down.
+She puts her head on the pillow.
+She moves the pillow around a little bit.
+It is more comfortable now.
+The lamp is still on.
+She turns off the lamp.
+Her bedroom is dark.
+She puts her head back on the pillow.
+She goes to sleep.
+   
+She opens the envelope.
+She reads the letter.
+The letter is from her cousin.
+Her cousin is in Europe.
+Her cousin likes Europe.
+She finishes the letter.
+She writes a letter to her cousin.
+She tells her cousin all the latest news at home.
+She thanks her cousin for the letter.
+   
+ 
+She is a model.
+She walks up and down the runway.
+She models clothes.
+She models expensive clothes.
+Famous designers design her clothes.
+The clothes look good on her.
+People watch her model clothes.
+People spend lots of money on the clothes.
+People buy the clothes.
+She never buys the clothes.
+She just wears them.
+   
+    
+The baby cries.
+She looks at it.
+She talks to it.
+The baby cries some more.
+She picks it up.
+She holds it.
+She pats the baby on the back.
+The baby burps.
+She puts the baby down.
+She looks at it.
+The baby looks at her.
+It smiles at her.
+   
+    
+He has a secret.
+He keeps his secret.
+He shares it with nobody.
+He tells it to nobody.
+A secret is a secret.
+He loves his teacher.
+That is his secret.
+His teacher is beautiful.
+She is smart.
+She likes him too.
+She gives him A's on his homework.
+She gives him gold stars for his class work.
+   
+It is winter.
+It is early morning.
+He goes to the park.
+He puts on his ice skates.
+He skates on the pond.
+He skates round and round.
+Nobody else is on the pond.
+He has it all to himself.
+It is quiet on the pond.
+The only sound is his skates on the ice.
+   
+
+He has a pocketknife.
+It has two parts.
+It has a knife.
+The knife is two inches long.
+It is sharp.
+He cuts rope with the knife.
+He cuts wood with the knife.
+The other part is a file.
+The file is two inches long.
+He files his nails with the file.
+
+
+

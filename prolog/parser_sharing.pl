@@ -14,6 +14,8 @@
    op(1150,fx,(shared_parser_data)),
    op(1150,fx,(dynamic_multifile_exported))]).
 
+
+:- ensure_loaded(library(no_repeats)).
 % :- op(900, fy, not).
 
 % Miscellaneous generic utility predicates.

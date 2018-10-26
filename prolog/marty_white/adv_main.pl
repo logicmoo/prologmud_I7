@@ -89,12 +89,10 @@ adventure:-
   % trace,  
   mainloop,
   %main_loop(S3),
-  adv:input_log(FH),
-  close(FH).
+  stop_logging.
 
 adventure :-
-  adv:input_log(FH),
-  close(FH),
+  stop_logging,
   player_format('adventure FAILED~n', []),
   !, fail.        
 
@@ -156,7 +154,7 @@ main_once:-
 mainloop :-
   repeat,
     once(main_once),
-    declared(quit, S1),
+    (advstate(S1)->declared(quit, S1)),
   !. % Don't allow future failure to redo mainloop.
 
 % TODO: try converting this to a true "repeat" loop.
