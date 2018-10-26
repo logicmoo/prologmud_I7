@@ -68,7 +68,7 @@ apply_forall_frames([Frame|Frames],Forall,Apply,S0,S2):-
   Frame=Forall,apply_state(Apply,S0,S1),
   apply_forall_frames(Frames,Forall,Apply,S1,S2).
 
-:- meta_predicate(apply_state(2,+,-)).
+:- meta_predicate(apply_state(+,+,-)).
 apply_state(Goal,S0,S0):- Goal==[],!.
 apply_state(rtrace(Goal), S0, S2) :- !, rtrace(apply_state(Goal, S0, S2)). 
 apply_state(dmust(Goal), S0, S2) :- !, dmust(apply_state(Goal, S0, S2)).

@@ -17,6 +17,21 @@
 %
 */
 
+:- dynamic(adv:cmd_help/2).
+
+add_help(Cmd,HelpStr):-
+  assert(adv:cmd_help(Cmd,HelpStr)).
+
+add_help_cmd_borked(Cmd):-
+  with_output_to(string(HelpStr),help(Cmd)),
+  assert(adv:cmd_help(Cmd,HelpStr)).
+
+
+add_help_cmd(Cmd):-
+  redirect_error(help(Cmd),HelpStr),
+  assert(adv:cmd_help(Cmd,HelpStr)).
+
+
 %:- nop(ensure_loaded('adv_chat80')).
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -26,18 +41,56 @@
 %printable_state(L,S):- sort(L,S).
 printable_state(S,S).
 
+
+current_error(Stream) :- 
+        stream_property(Stream, alias(user_error)), !. % force det. 
+
+set_error(Stream) :- 
+        set_stream(Stream, alias(user_error)). 
+
+redirect_error(Goal, String) :- 
+        current_error(OldErr),
+        new_memory_file(Handle),        
+        setup_call_cleanup( 
+            open_memory_file(Handle, write, Err),
+            setup_call_cleanup( 
+                set_error(Err),
+                (once(Goal),
+                   flush_output(Err)), 
+                set_error(OldErr)), 
+            close(Err)),
+        memory_file_to_string(Handle,String).
+
 meta_pprint(D,K):- pprint(D,K).
 
 % do_metacmd(Action, S0, S1)
+:- add_help(quit,"Quits the game.").
 do_metacmd(quit, S0, S1) :-
   declare(quit, S0, S1),
   player_format('Bye!~n', []).
+
+do_metacmd(help, S0, S0) :- !,
+  listing(adv:cmd_help).
+
+:- add_help(rtrace,"Debbuging: Start the non-interactive tracer.").
 do_metacmd(rtrace, S0, S0) :- admin, rtrace.
-do_metacmd( nortrace, S0, S0) :- admin, nortrace.
+
+:- add_help(nortrace,"Debbuging: Stop the non-interactive tracer.").
+do_metacmd(nortrace, S0, S0) :- admin, nortrace.
+
+:- add_help(trace,"Debbuging: Start the interactive tracer.").
 do_metacmd(trace, S0, S0) :- admin, trace.
-do_metacmd( notrace, S0, S0) :- admin, notrace.
+
+:- add_help(notrace,"Debbuging: Stop the interactive tracer.").
+do_metacmd(notrace, S0, S0) :- admin, notrace.
+
+:- add_help_cmd(spy).
 do_metacmd(spy(Pred), S0, S0) :- admin, spy(Pred).
+
+:- add_help_cmd(nospy).
 do_metacmd(nospy(Pred), S0, S0) :- admin, nospy(Pred).
+
+:- add_help(possess(agent),"Take possession of a character").
 do_metacmd(possess(NewAgent), S0, S0) :-
   wizard,
   retract(current_player(_Agent)),
@@ -77,23 +130,23 @@ do_metacmd(memory(Agent), S0, S0) :-
   declared(memories(Agent, Memory), S0),
   meta_pprint(Memory, general).
 
-do_metacmd(model(Spatial, Agent), S0, S0) :-
+do_metacmd(model(Agent), S0, S0) :-
   wizard,
   declared(memories(Agent, Memory), S0),
-  thought_model(Spatial,ModelData, Memory),
+  thought_model(ModelData, Memory),
   meta_pprint(ModelData, general).
 
 do_metacmd(model(Agent), S0, S0) :-
   wizard,
   declared(memories(Agent, Memory), S0),
-  forall(thought(model(_Spatial, ModelData), Memory),
+  forall(thought(model(ModelData), Memory),
    meta_pprint(ModelData, general)).
 
 do_metacmd(create(Object), S0, S1) :-
   wizard,
   current_player(Agent),
-  related(Spatial, How, Agent, Here, S0),
-  declare(h(Spatial, How, Object, Here), S0, S1),
+  related(Spatial, Prep, Agent, Here, S0),
+  declare(h(Spatial, Prep, Object, Here), S0, S1),
   player_format('You now see a ~w.~n', [Object]).
 do_metacmd(destroy(Object), S0, S1) :-
   wizard,

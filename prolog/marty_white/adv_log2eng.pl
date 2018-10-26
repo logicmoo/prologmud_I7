@@ -22,14 +22,14 @@
 % :- ensure_loaded('adv_log2eng').
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-reason2eng(cant(sense(Spatial, Sense, It, Why)), [ 'You can''t sense', It, ' ', ly(Sense), ly(Spatial), ' here', cuz(Why)]).
+reason2eng(cant(sense( Sense, It, Why)), [ 'You can''t sense', It, ' ', ly(Sense), ' here', cuz(Why)]).
 reason2eng(cant(reach(Spatial, It)), [  'You can''t reach ', It, ' ', ly(Spatial), '.']).
 reason2eng(cant(manipulate(Spatial, self)), [ 'You can''t manipulate yourself like that', ly(Spatial), '.']).
 reason2eng(alreadyhave(It), ['You already have the', It, '.']).
 reason2eng(mustgetout(_It), ['You must get out/off it first.']).
 reason2eng(self_relation(_Spatial, _It), ['Can\'t put thing inside itself!']).
 reason2eng(moibeus_relation( _, _), ['Topological error!']).
-reason2eng(state(Spatial, Dark, t),        ['It''s too ', Dark, ' to ', ly(Sense), ly(Spatial), '!']):- problem_solution(Dark, Sense, _Light).
+reason2eng(state(Dark, t),        ['It''s too ', Dark, ' to ', ly(Sense), '!']):- problem_solution(Dark, Sense, _Light).
 reason2eng(mustdrop(It), [ 'You will have to drop', It, ' first.']).
 reason2eng(cant(move(Spatial, _Thing)), ['Sorry, it\'s immobile', ly(Spatial), '.']).
 reason2eng(cantdothat(EatCmd),    [ 'Sorry, you can\'t do: ', EatCmd, '.']).
@@ -236,15 +236,15 @@ prop2eng(_Obj, fragile(_), ['It looks fragile.']).
 prop2eng(_Obj, shiny,  ['It\'s shiny!']).
 prop2eng( Obj, effect(_, _), Out):- prop2eng(Obj, adjs(special), Out), !.
 prop2eng(_Obj, desc(Out), Out):- !.
-prop2eng(_Obj, can_do(Spatial, Eat, t), ['Able to', Eat , ly(Spatial), '.']).
-prop2eng(_Obj, can_do(Spatial, Eat, f), ['Unable to', Eat , ly(Spatial), '.']).
+prop2eng(_Obj, can_do(Eat, t), ['Able to', Eat , '.']).
+prop2eng(_Obj, can_do(Eat, f), ['Unable to', Eat , '.']).
 
-prop2eng(_Obj, can_be(Spatial, eat, t), ['It looks tasty ', ly(Spatial), '!']).
-prop2eng(_Obj, can_be(Spatial, Eat, t), ['Can be', tense(Eat, past), ly(Spatial), '.']).
-prop2eng(_Obj, can_be(Spatial, Eat, f), ['Can\'t be', tense(Eat, past), ly(Spatial), '.']).
+prop2eng(_Obj, can_be(eat, t), ['It looks tasty ', '!']).
+prop2eng(_Obj, can_be(Eat, t), ['Can be', tense(Eat, past), '.']).
+prop2eng(_Obj, can_be(Eat, f), ['Can\'t be', tense(Eat, past), '.']).
 
-prop2eng(_Obj, state(Spatial, Open, t), ['It is', Open , ly(Spatial), '.']).
-prop2eng(_Obj, state(Spatial, Open, f), ['It is not', Open , ly(Spatial), '.']).
+prop2eng(_Obj, state(Open, t), ['It is', Open ,  '.']).
+prop2eng(_Obj, state(Open, f), ['It is not', Open , '.']).
 prop2eng( Obj, inherit(Type, t), Out):-   prop2eng(Obj, adjs(Type), Out), !.
 prop2eng( Obj, inherit(Type), Out):-   prop2eng(Obj, adjs(Type), Out), !.
 prop2eng( Obj, inherited(Type), Out):- prop2eng(Obj, nouns(Type), Out), !.
@@ -274,12 +274,12 @@ append_if_new(Text1, Text2, Text):- append_if_new1(Text1, Text2, Text), !.
 append_if_new(Text2, Text1, Text):- append_if_new1(Text1, Text2, Text), !.
 append_if_new(Text1, Text2, Text):- append(Text1, Text2, Text), !.
 
-%print_percept(Agent, sense(Sense, [you_are(Spatial, How, Here),
+%print_percept(Agent, sense(Sense, [you_are(Spatial, Prep, Here),
 %                         exits_are(Exits),
 %                         here_are(Nearby)...])) :-
 %  findall(X, (member(X, Nearby), X\=Agent), OtherNearby),
 %  player_format('You are ~p the ~p.  Exits are ~p.~nYou see: ~p.~n',
-%         [How, Here, Exits, OtherNearby]).
+%         [Prep, Here, Exits, OtherNearby]).
 
 logical2eng(_Agent, [], []).
 logical2eng(Agent, [Prop|Tail], Text) :- !,
@@ -291,8 +291,8 @@ logical2eng(Agent, [Prop|Tail], Text) :- !,
 
 logical2eng(Agent, sense(_See, Sensing), SensedText) :- logical2eng(Agent, Sensing, SensedText).
 
-logical2eng(Agent, you_are(How, Here), [cap(subj(Agent)), person(are, is), How, 'the', Here, '.', '\n']).
-logical2eng(Agent, you_are(_Spatial, How, Here), [cap(subj(Agent)), person(are, is), How, 'the', Here, '.', '\n']).
+logical2eng(Agent, you_are(Prep, Here), [cap(subj(Agent)), person(are, is), Prep, 'the', Here, '.', '\n']).
+logical2eng(Agent, you_are(_Spatial, Prep, Here), [cap(subj(Agent)), person(are, is), Prep, 'the', Here, '.', '\n']).
 logical2eng(_Agent, exits_are(Exits), ['Exits are', ExitText, '.', '\n']):- list2eng(Exits, ExitText).
 logical2eng(Agent, here_are(Nearby), [cap(subj(Agent)), person(see, sees), ':', SeeText, '.']):-
   findall(X, (member(X, Nearby), X\=Agent), OtherNearby),
@@ -302,13 +302,13 @@ logical2eng(Agent, carrying(Spatial, Items),
             [cap(subj(Agent)), person(are, is), ly(Spatial), 'carrying:'|Text]) :-
   list2eng(Items, Text).
 
-logical2eng(_Agent, notice_children(_See, _Parent, _How, []), []).
-logical2eng(Agent, notice_children(Sense, Parent, How, List),
-            [cap(How), 'the', Parent, subj(Agent), person(Sense, s(Sense)), ':'|Text]) :-
+logical2eng(_Agent, notice_children(_See, _Parent, _Prep, []), []).
+logical2eng(Agent, notice_children(Sense, Parent, Prep, List),
+            [cap(Prep), 'the', Parent, subj(Agent), person(Sense, s(Sense)), ':'|Text]) :-
   list2eng(List, Text).
 
-logical2eng(_Agent, moved(Spatial, What, From, How, To),
-            [cap(subj(What)), 'moves', ly(Spatial), ' from', From, 'to', How, To]).
+logical2eng(_Agent, moved( What, From, Prep, To),
+            [cap(subj(What)), 'moves', ' from', From, 'to', Prep, To]).
 
 
 logical2eng(_Agent, transformed(Before, After), [Before, 'turns into', After, .]).
@@ -324,7 +324,7 @@ logical2eng(Agent, sense_props(Sense, Object, PropList),
             [cap(subj(Agent)), person(Sense, s(Sense)), 'a', Object, '.'|PropDesc] ) :-
   proplist2eng(Object, PropList, PropDesc).
 
-%logical2eng(_Agent, emote(_Spatial, say, Speaker, (*), Eng), [cap(subj(Speaker)), ': "', Text, '"']) :-  eng2txt(Speaker, 'I', Eng, Text).
+%logical2eng(_Agent, emote( say, Speaker, (*), Eng), [cap(subj(Speaker)), ': "', Text, '"']) :-  eng2txt(Speaker, 'I', Eng, Text).
 logical2eng(_Agent, emoted( see, Speaker, Audience, Eng),
     ['to', Audience, ', "', Text, '"']) :-
   eng2txt(Speaker, Speaker, Eng, Text).
@@ -333,7 +333,7 @@ logical2eng(_Agent, emoted( Says, Speaker, Audience, Eng),
     [cap(subj(Speaker)), s(Says), 'to', Audience, ', "', Text, '"']) :-
   eng2txt(Speaker, 'I', Eng, Text).
 
-logical2eng(_Agent, emote(_Spatial, Says, Audience, Eng),
+logical2eng(_Agent, emote( Says, Audience, Eng),
     [cap(subj(do)), s(Says), 'to', Audience, ', "', Text, '"']) :-
   eng2txt(me, 'I', Eng, Text).
 

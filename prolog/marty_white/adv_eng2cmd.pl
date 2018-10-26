@@ -40,8 +40,9 @@ cmdalias(a, auto).
 cmdalias(turn, switch).
 cmdalias(flip, switch).
 
-preposition(spatial, P) :-
-  member(P, [at, down, in, inside, into, of, off, on, onto, out, over, to, under, up, with]).
+preposition(Spatial, P) :- (Spatial==spatial-> !; atom(P)),
+  atom(P),
+  notrace(member(P, [at, down, in, inside, into, of, off, on, onto, out, over, to, under, up, with])).
 
 preposition(_Other, P) :-
   member(P, [of, beside]).
@@ -105,8 +106,8 @@ parse2logical([request, Object | Msg], emote( say, Object, Msg), _M):- !.
 parse2logical([tell, Object | Msg], emote( say, Object, Msg), _M):- !.
 parse2logical([talk, Object | Msg], emote( say, Object, Msg), _M):- !.
 parse2logical([Object, ',' | Msg], emote( say, Object, Msg), Mem):- current_spatial(Spatial),
-  thought_model(Spatial,ModelData, Mem),
-  in_model(h(Spatial, _, Object, _, _), ModelData).
+  thought_model(ModelData, Mem),
+  in_model(h(Spatial, _, Object, _, _T), ModelData).
 
 parse2logical(Words, Action, Mem) :- 
   fail, 
@@ -120,30 +121,53 @@ parse2logical(Words, Action, Mem) :-
 % %%%%%%%%%%%%%%
 % Movement
 % %%%%%%%%%%%%%%
+
 % get [out,in,..]
-parse2logical([get, Prep], goto((*), Prep), _Mem) :-
+parse2logical([get, Prep, Object], goto(walk, _, Prep, Object), _Mem) :-
   preposition(spatial, Prep).
-parse2logical([get, Prep, Object], goto(Prep, Object), _Mem) :-
-  preposition(spatial, Prep).
+% n/s/e/w
+parse2logical([Dir], Logic, Mem):- (compass_direction(Dir);Dir==escape), !, dmust(txt2goto(walk, [Dir], Logic, Mem)).
+% escape .. 
+parse2logical([escape|Info], Logic, Mem):- !, dmust(txt2goto(run, Info, Logic, Mem)).
+% go .. 
+parse2logical([go|Info], Logic, Mem):- !, dmust(txt2goto(walk, Info, Logic, Mem)).
+% run .. 
+parse2logical([run|Info], Logic, Mem):- !, dmust(txt2goto(run, Info, Logic, Mem)).
+parse2logical([Prep], Logic, Mem) :- preposition(spatial, Prep), !, dmust(txt2goto(walk, [Prep], Logic, Mem)).
+parse2logical([ExitName], Logic, Mem) :-  
+  thought_model(ModelData, Mem),
+  in_model(h(_Spatial, exit(ExitName), _, _, _T), ModelData),
+   !, dmust(txt2goto(walk, [ExitName], Logic, Mem)).
 
-parse2logical([go, Dir], goto((*), Dir), _Mem) :- compass_direction(Dir).
-parse2logical([go, escape], goto((*), escape), _Mem):- !.
-parse2logical([go, Prep], goto((*), Prep), _Mem) :-
-  preposition(spatial, Prep).
-parse2logical([go, ExitName], goto((*), ExitName), Mem) :-
-  thought_model(Spatial,ModelData, Mem),
-  in_model(h(Spatial, exit(ExitName), _, _, _), ModelData).
-parse2logical([go, Dest], goto((*), Dest), Mem) :-
-  thought_model(Spatial,ModelData, Mem),
-  in_model(h(Spatial, _, _, Dest, _), ModelData).
-  % getprop(Dest, has_rel(Spatial, How), ModelData).
+parse2logical([get, Prep| More], Logic, Mem) :- preposition(spatial, Prep), !, dmust(txt2goto(walk, [Prep| More], Logic, Mem)).
 
-parse2logical([Prep], goto((*), Prep), _Mem) :- preposition(spatial, Prep).
-parse2logical([Dir], Logic, Mem):- (compass_direction(Dir);Dir==escape), !, parse2logical([go, Dir], Logic, Mem).
-parse2logical([ExitName], goto((*), ExitName), Mem) :-
-  thought_model(Spatial,ModelData, Mem),
-  in_model(h(Spatial, exit(ExitName), _, _, _), ModelData).
+% x shelf~1
+% go on shelf~1
 
+txt2goto(Walk,[to, Prep| More], Logic, Mem) :- !, txt2goto(Walk, [Prep| More], Logic, Mem).
+% go in kitchen
+% go in car
+txt2goto(Walk,[ Prep, Dest], goto(Walk, _Dir, Prep, Where), Mem) :-  
+  preposition(spatial, Prep),!,
+  dmust(txt2place(Dest, Where, Mem)).
+
+% go north
+txt2goto(Walk,[ ExitName], goto(Walk, ExitName, _To, _Where), Mem) :-
+  thought_model(ModelData, Mem),
+  in_model(h(_Spatial, exit(ExitName), _, _, _T), ModelData).
+% go escape
+txt2goto(Walk,[ Dir], goto(Walk, Dir, _To, _Object), _Mem) :- (compass_direction(Dir);Dir==escape),!.
+% go [out,in,..]
+txt2goto(Walk,[ Prep], goto(Walk, _Dir, Prep, _Where), _Mem) :- preposition(spatial, Prep).
+% go kitchen
+txt2goto(Walk,[ Dest], goto(Walk, _Dir, _To, Where), Mem) :-
+  txt2place(Dest, Where, Mem).
+
+txt2place(Dest, Place, Mem):- 
+  thought_model(ModelData, Mem),
+  in_model(h(_Spatial, _, _, Dest, _T), ModelData),
+  Dest = Place.
+  % getprop(Dest, has_rel(Spatial, Prep), ModelData).
 
 
 
@@ -176,35 +200,39 @@ parse2logical([switch, OnOff| TheThing], switch(OnOff, Thing), Mem) :- parse2obj
 % Dig
 % %%%%%%%%%%%%%%
 parse2logical([dig, Hole], dig( Hole, Where, Tool), Mem) :-
-  thought_model(Spatial,ModelData, Mem),
+  thought_model(ModelData, Mem),
   thought(inst(Agent), Mem),
-  in_model(h(Spatial, _, Agent, Where, _), ModelData),
+  in_model(h(_Spatial, _, Agent, Where, _T), ModelData),
   Tool=shovel.
 
-
-parse2logical([Verb|Args], Action, _M) :- verbatum(Verb), !,
-   Action =.. [Verb|Args].
 parse2logical([CmdAlias|Tail], Action, Mem) :-
   cmdalias(CmdAlias, Verb),
   parse2logical([Verb|Tail], Action, Mem).
 
 % parse2logical([look], look(Spatail), Mem) :- parse2object(Tail, Agent, Mem).
 
-parse2logical([TheVerb|Args], Action, M) :-
+parse2logical([TheVerb|Args], Action, M) :-  fail,
   quietly_talk_db([F,Verb|Forms]),
   notrace(F==intransitive;F==transitive),
   member(TheVerb,Forms),!,
   parse2logical([Verb|Args], Action, M).
 
-parse2logical([TheVerb|Args], Action, M) :-
+parse2logical([TheVerb|Args], Action, M) :-  fail,
   clex_verb(TheVerb,Verb,_,_),
   Verb\==TheVerb,!,
   parse2logical([Verb|Args], Action, M).
 
-parse2logical([Verb|TheArgs], Action, M) :-
-  args2logical(TheArgs, Args, M), Action =.. [Verb|Args].
+parse2logical([Verb], Verb, _M) :- !.
 
-verbatum(Verb):- member(Verb, [prolog, make, agent, create, delprop, destroy, echo, quit, memory, model, path, properties, setprop, state, trace, notrace, whereami, whereis, whoami]).
+parse2logical([Verb|Args], Action, _M) :- fail, verbatum(Verb), !,
+   Action =.. [Verb|Args].
+
+parse2logical([Verb|TheArgs], Action, M) :-
+  args2logical(TheArgs, Args, M), wdmsg( TheArgs->Args), !, 
+  Action =.. [Verb|Args].
+
+verbatum(Verb):- member(Verb, [prolog, make, agent, create, delprop, destroy, echo, quit,
+  memory, model, path, properties, setprop, state, trace, notrace, whereami, whereis, whoami]).
 
 parse2agent([], Agent, Mem):- thought(inst(Agent), Mem), !.
 parse2agent(List,Agent,Mem):- parse2object(List,Agent,Mem).
@@ -212,22 +240,27 @@ parse2agent(List,Agent,Mem):- parse2object(List,Agent,Mem).
 parse2object(List,Agent,Mem):- append(LList,[R],List),member(R,[(?),(.)]),!,parse2object(LList,Agent,Mem).
 parse2object([am, i], Agent, Mem):- thought(inst(Agent), Mem), !.
 
-parse2object([BE| List], Agent, Mem):- quietly_talk_db([_,BE,is|_More]), parse2object(List,Agent,Mem),!.
-parse2object([HAS| List], Agent, Mem):- quietly_talk_db([_,have|HASHAVE]), member(HAS,HASHAVE), !, parse2object(List,Agent,Mem).
+parse2object([BE| List], Agent, Mem):- fail, quietly_talk_db([_,BE,is|_More]), parse2object(List,Agent,Mem),!.
+parse2object([HAS| List], Agent, Mem):- fail, quietly_talk_db([_,have|HASHAVE]), member(HAS,HASHAVE), !, parse2object(List,Agent,Mem).
 parse2object([Det| Type], TheThing, Mem):-
    (nth0(_N, [(unknown), the, thee, old, some, a], Det)), !,
    parse2object(Type, TheThing, Mem).
 
-as1object([TheThing], Thing, Mem):- !, as1object(TheThing, Thing, Mem).
-as1object(TheThing, Thing, Mem):- as1object(TheThing, Thing, Mem).
+parse2object(Type, TheThing, Mem):-
+   show_call(as1object(Type, TheThing, Mem)), !.
+
+as1object([TheThing], Thing, Mem):- !,nonvar(TheThing), as1object(TheThing, Thing, Mem).
+%as1object(TheThing, Thing, Mem):- as1object(TheThing, Thing, Mem).
 
 as1object(TheThing, Thing, _Mem):- \+ atom(TheThing),!, TheThing=Thing.
-as1object(TheThing, Thing, Mem):-  atom_of(inst, TheThing, Thing, Mem).
-as1object(TheThing, Thing, _Mem):- advstate(Mem), atom_of(inst, TheThing, Thing, Mem).
-as1object(Thing, Thing, _Mem).
+as1object(TheThing, Thing, Mem):- atom_concat(TheThing,'~1',TheThing2), sub_term(Thing,Mem),atom(Thing),TheThing2==Thing,!.
+as1object(TheThing, Thing, Mem):- atom_concat(TheThing,'~2',TheThing2), sub_term(Thing,Mem),atom(Thing),TheThing2==Thing,!.
+as1object(TheThing, Thing, Mem):- atom_of(inst, TheThing, Thing, Mem),!.
+as1object(TheThing, Thing, _Mem):- advstate(Mem), atom_of(inst, TheThing, Thing, Mem),!.
+% as1object(Thing, Thing, _Mem).
 
 
-args2logical(TheArgs, [Thing], Mem):- parse2object(TheArgs, Thing, Mem),TheArgs\==[Thing],!.
+args2logical(TheArgs, [Thing], Mem):- parse2object(TheArgs, Thing, Mem),!. % TheArgs\==[Thing],!.
 args2logical(TheArgs, TheArgs, _M).
   
 quietly_talk_db(L):- notrace(talk_db(L)).

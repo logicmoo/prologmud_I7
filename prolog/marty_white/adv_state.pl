@@ -115,10 +115,10 @@ stores_props(memories(Agent, PropList), Agent, PropList).
 stores_props(props(Object, PropList), Object, PropList).
 
 % Retrieve Prop.
-% NOPE getprop(Object, state(Spatial, Prop, Value), State):- atom(Prop), !, getprop1(Also, Object, state(Spatial, Prop, Value), State).
-% NOPE getprop(Object, Prop, State):- getprop1(Also, Object, Prop, state(Spatial, State, f)), !, fail.
-% MAYBE getprop(Object, Prop, State):- atom(Prop), getprop1(Also, Object, state(Spatial, Prop, t), State).
-% MAYBE getprop(Object, Prop, State):- atom(Prop), getprop1(Also, Object, state(Spatial, Prop, f), State), !, fail.
+% NOPE getprop(Object, state(Prop, Value), State):- atom(Prop), !, getprop1(Also, Object, state(Prop, Value), State).
+% NOPE getprop(Object, Prop, State):- getprop1(Also, Object, Prop, state(State, f)), !, fail.
+% MAYBE getprop(Object, Prop, State):- atom(Prop), getprop1(Also, Object, state(Prop, t), State).
+% MAYBE getprop(Object, Prop, State):- atom(Prop), getprop1(Also, Object, state(Prop, f), State), !, fail.
 
 
 get_all_props(Object, AllProps, S0):- findall(Prop,getprop(Object, Prop, S0),AllProps).

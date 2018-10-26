@@ -98,7 +98,9 @@ do_command(Agent, Action, S0, S1) :-
   %player_format('~w~n', [Answer]).
 do_command(Agent, Action, S0, S3) :-
   undeclare(memories(Agent, Mem0), S0, S1),
-  memorize(did(Action), Mem0, Mem1),
+  copy_term(Action,ActionG),
+  numbervars(ActionG,999,_),
+  memorize(did(ActionG), Mem0, Mem1),
   declare(memories(Agent, Mem1), S1, S2),
   must_act(Agent, Action, S2, S3), !,
   nop(redraw_prompt(Agent)).
@@ -178,7 +180,7 @@ must_act(Agent, Action, S0, S1) :-
 act(Agent, Action, State, NewState) :-
   act_verb_thing_model_sense(Action, Verb, _Thing, Spatial, Sense),
   sensory_verb(Sense, Verb),
-  related(Spatial, How, Agent, Here, State),
+  related(Spatial, Relation, Agent, Here, State),
   sensory_model_problem_solution(Sense, Spatial, _TooDark, _EmittingLight),
   findall(What,
           related(Spatial, child, What, Here, State),
@@ -189,10 +191,11 @@ act(Agent, Action, State, NewState) :-
   findall(Direction, related(Spatial, exit(Direction), Here, _, State), Exits),
   !,
   queue_percept(Agent,
-                [sense(Sense, [you_are(Spatial, How, Here), exits_are(Exits), here_are(Nearby)])],
+                [sense(Sense, [you_are(Spatial, Relation, Here), exits_are(Exits), here_are(Nearby)])],
                 State, NewState).
 
-act(Agent, inventory, State, NewState) :- Spatial = spatial,
+act(Agent, inventory, State, NewState) :- 
+  Spatial = spatial,
   findall(What, related(Spatial, child, What, Agent, State), Inventory),
   queue_percept(Agent, [carrying(Spatial, Inventory)], State, NewState).
 
@@ -204,57 +207,68 @@ act(Agent, examine(Sense, Object), S0, S2) :-
   findall(P, (getprop(Object, P, S0), is_prop_public(Sense,P)), PropListL),
   list_to_set(PropListL,PropList),
   queue_percept(Agent, [sense_props(Sense, Object, PropList)], S0, S1),
-  (has_rel(Spatial, How, Object, S1); How='<unrelatable>'),
+  (has_rel(Spatial, Relation, Object, S1); Relation='<unrelatable>'),
   % Remember that Agent might be on the inside or outside of Object.
   findall(What,
           (related(Spatial, child, What, Object, S1),
-           once(can_sense(Spatial, Sense, What, Agent, S1))),
+           once(can_sense( Sense, What, Agent, S1))),
           ChildrenL),
   list_to_set(ChildrenL,Children),
-  queue_percept(Agent, [notice_children(Sense, Object, How, Children)], S1, S2))).
+  queue_percept(Agent, [notice_children(Sense, Object, Relation, Children)], S1, S2))).
 
 
-act(Agent, goto(_How, ExitName), S0, S9) :-         % go n/s/e/w/u/d/in/out
+act(Agent, goto(Walk, Dir, Relation, Place), S0, S1):- !,
+  (act_goto(Agent, Walk, Dir,  Relation, Place, S0, S1)->true;
+  queue_percept(Agent,
+                [failure(goto(Walk, Dir, Relation, Place)), 'You can\'t go that way'],
+                S0, S1)).
+
+
+act_goto(Agent, Walk, _Dir,  Relation, Object, S0, S9) :-  nonvar(Object),           % go in/on object
+ get_open_traverse(Walk, Spatial, OpenTraverse),
+  has_rel(Spatial, Relation, Object, S0),
+  related(Spatial, OpenTraverse, Agent, Here, S0),
+  related(Spatial, OpenTraverse, Object, Here, S0),
+  \+ is_state(~(open), Object, S0),
+
+  moveto(Spatial, Agent, Relation, Object, [Here],
+    [subj(Agent), person(get, gets), Relation, the, Object, .], S0, S1),
+  must_act(Agent, look(Spatial), S1, S9).
+
+% go n/s/e/w/u/d/in/out
+act_goto(Agent, _Walk, Dir, _Relation, _Room, S0, S9) :- nonvar(Dir),  
   related(Spatial, child, Agent, Here, S0),
-  related(Spatial, exit(ExitName), Here, There, S0),
-  %member(How, [*, to, at, through, thru]),
-  has_rel(Spatial, HowThere, There, S0),
-  moveto(Spatial, Agent, HowThere, There,
+  related(Spatial, exit(Dir), Here, There, S0),!,
+  %member(Relation, [*, to, at, through, thru]),
+  has_rel(Spatial, PrepThere, There, S0),
+
+  moveto(Spatial, Agent, PrepThere, There,
          [Here, There],
-         [cap(subj(Agent)), person(go, goes), ExitName],
+         [cap(subj(Agent)), person(go, goes), Dir],
          S0, S1),
   must_act(Agent, look(Spatial), S1, S9).
 
-act(Agent, goto(How, Room), S0, S9) :-              % go in (adjacent) room
-  get_open_traverse(How, Spatial, OpenTraverse),
-  has_rel(Spatial, How, Room, S0),
+act_goto(Agent, _Walk, Dir, Relation, Room, S0, S9)  :- nonvar(Room),         % go in (adjacent) room
+  has_rel(Spatial, Relation, Room, S0),!,
+  get_open_traverse(Relation, Spatial, OpenTraverse),
   related(Spatial, OpenTraverse, Agent, Here, S0),
-  related(Spatial, exit(ExitName), Here, Room, S0),
-  moveto(Spatial, Agent, How, Room, [Room, Here],
-    [cap(subj(Agent)), person(go, goes), ExitName], S0, S1),
+  related(Spatial, exit(Dir), Here, Room, S0),
+
+  moveto(Spatial, Agent, Relation, Room, [Room, Here],
+    [cap(subj(Agent)), person(go, goes), Dir], S0, S1),
   must_act(Agent, look(Spatial), S1, S9).
 
-act(Agent, goto((*), Room), S0, S9) :-              % go to (adjacent) room
-  has_rel(Spatial, How, Room, S0),
+act_goto(Agent, _Walk, Dir,  _To, Room, S0, S9) :- nonvar(Room),             % go to (adjacent) room
+  has_rel(Spatial, Relation, Room, S0),
   get_open_traverse(goto, Spatial, OpenTraverse),
   related(Spatial, OpenTraverse, Agent, Here, S0),
-  related(Spatial, exit(ExitName), Here, Room, S0),
-  moveto(Spatial, Agent, How, Room, [Room, Here],
-    [cap(subj(Agent)), person(go, goes), ExitName], S0, S1),
+  related(Spatial, exit(Dir), Here, Room, S0),
+
+  moveto(Spatial, Agent, Relation, Room, [Room, Here],
+    [cap(subj(Agent)), person(go, goes), Dir], S0, S1),
   must_act(Agent, look(Spatial), S1, S9).
-act(Agent, goto(How, Object), S0, S2) :-            % go in/on object
- get_open_traverse(goto(How), Spatial, OpenTraverse),
-  has_rel(Spatial, How, Object, S0),
-  related(Spatial, OpenTraverse, Agent, Here, S0),
-  related(Spatial, OpenTraverse, Object, Here, S0),
-  \+ is_state(Spatial, ~(open), Object, S0),
-  moveto(Spatial, Agent, How, Object, [Here],
-    [subj(Agent), person(get, gets), How, the, Object, .], S0, S1),
-  must_act(Agent, look(Spatial), S1, S2).
-act(Agent, goto(How, Dest), S0, S1) :-
-  queue_percept(Agent,
-                [failure(goto(How, Dest)), 'You can\'t go that way'],
-                S0, S1).
+
+
 
 %  sim(verb(args...), preconds, effects)
 %    Agent is substituted for $self.
@@ -282,17 +296,18 @@ act(Agent, take( Thing), S0, S1) :-
 %act(Agent, get(Thing), State, NewState) :-
 %  act(Agent, take( Thing), State, NewState).
 act(Agent, drop(Thing), State, NewState) :-
-  related(Spatial, How, Agent, Here, State),
-  has_rel(Spatial, How, Here, State),
-  moveto(Spatial, Thing, How, Here, [Here],
+  related(Spatial, Relation, Agent, Here, State),
+  has_rel(Spatial, Relation, Here, State),
+  moveto(Spatial, Thing, Relation, Here, [Here],
     [cap(subj(Agent)), person('drop the', 'drops a'), Thing, '.'], State, NewState).
+
 
 act(Agent, put(Thing1, Relation, Thing2), State, NewState) :-
   act(Agent, put(spatial, Thing1, Relation, Thing2), State, NewState).
 act(Agent, put(Spatial, Thing1, Relation, Thing2), State, NewState) :-
   has_rel(Spatial, Relation, Thing2, State),
    get_open_traverse(Open, _See, _Traverse, Spatial, OpenTraverse),
-  (Relation \= in ; \+ is_state(Spatial, ~(Open), Thing2, State)),
+  (Relation \= in ; \+ is_state(~(Open), Thing2, State)),
   reachable(Spatial, Thing2, Agent, State), % what if "under" an "untouchable" thing?
   % OK, put it
   related(Spatial, OpenTraverse, Agent, Here, State),
@@ -300,6 +315,7 @@ act(Agent, put(Spatial, Thing1, Relation, Thing2), State, NewState) :-
       [cap(subj(Agent)), person('put the', 'puts a'), Thing1,
           Relation, the, Thing2, '.'],
       State, NewState).
+
 act(Agent, give( Thing, Recipient), S0, S9) :-
   has_rel(Spatial, held_by, Recipient, S0),
   reachable(Spatial, Recipient, Agent, S0),
@@ -309,22 +325,23 @@ act(Agent, give( Thing, Recipient), S0, S9) :-
   moveto(Spatial, Thing, held_by, Recipient, [Here],
     [cap(subj(Agent)), person([give, Recipient, the], 'gives you a'), Thing, '.'],
     S0, S9).
+
 act(Agent, throw( Thing, at, Target), S0, S9) :-
   equals_efffectly(sense, Sense, see),
-  can_sense(Spatial, Sense, Target, Agent, S0),
+  can_sense( Sense, Target, Agent, S0),
   get_open_traverse(_Open, Sense, throw, Spatial, _OpenTraverse),
   % OK, throw it
-  related(Spatial, How, Agent, Here, S0),
-  thrown( Thing, Target, How, Here, [Here], S0, S1),
+  related(Spatial, Relation, Agent, Here, S0),
+  thrown( Thing, Target, Relation, Here, [Here], S0, S1),
   hit( Target, Thing, [Here], S1, S9).
-act(Agent, throw( Thing, ExitName), S0, S9) :-
-  related(Spatial, _How, Agent, Here, S0),
-  related(Spatial, exit(ExitName), Here, There, S0),
-  has_rel(Spatial, HowThere, There, S0),
-  thrown( Thing, There, HowThere, There, [Here, There], S0, S9).
+act(Agent, throw( Thing, Dir), S0, S9) :-
+  related(Spatial, _Relation, Agent, Here, S0),
+  related(Spatial, exit(Dir), Here, There, S0),
+  has_rel(Spatial, PrepThere, There, S0),
+  thrown( Thing, There, PrepThere, There, [Here, There], S0, S9).
 
 act(Agent, hit( Thing), S0, S9) :-
-  related(spatial, _How, Agent, Here, S0),
+  related(spatial, _Relation, Agent, Here, S0),
   hit( Thing, Agent, [Here], S0, S1),
   queue_percept(Agent, [true, 'OK.'], S1, S9).
 
@@ -336,11 +353,11 @@ act(Agent, dig( Hole, Where, Tool), S0, S9) :-
   get_open_traverse(dig, Spatial, OpenTraverse),
   related(Spatial, OpenTraverse, Tool, Agent, S0),
   related(Spatial, in, Agent, Where, S0),
-  \+ related(Spatial, _How, Hole, Where, S0),
+  \+ related(Spatial, _Relation, Hole, Where, S0),
   % OK, dig the hole.
   declare(h(Spatial, in, Hole, Where), S0, S1),
   setprop(Hole, has_rel(Spatial, in), S1, S2),
-  setprop(Hole, can_be(Spatial, move, f), S2, S3),
+  setprop(Hole, can_be(move, f), S2, S3),
   declare(h(Spatial, in, dirt, Where), S3, S8),
   queue_event(
     [ created(Hole, Where),
@@ -348,8 +365,8 @@ act(Agent, dig( Hole, Where, Tool), S0, S9) :-
     S8, S9))).
 
 act(Agent, eat( Thing), S0, S9) :-
-  getprop(Thing, can_be(Spatial, eat, t), S0),
-  undeclare(h(Spatial, _, Thing, _), S0, S1),
+  getprop(Thing, can_be(eat, t), S0),
+  undeclare(h(_Spatial, _, Thing, _), S0, S1),
   queue_percept(Agent, [destroyed(Thing), 'Mmmm, good!'], S1, S9).
 act(Agent, eat( Thing), S0, S9) :-
   queue_percept(Agent, [failure(eat( Thing)), 'It''s inedible!'], S0, S9).
@@ -358,18 +375,18 @@ act(Agent, eat( Thing), S0, S9) :-
 act(Agent, switch(Open, Thing), S0, S) :-
   act_prevented_by(Open, TF),
   reachable(Spatial, Thing, Agent, S0),
-  %getprop(Thing, can_be(Spatial, open, S0),
-  %\+ getprop(Thing, state(Spatial, open, t), S0),
+  %getprop(Thing, can_be(open, S0),
+  %\+ getprop(Thing, state(open, t), S0),
   Open = open, get_open_traverse(Open, Spatial, OpenTraverse),
-  %delprop(Thing, state(Spatial, Open, f), S0, S1),
-  %setprop(Thing, state(Spatial, open, t), S0, S1),
-  setprop(Thing, state(Spatial, Open, TF), S0, S2),
+  %delprop(Thing, state(Open, f), S0, S1),
+  %setprop(Thing, state(open, t), S0, S1),
+  setprop(Thing, state(Open, TF), S0, S2),
   related(Spatial, OpenTraverse, Agent, Here, S2),
-  queue_local_event(Spatial, [setprop(Thing, state(Spatial, Open, TF)),[Open,is,TF]], [Here, Thing], S2, S).
+  queue_local_event(Spatial, [setprop(Thing, state(Open, TF)),[Open,is,TF]], [Here, Thing], S2, S).
 
 act(Agent, switch(OnOff, Thing), S0, S) :-
   reachable(Spatial, Thing, Agent, S0),
-  getprop(Thing, can_be(Spatial, switch, t), S0),
+  getprop(Thing, can_be(switch, t), S0),
    getprop(Thing, effect(switch(OnOff), Term0), S0),
    subst(equivalent, $self, Thing, Term0, Term),
    call(Term, S0, S1),
@@ -417,32 +434,34 @@ act(Agent, OpenThing, S0, S) :-
    maybe_when(psubsetof(Open, touch),
       required_reason(Agent, reachable(Spatial, Thing, Agent, S0))),
    
-   %getprop(Thing, can_be(Spatial, open, S0),
-   %\+ getprop(Thing, state(Spatial, open, t), S0),
+   %getprop(Thing, can_be(open, S0),
+   %\+ getprop(Thing, state(open, t), S0),
 
-   required_reason(Agent, \+ getprop(Thing, can_be(Spatial, Open, f), S0)),
+   required_reason(Agent, \+ getprop(Thing, can_be(Open, f), S0)),
 
-   ignore(dshow_fail(getprop(Thing, can_be(Spatial, Open, t), S0))),
+   ignore(dshow_fail(getprop(Thing, can_be(Open, t), S0))),
    
    forall(act_prevented_by(Open,Locked,Prevented), 
-          required_reason(Agent, \+ getprop(Thing, state(Spatial, Locked, Prevented), S0))),
+          required_reason(Agent, \+ getprop(Thing, state(Locked, Prevented), S0))),
 
 
      %act_verb_thing_model_sense(OpenThing, Verb, Thing, Spatial, _Sense),
 
-   %delprop(Thing, state(Spatial, Open, f), S0, S1),
-   %setprop(Thing, state(Spatial, open, t), S0, S1),
+   %delprop(Thing, state(Open, f), S0, S1),
+   %setprop(Thing, state(open, t), S0, S1),
    get_open_traverse(Open, Spatial, OpenTraverse),
       related(Spatial, OpenTraverse, Agent, Here, S0),
 
    apply_forall(
      (getprop(Thing, effect(Open, Term0), S0),
-       subst(equivalent,$self, Thing, Term0, Term1),subst(equivalent,$agent, Agent, Term1, Term2),subst(equivalent,$here, Here, Term2, Term)),
+       subst(equivalent,$self, Thing, Term0, Term1),
+       subst(equivalent,$agent, Agent, Term1, Term2),
+       subst(equivalent,$here, Here, Term2, Term)),
        call(Term),S0,S1),
 
-   setprop(Thing, state(Spatial, Opened, TF), S1, S2),
+   setprop(Thing, state(Opened, TF), S1, S2),
 
-   queue_local_event(Spatial, [setprop(Thing, state(Spatial, Opened, TF)),[Open,is,TF]], [Here, Thing], S2, S))),!.
+   queue_local_event(Spatial, [setprop(Thing, state(Opened, TF)),[Open,is,TF]], [Here, Thing], S2, S))),!.
 
 % used mainly to debug if things are reachable
 act(Agent, touch(Thing), S0, S9) :-
@@ -456,7 +475,7 @@ act(Agent, emote( SAYTO, Object, Message), S0, S1) :- !, % directed message
   action_sensory(SAYTO, Sense),
   sensory_model(Sense, Spatial),
   get_open_traverse(SAYTO, Spatial, OpenTraverse),
-  can_sense(Spatial, Sense, Object, Agent, S0),
+  can_sense( Sense, Object, Agent, S0),
   related(Spatial, OpenTraverse, Agent, Here, S0),  
   queue_local_event(Spatial, [emoted( SAYTO, Agent, Object, Message)], [Here,Object], S0, S1))).
 %act(Agent, say(Message), S0, S1) :-          % undirected message
@@ -485,7 +504,7 @@ cmd_workarround_l([Verb|ObjS], [Verb|ObjS2]):-
    current_atom(Atom), atom_concat(L, RR, Atom), RR=R,
    append(Left, [Atom|More], ObjS2).
 % look(Spatial) at screendoor
-cmd_workarround_l([Verb, Prep|ObjS], [Verb|ObjS]):- is_ignorable(Prep), !.
+cmd_workarround_l([Verb, Relation|ObjS], [Verb|ObjS]):- is_ignorable(Relation), !.
 % look(Spatial) at screen door
 cmd_workarround_l([Verb1|ObjS], [Verb2|ObjS]):- verb_alias(Verb1, Verb2), !.
 

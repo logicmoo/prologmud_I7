@@ -99,7 +99,7 @@ create_objprop(Object, inherit(memorize,t), S0, S2):- !,
   declare(memories(Object, [
     structure_label(mem(Object)),
     timestamp(0),
-    model(spatial,[]),
+    model([]),
     goals([]),
     todo([look]),
     inst(Object)|PropList]), S0, S2).
@@ -114,13 +114,18 @@ create_objprop(Object, inherit(Other,t), S0, S9):-
    dmust(create_objprop(Object, PropListC, S2, S9)),
    %dmust(setprop(Object, inherited(Other), S3, S9)),
    !.
-   
+
+create_objprop(Object, inherit(Other,t), S0, S0):- getprop(Object,inherited(Other),S0),!.
+
+create_objprop(Object, Prop, S0, S2):- subst(equivalent,$self,Object,Prop,NewProp),Prop\==NewProp,!,
+   create_objprop(Object, NewProp, S0, S2).
 create_objprop(Object, Prop, S0, S2):- dmust(updateprop(Object,Prop,S0, S2)).
 
 
 
 create_missing_instances(S0,S2):- 
-  create_instances('~1',S0,S0,S0,S2).
+  gensym('~',Sym),
+  create_instances(Sym,S0,S0,S0,S2).
 
 may_contain_insts(h).
 

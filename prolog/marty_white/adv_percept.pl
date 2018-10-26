@@ -48,10 +48,10 @@ is_prop_public(_,P) :-
              fragile(_),emitting(_Light), 
              %has_rel(_Spatial, _), 
              
-             can_be(Spatial, eat, _), 
-             can_be(Spatial, move, _), 
-             can_be(Spatial, open, _), state(Spatial, open, _), 
-             can_be(Spatial, lock, t), state(Spatial, locked, _),
+             can_be(eat, _), 
+             can_be(move, _), 
+             can_be(open, _), state(open, _), 
+             can_be(lock, t), state(locked, _),
              inherit(shiny,t)]).
 is_prop_public(_,Prop):- is_prop_nonpublic(Prop),!,fail.
 
@@ -70,13 +70,13 @@ has_sensory(Spatial, Sense, Agent, State) :-
 has_sensory(_Spatial, _Sense, _Agent, _State) .
 
 
-can_sense(_Spatial, _See, Star, _Agent, _State) :- Star == '*', !.
-can_sense(Spatial, Sense, Thing, Agent, State) :-
+can_sense( _See, Star, _Agent, _State) :- Star == '*', !.
+can_sense( Sense, Thing, Agent, State) :-
   get_open_traverse(_Open, Sense, _Traverse, Spatial, OpenTraverse),
   has_sensory(Spatial, Sense, Agent, State),
   related(Spatial, OpenTraverse, Agent, Here, State),
   (Thing=Here; related(Spatial, OpenTraverse, Thing, Here, State)).
-can_sense(Spatial, Sense, Thing, Agent, _State):- dbug(pretending_can_sense(Spatial, Sense, Thing, Agent)),!.
+can_sense( Sense, Thing, Agent, _State):- dbug(pretending_can_sense( Sense, Thing, Agent)),!.
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -179,7 +179,7 @@ verb_sensory(Verb, Sense):- verb_alias(Verb, Verb2), Verb\=Verb2,
 
 
 % sensory_model(Visual, Spatial, TooDark, EmittingLight))
-sensory_model_problem_solution(Sense, Spatial, state(Spatial, Dark, t), emitting(Light)):-
+sensory_model_problem_solution(Sense, Spatial, state(Dark, t), emitting(Light)):-
    problem_solution(Dark, Sense, Light), sensory_model(Sense, Spatial).
 
 problem_solution(dark, see, light).
@@ -209,14 +209,14 @@ process_percept_auto(Agent, Percept, _Stamp, Mem0, Mem0) :-
 process_percept_auto(Agent, sense_props(Sense, Object, PropList), _Stamp, Mem0, Mem2) :-
   bugout('~w: ~p~n', [Agent, sense_props(Sense, Object, PropList)], autonomous),
   (member(shiny, PropList),member(inherit(shiny,t), PropList)),
-  member(model(Spatial, ModelData), Mem0),
-  \+ related(Spatial, descended, Object, Agent, ModelData), % Not holding it?
+  member(model(ModelData), Mem0),  
+  \+ related(_Spatial, descended, Object, Agent, ModelData), % Not holding it?
   add_todo_all([take( Object), print_('My shiny precious!')], Mem0, Mem2).
 
 process_percept_auto(_Agent,
-    sense(Sense, [you_are(Spatial, _How, _Here), exits_are(_Exits), here_are(Objects)]),
+    sense(Sense, [you_are(_Spatial, _Prep, _Here), exits_are(_Exits), here_are(Objects)]),
     _Stamp, Mem0, Mem2) :-
-  member(model(Spatial, ModelData), Mem0),
+  member(model(ModelData), Mem0),
   findall(examine(Sense, Obj),
           ( member(Obj, Objects),
             \+ member(props(Obj, _, _), ModelData)),
@@ -226,7 +226,7 @@ process_percept_auto(_Agent, _Percept, _Stamp, Mem0, Mem0).
 
 
 %was_own_self(Agent, say(Agent, _)).
-was_own_self(Agent, emote( _, Agent, _, _)):- fail.
+was_own_self(Agent, emote( _, Agent,  _)):- fail.
 
 % Ignore own speech.
 % process_percept_player(Agent, [Same|_], _Stamp, Mem0, Mem0) :- was_own_self(Agent, Same).
@@ -258,11 +258,11 @@ process_percept(Agent, Percept, Stamp, Mem0, Mem0):-
 
 process_percept_main(Agent, Percept, Stamp, Mem0, Mem3) :-
  dmust((
-  forget(model(Spatial, Model0), Mem0, Mem1),
+  forget(model(Model0), Mem0, Mem1),
   Percept = [LogicalPercept|IgnoredList],
   nop(ignore(((IgnoredList\==[], dbug(ignored_model_update(Agent,IgnoredList)))))),
-  update_model(Spatial, Agent, LogicalPercept, Stamp, Mem1, Model0, Model1),
-  memorize(model(Spatial, Model1), Mem1, Mem2),
+  update_model(Agent, LogicalPercept, Stamp, Mem1, Model0, Model1),
+  memorize(model(Model1), Mem1, Mem2),
   process_percept(Agent, Percept, Stamp, Mem2, Mem3))).
 process_percept_main(_Agent, Percept, _Stamp, Mem0, Mem0) :-
   bugout('process_percept_main(~w) FAILED!~n', [Percept], general), !.

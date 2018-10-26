@@ -19,7 +19,7 @@
 
 % Some Inform properties:
 %   light - rooms that have light in them
-%   can_be(Spatial, eat, t) - can be eaten
+%   can_be(eat, t) - can be eaten
 %   static - can't be taken or moved
 %   scenery - assumed to be in the room description (implies static)
 %   concealed - obscured, not listed, not part of 'all', but there
@@ -28,11 +28,11 @@
 %   clothing - can be worn
 %   worn - is being worn
 %   container
-%   state(Spatial, opened, t) - container is open (must be opened) to be used. there is no "closed").
-%   can_be(Spatial, open, t) - can be opened and closed
+%   state(opened, t) - container is open (must be opened) to be used. there is no "closed").
+%   can_be(open, t) - can be opened and closed
 %   capacity(N) - number of objects a container or supporter can hold
-%   state(Spatial, locked, t) - cannot be opened
-%   can_be(Spatial, lock, t), with_key
+%   state(locked, t) - cannot be opened
+%   can_be(lock, t), with_key
 %   enterable
 %   supporter
 %   article - specifies indefinite article ('a', 'le')
@@ -44,7 +44,7 @@
 %   list_together - way to handle "5 fish"
 %   plural - pluralized-name if different from singular
 %   when_closed - description when closed
-%   when_open - description when state(Spatial, opened, t)
+%   when_open - description when state(opened, t)
 %   when_on, when_off - like when_closed, etc.
 % Some TADS properties:
 %   thedesc
@@ -65,7 +65,7 @@
 istate([
        structure_label(istate),
 
-       props('floyd~1', [name('Floyd the robot'), inherit(autonomous,t),  % can_do(Spatial, eat, f), 
+       props('floyd~1', [name('Floyd the robot'), inherit(autonomous,t),  % can_do(eat, f), 
            inherit(robot,t)]),
        props('player~1', [name($self),inherit(console,t), inherit(humanoid,t)]),
 
@@ -100,7 +100,7 @@ istate([
 
   h(Spatial, in, a(shelf), pantry), % shelf is in pantry
        h(Spatial, in, a(table), kitchen), % a table is in kitchen
-       h(Spatial, on, a(lamp), the(table)), % a lamp is on the table
+       h(Spatial, on, a(lamp), a(table)), % a lamp is on the table
        h(Spatial, in, a(rock), garden),
        h(Spatial, in, a(fountain), garden),
   h(Spatial, in, a(mushroom), garden),
@@ -115,23 +115,23 @@ istate([
   h(Spatial, in, brklamp, garden),
 
        type_props(unthinkable, [
-          can_be(Spatial, examine(_), f),
+          can_be(examine(_), f),
           class_desc(['It is normally unthinkable'])]),
 
        type_props(thinkable, [
-          can_be(Spatial, examine(_), t),
+          can_be(examine(_), t),
           class_desc(['It is normally thinkable'])]),
 
        type_props(only_conceptual, [   
-          can_be(Spatial, examine(Spatial), f),
+          can_be(examine(Spatial), f),
           inherit(thinkable,t),
           class_desc(['It is completely conceptual'])]),
 
        type_props(noncorporial, [
-          can_be(Spatial, examine(Spatial), f),
-          can_be(Spatial, touch, f),
+          can_be(examine(Spatial), f),
+          can_be(touch, f),
           inherit(thinkable,t),
-          desc(['It is completely non-corporial'])]),
+          class_desc(['It is completely non-corporial'])]),
 
        type_props(partly_noncorporial, [
           inherit(corporial,t),
@@ -139,22 +139,24 @@ istate([
           class_desc(['It is both partly corporial and non-corporial'])]),
 
        type_props(corporial, [
-          can_be(Spatial, touch, t),
-          can_be(Spatial, examine(Spatial), t),
+          can_be(touch, t),
+          can_be(examine(Spatial), t),
           inherit(thinkable,t),
           class_desc(['It is corporial'])]),
 
        type_props(object, [
-          can_be(Spatial, touch, t),
-          can_be(Spatial, examine(Spatial), t),
+          can_be(touch, t),
+          can_be(examine(Spatial), t),
           inherit(thinkable,t),
+          can_be(move, t),
           class_desc(['It is an Object'])]),
 
-       type_props(object, [
-          can_be(Spatial, touch, t),
-          can_be(Spatial, examine(Spatial), t),
+       type_props(furnature, [
+          can_be(touch, t),
+          can_be(examine(Spatial), t),
+          can_be(move, f),
           inherit(thinkable,t),
-          class_desc(['It is an Object'])]),
+          class_desc(['It is furnature'])]),
 
   % People
    type_props(character, [
@@ -162,9 +164,9 @@ istate([
        has_rel(Spatial, worn_by),
        % overridable defaults
        mass(50), volume(50), % liters     (water is 1 kilogram per liter)
-       can_do(Spatial, eat, t),
-       can_do(Spatial, examine, t),
-       can_do(Spatial, touch, t),
+       can_do(eat, t),
+       can_do(examine, t),
+       can_do(touch, t),
        has_sense(Sense),
        inherit(perceptq,t),
        inherit(memorize,t),
@@ -174,49 +176,49 @@ istate([
       type_props(natural_force, [
           ~has_rel(Spatial, held_by),
           ~has_rel(Spatial, worn_by),
-          can_do(Spatial, eat, f),
+          can_do(eat, f),
 
-          can_do(Spatial, examine, t),
-          can_be(Spatial, touch, f),
+          can_do(examine, t),
+          can_be(touch, f),
           has_sense(Sense),
           iherit(character)
       ]),
 
        type_props(humanoid, [
-         can_do(Spatial, eat, t),
+         can_do(eat, t),
            volume(50), % liters     (water is 1 kilogram per liter)
            mass(50), % kilograms
             inherit(character,t),
             inherit(memorize,t),
             inherit(player,t),
             % players use power but cant be powered down
-            can_be(Spatial, switch(off), f), state(Spatial, powered, t)
+            can_be(switch(off), f), state(powered, t)
       ]),
 
   type_props(robot, [
-    can_do(Spatial, eat, f),
+    can_do(eat, f),
     inherit(autonomous,t),
     EmittingLight,
     volume(50), mass(200), % density(4) % kilograms per liter
     nouns(robot),
     adjs(metallic),
     desc('Your classic robot: metallic with glowing red eyes, enthusiastic but not very clever.'),
-    can_be(Spatial, switch, t),
+    can_be(switch, t),
     inherit(memorize,t),
     inherit(shiny,t),
     inherit(character,t),
-    state(Spatial, powered, t),
+    state(powered, t),
     % TODO: 'floyd~1' should `look(Spatial)` when turned back on.
-        effect(switch(on), setprop($self, state(Spatial, powered, t))),
-        effect(switch(off), setprop($self, state(Spatial, powered, f)))
+        effect(switch(on), setprop($self, state(powered, t))),
+        effect(switch(off), setprop($self, state(powered, f)))
   ]),
 
   % Places
-  type_props(place, [can_be(Spatial, move, f), inherit(container,t), volume_capacity(10000), has_rel(exit(_), t)]),
+  type_props(place, [can_be(move, f), inherit(container,t), volume_capacity(10000), has_rel(exit(_), t)]),
 
   type_props(container, [
 
-         oper(put(Spatial, Thing, in, $self),
+         oper($self, put(Spatial, Thing, in, $self),
             % precond(Test, FailureMessage)
             precond(~getprop(Thing, inherit(liquid,t)), ['liquids would spill out']),
            % body(clause)
@@ -226,7 +228,7 @@ istate([
 
   type_props(flask, [
 
-           oper(put(Spatial, Thing, in, $self),
+           oper($self, put(Spatial, Thing, in, $self),
               % precond(Test, FailureMessage)
               precond(getprop(Thing, inherit(corporial,t)), ['non-physical would spill out']),
              % body(clause)
@@ -243,17 +245,17 @@ istate([
   props(dining_room, [inherit(place,t)]),
   props(garden, [
     inherit(place,t),
-    % goto(dir, result) provides special handling for going in a direction.
-    goto(up, 'You lack the ability to fly.'),
-    effect(goto(_, north), getprop(screendoor, state(Spatial, opened, t))),
-    oper(/*garden, */ goto(_, north),
+    % goto(Prep, Dir, dir, result) provides special handling for going in a direction.
+    goto(Prep, Dir, up, 'You lack the ability to fly.'),
+    effect(goto(Prep, Dir, _, north), getprop(screendoor, state(opened, t))),
+    oper($self, /*garden, */ goto(Prep, Dir, _, north),
          % precond(Test, FailureMessage)
-         precond(getprop(screendoor, state(Spatial, opened, t)), ['you must open the door first']),
+         precond(getprop(screendoor, state(opened, t)), ['you must open the door first']),
          % body(clause)
          body(inherited)
     ),
     % cant_go provides last-ditch special handling for Go.
-    cant_goto('The fence surrounding the garden is too tall and solid to pass.')
+    cant_goto(Prep, Dir, 'The fence surrounding the garden is too tall and solid to pass.')
   ]),
   props(kitchen, [inherit(place,t)]),
   props(living_room, [inherit(place,t)]),
@@ -279,21 +281,27 @@ istate([
     inherit(object,t),
     volume_capacity(2),
     fragile(shards),
+    state(dirty,t),
     inherit(flask,t),
     name('porcelain bowl'),
     desc('This is a modest glass cooking bowl with a yellow flower motif glazed into the outside surface.')
   ]),
-  type_props(box, [
-    inherit(container,t),
-    inherit(object,t),
-    volume_capacity(15),
-    fragile(splinters),
-    %can_be(Spatial, open, t),
-    state(Spatial, opened, f),
-    %can_be(Spatial, lock, t),
-    state(Spatial, locked, t),
-    TooDark
-  ]),
+       type_props(box, [
+         inherit(container,t),
+         inherit(object,t),
+         volume_capacity(15),
+         fragile(splinters),
+         %can_be(open, t),
+         state(opened, f),
+         %can_be(lock, t),
+         state(locked, t),
+         TooDark
+       ]),
+       type_props(fountain, [         
+         volume_capacity(150),
+         inherit(place,t),
+         inherit(container,t)
+       ]),
 
   type_props(measurable,[has_rel(quantity,ammount,t)]),
   
@@ -301,15 +309,15 @@ istate([
   type_props(shiny, [adjs(shiny),inherit(object,t), inherit(corporial,t)]),
 
   type_props(coins, [inherit(shiny,t),inherit(measurable,t)]),
-       type_props(food,[can_be(Spatial, eat, t),inherit(object,t),inherit(measurable,t)]),
+       type_props(food,[can_be(eat, t),inherit(object,t),inherit(measurable,t)]),
        type_props(flour,[inherit(food,t),inherit(measurable,t)]),
   type_props(lamp, [
     name('shiny brass lamp'),
     nouns(light),
     nominals(brass),
     inherit(shiny,t),
-    can_be(Spatial, switch, t),
-    state(Spatial, powered, t),
+    can_be(switch, t),
+    state(powered, t),
     inherit(object,t),
     EmittingLight,
     effect(switch(on), setprop($self, EmittingLight)),
@@ -322,7 +330,7 @@ istate([
     nouns(light),
     nominals(brass),
     adjs(dented),
-    can_be(Spatial, switch, t),
+    can_be(switch, t),
     effect(switch(on), true),
     effect(switch(off), true) % calls true(S0, S1) !
   ]),
@@ -338,7 +346,7 @@ istate([
           name('definately broken'),
           effect(switch(on), true),
           effect(switch(off), true),
-          can_be(Spatial, switch, t),
+          can_be(switch, t),
           adjs(dented),
           adjs(broken)
        ]),
@@ -353,7 +361,7 @@ istate([
     initial('A speckled mushroom grows out of the sodden earth, on a long stalk.'),
     % description(examination description)
     desc('The mushroom is capped with blotches, and you aren\'t at all sure it\'s not a toadstool.'),
-    can_be(Spatial, eat, t),
+    can_be(eat, t),
     % before(VERB, CODE) -- Call CODE before default code for VERB.
     %                      If CODE succeeds, don't call VERB.
     before(eat, (random(100) =< 30, die('It was poisoned!'); 'yuck!')),
@@ -362,10 +370,10 @@ istate([
   ]),
 
     type_props(door, [
-       can_be(Spatial, move, f),
-       can_be(Spatial, open, t),
-       can_be(Spatial, close, t),
-       state(Spatial, opened, t),
+       can_be(move, f),
+       can_be(open, t),
+       can_be(close, t),
+       state(opened, t),
        nouns(door),
        inherit(corporial,t)
     ]),
@@ -374,24 +382,24 @@ istate([
       % see DM4
       door_to(kitchen),
       door_to(garden),
-      state(Spatial, opened, f),
+      state(opened, f),
       inherit(door,t)
     ]),
 
-  type_props(shelf, [has_rel(Spatial, on), can_be(Spatial, move, f)]),
-  type_props(table, [has_rel(Spatial, on), has_rel(Spatial, under)]),
+  type_props(shelf, [has_rel(Spatial, on), can_be(move, f)]),
+  type_props(table, [has_rel(Spatial, on), has_rel(Spatial, reverse(on))]),
   type_props(wrench, [inherit(shiny,t)]),
   type_props(videocamera, [
     inherit(memorize,t),
     inherit(perceptq,t),    
-    can_be(Spatial, switch, t),
-        effect(switch(on), setprop($self, state(Spatial, powered, t))),
-        effect(switch(off), setprop($self, state(Spatial, powered, f))),
-    state(Spatial, powered, t),
+    can_be(switch, t),
+        effect(switch(on), setprop($self, state(powered, t))),
+        effect(switch(off), setprop($self, state(powered, f))),
+    state(powered, t),
     has_sense(Sense),
     fragile(broken_videocam)
   ]),
-  type_props(broken_videocam, [can_be(Spatial, switch, f),state(Spatial, powered, f), inherit(videocamera,t)])
+  type_props(broken_videocam, [can_be(switch, f),state(powered, f), inherit(videocamera,t)])
          
 ]) :-
   sensory_model_problem_solution(Sense, Spatial, TooDark, EmittingLight).

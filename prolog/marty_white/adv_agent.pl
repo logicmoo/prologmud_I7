@@ -45,7 +45,7 @@ each_agent(Precond, NewGoal, S0, S2) :-
 %   Simulation: respond(Action_Id, LogicalResponse/Percept, EnglishResponse)
 %   Action(Verb, ...)
 %   failure(Reason)
-%   moved(Spatial, obj, from, how, to)
+%   moved( obj, from, how, to)
 
 % -----------------------------------------------------------------------------
 % The state of an Agent is stored in its memory.
@@ -56,7 +56,7 @@ each_agent(Precond, NewGoal, S0, S2) :-
 %   timestamp(T)    - agent may add a new timestamp whenever a sequence point
 %                     is desired.
 %   [percept]       - received perceptions.
-%   model(Spatial, [...])    - Agent's internal model of the Spatial world.
+%   model([...])    - Agent's internal model of the Spatial world.
 %                     Model is a collection of timestampped relations.
 %   goals([...])    - states the agent would like to achieve, or
 %                     acts the agent would like to be able to do.
@@ -101,8 +101,8 @@ add_todo_all([Action|Rest], Mem0, Mem2) :-
 % do_introspect(Query, Answer, Memory)
 do_introspect(path(Spatial, There), Answer, Memory) :-
   thought(inst(Agent), Memory),
-  thought_model(Spatial,ModelData, Memory),
-  in_model(h(Spatial, _How, Agent, Here, _T), ModelData),
+  thought_model(ModelData, Memory),
+  in_model(h(Spatial, _Prep, Agent, Here, _T), ModelData),
   find_path(Spatial, Here, There, Route, ModelData),
   Answer = ['Model is', ModelData, '\nShortest path is', Route].
 
@@ -114,9 +114,6 @@ do_introspect(whereis(X), Answer, Memory) :- !,
   sensory_model(Sense, spatial),
   Answer = [subj(Agent), person('don\'t', 'doesn\'t'),
             'recall ever ', ing(Sense), ' a "', X, '".'].
-do_introspect(whereis(X), Answer, Memory):-
- do_introspect(whereis(spatial,X), Answer, Memory).
-
 
 do_introspect(whois(X), Answer, Memory) :-
   remember_whereis(X, Answer, Memory).
@@ -130,25 +127,25 @@ do_introspect(whatis( X), [X, is, X, .], _Memory).
 
 remember_whereis(Thing, Answer, Memory) :-
   thought(inst(Agent), Memory),
-  thought_model(Spatial,ModelData, Memory),
-  in_model(h(Spatial, How, Thing, Where, T), ModelData),
-  How \= exit(_),
-  Answer = ['At time', T, subj(Agent), 'saw the', Thing, How, the, Where, .].
+  thought_model(ModelData, Memory),
+  in_model(h(_Spatial, Prep, Thing, Where, T), ModelData),
+  Prep \= exit(_),
+  Answer = ['At time', T, subj(Agent), 'saw the', Thing, Prep, the, Where, .].
 remember_whereis(Here, Answer, Memory) :-
   thought(inst(Agent), Memory),
-  thought_model(Spatial,ModelData, Memory),
-  in_model(h(Spatial, _How, Agent, Here, _T), ModelData),
+  thought_model(ModelData, Memory),
+  in_model(h(_Spatial, _Prep, Agent, Here, _T), ModelData),
   Answer = 'Right here.'.
 remember_whereis(There, Answer, Memory) :-
   thought(inst(Agent), Memory),
-  thought_model(Spatial,ModelData, Memory),
-  in_model(h(Spatial, _How, Agent, Here, _T), ModelData),
+  thought_model(ModelData, Memory),
+  in_model(h(Spatial, _Prep, Agent, Here, _T), ModelData),
   find_path(Spatial, Here, There, Route, ModelData),
   Answer = ['To get to the', There, ', ', Route].
 remember_whereis(There, Answer, Memory) :-
-  thought_model(Spatial,ModelData, Memory),
-  (in_model(h(Spatial, exit(_), _, There, _T), ModelData);
-    in_model(h(Spatial, exit(_), There, _, _T), ModelData)),
+  thought_model(ModelData, Memory),
+  (in_model(h(_Spatial, exit(_), _, There, _T), ModelData);
+    in_model(h(_Spatial, exit(_), There, _, _T), ModelData)),
   Answer = 'Can''t get there from here.'.
 
 
