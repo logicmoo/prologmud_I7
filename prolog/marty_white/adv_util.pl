@@ -19,7 +19,7 @@
 
 % Miscellaneous generic utility predicates.
 
-clock_time(T):- statistics(walltime,[X,_]),T is X/1000.
+clock_time(T):- statistics(walltime,[X,_]),T is (X // 100)/10.
 
 mk_complex(R, I, '@'(R, I)).
 get_complex('@'(R, I), R, I).

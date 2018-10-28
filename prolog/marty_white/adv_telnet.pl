@@ -17,7 +17,7 @@
 %
 */
 
-:- dynamic(adv:wants_quit/4).
+:- dynamic(adv:wants_quit/3).
 :- dynamic(adv:console_info/7).
 :- dynamic(adv:console_tokens/2).
 
@@ -62,7 +62,7 @@ setup_IO_props(InStream, OutStream):-
   set_stream(InStream, tty(true)), 
   set_stream(OutStream, tty(true)), 
   % set_prolog_flag(tty_control, false), % JanW
-  % set_prolog_flag(tty_control, true), 
+  % set_prolog_flag(tty_control, true), % Dmiles
   current_prolog_flag(encoding, Enc), 
   set_stream(user_input, encoding(Enc)), 
   %set_stream(user_input, buffer(false)), 
@@ -77,7 +77,9 @@ adv_serve_client(InStream, OutStream, Host, Peer, Alias) :-
   thread_self(Id), 
 
   set_prolog_IO(InStream, OutStream, OutStream),
-  set_stream(user_error, newline(dos)), 
+  % set_stream(user_error, newline(dos)), 
+  set_stream(OutStream, alias(user_error)), 
+  set_stream(OutStream, alias(user_output)), 
 
   setup_IO_props(InStream, OutStream),
 
@@ -161,26 +163,25 @@ welcome_adv_tnet(OutStream):-
 
 adventure_client_process(Id,Alias,InStream,OutStream, Host, Peer):- 
  prompt_for_agent(Id,Alias,InStream,OutStream, Host, Peer, Agent,_Name),
- retractall(adv:wants_quit(_,Alias,_,_)),
- retractall(adv:wants_quit(Id,_,_,_)),
- retractall(adv:wants_quit(_,_,InStream,_)),
+ retractall(adv:wants_quit(_,InStream,_)),
+ retractall(adv:wants_quit(Id,_,_)),
  welcome_adv_tnet(OutStream),
  redraw_prompt(Agent),
  setup_console,
  repeat,  
-  srv_catch(adv_tlnet_readloop(Id,Alias)),
-  adv:wants_quit(Id,Alias,_InStream,_OutStream),!.  
+  srv_catch(adv_tlnet_readloop(Id, InStream, Alias)),
+  adv:wants_quit(_,InStream,_),!.  
 
 
 tflush(OutStream):- ignore_srv_catch((flush_output(OutStream), ttyflush)).
 
-adv_tlnet_readloop(Id,Alias):- adv:wants_quit(Id,Alias,_InStream,_OutStream),!.
+adv_tlnet_readloop(Id, InStream, _Alias):- adv:wants_quit(Id, InStream, _Agent),!.
 
-adv_tlnet_readloop(Id,Alias):-  
-  adv:console_info(Id,Alias,_InStream,_OutStream,__Host,_Peer, Agent),
-  adv:console_tokens(Agent, _Words),sleep(0.1),!.
+adv_tlnet_readloop(Id, InStream, Alias):-  
+  adv:console_info(Id, Alias, InStream,_OutStream,_Host,_Peer, Agent),
+  adv:console_tokens(Agent, _Words), sleep(0.1), !.
 
-adv_tlnet_readloop(Id,Alias):-  
+adv_tlnet_readloop(Id, InStream, Alias):-  
   srv_catch(adv:console_info(Id,Alias,InStream,OutStream, Host, Peer, Agent)), 
   tflush(OutStream),
   current_input(In), wait_for_input([In,InStream,user_input],Found,0.2),
@@ -197,7 +198,7 @@ adv_tlnet_words(_Id,_Alias,_InStream,_OutStream, _Host, _Peer, _Agent, ['You'|_]
 
 adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, [quit]):-
  nop(adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent)),
- asserta(adv:wants_quit(Id,Alias,InStream,OutStream)).
+ asserta(adv:wants_quit(Id, InStream, Agent)).
 
 adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, Words0):-
   nop(adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, Words0)),

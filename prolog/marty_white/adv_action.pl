@@ -83,10 +83,10 @@ psubsetof(A, C) :-
   subsetof(B, C).
 
 
-
+maybe_pause(Agent):- console_player(CP),(Agent==CP -> wait_for_input([user_input],_,10) ; true).
 
 do_command(Agent, Action, S0, S1) :-
-  do_metacmd(Action, S0, S1), !,
+  do_metacmd(Agent, Action, S0, S1), !,   
   redraw_prompt(Agent).
 
 do_command(Agent, Action, _, _) :- set_last_action(Agent,Action), fail.

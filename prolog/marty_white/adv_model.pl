@@ -37,6 +37,7 @@ thought(Figment, M) :- member(Figment, M).
 % Fundamental predicate that actually modifies the list:
 update_relation( NewHow, Item, NewParent, Timestamp, M0, M2) :-
   select_always(h(Spatial, _How, Item, _Where, _T), M0, M1),
+  ignore(Spatial=spatial),
   append([h(Spatial, NewHow, Item, NewParent, Timestamp)], M1, M2).
 
 % Batch-update relations.
@@ -98,7 +99,8 @@ update_model(Agent, moved( Agent, There, How, Here), Timestamp, Mem, M0, M2) :-
   append(RecentMem, [did(goto(_HowGo,A,C,B))|OlderMem], Mem), % find figment
   member(ExitName,[A,B,C]),atom(ExitName),
   \+ member(did(goto(_, _, _, _)), RecentMem),          % guarrantee recentness
-  memberchk(timestamp(_T1), OlderMem),          % get associated stamp
+  memberchk(timestamp(_T1,_WhenNow), OlderMem),          % get associated stamp
+
   %player_format('~p moved: goto(~p, ~p) from ~p leads to ~p~n',
   %       [Agent, HowGo, Dest, There, Here]),
   update_model_exit(Spatial, exit(ExitName), There, Here, Timestamp, M0, M1), % Model the path.

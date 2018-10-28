@@ -28,7 +28,7 @@ add_help_cmd_borked(Cmd):-
 
 
 add_help_cmd(Cmd):-
-  redirect_error(help(Cmd),HelpStr),
+  redirect_error_to_string(help(Cmd),HelpStr),
   assert(adv:cmd_help(Cmd,HelpStr)).
 
 
@@ -42,143 +42,125 @@ add_help_cmd(Cmd):-
 printable_state(S,S).
 
 
-current_error(Stream) :- 
-        stream_property(Stream, alias(user_error)), !. % force det. 
-
-set_error(Stream) :- 
-        set_stream(Stream, alias(user_error)). 
-
-redirect_error(Goal, String) :- 
-        current_error(OldErr),
-        new_memory_file(Handle),        
-        setup_call_cleanup( 
-            open_memory_file(Handle, write, Err),
-            setup_call_cleanup( 
-                set_error(Err),
-                (once(Goal),
-                   flush_output(Err)), 
-                set_error(OldErr)), 
-            close(Err)),
-        memory_file_to_string(Handle,String).
-
 meta_pprint(D,K):- pprint(D,K).
 
-% do_metacmd(Action, S0, S1)
+% do_metacmd(Doer, Action, S0, S1)
 :- add_help(quit,"Quits the game.").
-do_metacmd(quit, S0, S1) :-
-  declare(quit, S0, S1),
+do_metacmd(Doer, quit, S0, S1) :-
+  declare(wishes(Doer, quit), S0, S1),
   player_format('Bye!~n', []).
 
-do_metacmd(help, S0, S0) :- !,
+do_metacmd(_Doer, help, S0, S0) :- !,
   listing(adv:cmd_help).
 
 :- add_help(rtrace,"Debbuging: Start the non-interactive tracer.").
-do_metacmd(rtrace, S0, S0) :- admin, rtrace.
+do_metacmd(Doer, rtrace, S0, S0) :- security_of(Doer,admin), rtrace.
 
 :- add_help(nortrace,"Debbuging: Stop the non-interactive tracer.").
-do_metacmd(nortrace, S0, S0) :- admin, nortrace.
+do_metacmd(Doer, nortrace, S0, S0) :- security_of(Doer,admin), nortrace.
 
 :- add_help(trace,"Debbuging: Start the interactive tracer.").
-do_metacmd(trace, S0, S0) :- admin, trace.
+do_metacmd(Doer, trace, S0, S0) :- security_of(Doer,admin), trace.
 
 :- add_help(notrace,"Debbuging: Stop the interactive tracer.").
-do_metacmd(notrace, S0, S0) :- admin, notrace.
+do_metacmd(Doer, notrace, S0, S0) :- security_of(Doer,admin), notrace.
 
 :- add_help_cmd(spy).
-do_metacmd(spy(Pred), S0, S0) :- admin, spy(Pred).
+do_metacmd(Doer, spy(Pred), S0, S0) :- security_of(Doer,admin), spy(Pred).
 
 :- add_help_cmd(nospy).
-do_metacmd(nospy(Pred), S0, S0) :- admin, nospy(Pred).
+do_metacmd(Doer, nospy(Pred), S0, S0) :- security_of(Doer,admin), nospy(Pred).
 
 :- add_help(possess(agent),"Take possession of a character").
-do_metacmd(possess(NewAgent), S0, S0) :-
-  wizard,
+do_metacmd(Doer, possess(NewAgent), S0, S0) :-
+  security_of(Doer,wizard),
   retract(current_player(_Agent)),
   asserta(current_player(NewAgent)).
-do_metacmd(Echo, S0, S0) :-
-  admin,
+do_metacmd(Doer, Echo, S0, S0) :-
+  security_of(Doer,admin),
   Echo =.. [echo|Args],
   player_format('~w~n', [Args]).
-do_metacmd(state, S0, S0) :-
-  wizard,
+do_metacmd(Doer, state, S0, S0) :-
+  security_of(Doer,wizard),
   printable_state(S0,S),
-  meta_pprint(S, general).
-do_metacmd(props, S0, S0) :-
-  wizard,
+  meta_pprint(S, general),
+  maybe_pause(Doer).
+do_metacmd(Doer, props, S0, S0) :-
+  security_of(Doer,wizard),
   printable_state(S0,S),
   include(@=<(props(_,_)),S,SP),
   reverse(SP,SPR),
-  meta_pprint(SPR, general).
-do_metacmd(mem, S0, S0) :-
-  wizard,
+  meta_pprint(SPR, general),
+  maybe_pause(Doer).
+do_metacmd(Doer, mem, S0, S0) :-
+  security_of(Doer,wizard),
   printable_state(S0,S),
   include(@>=(props(_,_)),S,SP),
   reverse(SP,SPR),
-  meta_pprint(SPR, general).
-do_metacmd(make, S0, S0) :-
-  wizard,
+  meta_pprint(SPR, general),
+  maybe_pause(Doer).
+do_metacmd(Doer, make, S0, S0) :-
+  security_of(Doer,wizard),
   thread_signal(main,make).
-do_metacmd(prolog, S0, S0) :-
-  wizard,
+do_metacmd(Doer, prolog, S0, S0) :-
+  security_of(Doer,wizard),
   prolog.
 
-do_metacmd(CLS, S0, S0) :- wizard, 
-  current_predicate(_, CLS), catch(CLS,_,fail), !.
+do_metacmd(Doer, CLS, S0, S0) :- security_of(Doer,wizard), 
+  current_predicate(_, CLS), 
+  (is_main_console -> catch(CLS,E,(dbug(CLS:- throw(E)),fail)) ;
+    (redirect_error_to_string(catch(CLS,E,(dbug(CLS:- throw(E)),fail)),Str),!, write(Str))).
 
-do_metacmd(memory(Agent), S0, S0) :-
-  wizard,
-  declared(memories(Agent, Memory), S0),
-  meta_pprint(Memory, general).
+do_metacmd(Doer, memory(Agent), S0, S0) :-
+  security_of(Doer,wizard),
+  forall(member(memories(Agent, Memory), S0),
+  meta_pprint(Memory, general)),
+  maybe_pause(Doer).
 
-do_metacmd(model(Agent), S0, S0) :-
-  wizard,
-  declared(memories(Agent, Memory), S0),
-  thought_model(ModelData, Memory),
-  meta_pprint(ModelData, general).
-
-do_metacmd(model(Agent), S0, S0) :-
-  wizard,
-  declared(memories(Agent, Memory), S0),
+do_metacmd(Doer, model(Agent), S0, S0) :-
+  security_of(Doer,wizard),
+  forall(member(memories(Agent, Memory), S0),
   forall(thought(model(ModelData), Memory),
-   meta_pprint(ModelData, general)).
+   meta_pprint(ModelData, general))),
+  maybe_pause(Doer).
 
-do_metacmd(create(Object), S0, S1) :-
-  wizard,
+do_metacmd(Doer, create(Object), S0, S1) :-
+  security_of(Doer,wizard),
   current_player(Agent),
   related(Spatial, Prep, Agent, Here, S0),
   declare(h(Spatial, Prep, Object, Here), S0, S1),
   player_format('You now see a ~w.~n', [Object]).
-do_metacmd(destroy(Object), S0, S1) :-
-  wizard,
+do_metacmd(Doer, destroy(Object), S0, S1) :-
+  security_of(Doer,wizard),
   undeclare(h(_Spatial, _, Object, _), S0, S1),
   player_format('It vanishes instantly.~n', []).
-do_metacmd(AddProp, S0, S1) :-
-  wizard,
+do_metacmd(Doer, AddProp, S0, S1) :-
+  security_of(Doer,wizard),
   AddProp =.. [setprop, Object | Args],
   Args \= [],
   Prop =.. Args,
   setprop(Object, Prop, S0, S1),
   player_format('Properties of ~p now include ~w~n', [Object, Prop]).
-do_metacmd(DelProp, S0, S1) :-
-  wizard,
+do_metacmd(Doer, DelProp, S0, S1) :-
+  security_of(Doer,wizard),
   DelProp =.. [delprop, Object | Args],
   Args \= [],
   Prop =.. Args,
   delprop(Object, Prop, S0, S1),
   player_format('Deleted.~n', []).
-do_metacmd(properties(Object), S0, S0) :-
-  wizard,
+do_metacmd(Doer, properties(Object), S0, S0) :-
+  security_of(Doer,wizard),
   (declared(props(Object, PropList), S0);declared(type_props(Object, PropList), S0)),!,
   player_format('Properties of ~p are now ~w~n', [Object, PropList]).
-do_metacmd(undo, S0, S1) :-
-  declare(undo, S0, S1),
+do_metacmd(Doer, undo, S0, S1) :-
+  declare(wants(Doer,undo), S0, S1),
   player_format('undo...OK~nKO...odnu~n', []).
-do_metacmd(save(Basename), S0, S0) :-
+do_metacmd(_Doer, save(Basename), S0, S0) :-
   atom_concat(Basename, '.adv', Filename),
   save_term(Filename, S0).
 
-do_metacmd(WA, S0, S1) :- 
-   ((cmd_workarround(WA, WB) -> WB\==WA)), !, do_metacmd(WB, S0, S1).
+do_metacmd(Doer, WA, S0, S1) :- 
+   ((cmd_workarround(WA, WB) -> WB\==WA)), !, do_metacmd(Doer, WB, S0, S1).
 
 
 

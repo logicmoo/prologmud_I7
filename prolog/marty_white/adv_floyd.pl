@@ -84,9 +84,9 @@ autonomous_decide_action(Agent, Mem0, Mem1) :-
   add_todo(Action, Mem0, Mem1).
 % If goals exist, forget them
 autonomous_decide_action(Agent, Mem0, Mem2) :-
-  forget(goals([_|_]), Mem0, Mem1),
+  forget(goals([G0|GS]), Mem0, Mem1),
   memorize(goals([]), Mem1, Mem2),
-  bugout('~w: Can\'t solve goals.  Forgetting them.~n', [Agent], autonomous).
+  bugout('~w: Can\'t solve goals ~p.  Forgetting them.~n', [Agent,[G0|GS]], autonomous).
 
 % If no actions or goals, but there's an unexplored exit here, go that way.
 autonomous_decide_action(Agent, Mem0, Mem1) :-

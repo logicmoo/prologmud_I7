@@ -20,11 +20,13 @@
 :- module(adv_io,[
    read_line_to_tokens/4,
    clear_overwritten_chars/1,
+   is_main_console/0,
    redraw_prompt/1,
    player_format/2,
    player_format/3,
    bugout/2,
    bugout/3,
+   with_tty/2,
 
    wait_for_key/0,
                    wait_for_key/1,
@@ -34,9 +36,12 @@
    stop_logging/0,
    bug/1,
    agent_to_input/2,
+   agent_to_output/2,
    get_overwritten_chars/2,
    restore_overwritten_chars/1,
    setup_console/0,setup_console/1,
+
+   current_error/1,set_error/1, redirect_error_to_string/2,
           messages_init/0,
           /*post_message/1,
           post_message/2,
@@ -47,6 +52,25 @@
           more_prompt/0,
           ack_messages/0]).
 
+
+
+current_error(Stream) :- stream_property(Stream, alias(user_error)), !. % force det. 
+current_error(Stream) :- stream_property(Stream, alias(current_error)), !. % force det. 
+current_error(Stream) :- stream_property(Stream, file_no(2)), !. % force det. 
+set_error(Stream) :- set_stream(Stream, alias(user_error)). 
+
+redirect_error_to_string(Goal, String) :- 
+        current_error(OldErr),
+        new_memory_file(Handle),        
+        setup_call_cleanup( 
+            open_memory_file(Handle, write, Err),
+            setup_call_cleanup( 
+                set_error(Err),
+                (once(Goal),
+                   flush_output(Err)), 
+                set_error(OldErr)), 
+            close(Err)),
+        memory_file_to_string(Handle,String).
 
 
 mutex_create_safe(M):- notrace(catch(mutex_create(M),_,true)).
@@ -231,18 +255,23 @@ global_key_hook(meta(l)):-
    (dungeon:player_dungeon(R,C,A,B),
     log_stuff('~w~n',[player_dungeon(R,C,A,B)]),fail;true),!.
 */
+keystrokes_thread_name(keystrokes).
+
 global_key_hook(Key):-
+  keystrokes_thread_name(Keystrokes),
    with_mutex(messages,(
       nop(more_prompt),(Key=' ',nop(ack_messages);true);
-      nop(ack_messages),thread_send_message(keystrokes,Key)
+      nop(ack_messages),thread_send_message(Keystrokes,Key)
    )),!.
 
 keyboard_init:-
-   (message_queue_property(_, alias(keystrokes))->true;message_queue_create(keystrokes)),
+   keystrokes_thread_name(Keystrokes),
+   (message_queue_property(_, alias(Keystrokes))->true;message_queue_create(Keystrokes)),
    thread_create(keyboard_thread([]),_,[]).
 
 wait_for_key(Key):-
-   thread_get_message(keystrokes,Key).
+   keystrokes_thread_name(Keystrokes),
+   thread_get_message(Keystrokes,Key).
 
 wait_for_key:-wait_for_key(_).
 
@@ -251,8 +280,7 @@ user:setup_console :- current_input(In),setup_console(In).
 :- dynamic(adv:has_setup_setup_console/1).
 
 setup_console(In):- adv:has_setup_setup_console(In),!.
-setup_console(In):-
-  
+setup_console(In):-   
    assert(adv:has_setup_setup_console(In)),
    set_prolog_flag(color_term, true),
    ensure_loaded(library(prolog_history)),
@@ -297,6 +325,11 @@ bugout(A, L, B) :-
   ansi_format([fg(cyan)], A, LA),
   dmust((console_player(Player),redraw_prompt(Player))),!.
 bugout(_, _, _).
+
+                       
+%:- set_stream(user_input,buffer_size(1)).
+%:- set_stream(user_input,buffer(none)).
+%:- set_stream(user_input,timeout(0.1)).
 
 
 :- export(simplify_dbug/2).
@@ -346,13 +379,10 @@ player_format(Fmt,List):-
   notrace(player_format(Agent, Fmt,List)).
 
 player_format(Agent,Fmt,List):-
-  agent_output(Agent,OutStream),
+  agent_to_output(Agent,OutStream),
   dmust(format(OutStream,Fmt,List)),!.
 player_format(_, Fmt,List):- dmust(format(Fmt,List)).
 
-
-agent_output(Agent,OutStream):- 
-  adv:console_info(_Id,_Alias,_InStream,OutStream,_Host,_Peer, Agent).
 
 
 
@@ -427,22 +457,23 @@ skip_to_nl(In) :-
 % -- Input from stdin, convert to a list of atom-tokens.
 
 read_line_to_tokens(_Agent,In,Prev,Tokens):-  
- stream_property(In,tty(Was)),
- setup_call_cleanup((  
-  set_stream(In, tty(true))),
-  ((setup_console(In),
-    %skip_to_nl(In),
-     New = '',
-    % format(atom(New),'~w@spatial> ',[Agent]),
-     setup_call_cleanup(prompt(Old,New),
-     read_line_to_codes(In,LineCodesR),
-     prompt(_,Old)), 
-    read_pending_input(In,_,[]),
+    setup_console(In),
+    with_tty(In,(read_line_to_codes(In,LineCodesR),read_pending_input(In,_,[]))),    
     append(Prev,LineCodesR,LineCodes),
     NegOne is -1,     
     dmust(line_to_tokens(LineCodes,NegOne,Tokens0)),!,
-    dmust(Tokens0=Tokens))),
-  set_stream(In, tty(Was))),!.
+    dmust(Tokens0=Tokens).
+
+with_tty(In,Goal):-  
+ stream_property(In,tty(Was)),
+ stream_property(In,timeout(TWas)), 
+ New = '', % format(atom(New),'~w@spatial> ',[Agent]),
+ setup_call_cleanup((  
+  set_stream(In, tty(true)),set_stream(In, timeout(infinite))),    
+     setup_call_cleanup(prompt(Old,New),
+        (%skip_to_nl(In),
+        Goal), prompt(_,Old)),
+  (set_stream(In, timeout(TWas)),set_stream(In, tty(Was)))),!.
 
 line_to_tokens([],_,[]):-!.
 line_to_tokens(NegOne,NegOne,[quit]):-!.
@@ -486,18 +517,34 @@ add_pending_input0(In,C):- assert(overwritten_chars(In,[C])).
 clear_overwritten_chars(Agent):- agent_to_input(Agent,In),retractall(overwritten_chars(In,_SoFar)).
 restore_overwritten_chars(Agent):- agent_to_input(Agent,In),overwritten_chars(In,SoFar),format('~s',[SoFar]).
 
-% agent_to_input(Agent,In):- overwritten_chars(Agent,_SoFar),In=Agent,
-agent_to_input(Agent,In):- adv:console_info(_Id,_Alias,In,_OutStream,_Host, _Peer, Agent),!.
-% agent_to_input(Agent,In):- stream_or_alias(In,Alias), stream_property(Agent,file_no(F)),stream_property(In,file_no(F)),stream_property(In,read),!.
-agent_to_input(_Agent,In):- current_input(In).
+using_stream(Stream,OtherAgent):- adv:console_info(_Id,_Alias,_In,Stream,_Host, _Peer, OtherAgent).
+using_stream(Stream,OtherAgent):- adv:console_info(_Id,_Alias,Stream,_Out,_Host, _Peer, OtherAgent).
 
-user:bi:- agent_to_input('telnet~1',In),
+agent_to_output(Agent, Stream):- adv:console_info(_Id,_Alias,_In,Stream,_Host, _Peer, Agent),!.
+agent_to_output(_Agent,Stream):- current_output(Stream), \+ using_stream(Stream,_Other),!.
+agent_to_output(_Agent,Stream):- stream_property(Stream, file_no(1)), \+ using_stream(Stream,_Other),!.
+agent_to_output(Agent, Stream):- fail, agent_to_input(Agent,In), stream_property(In,file_no(F)),stream_property(Stream,file_no(F)),stream_property(Stream,write),!.
+agent_to_output(Agent, Stream):- throw(agent_io(Agent,agent_to_output(Agent, Stream))).
+                           
+% agent_to_input(Agent,In):- overwritten_chars(Agent,_SoFar),In=Agent,
+agent_to_input(Agent, Stream):- adv:console_info(_Id,_Alias,Stream,_Out,_Host, _Peer, Agent),!.
+agent_to_input(_Agent,Stream):- current_input(Stream), \+ using_stream(Stream,_Other),!.
+agent_to_input(_Agent,Stream):- stream_property(Stream, file_no(0)), \+ using_stream(Stream,_Other),!.
+agent_to_input(Agent, Stream):- fail, agent_to_output(Agent,Stream), stream_property(Stream,file_no(F)),stream_property(Stream,file_no(F)),stream_property(Stream,read),!.
+agent_to_input(Agent, Stream):- throw(agent_io(Agent,agent_to_input(Agent, Stream))).
+
+is_main_console:- current_input(Stream), stream_property(Stream, file_no(0)).
+
+user:ci:- ci('telnet~1').
+user:ci(Agent):- 
+   agent_to_input(Agent,In),
+   agent_to_output(Agent,Out),
    forall(stream_property(In,P),dbug(ins(P))),
+   listing(overwritten_chars),
    %line_position(In,LIn),
    %dbug(ins(line_position(In,LIn))),
-   forall(stream_property('telnet~1',P),dbug(outs(P))),listing(overwritten_chars),
-   line_position('telnet~1',LInOut),!,
-   dbug(outs(line_position('telnet~1',LInOut))),!.
+   forall(stream_property(Out,P),dbug(outs(P))),
+   line_position(Out,LInOut),!,dbug(outs(line_position(Out,LInOut))),!.
 
 get_overwritten_chars(Agent,Chars):- agent_to_input(Agent,In),overwritten_chars(In,Chars).
 get_overwritten_chars(_Agent,[]).

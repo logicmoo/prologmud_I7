@@ -69,6 +69,18 @@ istate([
            inherit(robot,t)]),
        props('player~1', [name($self),inherit(console,t), inherit(humanoid,t)]),
 
+       memories('player~1',
+           [ structure_label(mem('player~1')),
+             timestamp(0,Now),
+             model([]),
+             goals([]),
+             todo([look]),
+             inst('player~1'),
+             name('player~1'),
+             inherit(console,t),
+             inherit(humanoid,t)
+        ]),
+
        % props(telnet, [inherit(telnet,t),isnt(console),inherit('player~1')]),
 	
 	
@@ -99,15 +111,9 @@ istate([
   h(Spatial, exit(west), kitchen, living_room),
 
   h(Spatial, in, a(shelf), pantry), % shelf is in pantry
-       h(Spatial, in, a(table), kitchen), % a table is in kitchen
-       h(Spatial, on, a(lamp), a(table)), % a lamp is on the table
-       h(Spatial, in, a(rock), garden),
-       h(Spatial, in, a(fountain), garden),
+  h(Spatial, in, a(rock), garden),
+  h(Spatial, in, a(fountain), garden),
   h(Spatial, in, a(mushroom), garden),
-  h(Spatial, reverse(on), a(table), a(table_leg)),
-  h(Spatial, on, a(box), a(table)),
-  h(Spatial, in, a(bowl), a(box)),
-  h(Spatial, in, a(flour), a(bowl)),
   h(Spatial, in, a(shovel), basement), % FYI shovel has no props (this is a lttle test to see what happens)
   h(Spatial, in, a(videocamera), living_room),
   h(Spatial, in, screendoor, kitchen),
@@ -258,6 +264,19 @@ istate([
     cant_goto(Prep, Dir, 'The fence surrounding the garden is too tall and solid to pass.')
   ]),
   props(kitchen, [inherit(place,t)]),
+       h(Spatial, reverse(on), a(table), a(table_leg)),
+       h(Spatial, on, a(box), a(table)),
+       h(Spatial, in, a(bowl), a(box)),
+       h(Spatial, in, a(flour), a(bowl)),
+       h(Spatial, in, a(table), kitchen), % a table is in kitchen
+       h(Spatial, on, a(lamp), a(table)), % a lamp is on the table
+
+       h(Spatial, in, a(sink), kitchen), 
+       h(Spatial, in, a(plate), a(sink)),
+       h(Spatial, in, a(cabinate), kitchen), 
+       h(Spatial, in, a(cup), a(cabinate)),
+        
+
   props(living_room, [inherit(place,t)]),
   props(pantry, [
     inherit(place,t),
@@ -276,16 +295,25 @@ istate([
     volume_capacity(10),
     TooDark
   ]),
-  type_props(bowl, [
-    inherit(container,t),
-    inherit(object,t),
-    volume_capacity(2),
-    fragile(shards),
-    state(dirty,t),
-    inherit(flask,t),
-    name('porcelain bowl'),
-    desc('This is a modest glass cooking bowl with a yellow flower motif glazed into the outside surface.')
-  ]),
+       type_props(bowl, [
+         inherit(container,t),
+         inherit(object,t),
+         volume_capacity(2),
+         fragile(shards),
+         state(dirty,t),
+         inherit(flask,t),
+         name('porcelain bowl'),
+         desc('This is a modest glass cooking bowl with a yellow flower motif glazed into the outside surface.')
+       ]),
+       type_props(plate, [
+         inherit(container,t),
+         inherit(object,t),
+         volume_capacity(2),
+         fragile(shards),
+         state(dirty,t),
+         inherit(flask,f),
+         name('plate')
+       ]),
        type_props(box, [
          inherit(container,t),
          inherit(object,t),
@@ -296,6 +324,18 @@ istate([
          %can_be(lock, t),
          state(locked, t),
          TooDark
+       ]),
+       type_props(sink, [
+         inherit(container,t),
+         inherit(furnature,t),
+         volume_capacity(10),
+         state(dirty,t),
+         inherit(flask,f)
+       ]),
+       type_props(cabinate, [
+         inherit(container,t),
+         inherit(furnature,t),
+         volume_capacity(10)
        ]),
        type_props(fountain, [         
          volume_capacity(150),
@@ -401,7 +441,7 @@ istate([
   ]),
   type_props(broken_videocam, [can_be(switch, f),state(powered, f), inherit(videocamera,t)])
          
-]) :-
+]) :-     clock_time(Now),
   sensory_model_problem_solution(Sense, Spatial, TooDark, EmittingLight).
 
 

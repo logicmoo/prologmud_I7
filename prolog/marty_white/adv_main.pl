@@ -18,6 +18,7 @@
 */
 %:- use_module(library(pfc)).
 
+security_of(_,_Wiz).
 admin :- true.  % Potential security hazzard.
 wizard :- true. % Potential to really muck up game.
 extra :-  true. % Fuller, but questionable if needed yet.

@@ -99,7 +99,7 @@ add_todo_all([Action|Rest], Mem0, Mem2) :-
 % -----------------------------------------------------------------------------
 
 % do_introspect(Query, Answer, Memory)
-do_introspect(path(Spatial, There), Answer, Memory) :-
+do_introspect(path(There), Answer, Memory) :-
   thought(inst(Agent), Memory),
   thought_model(ModelData, Memory),
   in_model(h(Spatial, _Prep, Agent, Here, _T), ModelData),
@@ -226,12 +226,13 @@ with_agent_console(Agent,Goal):-
      Goal,erase(E)),!.
 
 run_agent_pass_1_0(Agent, S0, S) :-
+  clock_time(Now),
   must_input_state(S0),
   %dmust((
   undeclare(memories(Agent, Mem0), S0, S1),
   undeclare(perceptq(Agent, PerceptQ), S1, S2),
-  thought(timestamp(T0), Mem0),  
-  (PerceptQ==[] -> (T1 is T0 + 0, Mem0 = Mem1) ;  (T1 is T0 + 1, memorize(timestamp(T1), Mem0, Mem1))), 
+  thought(timestamp(T0,_OldNow), Mem0),  
+  (PerceptQ==[] -> (T1 is T0 + 0, Mem0 = Mem1) ;  (T1 is T0 + 1, memorize(timestamp(T1,Now), Mem0, Mem1))), 
   process_percept_list(Agent, PerceptQ, T1, Mem1, Mem2),
   memorize_list(PerceptQ, Mem2, Mem3),
   decide_action(Agent, Mem3, Mem4),
