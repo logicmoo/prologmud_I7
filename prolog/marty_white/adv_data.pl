@@ -235,48 +235,48 @@ extra_decl(T,P):-
 
           type_props(unthinkable, [
              can_be(examine(_), f),
-             class_desc(['It is normally unthinkable'])]),
+             class_desc(['kind is normally unthinkable'])]),
 
           type_props(thinkable, [
              can_be(examine(_), t),
-             class_desc(['It is normally thinkable'])]),
+             class_desc(['kind is normally thinkable'])]),
 
           type_props(only_conceptual, [   
              can_be(examine(Spatial), f),
              inherit(thinkable,t),
-             class_desc(['It is completely conceptual'])]),
+             class_desc(['kind is completely conceptual'])]),
 
           type_props(noncorporial, [
              can_be(examine(Spatial), f),
              can_be(touch, f),
              inherit(thinkable,t),
              inherit(corporial,f),
-             class_desc(['It is completely non-corporial'])]),
+             class_desc(['kind is completely non-corporial'])]),
 
           type_props(partly_noncorporial, [
              inherit(corporial,t),
              inherit(noncorporial,t),
-             class_desc(['It is both partly corporial and non-corporial'])]),
+             class_desc(['kind is both partly corporial and non-corporial'])]),
 
           type_props(corporial, [
              can_be(touch, t),
              can_be(examine(Spatial), t),
              inherit(thinkable,t),
-             class_desc(['It is corporial'])]),
+             class_desc(['kind is corporial'])]),
 
           type_props(object, [
              can_be(touch, t),
              can_be(examine(Spatial), t),
              inherit(thinkable,t),
              can_be(move, t),
-             class_desc(['It is an Object'])]),
+             class_desc(['kind is an Object'])]),
 
           type_props(furnature, [
              can_be(touch, t),
              can_be(examine(Spatial), t),
              can_be(move, f),
              inherit(thinkable,t),
-             class_desc(['It is furnature'])]),
+             class_desc(['kind is furnature'])]),
 
      % People
       type_props(character, [
@@ -341,7 +341,7 @@ extra_decl(T,P):-
 
             oper($self, put(Spatial, Thing, in, $self),
                % precond(Test, FailureMessage)
-               precond(~getprop(Thing, inherit(liquid,t)), ['liquids would spill out']),
+               precond(( ~(getprop(Thing, inherit(liquid,t)))), ['liquids would spill out']),
               % body(clause)
                body(move(Spatial, Thing, in, $self))),
             has_rel(Spatial, in)

@@ -42,7 +42,11 @@ add_help_cmd(Cmd):-
 printable_state(S,S).
 
 
-meta_pprint(D,K):- pprint(D,K).
+print_english(Doer, Logic):- is_list(Logic),!, maplist(print_english(Doer), Logic).
+print_english(Doer, Logic):- log2eng(Doer, Logic, Eng),dmust((eng2txt(Doer, Doer, Eng, Text))), pprint(Text,always).
+
+meta_pprint(Doer, Logic, always):- ignore(xtreme_english),!, print_english(Doer, Logic).
+meta_pprint(_Doer, D,K):- pprint(D,K).
 
 % do_metacmd(Doer, Action, S0, S1)
 :- add_help(quit,"Quits the game.").
@@ -83,21 +87,21 @@ do_metacmd(Doer, Echo, S0, S0) :-
 do_metacmd(Doer, state, S0, S0) :-
   security_of(Doer,wizard),
   printable_state(S0,S),
-  meta_pprint(S, general),
+  meta_pprint(Doer, S, always),
   maybe_pause(Doer).
 do_metacmd(Doer, props, S0, S0) :-
   security_of(Doer,wizard),
   printable_state(S0,S),
   include(@=<(props(_,_)),S,SP),
   reverse(SP,SPR),
-  meta_pprint(SPR, general),
+  meta_pprint(Doer, SPR, always),
   maybe_pause(Doer).
 do_metacmd(Doer, mem, S0, S0) :-
   security_of(Doer,wizard),
   printable_state(S0,S),
   include(@>=(props(_,_)),S,SP),
   reverse(SP,SPR),
-  meta_pprint(SPR, general),
+  meta_pprint(Doer, SPR, always),
   maybe_pause(Doer).
 do_metacmd(Doer, make, S0, S0) :-
   security_of(Doer,wizard),
@@ -115,14 +119,14 @@ do_metacmd(Doer, CLS, S0, S0) :- security_of(Doer,wizard),
 do_metacmd(Doer, memory(Agent), S0, S0) :-
   security_of(Doer,wizard),
   forall(member(memories(Agent, Memory), S0),
-  meta_pprint(Memory, general)),
+  meta_pprint(Agent, Memory, always)),
   maybe_pause(Doer).
 
 do_metacmd(Doer, model(Agent), S0, S0) :-
   security_of(Doer,wizard),
   forall(member(memories(Agent, Memory), S0),
   forall(thought(model(ModelData), Memory),
-   meta_pprint(ModelData, general))),
+   meta_pprint(Doer, ModelData, always))),
   maybe_pause(Doer).
 
 do_metacmd(Doer, create(Object), S0, S1) :-

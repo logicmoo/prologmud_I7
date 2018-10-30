@@ -45,7 +45,7 @@ is_prop_public(_,P) :-
   member(P, [
              name(_),
              desc(_),
-             fragile(_),emitting(_Light), 
+             fragile(_),emitting(_,_Light), 
              %has_rel(_Spatial, _), 
              
              can_be(eat, _), 
@@ -179,7 +179,7 @@ verb_sensory(Verb, Sense):- verb_alias(Verb, Verb2), Verb\=Verb2,
 
 
 % sensory_model(Visual, Spatial, TooDark, EmittingLight))
-sensory_model_problem_solution(Sense, Spatial, state(Dark, t), emitting(Light)):-
+sensory_model_problem_solution(Sense, Spatial, state(Dark, t), emitting(Sense, Light)):-
    problem_solution(Dark, Sense, Light), sensory_model(Sense, Spatial).
 
 problem_solution(dark, see, light).
@@ -208,13 +208,13 @@ process_percept_auto(Agent, Percept, _Stamp, Mem0, Mem0) :-
   bugout('~w: Ignoring ~p~n', [Agent, Percept], autonomous).
 process_percept_auto(Agent, sense_props(Sense, Object, PropList), _Stamp, Mem0, Mem2) :-
   bugout('~w: ~p~n', [Agent, sense_props(Sense, Object, PropList)], autonomous),
-  (member(shiny, PropList),member(inherit(shiny,t), PropList)),
+  (member(inherited(shiny), PropList)),
   thought_model(ModelData, Mem0),  
   \+ related(_Spatial, descended, Object, Agent, ModelData), % Not holding it?
   add_todo_all([take( Object), print_('My shiny precious!')], Mem0, Mem2).
 
 process_percept_auto(_Agent,
-    sense(Sense, [you_are(_Spatial, _Prep, _Here), exits_are(_Exits), here_are(Objects)]),
+    sense(Sense, [you_are(_Prep, _Here), exits_are(_Exits), here_are(Objects)]),
     _Stamp, Mem0, Mem2) :-
   thought_model(ModelData, Mem0),
   findall(examine(Sense, Obj),

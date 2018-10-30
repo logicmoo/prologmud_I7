@@ -83,7 +83,7 @@ psubsetof(A, C) :-
   subsetof(B, C).
 
 
-maybe_pause(Agent):- console_player(CP),(Agent==CP -> wait_for_input([user_input],_,10) ; true).
+maybe_pause(Agent):- console_player(CP),(Agent==CP -> wait_for_input([user_input],_,0) ; true).
 
 do_command(Agent, Action, S0, S1) :-
   do_metacmd(Agent, Action, S0, S1), !,   
@@ -155,13 +155,13 @@ apply_act(Agent, examine(How, Thing), State, NewState) :-
 
 apply_act(Agent, Action, State, NewState) :- no_debug_cant(Agent, Action),
   cant(Agent, Action, Reason, State),
-  reason2eng(Reason, Eng),
+  log2eng(Agent, Reason, Eng),
   queue_percept(Agent, [failure(Action, Reason), Eng], State, NewState), !.
 
 apply_act(Agent, Action, State, NewState) :- \+ no_debug_cant(Agent, Action),
    \+ \+ cant(Agent, Action, _Reason, State),
   trace, rtrace(cant(Agent, Action, Reason, State)), !,
-  reason2eng(Reason, Eng),
+  log2eng(Agent, Reason, Eng),
   queue_percept(Agent, [failure(Action, Reason), Eng], State, NewState).
 
 apply_act(Agent, Action, State, NewState):- act(Agent, Action, State, NewState), !.
@@ -191,7 +191,7 @@ act(Agent, Action, State, NewState) :-
   findall(Direction, related(Spatial, exit(Direction), Here, _, State), Exits),
   !,
   queue_percept(Agent,
-                [sense(Sense, [you_are(Spatial, Relation, Here), exits_are(Exits), here_are(Nearby)])],
+                [sense(Sense, [you_are(Relation, Here), exits_are(Exits), here_are(Nearby)])],
                 State, NewState).
 
 act(Agent, inventory, State, NewState) :- 
@@ -241,12 +241,14 @@ act_goto(Agent, _Walk, Dir, _Relation, _Room, S0, S9) :- nonvar(Dir),
   related(Spatial, exit(Dir), Here, There, S0),!,
   %member(Relation, [*, to, at, through, thru]),
   has_rel(Spatial, PrepThere, There, S0),
-
   moveto(Spatial, Agent, PrepThere, There,
-         [Here, There],
+         [Here],
          [cap(subj(Agent)), person(go, goes), Dir],
          S0, S1),
-  must_act(Agent, look(Spatial), S1, S9).
+  (related(Spatial, exit(RDir), There, Here, S0)-> true ; reverse_dir(Dir,RDir)),
+  queue_local_event(Spatial, [moved( Agent, Here, PrepThere, There), 
+    the(Agent), person(arrived, arrives),from,the, RDir], [There], S1, S2),
+  must_act(Agent, look(Spatial), S2, S9).
 
 act_goto(Agent, _Walk, Dir, Relation, Room, S0, S9)  :- nonvar(Room),         % go in (adjacent) room
   has_rel(Spatial, Relation, Room, S0),!,
@@ -268,7 +270,7 @@ act_goto(Agent, _Walk, Dir,  _To, Room, S0, S9) :- nonvar(Room),             % g
     [cap(subj(Agent)), person(go, goes), Dir], S0, S1),
   must_act(Agent, look(Spatial), S1, S9).
 
-
+reverse_dir(Dir,ward(Dir)).
 
 %  sim(verb(args...), preconds, effects)
 %    Agent is substituted for $self.
@@ -316,7 +318,8 @@ act(Agent, put(Spatial, Thing1, Relation, Dest), State, NewState) :-
       [cap(subj(Agent)), person('put the', 'puts a'), Thing1,
           Relation, the, Dest, '.'],
       State, NewState).
-                          
+
+  
 act(Agent, give( Thing, Recipient), S0, S9) :-
   has_rel(Spatial, held_by, Recipient, S0),
   reachable(Spatial, Recipient, Agent, S0),

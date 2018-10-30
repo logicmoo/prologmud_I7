@@ -82,7 +82,7 @@ update_model(_Agent, sense_props(_Sense, Object, PropList), Stamp, _Mem, M0, M2)
   append([props_at(Object, PropList, Stamp)], M1, M2).
 
 update_model(_Agent,
-             sense(Sense, [you_are(Spatial, How, Here), exits_are(Exits), here_are(Objects)]),
+             sense(Sense, [you_are(How, Here), exits_are(Exits), here_are(Objects)]),
              Timestamp, _Mem, M0, M4) :-
   sensory_model(Sense, Spatial),
   % Don't update map here, it's better done in the moved( ) clause.

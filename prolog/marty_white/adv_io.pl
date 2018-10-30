@@ -309,7 +309,7 @@ stop_logging :-
 
 :- dynamic(bugs/1). % Types of logging output.
 %bugs([general, printer, planner, autonomous]).
-bugs([general, planner, autonomous, telnet]).
+bugs([always, general, planner, autonomous, telnet]).
 %bugs([general, autonomous]).
 bug(B) :-
   bugs(L),
@@ -363,9 +363,11 @@ clip_cons(Left,_,List):-maplist(simplify_dbug,Left,List).
 pprint(Term, B) :-
   bug(B),
   !,
-  player_format('~N~@~N',[prolog_pretty_print:print_term(Term, [output(current_output)])]),!.
+  player_format('~N~@~N',[our_pretty_printer(Term)]),!.
 pprint(_, _).
 
+our_pretty_printer(Term):- compound(Term),!, prolog_pretty_print:print_term(Term, [output(current_output)]).
+our_pretty_printer(Term):- format(current_output,'~w',[Term]).
 /*
 redraw_prompt(Agent):- (Agent == 'floyd~1'),
 
@@ -499,12 +501,13 @@ line_to_tokens([],_,[]):-!.
 line_to_tokens(NegOne,NegOne,[quit]):-!.
 line_to_tokens([NegOne],NegOne,[quit]):-!.
 line_to_tokens(LineCodes,_NegOne,Tokens) :- 
-    append(_NewLineCodes,[L],LineCodes),
-    member(L,[46]),read_term_from_codes(LineCodes,Term,
-     [syntax_errors(fail),var_prefix(false),
+    append(NewLineCodes,[L],LineCodes),
+    member(L,[46]),
+    catch((read_term_from_codes(NewLineCodes,Term,
+     [syntax_errors(error),var_prefix(false),
         % variables(Vars),
-        variable_names(_VNs),cycles(true),dotlists(true),singletons(_)]),
-    Term=..Tokens,!.
+        variable_names(_VNs),cycles(true),dotlists(true),singletons(_)])),_,fail),
+    Tokens=[Term],!.
 line_to_tokens(LineCodes,NegOne,Tokens) :- 
   append(NewLineCodes,[L],LineCodes),
   member(L,[10,13,32,46]),!,

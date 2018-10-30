@@ -2,4 +2,20 @@
 ~*
 *.qlf
 *.bak
+.git?*/
+Meta-AQUA/
+RefGitHub
+candc*
+*.log
+./*.*
+jgordon_boxer/
+learningbyreading/
+nlp-server/
+prolog/homelessExpertSystem/
+prolog/marty_white/index.html
+*~*/
+*.out
+prolog/nldata/sorted
+*.old
+prolog/prologmud/
 
