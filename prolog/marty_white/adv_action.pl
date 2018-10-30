@@ -231,7 +231,7 @@ act_goto(Agent, Walk, _Dir,  Relation, Object, S0, S9) :-  nonvar(Object),      
   related(Spatial, OpenTraverse, Object, Here, S0),
   \+ is_state(~(open), Object, S0),
 
-  moveto(Spatial, Agent, Relation, Object, [Here],
+  moveto(Spatial, Agent, Relation, Object, [Here, Object],
     [subj(Agent), person(get, gets), Relation, the, Object, .], S0, S1),
   must_act(Agent, look(Spatial), S1, S9).
 
@@ -278,7 +278,7 @@ act_goto(Agent, _Walk, Dir,  _To, Room, S0, S9) :- nonvar(Room),             % g
 %  Need:
 %    actor/agent, verb/action, direct-object/obj1, indirect-object/obj2,
 %      preposition-introducing-obj2
-%sim(put(Spatial, Obj1, Obj2),
+%sim(put(Spatial, Thing,Relation, Where),
 %    ( related(Spatial, descended, Thing, $self),
 %      has_sensory(Spatial, Sense, $self, Where),
 %      has_rel(Spatial, Relation, Where),
@@ -304,18 +304,19 @@ act(Agent, drop(Thing), State, NewState) :-
 
 act(Agent, put(Thing1, Relation, Thing2), State, NewState) :-
   act(Agent, put(spatial, Thing1, Relation, Thing2), State, NewState).
-act(Agent, put(Spatial, Thing1, Relation, Thing2), State, NewState) :-
-  has_rel(Spatial, Relation, Thing2, State),
-   get_open_traverse(Open, _See, _Traverse, Spatial, OpenTraverse),
-  (Relation \= in ; \+ is_state(~(Open), Thing2, State)),
-  reachable(Spatial, Thing2, Agent, State), % what if "under" an "untouchable" thing?
+
+act(Agent, put(Spatial, Thing1, Relation, Dest), State, NewState) :-
+  has_rel(Spatial, Relation, Dest, State),
+  get_open_traverse(Open, _See, _Traverse, Spatial, OpenTraverse),
+  (Relation \= in ; \+ is_state(~(Open), Dest, State)),
+  reachable(Spatial, Dest, Agent, State), % what if "under" an "untouchable" thing?
   % OK, put it
   related(Spatial, OpenTraverse, Agent, Here, State),
-  moveto(Spatial, Thing1, Relation, Thing2, [Here],
+  moveto(Spatial, Thing1, Relation, Dest, [Here],
       [cap(subj(Agent)), person('put the', 'puts a'), Thing1,
-          Relation, the, Thing2, '.'],
+          Relation, the, Dest, '.'],
       State, NewState).
-
+                          
 act(Agent, give( Thing, Recipient), S0, S9) :-
   has_rel(Spatial, held_by, Recipient, S0),
   reachable(Spatial, Recipient, Agent, S0),
@@ -417,6 +418,9 @@ act_to_cmd_thing(SwitchOnThing, SwitchOn, Thing) :-
   SwitchOnThing =.. [Switch, On, Thing],!,
   SwitchOn=.. [Switch,On].
 
+:- meta_predicate maybe_when(0,0).
+:- meta_predicate required_reason(*,0).
+:- meta_predicate unless_reason(*,0,*).
 maybe_when(If,Then):- If -> Then ; true.
 unless_reason(_Agent, Then,_Msg):- Then,!.
 unless_reason(Agent,_Then,Msg):- player_format(Agent,'~N~p~n',Msg),!,fail.
@@ -424,6 +428,7 @@ unless_reason(Agent,_Then,Msg):- player_format(Agent,'~N~p~n',Msg),!,fail.
 required_reason(_Agent, Required):- Required,!.
 required_reason(Agent, Required):- simplify_reason(Required,CUZ), player_format(Agent,'~N~p~n',cant(cuz(CUZ))),!,fail.
 
+simplify_reason(_:Required, CUZ):- !, simplify_dbug(Required, CUZ).
 simplify_reason(Required, CUZ):- simplify_dbug(Required, CUZ).
 
 act(Agent, OpenThing, S0, S) :- 

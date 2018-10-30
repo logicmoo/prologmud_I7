@@ -104,7 +104,8 @@ do_metacmd(Doer, make, S0, S0) :-
   thread_signal(main,make).
 do_metacmd(Doer, prolog, S0, S0) :-
   security_of(Doer,wizard),
-  prolog.
+  '$current_typein_module'(Was),
+  setup_call_cleanup('$set_typein_module'(mu),prolog,'$set_typein_module'(Was)).
 
 do_metacmd(Doer, CLS, S0, S0) :- security_of(Doer,wizard), 
   current_predicate(_, CLS), 

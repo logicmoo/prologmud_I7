@@ -22,7 +22,7 @@ filter_spec( \+ Spec, PropList):- !,
   \+  filter_spec(Spec, PropList).
 filter_spec((Spec1;Spec2), PropList):- !, filter_spec(Spec1, PropList);filter_spec(Spec2, PropList).
 filter_spec((Spec1, Spec2), PropList):- !, filter_spec(Spec1, PropList), filter_spec(Spec2, PropList).
-filter_spec(    Spec, PropList):- member(Spec, PropList).
+filter_spec(    Spec, PropList):- declared(Spec, PropList).
 
 create_new_unlocated(Type,Inst,S0,S2):- 
   atom_concat(Type,'~',TType),gensym(TType,Inst),
@@ -57,13 +57,12 @@ init_objects(S0, S2) :-
 %  dbug(existingAgent=Agent),
 %  S2=S0.
                    
-create_object(Object, S0, S0) :- declared(object(Object,t), S0),!.
+create_object(Object, S0, S0) :- declared(props(Object,PropList), S0), member(co(_),PropList),!.
 create_object(Object, S0, S9) :- 
-   declared_props_or(Object, PropList,[], S0),!,
+   object_props_or(Object, PropList, [], S0),!,
    dbug(create_object(Object,PropList)),
-   declare(object(Object,PropList), S0, S1),
-   undeclare_always(props(Object,_), S1, S2),
-   declare(props(Object,[]), S2, S3),
+   undeclare_always(props(Object,_), S0, S2),
+   declare(props(Object,[co(PropList)]), S2, S3),
    create_objprop(Object, PropList, S3, S9).   
 /*
 visit_existing(_Object, [], S0, S0) :-!.
@@ -94,20 +93,29 @@ create_objprop(Object, inherit(perceptq,t), S0, S1):- !,
 
   % Most agents store memories of percepts, world model, goals, etc.
 create_objprop(Object, inherit(memorize,t), S0, S0):- declared(memories(Object,_),S0),!.
-create_objprop(Object, inherit(memorize,t), S0, S2):- !, clock_time(Now),
-  dmust(declared(object(Object,PropList),S0)),
+/*create_objprop(Object, inherit(memorize,t), S0, S2):- !, clock_time(Now),
+  dmust(declared(props(Object,PropList),S0)),
   declare(memories(Object, [
     structure_label(mem(Object)),
     timestamp(0,Now),
     model([]),
     goals([]),
     todo([look]),
-    inst(Object)|PropList]), S0, S2).
+    inst(Object)|PropList]), S0, S2).*/
+
+create_objprop(Object, inherit(memorize,t), S0, S2):- !, clock_time(Now),
+  declare(memories(Object, [
+    structure_label(mem(Object)),
+    timestamp(0,Now),
+    model([]),
+    goals([]),
+    todo([look]),
+    inst(Object)]), S0, S2).
 
 
-create_objprop(_Object, inherit(Other,t), S0, S0):- current_props(Other, PropList, S0), member(no_copy(t),PropList),!.
+create_objprop(_Object, inherit(Other,t), S0, S0):- direct_props(Other, PropList, S0), member(no_copy(t),PropList),!.
 create_objprop(Object, inherit(Other,t), S0, S9):- 
-   current_props_or(Other, PropList, [], S0),
+   direct_props_or(Other, PropList, [], S0),
    copy_term(PropList,PropListC),!,
   % dmust(updateprop(Object, inherit(Other,t), S5, S9)), !,
    dmust(updateprop(Object, inherited(Other), S0, S2)), !,
@@ -155,7 +163,7 @@ create_1obj(Suffix,Info,the(Type),Inst,S0,S2):-  find_recent(Suffix,Type,Inst,S0
 create_1obj(_Suffix,_Info,I,I, S0,S0):- atom_contains(I,'~').
 create_1obj(_Suffix,_Info,I,I, S0,S0):- assertion(atom(I)),!.
 
-find_recent(_Suffix,Type,Inst,S0,S0):- member(props(Inst,PropList),S0),member(instance(Type),PropList).
+find_recent(_Suffix,Type,Inst,S0,S0):- declared(props(Inst,PropList),S0),declared(instance(Type),PropList).
 
 inst_of(I,C,N):- compound(I),!,I=..[C,N|_],number(N).
 inst_of(I,C,N):- atom(I),!, atomic_list_concat([C,NN],'~',I),atom_number(NN,N).

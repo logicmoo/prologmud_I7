@@ -53,22 +53,21 @@ runnable_goal(Goal, Goal) :- ground(Goal), !.
 %runnable_goal(Goal, Goal_Copy):- copy_term(Goal, Goal_Copy).
 runnable_goal(Goal, Goal).
 
-% :- meta_predicate nomic_mu:maybe_when(0,0).
-% :- meta_predicate nomic_mu:required_reason(*,0).
-% :- meta_predicate nomic_mu:unless_reason(*,0,*).
-% :- meta_predicate nomic_mu:with_agent_console(*,0).
-:- meta_predicate(apply_forall(0,2,+,-)).
+:- module_transparent(apply_forall//2).
+:- meta_predicate(apply_forall(+,2,+,-)).
 apply_forall(Forall,Apply,S0,S1):-
   findall(Forall,Forall,Frames),
   apply_forall_frames(Frames,Forall,Apply,S0,S1).
 
-:- meta_predicate(apply_forall_frames(*,*,2,+,*)).
+:- module_transparent(apply_forall_frames//3).
+:- meta_predicate(apply_forall_frames(+,+,2,+,-)).
 apply_forall_frames([],_Forall,_Apply,S0,S0).
 apply_forall_frames([Frame|Frames],Forall,Apply,S0,S2):-
   Frame=Forall,apply_state(Apply,S0,S1),
   apply_forall_frames(Frames,Forall,Apply,S1,S2).
 
-:- meta_predicate(apply_state(+,+,-)).
+:- module_transparent(apply_state//1).
+%:- meta_predicate(apply_state(//,+,-)).
 apply_state(Goal,S0,S0):- Goal==[],!.
 apply_state(rtrace(Goal), S0, S2) :- !, rtrace(apply_state(Goal, S0, S2)). 
 apply_state(dmust(Goal), S0, S2) :- !, dmust(apply_state(Goal, S0, S2)).
@@ -93,6 +92,10 @@ apply_state(s(Goal), S0, S2) :- !,
    dmust(Call),
    S0 = S2,
    must_output_state(S2).
+
+apply_state(M:Goal, S0, S2) :- !,
+  assertion(atom(M)),
+  M:apply_state(Goal, S0, S2).
 
 apply_state(Goal, S0, S2) :-
    notrace((compound_name_arguments(Goal, F, GoalL),

@@ -17,7 +17,15 @@
 %
 */
 
-:- module(nomic_mu, [srv_mu/0,run_mu/0]).
+:- module(mu, [srv_mu/0,run_mu/0]).
+
+% nohup websocket_redir.sh dbutterfly 2666 &
+
+:- if(\+ exists_source(library(poor_bugger))).
+:- prolog_load_context(file,File),
+   absolute_file_name('.',X,[relative_to(File),file_type(directory)]),
+   asserta(user:file_search_path(library,X)).
+:- endif.
 
 :- ensure_loaded('./marty_white/adv_telnet').
 :- ensure_loaded('./marty_white/adv_main').

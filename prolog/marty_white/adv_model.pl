@@ -78,8 +78,8 @@ update_model(Agent, carrying(_Spatial, Objects), Timestamp, _Memory, M0, M1) :-
 update_model(_Agent, notice_children(_Sense, Object, How, Children), Timestamp, _Mem, M0, M1) :-
   update_relations( How, Children, Object, Timestamp, M0, M1).
 update_model(_Agent, sense_props(_Sense, Object, PropList), Stamp, _Mem, M0, M2) :-
-  select_always(props(Object, _, _), M0, M1),
-  append([props(Object, PropList, Stamp)], M1, M2).
+  select_always(props_at(Object, _, _), M0, M1),
+  append([props_at(Object, PropList, Stamp)], M1, M2).
 
 update_model(_Agent,
              sense(Sense, [you_are(Spatial, How, Here), exits_are(Exits), here_are(Objects)]),

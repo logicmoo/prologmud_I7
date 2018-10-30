@@ -1,0 +1,8 @@
+swipl -l nutcracker/tokkie.pl -g start tokkie --input $1.txt --output $1.tok
+../candc/bin/pos --input $1.tok --model ../candc/models/pos --output $1.pos
+../candc/bin/ner --input $1.pos --model ../candc/models/ner --output $1.ner
+../candc/bin/candc --input $1.tok --models ../candc/models/boxer --candc-printer boxer --output $1.ccg
+swipl -f /dev/null -l boxer/boxer.pl -g start --input $1.ccg --box --resolve --modal true  > $1.box
+swipl -f /dev/null -l boxer/boxer.pl -g start --input $1.ccg --box --resolve --modal true --semantics fol > $1.fol
+
+

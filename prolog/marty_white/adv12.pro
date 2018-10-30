@@ -320,17 +320,19 @@ select_always(_Item, ListWithoutItem, ListWithoutItem).
 
 % Manipulate simulation state
 declare(Fact, State, NewState) :- append([Fact], State, NewState).
+declare_if_new(Fact, State, NewState) :- declared(Fact, State) -> NewState=State ; declare(Fact, State, NewState).
 undeclare(Fact, State, NewState)   :- select(Fact, State, NewState).
 undeclare_always(Fact, State, NewState) :- select_always(Fact, State, NewState).
+
 declared(Fact, State) :- member(Fact, State).
 
 % Retrieve Prop.
 getprop(Object, Prop, State) :-
   declared(props(Object, PropList), State),
-  member(Prop, PropList).
+  declared(Prop, PropList).
 getprop(Object, Prop, State) :-
   declared(props(Object, PropList), State),
-  member(inherit(Delegate), PropList),
+  declared(inherit(Delegate), PropList),
   getprop(Delegate, Prop, State).
 
 % Replace or create Prop.
@@ -869,7 +871,7 @@ act(Agent, go(How, Room), S0, S9) :-              % go in (adjacent) room
   related(open_traverse, Agent, Here, S0),
   related(exit(ExitName), Here, Room, S0),
   moveto(Agent, How, Room, [Room,Here], 
-    [cap(subj(Agent)),person(go,goes),ExitName], S0, S1),
+    [cap(subj(Agent)),person(go,goes),ExitName,to,Room], S0, S1),
   act(Agent, look, S1, S9).
 act(Agent, go(*, Room), S0, S9) :-              % go to (adjacent) room
   relatable(How, Room, S0),
@@ -1100,8 +1102,8 @@ update_model(Agent, carrying(Objects), Timestamp, _Memory, M0, M1) :-
 update_model(_Agent, see_children(Object,How,Children),Timestamp,_Mem,M0,M1) :-
   update_relations(How, Children, Object, Timestamp, M0, M1).
 update_model(_Agent, see_props(Object,PropList), Stamp,_Mem,M0,M2) :-
-  select_always(props(Object,_,_),M0,M1),
-  append([props(Object,PropList, Stamp)],M1,M2).
+  select_always(props_at(Object,_,_),M0,M1),
+  append([props_at(Object,PropList, Stamp)],M1,M2).
 update_model(_Agent,
              see(you_are(How,Here), exits_are(Exits), here_are(Objects)),
              Timestamp, _Mem, M0, M4) :-
@@ -1810,7 +1812,7 @@ process_percept_auto(_Agent,
   member(model(Model), Mem0),
   findall(examine(Obj),
           ( member(Obj, Objects),
-            \+ member(props(Obj,_,_),Model)),
+            \+ member(props_at(Obj,_,_),Model)),
           ExamineNewObjects),
   add_todo_all(ExamineNewObjects, Mem0, Mem2).
 process_percept_auto(_Agent, _Percept, _Stamp, Mem0, Mem0).
@@ -2187,7 +2189,8 @@ decide_action(Agent, Mem0, Mem3) :-
 decide_action(_Agent, Mem, Mem) :-
   thought(agent_type(recorder), Mem).  % recorders don't decide much.
 decide_action(Agent, Mem0, Mem0) :-
-  bugout('decide_action(~w) FAILED!~n',[Agent],general).
+  set_last_action(Agent,[auto]),
+  nop(bugout('decide_action(~w) FAILED!~n',[Agent],general)).
 
 run_agent(Agent, S0, S) :-
   undeclare(memories(Agent, Mem0), S0, S1),

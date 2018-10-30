@@ -14,17 +14,21 @@
 % Main file.
 %
 */
+:- if(exists_source(library(nldata/nl_iface))).
+% being in user is just to help debugging from console
+:- user:ensure_loaded(library(nldata/nl_iface)).
+:- endif.
 
 :- if(exists_source(library(nldata/clex_iface))).
 % being in user is just to help debugging from console
 :- user:ensure_loaded(library(nldata/clex_iface)).
 :- endif.
-
+/*
 :- if(exists_source(library(nldata/ac_xnl_iface))).
 % being in user is just to help debugging from console
 :- time(user:ensure_loaded(library(nldata/ac_xnl_iface))).
 :- endif.
-
+*/
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  CODE FILE SECTION
 % :- ensure_loaded('adv_eng2cmd').
@@ -166,9 +170,12 @@ txt2goto(Walk,[ Dir], goto(Walk, Dir, _To, _Object), _Mem) :- (compass_direction
 % go [out,in,..]
 txt2goto(Walk,[ Prep], goto(Walk, _Dir, Prep, _Where), _Mem) :- preposition(spatial, Prep).
 % go kitchen
-txt2goto(Walk,[ Dest], goto(Walk, _Dir, _To, Where), Mem) :-
+txt2goto(Walk, Dest, goto(Walk, _Dir, _To, Where), Mem) :-
   txt2place(Dest, Where, Mem).
 
+
+txt2place(List, Place, Mem):- is_list(List), parse2object(List,Object,Mem),
+  txt2place(Object, Place, Mem).
 txt2place(Dest, Place, Mem):- 
   thought_model(ModelData, Mem),
   in_model(h(_Spatial, _, _, Dest, _T), ModelData),
@@ -262,7 +269,7 @@ as1object(TheThing, Thing, _Mem):- \+ atom(TheThing),!, TheThing=Thing.
 as1object(TheThing, Thing, Mem):- atom_concat(TheThing,'~1',TheThing2), sub_term(Thing,Mem),atom(Thing),TheThing2==Thing,!.
 as1object(TheThing, Thing, Mem):- atom_concat(TheThing,'~2',TheThing2), sub_term(Thing,Mem),atom(Thing),TheThing2==Thing,!.
 as1object(TheThing, Thing, Mem):- atom_of(inst, TheThing, Thing, Mem),!.
-as1object(TheThing, Thing, _Mem):- advstate(Mem), atom_of(inst, TheThing, Thing, Mem),!.
+as1object(TheThing, Thing, _Mem):- b_getval(advstate,Mem), atom_of(inst, TheThing, Thing, Mem),!.
 % as1object(Thing, Thing, _Mem).
 
 

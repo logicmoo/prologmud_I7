@@ -17,7 +17,7 @@ sentence(S) ---> imperative(S), terminator(!) .
 
 /* Declarative sentence */
 
-declarative(decl(S)) ---> s(S,_).
+declarative(decl(S)) ---> s80(S,_).
 
 /* Wh-questions */
 
@@ -61,10 +61,10 @@ whose(X,Agmt), np_head0(wh(X),Agmt,proper), gen_marker ---> [whose].
 
 question(QCase,NPCase,S) --->
    {subj_question(QCase), ix_role(subj,_,NPCase)},
-   s(S,_).
+   s80(S,_).
 question(QCase,NPCase,S) --->
    fronted_verb(QCase,NPCase),
-   s(S,_).
+   s80(S,_).
 
 int_art(X,Agmt), det(DX,Agmt,def) ---> int_art(X,Agmt,DX).
 
@@ -75,7 +75,7 @@ subj_question(undef).
 
 yn_question(q(S)) --->
    fronted_verb(nil,_),
-   s(S,_).
+   s80(S,_).
 
 fronted_verb(QCase,NPCase) ... 
       verb_form(Root,Tense,Agmt,Role), neg(_,Neg) --->
@@ -88,7 +88,7 @@ fronted_verb(QCase,NPCase) ...
 
 imperative(imp(S)) --->
    imperative_verb,
-   s(S,_).
+   s80(S,_).
 
 imperative_verb,
    [you],
@@ -97,7 +97,7 @@ imperative_verb,
 
 /* Basic sentence (actually, declarative sentence) */
 
-s(s(Subj,Verb,Args,Mods),Mask) --->
+s80(s80(Subj,Verb,Args,Mods),Mask) --->
    subj(Subj,Agmt,Type),
    verb(Verb,Agmt,Type,Voice),
    {ix_empty(Nil), ix_s_all(SAll)},
@@ -287,7 +287,7 @@ rel_rest(_,_,Rel,Rel,Mask,Mask) ---> [].
 rel(Agmt,rel(X,S),Mask) --->
    island,
    variable(Agmt,X),
-   s(S,Mask0),
+   s80(S,Mask0),
    {ix_trace(Trace), ix_minus(Mask0,Trace,Mask)},
    dnalsi.
 
@@ -332,7 +332,7 @@ reduced_rel_rest(_,_,Rel,Rel,Mask,Mask) ---> [].
 reduced_rel(Agmt,reduced_rel(X,S),Mask) --->
    island,
    reduced_wh(Agmt,X),
-   s(S,Mask0),
+   s80(S,Mask0),
    {ix_trace(Trace), ix_minus(Mask0,Trace,Mask)},
    dnalsi.
 

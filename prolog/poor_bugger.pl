@@ -11,6 +11,10 @@
 
 % :- set_prolog_flag(gc,false).
 
+:- if(exists_source(library(xlisting))).
+:- use_module(library(xlisting)).
+:- endif.
+
 update_deps :-
    pack_install(each_call_cleanup,[url('https://github.com/TeamSPoon/each_call_cleanup.git'),upgrade(true),interactive(false)]),
    pack_install(no_repeats,[url('https://github.com/TeamSPoon/no_repeats.git'),upgrade(true),interactive(false)]),
@@ -20,6 +24,10 @@ update_deps :-
    % hoses developement 
    nop(pack_install(small_adventure_games,[url('https://github.com/TeamSPoon/small_adventure_games.git'),upgrade(true),interactive(true)])),
    !.
+
+:- meta_predicate dmust(0).
+:- meta_predicate failed_dmust(0).
+:- meta_predicate no_repeats_must(0).
 
 dbug(P):- notrace(ansi_format([fg(cyan)],'~N% ~p.~n',[P])).
 :- module_transparent(dmust/1).

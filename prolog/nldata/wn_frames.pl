@@ -15581,3 +15581,4 @@ boxer_lex/framenet.pl:fnpattern(bend, 50000000, 'Change_posture', ['Agent': 'Pro
 +0 ## Committing_crime - crime.n - n#766234
 +0 ## Committing_crime - perpetrate.v - v#2582615
 +0 ## Committing_crime - commit.v - v#2582615
+

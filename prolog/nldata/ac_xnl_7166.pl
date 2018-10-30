@@ -1,98 +1,206 @@
+:- module(nlkb7166,[
+   assertion_lifting_consequent/2,assertion_lifting/2,assertion_mt/2,
+   assertion_content/3,assertion_content/4,assertion_content/5,assertion_content/6,
+   assertion_content/7,assertion_content/8,assertion_content/9,assertion_content/10,
+   assertion_content/11,assertion_content/12,assertion_content/13]).
 
-:- module(cycnl,[ttholds/1,ttholds/2,ttholds/3,ttholds/4,ttholds/5,ttholds/6,ttholds/7,ttholds/8,ttholds/9, 
-   assertion_content/3,assertion_content/4,assertion_content/5,assertion_content/6,assertion_content/7,assertion_content/8,assertion_content/9,assertion_content/10,assertion_content/11,assertion_content/12,assertion_content/13]).
-:- style_check(-singleton).
 
-:- multifile((ttholds/1,ttholds/2,ttholds/3,ttholds/4,ttholds/5,ttholds/6,ttholds/7,ttholds/8,ttholds/9)).
-:- dynamic((ttholds/1,ttholds/2,ttholds/3,ttholds/4,ttholds/5,ttholds/6,ttholds/7,ttholds/8,ttholds/9)).
-:- discontiguous((ttholds/1,ttholds/2,ttholds/3,ttholds/4,ttholds/5,ttholds/6,ttholds/7,ttholds/8,ttholds/9)).
-
+:- public((assertion_content/3,assertion_content/4,assertion_content/5,assertion_content/6,assertion_content/7,assertion_content/8,assertion_content/9,assertion_content/10,assertion_content/11,assertion_content/12,assertion_content/13)).
+:- export((assertion_content/3,assertion_content/4,assertion_content/5,assertion_content/6,assertion_content/7,assertion_content/8,assertion_content/9,assertion_content/10,assertion_content/11,assertion_content/12,assertion_content/13)).
 :- multifile((assertion_content/3,assertion_content/4,assertion_content/5,assertion_content/6,assertion_content/7,assertion_content/8,assertion_content/9,assertion_content/10,assertion_content/11,assertion_content/12,assertion_content/13)).
 :- dynamic((assertion_content/3,assertion_content/4,assertion_content/5,assertion_content/6,assertion_content/7,assertion_content/8,assertion_content/9,assertion_content/10,assertion_content/11,assertion_content/12,assertion_content/13)).
 :- discontiguous((assertion_content/3,assertion_content/4,assertion_content/5,assertion_content/6,assertion_content/7,assertion_content/8,assertion_content/9,assertion_content/10,assertion_content/11,assertion_content/12,assertion_content/13)).
 
+:- public((assertion_lifting_consequent/2,assertion_lifting/2,assertion_mt/2)).
+:- export((assertion_lifting_consequent/2,assertion_lifting/2,assertion_mt/2)).
 :- multifile((assertion_lifting_consequent/2,assertion_lifting/2,assertion_mt/2)).
 :- dynamic((assertion_lifting_consequent/2,assertion_lifting/2,assertion_mt/2)).
 :- discontiguous((assertion_lifting_consequent/2,assertion_lifting/2,assertion_mt/2)).
 
 :- set_prolog_flag(double_quotes,string).
+:- style_check(-singleton).
 
-%:- include('ac_xnl_7166.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_000000.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_000100.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_000200.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_000300.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_000400.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_000500.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_000600.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_000700.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_000800.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_000900.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_001000.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_001100.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_001200.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_001300.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_001400.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_001500.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_001600.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_001700.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_001800.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_001900.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_002000.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_002100.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_002200.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_002300.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_002400.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_002500.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_002600.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_002700.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_002800.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_002900.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_003000.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_003100.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_003200.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_003300.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_003400.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_003500.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_003600.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_003700.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_003800.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_003900.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_004000.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_004100.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_004200.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_004300.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_004400.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_004500.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_004600.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_004700.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_004800.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_004900.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_005000.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_005100.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_005200.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_005300.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_005400.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_005500.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_005600.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_005700.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_005800.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_005900.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_006000.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_006100.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_006200.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_006300.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_006400.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_006500.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_006600.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_006700.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_006800.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_006900.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_007000.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_007100.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_007200.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_007300.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_007400.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_007500.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_007600.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_007700.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_007800.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_007900.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_008000.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_008100.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_008200.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_008300.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_008400.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_008500.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_008600.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_008700.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_008800.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_008900.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_009000.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_009100.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_009200.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_009300.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_009400.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_009500.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_009600.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_009700.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_009800.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_009900.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_010000.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_010100.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_010200.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_010300.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_010400.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_010500.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_010600.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_010700.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_010800.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_010900.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_011000.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_011100.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_011200.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_011300.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_011400.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_011500.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_011600.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_011700.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_011800.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_011900.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_012000.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_012100.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_012200.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_012300.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_012400.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_012500.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_012600.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_012700.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_012800.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_012900.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_013000.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_013100.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_013200.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_013300.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_013400.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_013500.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_013600.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_013700.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_013800.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_013900.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_014000.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_014100.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_014200.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_014300.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_014400.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_014500.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_014600.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_014700.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_014800.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_014900.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_015000.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_015100.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_015200.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_015300.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_015400.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_015500.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_015600.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_015700.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_015800.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_015900.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_016000.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_016100.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_016200.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_016300.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_016400.nldata').
+:-include('ac_xnl/ac_xnl_7166_part_016500.nldata').
 
-:- dynamic(warned_ttw/1).
-ttw(A):- warned_ttw(A),!.
-ttw(A):- assertz(warned_ttw(A)),
-         source_location(F,L),
-         format(user_error,'~NWARN: ~p. % ~w:~w~n',[A,F,L]),!.
 
-:- include('tt0_00022_cycl_renamed.nldata').
+/*
+split -l 8000 -d -a 4 --additional-suffix=00.nldata sorted ac_xnl/ac_xnl_7166_part_
 
-is_tt(A,R):- atom(A),!,atom_concat('tt_',R,A).
-is_tt(A,A).
+   assertion_content/3
+   assertion_content/4
+   assertion_content/5
+   assertion_content/6
+   assertion_content/7
+   assertion_content/8
+   assertion_content/9
+   % assertion_content/10
+   assertion_content/11
 
-is_NOf(Event,W,N):-atom(W),atom_concat(Event,NOf,W),atom_concat(NA,'-of',NOf),atom_number(NA,N).
-
-maybe_rename_tt(I,I):- \+ callable(I),!.
-maybe_rename_tt(tt(I),tt(I)):-!.
-maybe_rename_tt(fr(I),fr(I)):-!.
-maybe_rename_tt([],[]):-!. 
-maybe_rename_tt([I],S):- atom_string(I,S),!.
-%maybe_rename_tt([I],S):- atom_string(I,S),!.
-maybe_rename_tt(I,I):-  \+ atom(I),!. %, nop(ttw(\+ atom(I))),!.
-maybe_rename_tt(I,N):- atom_number(I,N),!.
-maybe_rename_tt(I,R):- rename(R,I),!,ttw(rename(R,I)).
-maybe_rename_tt(I,I).
-
-%ttholds('inflNounSingularUnchecked','TTWord-MovieHouse',['movie','house']).
-
-dash_to_underscore(R,U):- atomic_list_concat(List,'-',R),atomic_list_concat(List,'_',U).
-
-has_tt([R|GS]):- member(E,[R|GS]),\+ atom(E),!.
-has_tt(RGS):- sub_term(Sub,RGS),atom(Sub),atom_concat('tt_',_,Sub),!.
+*/
 
 
-de_frame([FN,A|RGS],(PP)):- has_tt(RGS),maplist(de_frame,[A|RGS],NARGS),!,PP=..[FN|NARGS].
-de_frame([A|RGS],PP):- ws_to_string([A|RGS],PP),!.
-de_frame(A,R):- de_tt_ify(A,R).
-
-de_tt_ify(A,UU):- atom(A),atom_concat('tt_',R,A),!,dash_to_underscore(R,U),atom_concat(U,'_tt',UU).
-de_tt_ify(A,R):- maybe_rename_tt(A,R) .
-
-
-ws_to_string([W|List],PP):- has_tt([W|List]),!,maplist(de_frame,[W|List],FNNARGS),PP=..FNNARGS.
-% ws_to_string([W|List],_):- has_tt([W|List]),!,fail.
-ws_to_string([WordList],PP):- ws_to_string(WordList,PP),!.
-ws_to_string([W|List],SS):- maplist(ws_to_string,[W|List],PP),SS=..[s|PP].
-ws_to_string(W,S):- text_to_string(W,S).
-
-% ['agree','tt_bride',['husband-of','tt_bride','tt_bridegroom']]
-tt_expansion(F,[TT,WordList],ttholds(F,TT,PP)):- atom(TT),atom_concat('TTWord-',_Word,TT),is_list(WordList),!,ws_to_string(WordList,PP).
-tt_expansion(F,[TT,Frame],ttholds(eventOf,TTT,N,PP)):- is_NOf('event',F,N),!,de_tt_ify(TT,TTT),de_frame(Frame,PP).
-tt_expansion(F,[TT,Frame],ttholds(roleOf,TTT,N,PP)):- is_NOf('role',F,N),!,de_tt_ify(TT,TTT),de_frame(Frame,PP).
-tt_expansion(F,List,PP):-
-  maplist(de_frame,List,RNList),
-  PP=..[ttholds,F|RNList],!.
-
-tt_term_expansion(P,PP):-
-  P=..[ttholds,F|List],
-  tt_expansion(F,List,PP).
-
-tt_write(P):- tt_term_expansion(P,PP)->P\==PP,!,tt_write(PP).
-tt_write(P):- format('~N~p.~n',[P]).
-
-:- ensure_loaded('tt0_00022_cycl.pl').
-% library('nldata/tt0_00022_cycl.nldata')
-:- absolute_file_name('tt0_00022_cycl.nldata',
-        File, [access(read)]),
-   open(File, read, In),
-   set_stream(In, encoding(iso_latin_1)),
-   tell(tt2),
-   repeat,
-   read(In, P),
-   % DMiles: i am putting them in backwards (cuz, the hypens- confuse me if they pop out first in the debugger)
-   once(tt_write(P);break),
-   P==end_of_file,!,
-   told,!.
-
-
-%:- retractall(assertion_content(retainTerm,_,_)).

@@ -219,7 +219,7 @@ process_percept_auto(_Agent,
   thought_model(ModelData, Mem0),
   findall(examine(Sense, Obj),
           ( member(Obj, Objects),
-            \+ member(props(Obj, _, _), ModelData)),
+            \+ member(props_at(Obj, _, _), ModelData)),
           ExamineNewObjects),
   add_todo_all(ExamineNewObjects, Mem0, Mem2).
 process_percept_auto(_Agent, _Percept, _Stamp, Mem0, Mem0).
@@ -238,7 +238,7 @@ process_percept_player(Agent, Percept, _Stamp, Mem0, Mem0) :-
   player_format('~N~q~n', [Agent:Percept]),
   dmust(redraw_prompt(Agent)),!.
 
-% once(( notrace((thought(inherit(console,t), Mem0);thought(inherit(player,t), Mem0);thought(inherit(telnet,t), Mem0))).
+% once(( notrace((thought(inherited(console), Mem0);thought(inherit(player,t), Mem0);thought(inherit(telnet,t), Mem0))).
 is_player(Agent):- \+ is_non_player(Agent).
 is_non_player(Agent):- Agent == 'floyd~1'.
 
@@ -246,10 +246,10 @@ is_non_player(Agent):- Agent == 'floyd~1'.
 process_percept(Agent, Percept, Stamp, Mem0, Mem1) :-
   once(is_player(Agent)),
   once((process_percept_player(Agent, Percept, Stamp, Mem0, Mem1))),
-  \+ thought(inherit(autonomous,t), Mem1),!.
+  \+ declared(inherited(autonomous), Mem1),!.
   
 process_percept(Agent, [LogicalPercept|_IgnoredList], Stamp, Mem0, Mem1) :-
-  thought(inherit(autonomous,t), Mem0),
+  declared(inherited(autonomous), Mem0),
   nop((ignore(((IgnoredList\==[], dbug(ignored_process_percept_auto(Agent,IgnoredList))))))),
   process_percept_auto(Agent, LogicalPercept, Stamp, Mem0, Mem1).
 
@@ -272,7 +272,7 @@ process_percept_main(_Agent, Percept, _Stamp, Mem0, Mem0) :-
 process_percept_list(_Agent, [], _Stamp, Mem0, Mem0).
 % caller memorizes PerceptList
 process_percept_list(_Agent, _, _Stamp, Mem, Mem) :-
-  thought(inherit(no_perceptq, t), Mem),
+  declared(inherited(no_perceptq), Mem),
   !.
 process_percept_list(Agent, [Percept|Tail], Stamp, Mem0, Mem4) :-
   %bugout('process_percept_list([~w|_])~n', [Percept], autonomous),

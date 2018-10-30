@@ -89,9 +89,9 @@ capitalize(Atom, Capitalized) :-
   atom_chars(Capitalized, [Upper|Rest]).
 
 context_agent(Agent, Context):-
-  member(agent(Agent), Context).
+  declared(agent(Agent), Context).
 context_agent(Agent, Context):-
-  member(inst(Agent), Context).
+  declared(inst(Agent), Context).
 % compile_eng(Context, Atom/Term/List, TextAtom).
 %  Compile Eng terms to ensure subject/verb agreement:
 %  If subject is agent, convert to 2nd person, else use 3rd person.
@@ -104,14 +104,14 @@ compile_eng(Context, [First|Rest], [First2|Rest2]) :-
 
 compile_eng(Context, subj(Agent), Person) :-
   context_agent(Agent, Context),
-  member(person(Person), Context).
+  declared(person(Person), Context).
 compile_eng(Context, subj(Other), Compiled) :-
   compile_eng(Context, Other, Compiled).
 compile_eng(Context, Agent, Person) :-
   context_agent(Agent, Context),
-  member(person(Person), Context).
+  declared(person(Person), Context).
 compile_eng(Context, person(Second, _Third), Compiled) :-
-  member(subj(Agent), Context),
+  declared(subj(Agent), Context),
   context_agent(Agent, Context),
   compile_eng(Context, Second, Compiled).
 compile_eng(Context, person(_Second, Third), Compiled) :-

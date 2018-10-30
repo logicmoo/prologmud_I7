@@ -384,8 +384,8 @@
 ;--------------------------------------------------------------------------
 
 */
+:-module(tt0,[ttholds/1,ttholds/2,ttholds/3,ttholds/4,ttholds/5,ttholds/6,ttholds/7,ttholds/8,ttholds/9]).
 :-if(false).
-:-module(tt0_00022_cycl,[ttholds/1,ttholds/2,ttholds/3,ttholds/4,ttholds/5,ttholds/6,ttholds/7,ttholds/8,ttholds/9]).
 :-style_check(-atom).
 :-endif.
 
@@ -394,6 +394,10 @@
 :-style_check(- (discontiguous)).
 :-set_prolog_flag(double_quotes,string).
 :-prolog_load_context(stream,_4410),set_stream(_4410,encoding(iso_latin_1)).
+
+:- multifile((ttholds/1,ttholds/2,ttholds/3,ttholds/4,ttholds/5,ttholds/6,ttholds/7,ttholds/8,ttholds/9)).
+:- dynamic((ttholds/1,ttholds/2,ttholds/3,ttholds/4,ttholds/5,ttholds/6,ttholds/7,ttholds/8,ttholds/9)).
+:- discontiguous((ttholds/1,ttholds/2,ttholds/3,ttholds/4,ttholds/5,ttholds/6,ttholds/7,ttholds/8,ttholds/9)).
 
 :- include('tt0_00022_cycl.nldata').
 

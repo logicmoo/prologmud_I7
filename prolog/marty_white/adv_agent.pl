@@ -160,11 +160,31 @@ console_decide_action(Agent, Mem0, Mem1):-
     dmust(is_stream(In)),
     setup_console,
     read_line_to_tokens(Agent, In,[], Words0),    
-    (Words0==[]->(Words=[wait],make);Words=Words0))),
+    (Words0==[]->(Words=[wait],makep);Words=Words0))),
     parse(Words, Action, Mem0),                       
     !,
   (Action =.. Words; player_format('~w~n', [Action])),
   add_todo(Action, Mem0, Mem1), ttyflush, !.
+
+makep:- 
+ locally(set_prolog_flag(verbose_load,true),
+   with_no_dmsg(make:((
+        
+        '$update_library_index',
+    findall(File, make:modified_file(File), Reload0),
+    list_to_set(Reload0, Reload),
+    (   prolog:make_hook(before, Reload)
+    ->  true
+    ;   true
+    ),
+    print_message(silent, make(reload(Reload))),
+    maplist(reload_file, Reload),
+    print_message(silent, make(done(Reload))),
+    (   prolog:make_hook(after, Reload)
+    ->  true
+    ;   nop(list_undefined),
+        nop(list_void_declarations)
+    ))))).
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -174,12 +194,12 @@ console_decide_action(Agent, Mem0, Mem1):-
 
 % Telnet client
 decide_action(Agent, Mem0, Mem1) :-
-  notrace(thought(inherit(telnet,t), Mem0)),!,
+  notrace(declared(inherited(telnet), Mem0)),!,
   dmust(telnet_decide_action(Agent, Mem0, Mem1)).
 
 % Stdin Client
 decide_action(Agent, Mem0, Mem1) :-
-  notrace(thought(inherit(console,t), Mem0)),!,
+  notrace(declared(inherited(console), Mem0)),!,
  % agent_to_input(Agent,In),
    (tracing->catch(sleep(3),_,(nortrace,notrace,break));true),
 
@@ -191,13 +211,29 @@ decide_action(Agent, Mem0, Mem1) :-
 
 % Autonomous
 decide_action(Agent, Mem0, Mem3) :-
-  thought(inherit(autonomous,t), Mem0),
+  declared(inherited(autonomous), Mem0),
   maybe_autonomous_decide_goal_action(Agent, Mem0, Mem3).
 
 decide_action(_Agent, Mem, Mem) :-
-  thought(inherit(memorize,t), Mem), !.  % recorders don't decide much.
+  declared(inherited(memorize), Mem), !.  % recorders don't decide much.
 decide_action(Agent, Mem0, Mem0) :-
-  bugout('decide_action(~w) FAILED!~n', [Agent], general).
+  set_last_action(Agent,[auto]),
+  nop(bugout('decide_action(~w) FAILED!~n', [Agent], general)).
+
+
+:- meta_predicate with_agent_console(*,0).
+/*
+with_agent_console(Agent,Goal):- 
+   adv:console_info(Id,Alias,InStream,OutStream, Host, Peer, Agent),
+   nop(adv:console_info(Id,Alias,InStream,OutStream, Host, Peer, Agent)),
+   current_input(WasIn),
+   InStream\==WasIn,!,
+   setup_call_cleanup(set_input(InStream),with_agent_console(Agent,Goal),set_input(WasIn)).
+*/
+with_agent_console(Agent,Goal):- 
+  setup_call_cleanup(
+     asserta(adv:current_agent(Agent),E),
+     Goal,erase(E)),!.
 
 
 run_agent_pass_1(Agent, S0, S) :-
@@ -212,18 +248,6 @@ run_agent_pass_2(Agent, S0, S0) :-
 
 
 
-/*
-with_agent_console(Agent,Goal):- 
-   adv:console_info(Id,Alias,InStream,OutStream, Host, Peer, Agent),
-   nop(adv:console_info(Id,Alias,InStream,OutStream, Host, Peer, Agent)),
-   current_input(WasIn),
-   InStream\==WasIn,!,
-   setup_call_cleanup(set_input(InStream),with_agent_console(Agent,Goal),set_input(WasIn)).
-*/
-with_agent_console(Agent,Goal):- 
-  setup_call_cleanup(
-     asserta(adv:current_agent(Agent),E),
-     Goal,erase(E)),!.
 
 run_agent_pass_1_0(Agent, S0, S) :-
   clock_time(Now),
@@ -231,6 +255,8 @@ run_agent_pass_1_0(Agent, S0, S) :-
   %dmust((
   undeclare(memories(Agent, Mem0), S0, S1),
   undeclare(perceptq(Agent, PerceptQ), S1, S2),
+  nb_setval(advstate,S2), % backtrackable leaks :(
+  % b_setval(advstate,S2),
   thought(timestamp(T0,_OldNow), Mem0),  
   (PerceptQ==[] -> (T1 is T0 + 0, Mem0 = Mem1) ;  (T1 is T0 + 1, memorize(timestamp(T1,Now), Mem0, Mem1))), 
   process_percept_list(Agent, PerceptQ, T1, Mem1, Mem2),

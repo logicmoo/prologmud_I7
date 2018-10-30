@@ -52,6 +52,9 @@
           more_prompt/0,
           ack_messages/0]).
 
+:- dynamic(adv:wants_quit/3).
+:- dynamic(adv:console_info/7).
+:- dynamic(adv:console_tokens/2).
 
 
 current_error(Stream) :- stream_property(Stream, alias(user_error)), !. % force det. 
@@ -59,6 +62,7 @@ current_error(Stream) :- stream_property(Stream, alias(current_error)), !. % for
 current_error(Stream) :- stream_property(Stream, file_no(2)), !. % force det. 
 set_error(Stream) :- set_stream(Stream, alias(user_error)). 
 
+:- meta_predicate redirect_error_to_string(0,-).
 redirect_error_to_string(Goal, String) :- 
         current_error(OldErr),
         new_memory_file(Handle),        
@@ -370,6 +374,21 @@ redraw_prompt(_Agent):-
    current_player(Player),
    player_format(Player,'~w@spatial> ',[Player]),!.
 */
+
+:- export(console_player/1).
+console_player(Agent):-
+  current_input(InStream),
+  adv:console_info(_Id, _Alias, InStream, _OutStream, _Host, _Peer, Agent),!.
+console_player(Agent):-
+  Agent = 'player~1',
+  (( \+ adv:console_info(_Id, _Alias, _InStream, _OutStream, _Host, _Peer, Agent))).
+
+:- thread_local(adv:current_agent/1).
+current_player(Agent):- adv:current_agent(Agent),!.
+current_player(Agent):- thread_self(Id),adv:console_info(Id,_Alias,_InStream,_OutStream,_Host,_Peer, Agent).
+current_player('player~1').
+:- export(current_player/1).
+
 redraw_prompt(Agent):- (Agent \== 'floyd~1'),!, 
   player_format(Agent,'~w@spatial> ',[Agent]),!.
 redraw_prompt(_Agent).
@@ -464,6 +483,7 @@ read_line_to_tokens(_Agent,In,Prev,Tokens):-
     dmust(line_to_tokens(LineCodes,NegOne,Tokens0)),!,
     dmust(Tokens0=Tokens).
 
+:- meta_predicate with_tty(+,0).
 with_tty(In,Goal):-  
  stream_property(In,tty(Was)),
  stream_property(In,timeout(TWas)), 

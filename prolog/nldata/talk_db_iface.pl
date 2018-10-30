@@ -18,7 +18,7 @@
 
 */
 
-:- module(talk_db_iface, []).
+:- module(talkdb, []).
 
 :- style_check(-(discontiguous)).
 
@@ -133,9 +133,7 @@ talk_db(noun1, Sing, Sing):- talk_db(noun2, Sing).
 
 %:- style_check(-discontiguous).
 %:- include(library('nldata/talk_db.pl.dat')).
-:- absolute_file_name(
-   library('nldata/talk_db.nldata'),
-        File, [access(read)]),
+:- absolute_file_name('talk_db.nldata', File, [access(read)]),
    open(File, read, In),
    set_stream(In, encoding(iso_latin_1)),
    repeat,

@@ -3,9 +3,11 @@
 % t10/0,t11/0,t12/0,t13/0,t14/0,satisfy/1,holds_truthvalue/2
 
 %:- nop(ensure_loaded('adv_chat80')).
-:- ensure_loaded('./marty_white/adv_main').
+%:- ensure_loaded('./marty_white/adv_main').
 
-:- initialization(adventure,main).
+:- ensure_loaded('./nomic_mu').
+
+:- initialization(mu:adventure,main).
 
 
 /** <module>
@@ -72,7 +74,7 @@ get_it:-
 % 
 % gripe_time(warn(12.246577455>7),        user:time(pfc_lib:load_parser_interface(library(el_holds/'el_assertions.pl.qlf')))).
 % OLD :- gripe_time(7,time(pfc_lib:load_parser_interface(library(el_holds/'el_assertions.pl.qlf')))).
-:- ensure_loaded(nldata/nldata_talk_db_pdat).
+%:- ensure_loaded(nldata/nldata_talk_db_pdat).
 
 
 % 6.052 CPU on VMWare I7
@@ -80,12 +82,12 @@ get_it:-
 % term_expansion(G,I,GG,O):- compound(I),source_location(File,_),prolog_load_context(module,Module),using_shared_parser_data(Module,File),importing_clause(G,GG) -> G \== GG, I=O.
 :- ensure_loaded(nldata/clex_iface).
 
-:- shared_parser_data(clex_iface:clex_adj/3).
-:- shared_parser_data(clex_iface:clex_noun/5).
+:- shared_parser_data(clex:clex_adj/3).
+:- shared_parser_data(clex:clex_noun/5).
 
 % :- set_prolog_flag(qcompile,false).
 
-:- include('marty_white/adv_util.pro').
+%:- include('marty_white/adv_util.pro').
 
 :- module_transparent(cycQuery80/1).
 cycQuery80(Q):- notrace(current_predicate(_,Q)),call(Q).
@@ -93,9 +95,10 @@ cycQuery80(Q):- notrace(current_predicate(_,Q)),call(Q).
 :- retractall(t_l:disable_px).
 :- asserta(t_l:disable_px).
 
-:- shared_parser_data(nldata_talk_db_pdat:talk_db/2).
-:- shared_parser_data(nldata_talk_db_pdat:talk_db/3).
-:- shared_parser_data(nldata_talk_db_pdat:talk_db/6).
+:- shared_parser_data(talk_db:talk_db/2).
+:- shared_parser_data(talk_db:talk_db/3).
+:- shared_parser_data(talk_db:talk_db/6).
+
 
 %:- shared_parser_data(transitive_subclass/2).
 %:- shared_parser_data(tSet/1).

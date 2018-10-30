@@ -53,6 +53,12 @@ do_autonomous_cycle(Agent):-
   bugout('~w @ ~w: was about to: ~w~n', [Agent, Here, Action], autonomous),fail.
 */
 
+
+% Is powered down
+maybe_autonomous_decide_goal_action(Agent, Mem0, Mem0) :- 
+  nb_getval(advstate, S1),
+  getprop(Agent, state(powered, f), S1),!.
+
 maybe_autonomous_decide_goal_action(Agent, Mem0, Mem1) :- notrace((do_autonomous_cycle(Agent),
   set_last_action(Agent,[auto]))),
   autonomous_decide_goal_action(Agent, Mem0, Mem1).

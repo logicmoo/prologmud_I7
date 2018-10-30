@@ -18,6 +18,12 @@
 */
 %:- use_module(library(pfc)).
 
+:- if(\+ exists_source(library(poor_bugger))).
+:- prolog_load_context(file,File),
+   absolute_file_name('..',X,[relative_to(File),file_type(directory)]),
+   asserta(user:file_search_path(library,X)).
+:- endif.
+
 security_of(_,_Wiz).
 admin :- true.  % Potential security hazzard.
 wizard :- true. % Potential to really muck up game.
@@ -25,7 +31,8 @@ extra :-  true. % Fuller, but questionable if needed yet.
 
 :- op(200,fx,'$').
 
-:- user:ensure_loaded((.. / parser_sharing)).
+:- user:ensure_loaded(('../parser_sharing')).
+
 :- consult(adv_debug).
 :- consult(adv_util).
 :- consult(adv_io).
@@ -48,21 +55,6 @@ extra :-  true. % Fuller, but questionable if needed yet.
 
 %:- consult(adv_test).
 %:- consult(adv_telnet).
-
-
-:- export(console_player/1).
-console_player(Agent):-
-  current_input(InStream),
-  adv:console_info(_Id, _Alias, InStream, _OutStream, _Host, _Peer, Agent),!.
-console_player(Agent):-
-  Agent = 'player~1',
-  (( \+ adv:console_info(_Id, _Alias, _InStream, _OutStream, _Host, _Peer, Agent))).
-
-:- thread_local(adv:current_agent/1).
-current_player(Agent):- adv:current_agent(Agent),!.
-current_player(Agent):- thread_self(Id),adv:console_info(Id,_Alias,_InStream,_OutStream,_Host,_Peer, Agent).
-current_player('player~1').
-:- export(current_player/1).
 
 
 adventure_init :-

@@ -10,6 +10,8 @@
 % ===================================================================
 
 :- module(parser_sharing,[
+   (shared_parser_data)/1,
+   (use_shared_parser_data)/2,
    op(1150,fx,(share_mp)),
    op(1150,fx,(shared_parser_data)),
    op(1150,fx,(dynamic_multifile_exported))]).
@@ -28,6 +30,7 @@ only_pfc(P):- assertion(ignore(ground(P))), !.
 :- module_transparent(only_if_pfc/1).
 only_if_pfc(_):- fail.
 :- module_transparent(only_if_adv/1).
+:- meta_predicate only_if_adv(0).
 only_if_adv(P):- call(P).
 
 
@@ -38,6 +41,7 @@ each_parser_module_0(baseKB).
 each_parser_module_0(parser_shared).
 each_parser_module_0(parser_all).
 each_parser_module_0(M):- each_parser_module_1(E),default_module(E,M).
+:- export(each_parser_module_0/1).
 %each_parser_module_0(M):- current_module(M).
 :- module_transparent(each_parser_module/1).
 each_parser_module_1(M):- strip_module(_,M,_).
