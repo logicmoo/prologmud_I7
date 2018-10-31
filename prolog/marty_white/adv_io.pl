@@ -301,7 +301,7 @@ setup_console(In):-
 init_logging :-
   get_time(StartTime),
   convert_time(StartTime, StartTimeString),
-  open('working/input.log', append, FH),
+  open('~/.nomic_mu_input.log', append, FH),
   format(FH, '\n==== ADVENTURE INPUT, ~w\n', [StartTimeString]),
   asserta(adv:input_log(FH)).
 stop_logging :-
