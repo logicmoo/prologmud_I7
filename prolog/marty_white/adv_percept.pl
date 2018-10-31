@@ -76,7 +76,7 @@ can_sense( Sense, Thing, Agent, State) :-
   has_sensory(Spatial, Sense, Agent, State),
   related(Spatial, OpenTraverse, Agent, Here, State),
   (Thing=Here; related(Spatial, OpenTraverse, Thing, Here, State)).
-can_sense( Sense, Thing, Agent, _State):- dbug(pretending_can_sense( Sense, Thing, Agent)),!.
+can_sense( Sense, Thing, Agent, _State):- bugout(pretending_can_sense( Sense, Thing, Agent)),!.
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -250,22 +250,22 @@ process_percept(Agent, Percept, Stamp, Mem0, Mem1) :-
   
 process_percept(Agent, [LogicalPercept|_IgnoredList], Stamp, Mem0, Mem1) :-
   declared(inherited(autonomous), Mem0),
-  nop((ignore(((IgnoredList\==[], dbug(ignored_process_percept_auto(Agent,IgnoredList))))))),
+  nop((ignore(((IgnoredList\==[], bugout(ignored_process_percept_auto(Agent,IgnoredList))))))),
   process_percept_auto(Agent, LogicalPercept, Stamp, Mem0, Mem1).
 
 process_percept(Agent, Percept, Stamp, Mem0, Mem0):- 
-  bugout('~q FAILED!~n', [bprocess_percept(Agent, Percept, Stamp)], general), !.
+  bugout('~q FAILED!~n', [bprocess_percept(Agent, Percept, Stamp)], todo), !.
 
 process_percept_main(Agent, Percept, Stamp, Mem0, Mem3) :-
  dmust((
   forget(model(Model0), Mem0, Mem1),
   Percept = [LogicalPercept|IgnoredList],
-  nop(ignore(((IgnoredList\==[], dbug(ignored_model_update(Agent,IgnoredList)))))),
+  nop(ignore(((IgnoredList\==[], bugout(ignored_model_update(Agent,IgnoredList)))))),
   update_model(Agent, LogicalPercept, Stamp, Mem1, Model0, Model1),
   memorize(model(Model1), Mem1, Mem2),
   process_percept(Agent, Percept, Stamp, Mem2, Mem3))).
 process_percept_main(_Agent, Percept, _Stamp, Mem0, Mem0) :-
-  bugout('process_percept_main(~w) FAILED!~n', [Percept], general), !.
+  bugout('process_percept_main(~w) FAILED!~n', [Percept], todo), !.
 
 
 
@@ -280,7 +280,7 @@ process_percept_list(Agent, [Percept|Tail], Stamp, Mem0, Mem4) :-
   process_percept_main(Agent, Percept, Stamp, Mem0, Mem1),
   process_percept_list(Agent, Tail, Stamp, Mem1, Mem4).
 process_percept_list(Agent, List, Stamp, Mem0, Mem0) :-
-  bugout('process_percept_list FAILED!~n'(Agent, List, Stamp), general).
+  bugout('process_percept_list FAILED!~n'(Agent, List, Stamp), todo).
 
 
 

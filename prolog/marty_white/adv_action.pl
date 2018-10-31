@@ -166,7 +166,7 @@ apply_act(Agent, Action, State, NewState) :- \+ no_debug_cant(Agent, Action),
 
 apply_act(Agent, Action, State, NewState):- act(Agent, Action, State, NewState), !.
 apply_act(Agent, Act, State, NewState):- ((cmd_workarround(Act, NewAct) -> Act\==NewAct)), !, apply_act(Agent, NewAct, State, NewState).
-apply_act(Agent, Action, _State, _NewState):- notrace((dbug(act(Agent, Action)), fail)).
+apply_act(Agent, Action, _State, _NewState):- notrace((bugout(act(Agent, Action)), fail)).
 
 must_act(Agent, Action, State, NewState):- apply_act(Agent, Action, State, NewState) *-> ! ; fail.
 % must_act(Agent, Action, S0, S1) :- rtrace(must_act(Agent, Action, S0, S1)), !.
@@ -245,7 +245,7 @@ act_goto(Agent, _Walk, Dir, _Relation, _Room, S0, S9) :- nonvar(Dir),
          [Here],
          [cap(subj(Agent)), person(go, goes), Dir],
          S0, S1),
-  (related(Spatial, exit(RDir), There, Here, S0)-> true ; reverse_dir(Dir,RDir)),
+  (related(Spatial, exit(RDir), There, Here, S0)-> true ; reverse_dir(Dir,RDir,S0)),
   queue_local_event(Spatial, [moved( Agent, Here, PrepThere, There), 
     the(Agent), person(arrived, arrives),from,the, RDir], [There], S1, S2),
   must_act(Agent, look(Spatial), S2, S9).
@@ -270,7 +270,13 @@ act_goto(Agent, _Walk, Dir,  _To, Room, S0, S9) :- nonvar(Room),             % g
     [cap(subj(Agent)), person(go, goes), Dir], S0, S1),
   must_act(Agent, look(Spatial), S1, S9).
 
-reverse_dir(Dir,ward(Dir)).
+reverse_dir(Dir,RDir,S0):-
+  related(Spatial, exit(Dir), Here, Room, S0),
+  related(Spatial, exit(RDir), Room, Here, S0),!.
+reverse_dir(Dir,RDir,S0):- 
+  related(Spatial, Dir, Here, Room, S0),
+  related(Spatial, RDir, Room, Here, S0),!.
+reverse_dir(Dir,reverse(Dir),_).
 
 %  sim(verb(args...), preconds, effects)
 %    Agent is substituted for $self.

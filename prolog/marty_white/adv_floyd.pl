@@ -17,7 +17,7 @@
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  CODE FILE SECTION
-:- dbug(ensure_loaded('adv_robot_floyd')).
+:- bugout(ensure_loaded('adv_robot_floyd')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 extra_look_around(Agent, S0, S9) :-
@@ -44,7 +44,7 @@ do_autonomous_cycle(Agent):-
   time_since_last_action(Other,When),
   Other \== Agent, When < 1, !, 
   retractall(adv:agent_last_action(Other,_,_)),
-  nop(dbug(time_since_last_action_for(Other,When,Agent))).
+  nop(bugout(time_since_last_action_for(Other,When,Agent))).
 
 /*maybe_autonomous_decide_goal_action(Agent, Mem0, Mem0) :-
   % If actions are queued, no further thinking required.

@@ -40,11 +40,11 @@ never_trace(Spec):- '$hide'(Spec),'$iso'(Spec),trace(Spec, -all).
 
 %:- never_trace(lists:member(_,_)).
 %:- never_trace(lists:append(_,_,_)).
-dshow_call(G):- simplify_dbug(G,GG), (call(G)*-> dbug(success_dshow_call(GG)) ; (dbug(failed_dshow_call(GG)),!,fail)).
+dshow_call(G):- simplify_dbug(G,GG), (call(G)*-> bugout(success_dshow_call(GG)) ; (bugout(failed_dshow_call(GG)),!,fail)).
 dshow_fail((G1,G2)):- !,dshow_fail(G1),dshow_fail(G2).
 dshow_fail(\+(G1)):- !, \+ dshow_true(G1).
-dshow_fail(G):- simplify_dbug(G,GG), (call(G)*-> true ; (dbug(failed_dshow_call(GG)),!,fail)).
-dshow_true(G):- simplify_dbug(G,GG), (call(G)*-> dbug(success_dshow_call(GG)) ; (!,fail)).
+dshow_fail(G):- simplify_dbug(G,GG), (call(G)*-> true ; (bugout(failed_dshow_call(GG)),!,fail)).
+dshow_true(G):- simplify_dbug(G,GG), (call(G)*-> bugout(success_dshow_call(GG)) ; (!,fail)).
 found_bug(S0,duplicated_object(X,R,L)) :-
   append(Left,[prop(X,R)|_],S0),
   member(prop(X,L),Left).

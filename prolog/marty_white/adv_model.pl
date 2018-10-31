@@ -112,7 +112,7 @@ update_model(_Agent, moved( Object, _From, How, To), Timestamp, _Mem, M0, M1) :-
 update_model(_Agent, failure(_), _Timestamp, _Mem, M0, M0) :- !.
 
 update_model(Agent, time_passes, Timestamp, _Memory, M, M):-
-  nop(dbug(unused_update_model(Agent, time_passes, Timestamp, M))).
+  nop(bugout(unused_update_model(Agent, time_passes, Timestamp, M))).
 
 update_model(_Agent, [], _Timestamp, _Memory, M, M).
 update_model(Agent, [Percept|Tail], Timestamp, Memory, M0, M2) :-
@@ -121,7 +121,7 @@ update_model(Agent, [Percept|Tail], Timestamp, Memory, M0, M2) :-
 
 
 update_model(Agent, Percept, Timestamp, _Memory, M, M):-
-  dbug(failed_update_model(Agent, Percept, Timestamp)).
+  bugout(failed_update_model(Agent, Percept, Timestamp), model).
 
 % update_model_all(Spatial, Agent, PerceptsList, Stamp, ROMemory, OldModel, NewModel)
 update_model_all(_Agent, [], _Timestamp, _Memory, M, M).

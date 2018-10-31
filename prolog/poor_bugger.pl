@@ -29,7 +29,7 @@ update_deps :-
 :- meta_predicate failed_dmust(0).
 :- meta_predicate no_repeats_must(0).
 
-dbug(P):- notrace(ansi_format([fg(cyan)],'~N% ~p.~n',[P])).
+bugout(P):- notrace(ansi_format([fg(cyan)],'~N% ~p.~n',[P])).
 :- module_transparent(dmust/1).
 dmust((A,!,B)):-!,dmust(A),!,dmust(B).
 dmust((A,B)):-!,dmust(A),dmust(B).
@@ -40,13 +40,13 @@ dmust(A):- call(A)*-> true ; failed_dmust(A).
 
 :- module_transparent(failed_dmust/1).
 failed_dmust(once(A)):-!, failed_dmust(A),!.
-failed_dmust((A,B)):- !,dbug(dmust_start(A)),ignore(rtrace(A)),dbug(dmust_mid(A)), failed_dmust(B).
-failed_dmust(A):- dbug(failed_dmust_start(A)),ignore(rtrace(A)),dbug(failed_dmust_end(A)),
+failed_dmust((A,B)):- !,bugout(dmust_start(A)),ignore(rtrace(A)),bugout(dmust_mid(A)), failed_dmust(B).
+failed_dmust(A):- bugout(failed_dmust_start(A)),ignore(rtrace(A)),bugout(failed_dmust_end(A)),
   break,nortrace,notrace,trace.
 
 no_repeats_must(Call):-
  gripe_time(0.5,no_repeats(Call)) *-> true;
-  (fail,(dbug(warn(show_failure(Call))),!,fail)).
+  (fail,(bugout(warn(show_failure(Call))),!,fail)).
 
 :- ensure_loaded(library(no_repeats)).
 :- ensure_loaded(library(loop_check)).
@@ -132,8 +132,8 @@ gripe_time(_TooLong,Goal):- current_prolog_flag(runtime_debug,1),!,Goal.
 % gripe_time(_TooLong,Goal):- \+ current_prolog_flag(runtime_debug,3),\+ current_prolog_flag(runtime_debug,2),!,Goal.
 gripe_time(TooLong,Goal):-
  call_for_time(Goal,ElapseCPU,ElapseWALL,Success),
- (ElapseCPU>TooLong -> dbug(gripe_CPUTIME(Success,warn(ElapseCPU>TooLong),Goal)) ;
-   (ElapseWALL>TooLong -> dbug(gripe_WALLTIME(Success,warn(ElapseWALL>TooLong),Goal,cputime=ElapseCPU)) ;
+ (ElapseCPU>TooLong -> bugout(gripe_CPUTIME(Success,warn(ElapseCPU>TooLong),Goal)) ;
+   (ElapseWALL>TooLong -> bugout(gripe_WALLTIME(Success,warn(ElapseWALL>TooLong),Goal,cputime=ElapseCPU)) ;
      true)),
   Success.
 
@@ -184,7 +184,7 @@ on_f_rtrace(Goal):-  Goal *-> true; (rtrace(Goal),debugCallWhy(on_f_rtrace(Goal)
 
 
 
-debugCallWhy(Why, C):- dbug(Why),catch(failed_dmust(C),E,dbug(cont_X_debugCallWhy(E,Why, C))).
+debugCallWhy(Why, C):- bugout(Why),catch(failed_dmust(C),E,bugout(cont_X_debugCallWhy(E,Why, C))).
 
 %! on_x_debug( :Goal) is det.
 %
@@ -339,7 +339,7 @@ quietly3(Goal):- \+ tracing -> Goal ;
 
 deterministically_must(G):- call(call,G),deterministic(YN),true,
   (YN==true -> true; 
-     ((dbug(failed_deterministically_must(G)),(!)))),!.
+     ((bugout(failed_deterministically_must(G)),(!)))),!.
 
 
 %:- totally_hide(quietly/1).

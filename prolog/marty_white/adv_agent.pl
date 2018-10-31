@@ -25,7 +25,7 @@ each_live_agent(NewGoal, S0, S2) :-
 each_sensing_agent(Sense, NewGoal, S0, S2) :-
  dmust((get_sensing_objects(Sense, List, S0),
       List\==[],
-      %dbug(each_sensing_agent(Sense)=(List=NewGoal)),
+      %bugout(each_sensing_agent(Sense)=(List=NewGoal)),
  apply_all(List, NewGoal, S0, S2))).
 
 each_agent(Precond, NewGoal, S0, S2) :-
@@ -154,7 +154,7 @@ remember_whereis(There, Answer, Memory) :-
 
 console_decide_action(Agent, Mem0, Mem1):- 
   %thought(timestamp(T0), Mem0),
-  %dbug(read_pending_codes(In,Codes,Found,Missing)),
+  %bugout(read_pending_codes(In,Codes,Found,Missing)),
   repeat,
    notrace((ttyflush,
     %player_format('[~p: ~p] ==> ', [T0, Agent]), ttyflush,
@@ -191,7 +191,7 @@ makep:-
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  CODE FILE SECTION
-:- dbug(ensure_loaded('adv_agents')).
+:- bugout(ensure_loaded('adv_agents')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Telnet client
@@ -265,14 +265,14 @@ run_agent_pass_1_0(Agent, S0, S) :-
   memorize_list(PerceptQ, Mem2, Mem3),
   decide_action(Agent, Mem3, Mem4),
   declare(memories(Agent, Mem4), S2, S3),
-  declare(perceptq(Agent, []), S3, S4),
-  % dbug(timestamp(Agent, T1)),
-  apply_first_arg_state(Agent, do_todo(), S4, S),
+  declare(perceptq(Agent, []), S3, S),
+  % bugout(timestamp(Agent, T1)),
+  %apply_first_arg_state(Agent, do_todo(), S4, S),
   % pprint(S, general),
   
   notrace(must_output_state(S)),!.
   
-run_agent_pass_2_0(_Agent, S0, S0):-!.
+%run_agent_pass_2_0(_Agent, S0, S0):-!.
 run_agent_pass_2_0(Agent, S0, S) :-
   must_input_state(S0),
   apply_first_arg_state(Agent, do_todo(), S0, S),

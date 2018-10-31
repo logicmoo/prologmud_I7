@@ -148,7 +148,7 @@ in_scope(Spatial, Thing, Agent, State) :-
    get_open_traverse(_Open, _See, _Traverse, Spatial, OpenTraverse),
   related(Spatial, OpenTraverse, Agent, Here, State),
   (Thing=Here; related(Spatial, OpenTraverse, Thing, Here, State)).
-in_scope(Spatial, Thing, Agent, _State):- dbug(pretending_in_scope(Spatial, Thing, Agent)).
+in_scope(Spatial, Thing, Agent, _State):- bugout(pretending_in_scope(Spatial, Thing, Agent)).
 
 reachable(_Spatial, Star, _Agent, _State) :- Star == '*', ! .
 reachable(Spatial, Thing, Agent, State) :-

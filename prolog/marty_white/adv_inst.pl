@@ -48,19 +48,19 @@ init_objects(S0, S2) :-
   must_input_state(S0),
   create_missing_instances(S0,S1),
   dmust(call((get_objects(true,ObjectList, S1), ObjectList\==[]))),
-  dbug(iObjectList  = ObjectList),
+  bugout(iObjectList  = ObjectList),
   apply_all(ObjectList, create_object(), S1, S2),
   must_output_state(S2), !.
 
 
 %create_object(Agent, S0, S2) :- declared(perceptq(Agent, []), S0), !,
-%  dbug(existingAgent=Agent),
+%  bugout(existingAgent=Agent),
 %  S2=S0.
                    
 create_object(Object, S0, S0) :- declared(props(Object,PropList), S0), member(co(_),PropList),!.
 create_object(Object, S0, S9) :- 
    object_props_or(Object, PropList, [], S0),!,
-   dbug(create_object(Object,PropList)),
+   bugout(create_object(Object,PropList)),
    undeclare_always(props(Object,_), S0, S2),
    declare(props(Object,[co(PropList)]), S2, S3),
    create_objprop(Object, PropList, S3, S9).   

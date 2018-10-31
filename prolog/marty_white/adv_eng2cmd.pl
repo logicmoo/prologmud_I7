@@ -141,6 +141,7 @@ parse2logical([get, Prep| More], Logic, Mem) :- preposition(spatial, Prep), !, d
 % go on shelf~1
 
 txt2goto(Walk,[to, Prep| More], Logic, Mem) :- !, txt2goto(Walk, [Prep| More], Logic, Mem).
+txt2goto(Walk,[Alias| More], Logic, Mem) :- cmdalias(Alias,Dir), !, txt2goto(Walk,[Dir| More], Logic, Mem).
 % go in kitchen
 % go in car
 txt2goto(Walk,[ Prep, Dest], goto(Walk, _Dir, Prep, Where), Mem) :-  

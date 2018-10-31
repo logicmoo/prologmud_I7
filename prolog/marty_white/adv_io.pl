@@ -319,7 +319,7 @@ bug(B) :-
 bugout(A, B) :-
   bug(B),
   !,
-  dbug(B:A).
+  bugout(B:A).
 bugout(_, _).
 
 bugout(A, L, B) :-
@@ -564,12 +564,12 @@ user:ci:- ci('telnet~1').
 user:ci(Agent):- 
    agent_to_input(Agent,In),
    agent_to_output(Agent,Out),
-   forall(stream_property(In,P),dbug(ins(P))),
+   forall(stream_property(In,P),bugout(ins(P))),
    listing(overwritten_chars),
    %line_position(In,LIn),
-   %dbug(ins(line_position(In,LIn))),
-   forall(stream_property(Out,P),dbug(outs(P))),
-   line_position(Out,LInOut),!,dbug(outs(line_position(Out,LInOut))),!.
+   %bugout(ins(line_position(In,LIn))),
+   forall(stream_property(Out,P),bugout(outs(P))),
+   line_position(Out,LInOut),!,bugout(outs(line_position(Out,LInOut))),!.
 
 get_overwritten_chars(Agent,Chars):- agent_to_input(Agent,In),overwritten_chars(In,Chars).
 get_overwritten_chars(_Agent,[]).

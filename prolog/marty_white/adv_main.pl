@@ -103,7 +103,7 @@ main(S0, S9) :-
   % pprint(S1,general),
   get_live_agents(LiveAgents, S1),
   ttyflush)),
-  %dbug(liveAgents = LiveAgents),
+  %bugout(liveAgents = LiveAgents),
   apply_all(LiveAgents, run_agent_pass_1(), S1, S2),
   apply_all(LiveAgents, run_agent_pass_2(), S2, S9),
   notrace((nb_setval(advstate,S9))),
