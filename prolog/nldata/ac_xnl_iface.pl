@@ -4,6 +4,12 @@
 %:- dynamic((ttholds/1,ttholds/2,ttholds/3,ttholds/4,ttholds/5,ttholds/6,ttholds/7,ttholds/8,ttholds/9)).
 %:- discontiguous((ttholds/1,ttholds/2,ttholds/3,ttholds/4,ttholds/5,ttholds/6,ttholds/7,ttholds/8,ttholds/9)).
 :- ensure_loaded(nl_iface).
+
+:- if(\+ (exists_file('ac_xnl_7166.qlf'))).
+:- format(user_error,'~NCreating for the first time ac_xnl_7166.qlf (this may take 60-120 seconds) ... ~n',[]).
+:- time(load_files(ac_xnl_7166,[qcompile(true)])).
+:- endif.
+
 :- reexport(ac_xnl_7166).
 
 %:- retractall(assertion_content(retainTerm,_,_)).

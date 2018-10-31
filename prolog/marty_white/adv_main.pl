@@ -24,6 +24,12 @@
    asserta(user:file_search_path(library,X)).
 :- endif.
 
+:- if(exists_source(library(nldata/nl_iface))).
+% being in user is just to help debugging from console
+:- user:ensure_loaded(library(nldata/nl_iface)).
+:- endif.
+
+
 security_of(_,_Wiz).
 admin :- true.  % Potential security hazzard.
 wizard :- true. % Potential to really muck up game.
@@ -31,7 +37,7 @@ extra :-  true. % Fuller, but questionable if needed yet.
 
 :- op(200,fx,'$').
 
-:- user:ensure_loaded(('../parser_sharing')).
+:- user:ensure_loaded(library(parser_sharing)).
 
 :- consult(adv_debug).
 :- consult(adv_util).

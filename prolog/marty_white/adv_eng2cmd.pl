@@ -14,21 +14,7 @@
 % Main file.
 %
 */
-:- if(exists_source(library(nldata/nl_iface))).
-% being in user is just to help debugging from console
-:- user:ensure_loaded(library(nldata/nl_iface)).
-:- endif.
 
-:- if(exists_source(library(nldata/clex_iface))).
-% being in user is just to help debugging from console
-:- user:ensure_loaded(library(nldata/clex_iface)).
-:- endif.
-/*
-:- if(exists_source(library(nldata/ac_xnl_iface))).
-% being in user is just to help debugging from console
-:- time(user:ensure_loaded(library(nldata/ac_xnl_iface))).
-:- endif.
-*/
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  CODE FILE SECTION
 % :- ensure_loaded('adv_eng2cmd').
