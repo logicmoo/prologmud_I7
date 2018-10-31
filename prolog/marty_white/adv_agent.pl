@@ -83,7 +83,9 @@ add_goals(Goals, Mem0, Mem2) :-
 
 add_todo(Auto, Mem0, Mem3) :- Auto = auto,
   member(inst(Agent), Mem0),
-  autonomous_decide_goal_action(Agent, Mem0, Mem3),!.
+  autonomous_decide_goal_action(Agent, Mem0, Mem3),!,
+  redraw_prompt(Agent).
+
 add_todo(Action, Mem0, Mem2) :-
   forget(todo(OldToDo), Mem0, Mem1),
   append(OldToDo, [Action], NewToDo),

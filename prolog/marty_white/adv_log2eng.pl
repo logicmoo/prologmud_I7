@@ -22,6 +22,14 @@
 % :- ensure_loaded('adv_log2eng').
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+xtreme_english :- flag_level(english,>(1)).
+any_english :- \+ no_english.
+no_english :- flag_level(english,=(0)).
+:- ignore(flag(english,0,1)).
+
+flag_level(Flag,Prop):-flag(Flag,Was,Was),Prop=..[F|Args],apply(F,[Was|Args]).
+
+
 
 % A percept or event:
 %   - is a logical description of what happened
@@ -284,6 +292,9 @@ logic2eng(Obj, [Prop|Tail], Text) :- !,
   flatten([UText1], Text1),
   append_if_new(Text1, Text2, Text))), !.
 
+
+
+logic2eng(_Obj, Prop, [String]):- compound(Prop), no_english, !, format(atom(String), '~q', [Prop]), !.
 logic2eng( Obj, ~(Type), ['(','logically','not','(',Out, '))']):- dmust(log2eng(Obj, Type, Out)), !.
 
 logic2eng(_Agent, time_passes, []).
@@ -440,8 +451,6 @@ logic2eng(_Obj, Prop, [String]):- format(atom(String), '~w', [Prop]), !.
 atom_needs_quotes(V):-format(atom(VV),'~q',[V]),V\==VV.
 
 append_if_new1(Text1, Text2, Text):- flatten([Text1], TextF1), flatten([Text2], TextF2), append([_|TextF1], _, TextF2), !, Text=Text2.
-
-xtreme_english :- true.
 
 append_if_new(Text1, Text2, Text):- append_if_new1(Text1, Text2, Text), !.
 append_if_new(Text2, Text1, Text):- append_if_new1(Text1, Text2, Text), !.

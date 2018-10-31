@@ -13,4 +13,5 @@ download( 'https://github.com/TeamSPoon/prologmud_I7/archive/V*.zip' ).
 requires(each_call_cleanup).
 requires(no_repeats).
 requires(loop_check).
+requires(pfc).
 

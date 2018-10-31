@@ -45,7 +45,7 @@ printable_state(S,S).
 print_english(Doer, Logic):- is_list(Logic),!, maplist(print_english(Doer), Logic).
 print_english(Doer, Logic):- log2eng(Doer, Logic, Eng),dmust((eng2txt(Doer, Doer, Eng, Text))), pprint(Text,always).
 
-meta_pprint(Doer, Logic, always):- ignore(xtreme_english),!, print_english(Doer, Logic).
+meta_pprint(Doer, Logic, always):- xtreme_english,!, print_english(Doer, Logic).
 meta_pprint(_Doer, D,K):- pprint(D,K).
 
 % do_metacmd(Doer, Action, S0, S1)
@@ -56,6 +56,15 @@ do_metacmd(Doer, quit, S0, S1) :-
 
 do_metacmd(_Doer, help, S0, S0) :- !,
   listing(adv:cmd_help).
+
+:- add_help(english,"english <level>: turn on paraphrase generation.").
+do_metacmd(Doer, english, S0, S0) :- security_of(Doer,admin),
+  flag(english,Was,Was),
+  player_format('~w=~w~n', [english,Was]).
+do_metacmd(Doer, english(N), S0, S0) :- security_of(Doer,admin),
+  flag(english,_Was,N),
+  flag(english,New,New),
+  player_format('~w=~w~n', [english,N]).
 
 :- add_help(rtrace,"Debbuging: Start the non-interactive tracer.").
 do_metacmd(Doer, rtrace, S0, S0) :- security_of(Doer,admin), rtrace.

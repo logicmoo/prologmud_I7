@@ -266,6 +266,7 @@ as1object([TheThing], Thing, Mem):- !,nonvar(TheThing), as1object(TheThing, Thin
 %as1object(TheThing, Thing, Mem):- as1object(TheThing, Thing, Mem).
 
 as1object(TheThing, Thing, _Mem):- \+ atom(TheThing),!, TheThing=Thing.
+as1object(TheThing, Thing, _Mem):-  atom_number(TheThing,Thing).
 as1object(TheThing, Thing, Mem):- atom_concat(TheThing,'~1',TheThing2), sub_term(Thing,Mem),atom(Thing),TheThing2==Thing,!.
 as1object(TheThing, Thing, Mem):- atom_concat(TheThing,'~2',TheThing2), sub_term(Thing,Mem),atom(Thing),TheThing2==Thing,!.
 as1object(TheThing, Thing, Mem):- atom_of(inst, TheThing, Thing, Mem),!.
