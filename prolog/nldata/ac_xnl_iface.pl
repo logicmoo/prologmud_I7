@@ -7,7 +7,7 @@
 
 :- if(\+ (exists_file('ac_xnl_7166.qlf'))).
 :- format(user_error,'~NCreating for the first time ac_xnl_7166.qlf (this may take 60-120 seconds) ... ~n',[]).
-:- time(load_files(ac_xnl_7166,[qcompile(true)])).
+:- time(load_files(ac_xnl_7166,[qcompile(auto)])).
 :- endif.
 
 :- reexport(ac_xnl_7166).
