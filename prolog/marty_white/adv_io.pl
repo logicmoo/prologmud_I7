@@ -315,6 +315,8 @@ bugs([always, general, planner, autonomous, telnet]).
 bug(B) :-
   bugs(L),
   member(B, L).
+bug(B) :- debugging(B).
+bug(B) :- debugging(adv(B)).
 
 bugout(A, B) :-
   bug(B),
@@ -326,8 +328,7 @@ bugout(A, L, B) :-
   bug(B),
   !,
   dmust(maplist(simplify_dbug, L, LA)),
-  ansi_format([fg(cyan)], '~N% ', []),
-  ansi_format([fg(cyan)], A, LA),
+  ansi_format([fg(cyan)], '~N% ', []), ansi_format([fg(cyan)], A, LA),
   dmust((console_player(Player),redraw_prompt(Player))),!.
 bugout(_, _, _).
 
@@ -367,7 +368,14 @@ pprint(Term, B) :-
   player_format('~N~@~N',[our_pretty_printer(Term)]),!.
 pprint(_, _).
 
-our_pretty_printer(Term):- compound(Term),!, prolog_pretty_print:print_term(Term, [output(current_output)]).
+:- flag(our_pretty_printer,_,0).
+
+our_pretty_printer(Term):- compound(Term),!, 
+   setup_call_cleanup(
+    flag(our_pretty_printer,Was,Was+1),
+    prolog_pretty_print:print_term(Term, [portray(true), output(current_output)]),
+    flag(our_pretty_printer,_,Was)).
+
 our_pretty_printer(Term):- format(current_output,'~w',[Term]).
 /*
 redraw_prompt(Agent):- (Agent == 'floyd~1'),

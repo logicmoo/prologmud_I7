@@ -166,7 +166,7 @@ apply_act(Agent, Action, State, NewState) :- \+ no_debug_cant(Agent, Action),
 
 apply_act(Agent, Action, State, NewState):- act(Agent, Action, State, NewState), !.
 apply_act(Agent, Act, State, NewState):- ((cmd_workarround(Act, NewAct) -> Act\==NewAct)), !, apply_act(Agent, NewAct, State, NewState).
-apply_act(Agent, Action, _State, _NewState):- notrace((bugout(act(Agent, Action)), fail)).
+apply_act(Agent, Action, _State, _NewState):- notrace((bugout(failed_act(Agent, Action)), fail)).
 
 must_act(Agent, Action, State, NewState):- apply_act(Agent, Action, State, NewState) *-> ! ; fail.
 % must_act(Agent, Action, S0, S1) :- rtrace(must_act(Agent, Action, S0, S1)), !.
