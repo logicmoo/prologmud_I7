@@ -298,6 +298,7 @@ setup_console(In):-
 
 
 :- dynamic(adv:input_log/1).
+init_logging :- !.
 init_logging :-
   get_time(StartTime),
   convert_time(StartTime, StartTimeString),
@@ -452,6 +453,7 @@ tokenize([_BadChar|Tail], Rest) :-
   tokenize(Tail, Rest).
 
 log_codes([-1]).
+log_codes(_) :- \+ adv:input_log(_),!.
 log_codes(LineCodes) :-
   ignore(notrace(catch((atom_codes(Line, LineCodes),
   adv:input_log(FH),

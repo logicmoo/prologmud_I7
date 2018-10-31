@@ -6,7 +6,7 @@
 :- ensure_loaded(nl_iface).
 
 :- if(\+ (exists_file('ac_xnl_7166.qlf'))).
-:- format(user_error,'~NCreating for the first time ac_xnl_7166.qlf (this may take 60-120 seconds) ... ~n',[]).
+:- format(user_error,'~NLoading ac_xnl_7166.qlf (this may take 60-120 seconds the very first time) ... ~n',[]).
 :- time(load_files(ac_xnl_7166,[qcompile(auto)])).
 :- endif.
 
