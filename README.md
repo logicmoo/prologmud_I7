@@ -37,6 +37,8 @@ available under a classical _academic use license_. See `LICENSE` in the
 Python [NLTK data package](https://www.kaggle.com/nltkdata/chat-80/home)
 that includes the chat80 files.
 
+## INSTALL
+
 ````
 tmptest@gitlab:~$ swipl
 Welcome to SWI-Prolog (threaded, 64 bits, version 7.6.4)
@@ -251,7 +253,7 @@ true.
 ?-
 ````
 
-It is now ready to use the module
+## Use the module
 
 ````
 ?- use_module(library(nomic_mu)).
@@ -284,7 +286,7 @@ true.
 ?-
 ````
 
-
+## Run it
 
 ````
 ?- srv_mu.
@@ -552,6 +554,8 @@ player~1@spatial>
 player~1@spatial>
 ````
 
+## HELP COMMAND
+
 ````
 player~1@spatial> help
 help
@@ -561,15 +565,13 @@ cmd_help(quit, "Quits the game.").
 cmd_help(english, "english <level>: turn on paraphrase generation.").
 cmd_help(rtrace, "Debbuging: Start the non-interactive tracer.").
 cmd_help(nortrace, "Debbuging: Stop the non-interactive tracer.").
-cmd_help(trace, "Debbuging: Start the interactive tracer.").
-cmd_help(notrace, "Debbuging: Stop the interactive tracer.").
-cmd_help(spy, "").
-cmd_help(nospy, "").
+...
 cmd_help(possess(agent), "Take possession of a character").
 
 player~1@spatial>
 ````
 
+## AUTO COMMAND
 
 player~1@spatial> a
 a
@@ -593,6 +595,8 @@ player~1@spatial>
 the floyd arrives from the west
 player~1@spatial>
 ````
+
+## MEMORY COMMAND
 
 
 ````
