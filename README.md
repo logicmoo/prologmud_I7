@@ -572,7 +572,7 @@ player~1@spatial>
 ````
 
 ## AUTO COMMAND
-
+````
 player~1@spatial> a
 a
 auto
