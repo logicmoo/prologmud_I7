@@ -22,7 +22,7 @@
 % :- ensure_loaded('adv_log2eng').
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-xtreme_english :- flag_level(english,>(1)).
+xtreme_english :- flag_level(english,>(2)).
 any_english :- \+ no_english.
 no_english :- flag_level(english,=(0)).
 :- ignore(flag(english,0,1)).
@@ -75,6 +75,23 @@ flag_level(Flag,Prop):-flag(Flag,Was,Was),Prop=..[F|Args],apply(F,[Was|Args]).
 %  eng(subject(Agent), 'quickly', verb(grab, grabs), the(Thing))
 %  [s(Agent), 'quickly', v(grab, grabs), the(Thing)]
 
+english_directve(quoted(_)).
+english_directve(cap(_)).
+english_directve(subj(_)).
+english_directve(person(_,_)).
+english_directve(tense(_,_)).
+english_directve(a(_)).
+english_directve(the(_)).
+english_directve(aux(_)).
+english_directve(silent(_)).
+english_directve(P):- english_suffix(S), functor(P,S,1).
+
+english_suffix(s).
+english_suffix(ed).
+english_suffix(ly).
+english_suffix(ing).
+
+
 capitalize([First|Rest], [Capped|Rest]) :- !,
   capitalize(First, Capped).
 capitalize(Atom, Capitalized) :-
@@ -94,6 +111,7 @@ context_agent(Agent, Context):-
 %  Context specifies agent, and (if found) subject of sentence.
 
 compile_eng(_Context, Done, '') :- Done == [], !.
+
 compile_eng(Context, [cap(subj(Agent)), aux(be)|More], Person) :- !,
   compile_eng(Context, [cap(subj(Agent)),  person(are, is)|More], Person) .  
 
@@ -102,6 +120,7 @@ compile_eng(Context, [First|Rest], [First2|Rest2]) :-
   compile_eng(Context, Rest, Rest2).
 
 compile_eng(_Context, aux(be), 'is') :- !.
+compile_eng(_Context, aux(Can), Can) :- !.
 
 compile_eng(Context, subj(Agent), Person) :-
   context_agent(Agent, Context),
@@ -138,6 +157,10 @@ compile_eng(Context, s(Word), Spatially) :- % TODO make actually plural
   compile_eng(Context, Word, Spatial),
   atom(Spatial),
   atom_concat(Spatial, "s", Spatially).
+compile_eng(Context, Wordly, Spatially) :- functor(Wordly,S,1),english_suffix(S),
+  Wordly =..[S, Word],
+  compile_eng(Context, Word, Spatial),
+  atom(Spatial), atom_concat(Spatial, S, Spatially).
 
 compile_eng(Context, DetWord, AThing) :-
   compound(DetWord), DetWord=..[Det, Word],
@@ -156,6 +179,7 @@ compile_eng(Context, Inst, TheThing):- inst_of(Inst, Type, N), !,
 
 compile_eng(_Context, Prop, Text):- format(atom(Text),'~w',[Prop]).
 
+vowel(a). vowel(e). vowel(i). vowel(o). vowel(u).
 
 verb_tensed(Context, Verb, past, Compiled):- 
   compile_eng(Context, Verb, Word),
@@ -167,7 +191,6 @@ verb_tensed(Context, Verb, _Tense, Compiled):-
 pasitfy_word(take,took).
 pasitfy_word(make,made).
 pasitfy_word(move,moved).
-pasitfy_word(eat,ate).
 pasitfy_word(eat,ate).
 pasitfy_word(Verb,Compiled):- \+ atom(Verb),!,Compiled=Verb.
 pasitfy_word(Verb,Compiled):- atomic_concat(Verb,'ed', Compiled).
@@ -227,10 +250,29 @@ eng2txt(Agent, Person, Eng, Text) :-  assertion(nonvar(Eng)),
   concat_atom(SpacedList, Text).
 eng2txt(_Agent, _Person, Text, Text).
 
-%portray(ItemToPrint) :- print_item_list(ItemToPrint).  % called by print.
-  
-:- nb_setval(list2eng_e, []).
 
+:- dynamic user:portray/1.
+:- multifile user:portray/1.
+:- module_transparent user:portray/1.
+%user:portray(ItemToPrint) :- print_item_list(ItemToPrint).  % called by print.
+
+user:portray(Logic) :- 
+  compound(Logic), \+ is_list(Logic),
+  flag_level(english,>(1)),
+  in_ourpp(1),
+  current_player(Agent),
+  with_output_to(codes(String),print_english(Agent, Logic)),!,
+  simply_pprinted(String,Codes),
+  format('{|i7|| ~s |}',[Codes]).
+
+simply_pprinted(String,Codes):- append(LString,[N],String),(N==13;N==10),!,simply_pprinted(LString,Codes).
+simply_pprinted(String,Codes):-
+  freeze(C, member(C,`\n\r[.{?`)),
+  \+ member(C,String),
+  String = Codes.
+
+in_ourpp(Level) :- flag(our_pretty_printer,Was,Was),Was=Level.
+  
 list2eng(Obj, Some, English):-
   list2eng([], Obj, Some, English).
 
@@ -241,9 +283,10 @@ list2eng(Punct, Obj, Some, English) :- \+ is_list(Some), !,
    punct_or(Punct,log2eng,Log2Eng),
    call(Log2Eng, Obj, Some, English),!.
 
-%list2eng(_Punct, Obj, Some, [' [' | English]) :- nb_current(list2eng_e,D), number(D), list2eng_e(['.'=']','and'=','], Obj, Some, English), !.
-list2eng(Punct, Obj, Some, English) :- nb_current(list2eng_e,D),b_setval(list2eng_e,1), list2eng_e(Punct, Obj, Some, English), !,
-  b_setval(list2eng_e,D).
+:- nb_setval(list2eng, []).
+list2eng(_Punct, Obj, Some, [' ['| English]) :- nb_current(list2eng,D), number(D),!, list2eng_e(['.'=']','and'=','], Obj, Some, English), !.
+list2eng(Punct, Obj, Some, English) :- nb_current(list2eng,D), b_setval(list2eng,1), list2eng_e(Punct, Obj, Some, English), !,
+  b_setval(list2eng,D).
 
 
 list2eng_e(Punct, Obj, [Single], English) :- !,
@@ -297,8 +340,8 @@ logic2eng(Obj, [Prop|Tail], Text) :- !,
 logic2eng(_Obj, Prop, [String]):- compound(Prop), no_english, !, format(atom(String), '~q', [Prop]), !.
 logic2eng( Obj, ~(Type), ['(','logically','not','(',Out, '))']):- dmust(log2eng(Obj, Type, Out)), !.
 
-logic2eng(_Agent, time_passes, []).
-% log2eng(_Agent, time_passes, ['Time passes.']).
+%logic2eng(_Agent, time_passes, []).
+logic2eng(_Agent, time_passes, ['Time passes.']).
 
 logic2eng(Agent, you_are(Prep, Here), [cap(subj(Agent)), person(are, is), Prep, 'the', Here, '\n']).
 
@@ -363,19 +406,29 @@ logic2eng(Agent, sense(See, Sensing), [cap(subj(Agent)), person(See, s(See)), ':
 
 %logic2eng( Obj, effect(_, _), Out):- log2eng(Obj, adjs(special), Out), !.
 
-logic2eng(_Obj, h(_Spatial, ExitDown, Object, Speaker), [the(Object), 'has', Exit, Down, 'to', Speaker]):- 
-  compound(ExitDown), 
-  ExitDown=..[Exit, Down].
+logic2eng(Obj, timestamp(Ord,Time), [timestamp,is,Ord,'(',Ago,')']):-  log2eng(Obj, ago(Time), Ago).
 
-  
-logic2eng(_Obj, timestamp(Ord,Time), [timestamp,is,Ord,'(',MinutesSecs,' ago )']):- clock_time(Now),Dif is round((Now - Time)*10)/10,
+logic2eng(_Obj, ago(Time), [MinutesSecs,ago]):- clock_time(Now),Dif is round((Now - Time)*10)/10,
    Minutes is round(Dif) // 60,
    Secs is round(Dif) rem 60,
    (Secs<10 
      -> format(atom(MinutesSecs),'~w:0~ws',[Minutes,Secs])
      ; format(atom(MinutesSecs),'~w:~ws',[Minutes,Secs])).
 
-logic2eng(_Obj, h(_Spatial, Held_by , Object, Speaker), [the(Object), aux(be), Held_by, Speaker]).
+logic2eng(Obj, HWestFromTo_At, [ Ago | Info]):- 
+     HWestFromTo_At =.. [H,West,From|To_At],
+     timestamped_pred(H),
+     append(To,[At],To_At), number(At),!,
+     log2eng(Obj, ago(At), Ago),
+     HWestFromTo =.. [H,West,From|To],
+     logic2eng(Obj, HWestFromTo, Info).
+
+logic2eng(_Obj, h(exit(West), From , To), [To, 'is', West, 'of', From]):- !.
+logic2eng(_Obj, h(ExitDown, Object, Speaker), [the(Object), 'has', Exit, Down, 'to', Speaker]):- 
+  compound(ExitDown), 
+  ExitDown=..[Exit, Down].
+logic2eng(_Obj, h(Held_by , Object, Speaker), [the(Object), aux(be), Held_by, Speaker]).
+
 
 logic2eng(_Obj, EmittingLight, [aux(be), 'glowing']):- EmittingLight == emmiting(light), !.
 logic2eng(_Obj, fragile(_), ['looks fragile']).
