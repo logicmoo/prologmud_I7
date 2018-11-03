@@ -81,15 +81,19 @@ update_model(Agent, sense_props(Agent, _Sense, Object, PropList), Stamp, _Mem, M
  select_always(props_at(Object, _, _), M0, M1),
  append([props_at(Object, PropList, Stamp)], M1, M2).
 
-update_model(Agent,
-    sense(Agent, Sense, [you_are(Agent, How, Here), exits_are(Agent,Here,Exits), here_are(Agent,Here,Objects)]),
-    Timestamp, _Mem, M0, M4) :-
- sensory_model(Sense, Spatial),
- % Don't update map here, it's better done in the moved( ) clause.
- update_relations( How, Objects, Here, Timestamp, M0, M3), % Model objects seen Here
- findall(exit(E), member(E, Exits), ExitRelations),
- update_model_exits(Spatial, ExitRelations, Here, Timestamp, M3, M4).% Model exits from Here.
+update_model(Agent, sense(Agent, _Sense, List), Timestamp, Mem, M0, M4) :- !, update_model(Agent, List, Timestamp, Mem, M0, M4).
 
+% Don't update map here, it's better done in the moved( ) clause.
+update_model(Agent, you_are(Agent, _How, _Here), _Timestamp, _Mem, M0, M0):- !.
+
+% Model exits from Here.
+update_model(Agent, exits_are(Agent,Here,Exits), Timestamp, _Mem, M3, M4):- !,
+  findall(exit(E), member(E, Exits), ExitRelations),
+  update_model_exits(spatial, ExitRelations, Here, Timestamp, M3, M4).
+
+% Model objects seen Here
+update_model(Agent, here_are(Agent, _Sense, Prep, Here,Objects), Timestamp, _Mem, M0, M3):- !,
+   update_relations(Prep, Objects, Here, Timestamp, M0, M3). 
 
 update_model(Agent, moved( Agent, There, How, Here), Timestamp, Mem, M0, M2) :-
  % According to model, where was I?
@@ -111,8 +115,8 @@ update_model(_Agent, moved( Object, _From, How, To), Timestamp, _Mem, M0, M1) :-
 
 update_model(_Agent, failure(_), _Timestamp, _Mem, M0, M0) :- !.
 
-update_model(Agent, time_passes, Timestamp, _Memory, M, M):-
- nop(bugout(unused_update_model(Agent, time_passes, Timestamp, M))).
+update_model(Agent, time_passes(Target), Timestamp, _Memory, M, M):-
+ nop(bugout(unused_update_model(Agent, time_passes(Target), Timestamp, M))).
 
 update_model(_Agent, [], _Timestamp, _Memory, M, M).
 update_model(Agent, [Percept|Tail], Timestamp, Memory, M0, M2) :-

@@ -411,8 +411,12 @@ logic2eng(_Context, time_passes(Agent), ['Time passes for',Agent,'.']).
 
 logic2eng(_Agent, you_are(Self, Prep, Here), [cap(subj(Self)), person(are, is), Prep, 'the', Here, '\n']).
 
-logic2eng(Context, exits_are(_Agent,Here,Exits), ['Exits of',Here,' are', ExitText, '\n']):- list2eng(Context, Exits, ExitText).
-logic2eng(Context, here_are(Agent,Here, Nearby), [cap(subj(Agent)), person(see, sees),at,Here, ':', SeeText]):-
+logic2eng(Context, exits_are(_Agent, Here, Exits), ['Exits of',Here,' are', ExitText, '\n']):- list2eng(Context, Exits, ExitText).
+
+logic2eng(Context, here_are(Agent, see, Prep, Here, Nearby), [cap(Prep),Here, ':', SeeText]):-
+ exclude(=@=(Agent), Nearby, OtherNearby), list2eng(Context, OtherNearby, SeeText).
+
+logic2eng(Context, here_are(Agent, Sense, Prep, Here, Nearby), [cap(subj(Agent)), person(Sense, s(Sense)),Prep,Here, ':', SeeText]):-
  exclude(=@=(Agent), Nearby, OtherNearby), list2eng(Context, OtherNearby, SeeText).
 
 logic2eng(Context, carrying(Agent, Items),
@@ -576,7 +580,7 @@ append_if_new(Text1, Text2, Text):- append(Text1, Text2, Text), !.
 
 %print_percept(Agent, sense(Sense, [you_are(Self, Prep, Here),
 %       exits_are(Agent,Here,Exits),
-%       here_are(Agent,Here,Nearby)...])) :-
+%       here_are(Agent, Sence, Prep,Here,Nearby)...])) :-
 % findall(X, (member(X, Nearby), X\=Agent), OtherNearby),
 % player_format('You are ~p the ~p. Exits are ~p.~nYou see: ~p.~n',
 %   [Prep, Here, Exits, OtherNearby]).

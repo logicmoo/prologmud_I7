@@ -144,6 +144,7 @@ do_todo(_Agent, S0, S0).
 % In TADS:
 % "verification" methods perferm tests only
 
+apply_act( Action, _State, _NewState):- notrace((bugout(apply_act( Action), action))),fail.
 
 apply_act( examine(Agent, How, Thing), State, NewState) :-
  (equals_efffectly(sense, Sense, _), equals_efffectly(model, Spatial, _)) ->
@@ -159,7 +160,7 @@ apply_act( Action, State, NewState) :-
 
 apply_act( Action, State, NewState):- act( Action, State, NewState), !.
 apply_act( Act, State, NewState):- ((cmd_workarround(Act, NewAct) -> Act\==NewAct)), !, apply_act( NewAct, State, NewState).
-apply_act( Action, _State, _NewState):- notrace((bugout(failed_act( Action)), fail)).
+apply_act( Action, State, State):- notrace((bugout(failed_act( Action), general))),!.
 
 must_act( Action, State, NewState):- apply_act( Action, State, NewState) *-> ! ; fail.
 % must_act( Action, S0, S1) :- rtrace(must_act( Action, S0, S1)), !.
@@ -184,7 +185,7 @@ act( Action, State, NewState) :-
  findall(Direction, related(Spatial, exit(Direction), Here, _, State), Exits),
  !,
  queue_percept(Agent,
-    [sense(Agent, Sense, [you_are(Agent, Relation, Here), exits_are(Agent,Here,Exits), here_are(Agent,Here,Nearby)])],
+    [sense(Agent, Sense, [you_are(Agent, Relation, Here), exits_are(Agent,Here,Exits), here_are(Agent, Sense, Relation, Here, Nearby)])],
     State, NewState).
 
 act( inventory, State, NewState) :- 
@@ -490,7 +491,7 @@ act( emote(Agent, SAYTO, Object, Message), S0, S1) :- !, % directed message
 % queue_local_event(Spatial, [emoted(Agent,  say, (*), Message)], [Here], S0, S1).
 
 act( wait(Agent), State, NewState) :-
- queue_percept(Agent, [time_passes], State, NewState).
+ queue_percept(Agent, [time_passes(Agent)], State, NewState).
 act( print_(Agent, Msg), S0, S1) :-
  related(Spatial, descended, Agent, Here, S0),
  queue_local_event(Spatial, [true, Msg], [Here], S0, S1).
@@ -515,6 +516,7 @@ cmd_workarround_l([Verb, Relation|ObjS], [Verb|ObjS]):- is_ignorable(Relation), 
 % look(Agent, Spatial) at screen door
 cmd_workarround_l([Verb1|ObjS], [Verb2|ObjS]):- verb_alias(Verb1, Verb2), !.
 
+is_ignorable(Var):- var(Var),!,fail.
 is_ignorable(at). is_ignorable(in). is_ignorable(to). is_ignorable(the). is_ignorable(a). is_ignorable(spatial).
 
 verb_alias(look, examine) :- fail.

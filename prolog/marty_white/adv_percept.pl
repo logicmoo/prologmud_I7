@@ -209,19 +209,20 @@ process_percept_auto(Agent, Percept, _Stamp, Mem0, Mem0) :-
 process_percept_auto(Agent, sense_props(Agent, Sense, Object, PropList), _Stamp, Mem0, Mem2) :-
  bugout('~w: ~p~n', [Agent, sense_props(Agent, Sense, Object, PropList)], autonomous),
  (member(inherited(shiny), PropList)),
- thought_model(ModelData, Mem0), 
- \+ related(_Spatial, descended, Object, Agent, ModelData), % Not holding it?
+ Object \== Agent,
+ thought_model(ModelData, Mem0),
+ \+ related(_Spatial, descended, Object, Agent, ModelData), % Not holding it? 
  add_todo_all([take(Agent, Object), print_(Agent, 'My shiny precious!')], Mem0, Mem2).
 
-process_percept_auto(_Agent,
- sense(Agent, Sense, [you_are(Agent, _Prep, _Here), exits_are(Agent,Here,_Exits), here_are(Agent,Here,Objects)]),
- _Stamp, Mem0, Mem2) :-
+process_percept_auto(Agent, here_are(Agent, Sense, _Prep, _Here,Objects), _Stamp, Mem0, Mem2) :-
  thought_model(ModelData, Mem0),
  findall( examine(Agent, Sense, Obj),
    ( member(Obj, Objects),
    \+ member(props_at(Obj, _, _), ModelData)),
    ExamineNewObjects),
  add_todo_all(ExamineNewObjects, Mem0, Mem2).
+
+
 process_percept_auto(_Agent, _Percept, _Stamp, Mem0, Mem0).
 
 

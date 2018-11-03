@@ -23,7 +23,7 @@ thought_model(E, L):- in_model(model(E), L).
 
 
 get_open_traverse(Open, Sense, Traverse, Spatial, OpenTraverse):- get_open_traverse(Traverse, Spatial, OpenTraverse),
- nop((ignore(Open=open), ignore(Sense=see))).
+ ((ignore(Open=open), ignore(Sense=see))).
 
 get_open_traverse(_Need, Spatial, OpenTraverse):- ignore(OpenTraverse = open_traverse(_Prep, Spatial)).
 
@@ -39,11 +39,13 @@ equals_efffectly(_, Value, Value).
 :- nop(ensure_loaded('adv_relation')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+never_equal(Sense,Thing,Agent):-
+  never_equal(Sense,Thing),never_equal(Sense,Agent).
 never_equal(Sense,Thing):-
  notrace((freeze(Thing, (dmust(Thing\==Sense))), freeze(Sense, (dmust(Thing\==Sense))))).
 
 cant( Action, cant( sense(Agent, Sense, Thing, Why)), State) :-
- never_equal(Sense,Thing),
+ never_equal(Sense,Thing, Agent),
  act_verb_thing_model_sense(Agent, Action, Verb, Thing, Spatial, Sense),
  psubsetof(Verb, _),
  \+ in_scope(Spatial, Thing, Agent, State),
@@ -51,7 +53,7 @@ cant( Action, cant( sense(Agent, Sense, Thing, Why)), State) :-
 
 
 cant( Action, cant( sense(Agent, Sense, Thing, Why)), State) :-
- never_equal(Sense,Thing),
+ never_equal(Sense,Thing, Agent),
  % sensory_model(Sense, Spatial),
  act_verb_thing_model_sense(Agent, Action, Verb, Thing, _Spatial, Sense),
  psubsetof(Verb, examine(Agent, Sense)),
@@ -104,12 +106,12 @@ cant( look(Agent, Spatial), TooDark, State) :-
 % \+ has_sensory(Spatial, Sense, Agent, State).
 
 cant( examine(Agent, Sense, Thing), cant( sense( Agent, Sense, Thing, TooDark)), State) :- equals_efffectly(sense, Sense, see),
- never_equal(Sense,Thing),
+ never_equal(Sense,Thing, Agent),
  sensory_model_problem_solution(Sense, Spatial, TooDark, _EmittingLight),
  \+ has_sensory(Spatial, Sense, Agent, State).
 
 cant( examine(Agent, Sense, Thing), cant( sense( Agent, Sense, Thing, Why)), State) :-
- never_equal(Sense,Thing),
+ never_equal(Sense,Thing, Agent),
  \+ can_sense( Sense, Thing, Agent, State),
  (Why = ( \+ can_sense( Sense, Thing, Agent, State))).
 
@@ -193,7 +195,8 @@ related_hl(Spatial, descended, X, Z, State) :-
 related_hl(Spatial, open_traverse(Traverse, Spatial), X, Z, State) :- (nonvar(X);nonvar(Z)),
  get_open_traverse(_Traverse, Spatial, open_traverse(Traverse, Spatial)),
  related_hl(Spatial, child, X, Z, State).
-related_hl(Spatial, open_traverse(Traverse, Spatial), X, Z, State) :- !, fail,  (nonvar(X);nonvar(Z)),
+related_hl(Spatial, open_traverse(Traverse, Spatial), X, Z, State) :- !,
+ (nonvar(X);nonvar(Z)),
  get_open_traverse(Open, _See, _Traverse, Spatial, open_traverse(Traverse, Spatial)),
  related_hl(Spatial, child, Y, Z, State),
  \+ is_state(~(Open), Y, State),
@@ -265,7 +268,7 @@ hit(_Spatial, _Target, _Thing, _Vicinity, S0, S0).
 
 
 act_verb_thing_model_sense(Agent, Action, Verb, Thing, Spatial, Sense):-
- never_equal(Sense,Thing),
+ never_equal(Sense,Thing, Agent),
  notrace(act_verb_thing_model_sense0(Agent, Action, Verb, Thing, Spatial, Sense)), !.
 
 act_verb_thing_model_sense0(Agent, goto(Agent, _Walk, _Dir, _Rel, Thing), goto, Thing, spatial, see):-!.

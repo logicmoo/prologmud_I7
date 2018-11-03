@@ -222,17 +222,19 @@ parse2logical(Self, [TheVerb|Args], Action, M) :- fail,
  Verb\==TheVerb,!,
  parse2logical(Self, [Verb|Args], Action, M).
 
-parse2logical(Self, [Verb], Action, _M) :- Action=..[Verb,Self], !.
+parse2logical(_Self, [Verb|Args], Action, _M) :- verbatum(Verb), !,
+ Action =.. [Verb|Args].
 
-parse2logical(Self, [Verb|Args], Action, _M) :- fail, verbatum(Verb), !,
- Action =.. [Verb,Self|Args].
+parse2logical(Self, [Verb], Action, _M) :- Action=..[Verb,Self], !.
 
 parse2logical(Self, [Verb|TheArgs], Action, M) :-
  args2logical(TheArgs, Args, M), wdmsg( TheArgs->Args), !, 
  Action =.. [Verb,Self|Args].
 
-verbatum(Verb):- member(Verb, [prolog, make, agent, create, delprop, destroy, echo, quit,
- memory, model, path, properties, setprop, state, trace, notrace, whereami, whereis, whoami]).
+verbatum(Verb):- member(Verb, [prolog, make, 
+ agent, create, delprop, destroy, echo, quit,
+ memory, model, path, properties, setprop, state, trace, notrace, whereami, whereis, whoami
+ ]).
 
 parse2agent([], Agent, Mem):- thought(inst(Agent), Mem), !.
 parse2agent(List,Agent,Mem):- parse2object(List,Agent,Mem).

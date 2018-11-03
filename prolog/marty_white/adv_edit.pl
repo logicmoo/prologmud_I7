@@ -98,9 +98,11 @@ do_metacmd(Doer, mem, S0, S0) :-
  reverse(SP,SPR),
  meta_pprint(Doer, SPR, always),
  maybe_pause(Doer).
+
 do_metacmd(Doer, make, S0, S0) :-
  security_of(Doer,wizard),
  thread_signal(main,make).
+
 do_metacmd(Doer, prolog, S0, S0) :-
  security_of(Doer,wizard),
  '$current_typein_module'(Was),
@@ -109,7 +111,7 @@ do_metacmd(Doer, prolog, S0, S0) :-
 do_metacmd(Doer, CLS, S0, S0) :- security_of(Doer,wizard), 
  current_predicate(_, CLS), 
  (is_main_console -> catch(CLS,E,(bugout(CLS:- throw(E)),fail)) ;
- (redirect_error_to_string(catch(CLS,E,(bugout(CLS:- throw(E)),fail)),Str),!, write(Str))).
+ (redirect_error_to_string(catch(CLS,E,(bugout(CLS:- throw(E)),fail)),Str),!, write(Str))),!.
 
 do_metacmd(Doer, memory(Agent), S0, S0) :-
  security_of(Doer,wizard),
