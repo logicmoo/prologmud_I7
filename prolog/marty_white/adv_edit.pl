@@ -113,17 +113,17 @@ do_metacmd(Doer, CLS, S0, S0) :- security_of(Doer,wizard),
  (is_main_console -> catch(CLS,E,(bugout(CLS:- throw(E)),fail)) ;
  (redirect_error_to_string(catch(CLS,E,(bugout(CLS:- throw(E)),fail)),Str),!, write(Str))),!.
 
-do_metacmd(Doer, memory(Agent), S0, S0) :-
+do_metacmd(Doer, inspect(Self, memory, Target), S0, S0) :-
  security_of(Doer,wizard),
- forall(member(memories(Agent, Memory), S0),
- meta_pprint(Agent, Memory, always)),
+ forall(member(memories(Target, Memory), S0),
+ meta_pprint(Self, Memory, always)),
  maybe_pause(Doer).
 
-do_metacmd(Doer, model(Agent), S0, S0) :-
+do_metacmd(Doer, inspect(Self, model, Target), S0, S0) :-
  security_of(Doer,wizard),
- forall(member(memories(Agent, Memory), S0),
+ forall(member(memories(Target, Memory), S0),
  forall(thought(model(ModelData), Memory),
- meta_pprint(Doer, ModelData, always))),
+ meta_pprint(Self, ModelData, always))),
  maybe_pause(Doer).
 
 do_metacmd(Doer, create(Object), S0, S1) :-

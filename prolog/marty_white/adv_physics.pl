@@ -276,6 +276,7 @@ act_verb_thing_model_sense0(Agent, look(Agent, spatial), look, *, spatial, see):
 act_verb_thing_model_sense0(Agent, look(Agent, spatial, spatial), look, *, spatial, see):-!.
 act_verb_thing_model_sense0(Agent, look(Agent), look, *, spatial, see):-!.
 act_verb_thing_model_sense0(Agent, look(Agent), look, *, spatial, Sense):- is_sense(Sense), !.
+act_verb_thing_model_sense0(Agent, touch(Agent,Target), touch, Target, spatial, Sense):- is_sense(Sense), !.
 
 act_verb_thing_model_sense0(Agent, Action, Verb, Thing, W1, Sense):-
   Action=..[Verb,Agent, W1|Rest],

@@ -205,7 +205,7 @@ pasitfy_word(Verb,Compiled):- atomic_concat(Verb,'ed', Compiled).
 
 nospace(_, ',').
 nospace(_, ';').
-nospace(_, ':').
+nospace(_, ':').              
 nospace(_, '.').
 nospace(_, '?').
 nospace(_, '!').

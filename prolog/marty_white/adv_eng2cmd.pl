@@ -231,7 +231,7 @@ parse2logical(Self, [Verb|TheArgs], Action, M) :-
  args2logical(TheArgs, Args, M), wdmsg( TheArgs->Args), !, 
  Action =.. [Verb,Self|Args].
 
-verbatum(Verb):- member(Verb, [prolog, make, 
+verbatum(Verb):- member(Verb, [prolog, make, cls, mem, props,
  agent, create, delprop, destroy, echo, quit,
  memory, model, path, properties, setprop, state, trace, notrace, whereami, whereis, whoami
  ]).

@@ -195,17 +195,25 @@ problem_solution(noisy, hear, quiet).
 
 
 % Autonomous logical percept processing.
-process_percept_auto(Agent, [Same|_], _Stamp, Mem0, Mem0) :- was_own_self(Agent, Same).
+%process_percept_auto(Agent, with_msg(Percept, _Msg), Timestamp, M0, M2) :- !, 
+% process_percept_auto(Agent, Percept, Timestamp, M0, M2).
+
+process_percept_auto(Agent, [Percept|Tail], Stamp, Mem0, Mem4) :-
+ process_percept_auto(Agent, Percept, Stamp, Mem0, Mem1),
+ process_percept_auto(Agent, Tail, Stamp, Mem1, Mem4).
+
+process_percept_auto(Agent, Same, _Stamp, Mem0, Mem0) :- fail, was_own_self(Agent, Same).
 process_percept_auto(Agent, emoted(Speaker,  _Say, Agent, Words), _Stamp, Mem0, Mem1) :-
  consider_text(Speaker, Agent, Words, Mem0, Mem1).
 process_percept_auto(Agent, emoted(Speaker,  _Say, (*), WordsIn), _Stamp, Mem0, Mem1) :-
  addressing_whom(WordsIn, Whom, Words),
  Whom == Agent,
  consider_text(Speaker, Agent, Words, Mem0, Mem1).
-process_percept_auto(Agent, Percept, _Stamp, Mem0, Mem0) :-
- Percept =.. [Functor|_],
- member(Functor, [talk, say]),
- bugout('~w: Ignoring ~p~n', [Agent, Percept], autonomous).
+
+process_percept_auto(_Agent, sense(_Agent2,_See,[]), _Timestamp, M, M):-!.
+process_percept_auto(_Agent2, sense(Agent,_See,[Percept|Tail]), Timestamp, M0, M2) :- !, 
+ process_percept_auto(Agent, [Percept|Tail], Timestamp, M0, M2).
+
 process_percept_auto(Agent, sense_props(Agent, Sense, Object, PropList), _Stamp, Mem0, Mem2) :-
  bugout('~w: ~p~n', [Agent, sense_props(Agent, Sense, Object, PropList)], autonomous),
  (member(inherited(shiny), PropList)),
