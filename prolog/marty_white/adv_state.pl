@@ -5,7 +5,7 @@
 %
 % Bits and pieces:
 %
-%  LogicMOO, Inform7, FROLOG, Guncho, PrologMUD and Marty's Prolog Adventure Prototype
+% LogicMOO, Inform7, FROLOG, Guncho, PrologMUD and Marty's Prolog Adventure Prototype
 % 
 % Copyright (C) 2004 Marty White under the GNU GPL 
 % Sept 20,1999 - Douglas Miles
@@ -40,11 +40,11 @@ advstate([]).
 % hash table, etc.), but for now is a List. These (backtrackable) predicates
 % hide the implementation:
 % assert/record/declare/memorize/think/associate/know/retain/affirm/avow/
-%  insist/maintain/swear/posit/postulate/allege/assure/claim/proclaim
+% insist/maintain/swear/posit/postulate/allege/assure/claim/proclaim
 % retract/erase/forget/un-declare/unthink/repress/supress
 % retrieve/remember/recall/ask/thought/think-of/reminisc/recognize/review/
-%  recollect/remind/look(Spatial)-up/research/establish/testify/sustain/attest/certify/
-%  verify/prove
+% recollect/remind/look-up/research/establish/testify/sustain/attest/certify/
+% verify/prove
 % simulation: declare/undeclare/declared
 % perception:
 % memory: memorize/forget/thought
@@ -69,7 +69,7 @@ declare(Fact, State, NewState) :- notrace(((assertion(var(NewState)),dmust(appen
 %undeclare(Fact, State):- player_local(Fact, Player), !, undeclare(wishes(Player, Fact), State).
 undeclare(Fact, State, NewState):- notrace(undeclare_(Fact, State, NewState)).
 undeclare_(Fact, State, NewState) :- copy_term(State, Copy), select(Fact, State, NewState),
-  assertion( \+ member(Copy , NewState)).
+ assertion( \+ member(Copy , NewState)).
 
 %undeclare_always(Fact, State):- player_local(Fact, Player), !, undeclare_always(wishes(Player, Fact), State).
 undeclare_always(Fact, State, NewState) :- select_always(Fact, State, NewState).
@@ -92,16 +92,16 @@ declared_link(Fact, Object):- callable(Fact), Fact=..[F|List],Call=..[F,Object|L
 
 % Entire state of simulation & agents is held in one list, so it can be easy
 % to roll back. The state of the simulation consists of:
-%  object properties
-%  object relations
-%  percept queues for agents
-%  memories for agents (actually logically distinct from the simulation)
+% object properties
+% object relations
+% percept queues for agents
+% memories for agents (actually logically distinct from the simulation)
 % Note that the simulation does not maintain any history.
 % TODO: change state into a term:
-%  ss(Objects, Relationships, PerceptQueues, AgentMinds)
+% ss(Objects, Relationships, PerceptQueues, AgentMinds)
 % TODO:
-%  store initial state as clauses which are collected up and put into a list,
-%   like the operators are, to provide proper prolog variable management.
+% store initial state as clauses which are collected up and put into a list,
+% like the operators are, to provide proper prolog variable management.
 must_input_state(S0):- notrace(assertion(is_list(S0);must_state(S0))).
 must_output_state(S0):- notrace(assertion(must_state(S0);is_list(S0))),notrace(check4bugs(S0)).
 must_state(S0):- is_list(S0), nb_setval(advstate,S0).
@@ -110,11 +110,11 @@ get_objects(Spec, Set, State):- must_input_state(State), get_objects_(Spec, List
 %get_objects(_Spec, [player1, floyd], _State):-!.
 
 get_objects_(_Spec, [], [], im(_)) :- !.
-get_objects_(Spec, OutList, [Store|StateList], im(S0)):-   
+get_objects_(Spec, OutList, [Store|StateList], im(S0)):- 
  (( stores_props(Store, Object, PropList) -> filter_spec(Spec, PropList))
-  -> OutList = [Object|MidList]
-  ; OutList = MidList), !,
-  get_objects_(Spec, MidList, StateList, im(S0)).
+ -> OutList = [Object|MidList]
+ ; OutList = MidList), !,
+ get_objects_(Spec, MidList, StateList, im(S0)).
 
 stores_props(perceptq(Agent, PropList), Agent, PropList).
 %stores_props(type_props(Agent, PropList), Agent, PropList).
@@ -129,8 +129,8 @@ stores_props(props(Object, PropList), Object, PropList).
 
 
 getprop(Object, Prop, S0):- 
-  quietly(( assertion(\+ atom(Prop)), getprop1(Object, [], Object, Prop, S0)))
-   *-> true; getprop_from_state(Object, Object, Prop, S0).
+ quietly(( assertion(\+ atom(Prop)), getprop1(Object, [], Object, Prop, S0)))
+ *-> true; getprop_from_state(Object, Object, Prop, S0).
 
 getprop_from_state(Orig, Object, Prop, Memory):- 
  member(state(S0), Memory), !, getprop1(Orig, [], Object, Prop, S0).
@@ -138,33 +138,33 @@ getprop_from_state(Orig, Object, Prop, Memory):-
 getprop1(Orig, AlreadyUsed, Object, Prop, S0) :- 
  direct_props(Object, PropList, S0),
  ( declared(Prop,PropList)*-> true ; 
-    inherited_prop1(Orig, AlreadyUsed, Object, Prop, PropList, S0)).
+ inherited_prop1(Orig, AlreadyUsed, Object, Prop, PropList, S0)).
 
 inherited_prop1(Orig, AlreadyUsed, _Object, Prop, PropList, S0):- 
-  member(inherit(Delegate,t), PropList),
-   \+ member(inherit(Delegate,t), AlreadyUsed),
-   \+ member(inherited(Delegate), PropList),
-   \+ member(isnt(Delegate), PropList),
-   \+ member(inherited(Delegate), AlreadyUsed),
-   \+ member(isnt(Delegate), AlreadyUsed),
-  append(AlreadyUsed,PropList,AllPropList),
-  getprop1(Orig, AllPropList, Delegate, Prop, S0).
+ member(inherit(Delegate,t), PropList),
+ \+ member(inherit(Delegate,t), AlreadyUsed),
+ \+ member(inherited(Delegate), PropList),
+ \+ member(isnt(Delegate), PropList),
+ \+ member(inherited(Delegate), AlreadyUsed),
+ \+ member(isnt(Delegate), AlreadyUsed),
+ append(AlreadyUsed,PropList,AllPropList),
+ getprop1(Orig, AllPropList, Delegate, Prop, S0).
 
 inherited_prop1(_Orig, AlreadyUsed, _Object, Prop, PropList, _S0):- 
-   member(link(Delegate), PropList),
-   \+ member(link(Delegate), AlreadyUsed),
-   nb_current(Delegate,NewProps),
-   member(Prop,NewProps).
+ member(link(Delegate), PropList),
+ \+ member(link(Delegate), AlreadyUsed),
+ nb_current(Delegate,NewProps),
+ member(Prop,NewProps).
 
 
 
 direct_props(Object, PropList, S0):- 
  (var(S0)->nb_current(advstate,S0); true),
-  (declared(props(Object, PropList), S0) 
-  -> true 
-   ; ( declared(type_props(Object, PropList), S0) 
-   -> true 
-      ; extra_decl(Object, PropList))).
+ (declared(props(Object, PropList), S0) 
+ -> true 
+ ; ( declared(type_props(Object, PropList), S0) 
+ -> true 
+  ; extra_decl(Object, PropList))).
 
 direct_props_or(Object,PropList, Default, S0) :-
  direct_props(Object, PropList, S0)*->true; PropList=Default.
@@ -187,14 +187,14 @@ setprop_(Object, Prop, S0, S2) :-
  nb_setarg(A,Old,_),
 
  (select(Old, PropList, PropList2) ->
-   (upmerge_prop(F,A,Old,Prop,Merged) ->
-     ((Old==Merged,fail) -> S2=S0 ; 
-      (append([Merged], PropList2, PropList3),declare(props(Object, PropList3), S1, S2)));
-    append([Prop], PropList, PropList3),declare(props(Object, PropList3), S1, S2));
-  (append([Prop], PropList, PropList3),declare(props(Object, PropList3), S1, S2))).
+ (upmerge_prop(F,A,Old,Prop,Merged) ->
+  ((Old==Merged,fail) -> S2=S0 ; 
+  (append([Merged], PropList2, PropList3),declare(props(Object, PropList3), S1, S2)));
+ append([Prop], PropList, PropList3),declare(props(Object, PropList3), S1, S2));
+ (append([Prop], PropList, PropList3),declare(props(Object, PropList3), S1, S2))).
 
 
-%   delprop_always(Object, Prop, S0U, S0a),
+% delprop_always(Object, Prop, S0U, S0a),
 
 /*setprop(Object, Prop, S0, S2) :-
  %dmust((
@@ -203,7 +203,7 @@ setprop_(Object, Prop, S0, S2) :-
  select_always(Prop, PropList, PropList2),
  append([Prop], PropList2, PropList3),
  declare(props(Object, PropList3), S1, S2))
-  ->true;
+ ->true;
  declare(props(Object, [Prop]), S0, S2)).
 */
 
@@ -231,9 +231,9 @@ updateprop_(Object, Prop, S0, S2) :-
  assertion(compound(Prop)),
  direct_props_or(Object, PropList, [], S0),
  (member(Prop,PropList)
-   -> S0=S2;
-  (undeclare_always(props(Object, _), S0, S1),
-   updateprop_1(Object, Prop, PropList, S1, S2))).
+ -> S0=S2;
+ (undeclare_always(props(Object, _), S0, S1),
+ updateprop_1(Object, Prop, PropList, S1, S2))).
 
 updateprop_1(Object, Prop, PropList, S0, S2) :-
  functor(Prop,F,A),
@@ -241,11 +241,11 @@ updateprop_1(Object, Prop, PropList, S0, S2) :-
  nb_setarg(A,Old,_),
 
  (select(Old, PropList, PropList2) ->
-   (upmerge_prop(F,A,Old,Prop,Merged) ->
-     ((Old==Merged,fail) -> declare(props(Object, PropList), S0, S2) ; % no update
-      (append([Merged], PropList2, PropList3),declare(props(Object, PropList3), S0, S2)));
-    append([Prop], PropList, PropList3),declare(props(Object, PropList3), S0, S2));
-  (append([Prop], PropList, PropList3),declare(props(Object, PropList3), S0, S2))).
+ (upmerge_prop(F,A,Old,Prop,Merged) ->
+  ((Old==Merged,fail) -> declare(props(Object, PropList), S0, S2) ; % no update
+  (append([Merged], PropList2, PropList3),declare(props(Object, PropList3), S0, S2)));
+ append([Prop], PropList, PropList3),declare(props(Object, PropList3), S0, S2));
+ (append([Prop], PropList, PropList3),declare(props(Object, PropList3), S0, S2))).
 
 
 % Remove Prop.
