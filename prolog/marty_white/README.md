@@ -16,6 +16,31 @@ See:  http://www.lightlink.com/vulcan/adv/essay.html
 
 # Douglas TODOs
 
+      * [Chapter 1 - Some Characteristics and Adjectives](#chapter-1---some-characteristics-and-adjectives)
+         * [Section 1 - Physical truths](#section-1---physical-truths)
+         * [Section 2 - Hunger](#section-2---hunger)
+         * [Section 3 - Access and Preference of Objects](#section-3---access-and-preference-of-objects)
+         * [Section 4 - Mood-related](#section-4---mood-related)
+         * [Section 5 - Qualities Inherited From The Home-world](#section-5---qualities-inherited-from-the-home-world)
+      * [Chapter 2 - Creature Behavior](#chapter-2---creature-behavior)
+         * [Section 1 - Some Phrasing Helps](#section-1---some-phrasing-helps)
+         * [Section 2 - Creature Actions](#section-2---creature-actions)
+         * [Section 3 - Every Turn Rules for Creature](#section-3---every-turn-rules-for-creature)
+         * [Section 4 - Creature Reactions to Giving and Other Actions](#section-4---creature-reactions-to-giving-and-other-actions)
+      * [Chapter 3 - The Player's Clothing and Inventory](#chapter-3---the-players-clothing-and-inventory)
+      * [Chapter 4 - The Office](#chapter-4---the-office)
+      * [Chapter 8 - The Capsule](#chapter-8---the-capsule)
+         * [Section 1 - Glue and Gluing](#section-1---glue-and-gluing)
+         * [Section 2 - The Label](#section-2---the-label)
+         * [Section 3 - Propelling](#section-3---propelling)
+      * [Chapter 9 - Other Ways of Interacting with the Creature](#chapter-9---other-ways-of-interacting-with-the-creature)
+      * [Chapter 10 - The Plot](#chapter-10---the-plot)
+         * [Section 1 - Accounting for Time](#section-1---accounting-for-time)
+         * [Section 2 - Major Plot Events](#section-2---major-plot-events)
+         * [Section 3 - Final scene](#section-3---final-scene)
+      * [Chapter 11 - Help System](#chapter-11---help-system)
+      * [Chapter 12 - Testing - Not for Release](#chapter-12---testing---not-for-release)
+
 "When in Rome 2: Far from Home" by Emily Short.
 
 The story genre is "Science Fiction". The story headline is "A Puzzle Game in Five Brief Episodes". The story is episode 2 of "When in Rome". The story creation year is 2006. The story description is "Manhattan, 1954. 
