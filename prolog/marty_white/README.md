@@ -258,7 +258,6 @@ Pluto	curious	strong	45	negligible	hard	2	fast	textile	stupid	Pluto	"**** *****"
 Charon	curious	weak	45	negligible	hard	2	fast	meaty	stupid	Pluto	"**** ***** -"
 
 
-
 Definition: a person is tall if it is negligible or it is fractional.
 
 Definition: a person is timid:
@@ -3942,8 +3941,7 @@ hint	used
 "Remember also that Esther tells you it has been twenty minutes without food when the game begins."
 "Once you have measured the number of minutes that pass between feedings, you can narrow down the creature's origin system."
 "Looking up moons in the paperwork may give you some idea of what the feeding times should be."
-"If the feedings are more frequent than every 20 minutes, you know that it comes from somewhere nearer than the Jovian system; if they are less frequent, you know it comes from somewhere further out. Exactly 20 minutes would place it on Io, Europa, Ganymede, or Callisto."	
- 
+"If the feedings are more frequent than every 20 minutes, you know that it comes from somewhere nearer than the Jovian system; if they are less frequent, you know it comes from somewhere further out. Exactly 20 minutes would place it on Io, Europa, Ganymede, or Callisto."	 
  
 ## Chapter 12 - Testing - Not for Release
 
