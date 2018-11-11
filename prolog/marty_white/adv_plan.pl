@@ -26,12 +26,12 @@
 precond_matches_effect(Cond, Cond).
 
 
-precond_matches_effects(path(Spatial, Here, There), StartEffects) :-
+precond_matches_effects(path(Spatial, Here, There), StartEffects) :- 
  find_path(Spatial, Here, There, _Route, StartEffects).
 precond_matches_effects(exists(Spatial, Object), StartEffects) :-
- in_model(h_at(Spatial, _, Object, _, _), StartEffects)
+ in_model(h(Spatial, _, Object, _), StartEffects)
  ;
- in_model(h_at(Spatial, _, _, Object, _), StartEffects).
+ in_model(h(Spatial, _, _, Object), StartEffects).
 precond_matches_effects(Cond, Effects) :-
  member(E, Effects),
  precond_matches_effect(Cond, E).
@@ -54,8 +54,8 @@ oper(Self, goto(Self, Walk, loc(Self, Dir, Rel, There)),
   \+ is_state(~(open), Dir),
   h(Spatial, exit(Dir), Here, There)], % path(Spatial, Here, There)
   [ %Postconds:
-  h_at(Spatial, Rel, Self, There, _),
-  ~ h_at(Spatial, WasRel, Self, Here, _)]).
+  h(Spatial, Rel, Self, There),
+  ~ h(Spatial, WasRel, Self, Here)]).
 
 
 
@@ -66,60 +66,60 @@ oper(Self, Action, Preconds, Effects):- % Hooks to better KR above
 
 oper(Self, goto(Self, _Walk, loc(Self, Dir, Rel, There)),
   [ Here \= Self, There \= Self,
-  h_at(Spatial, WasRel, Self, Here, _),
-  h_at(Spatial, exit(Dir), Here, There, _)], % path(Spatial, Here, There)
-  [ h_at(Spatial, Rel, Self, There, _),
-  ~ h_at(Spatial, WasRel, Self, Here, _)]).
+  h(Spatial, WasRel, Self, Here),
+  h(Spatial, exit(Dir), Here, There)], % path(Spatial, Here, There)
+  [ h(Spatial, Rel, Self, There),
+  ~ h(Spatial, WasRel, Self, Here)]).
 
 oper(Self, take(Self, Thing), % from same room
   [ Thing \= Self, exists(Spatial, Thing),
   There \= Self,
-  h_at(Spatial, At, Thing, There, _T0),
-  h_at(Spatial, At, Self, There, _T1)],
-  [ h_at(Spatial, held_by, Thing, Self, _T2),
-  ~ h_at(Spatial, At, Thing, There, _T3)]).
+  h(Spatial, At, Thing, There),
+  h(Spatial, At, Self, There)],
+  [ h(Spatial, held_by, Thing, Self),
+  ~ h(Spatial, At, Thing, There)]).
 oper(Self, take(Self, Thing), % from something else
   [ Thing \= Self, exists(Spatial, Thing),
-  h_at(Spatial, Prep, Thing, What, _),
-  h_at(Spatial, At, What, There, _),
-  h_at(Spatial, At, Self, There, _) ],
-  [ h_at(Spatial, held_by, Thing, Self, _),
-  ~ h_at(Spatial, Prep, Thing, There, _)]):- extra.
+  h(Spatial, Prep, Thing, What),
+  h(Spatial, At, What, There),
+  h(Spatial, At, Self, There) ],
+  [ h(Spatial, held_by, Thing, Self),
+  ~ h(Spatial, Prep, Thing, There)]):- extra.
 oper(Self, drop(Self, Thing),
   [ Thing \= Self, exists(Spatial, Thing),
-  h_at(Spatial, held_by, Thing, Self, _)],
-  [ ~ h_at(Spatial, held_by, Thing, Self, _)] ).
+  h(Spatial, held_by, Thing, Self)],
+  [ ~ h(Spatial, held_by, Thing, Self)] ).
 oper(Self, emote(Self, say, Player, [please, give, Self, the(Thing)]),
   [ Thing \= Self, exists(Spatial, Thing),
-  h_at(Spatial, held_by, Thing, Player, _),
-  h_at(Spatial, Prep, Player, Where, _),
-  h_at(Spatial, Prep, Self, Where, _) ],
-  [ h_at(Spatial, held_by, Thing, Self, _),
-  ~ h_at(Spatial, held_by, Thing, Player, _)] ):- extra.
+  h(Spatial, held_by, Thing, Player),
+  h(Spatial, Prep, Player, Where),
+  h(Spatial, Prep, Self, Where) ],
+  [ h(Spatial, held_by, Thing, Self),
+  ~ h(Spatial, held_by, Thing, Player)] ):- extra.
 oper(Self, give(Self, Thing, Recipient),
   [ Thing \= Self, Recipient \= Self,
   exists(Spatial, Thing), exists(Spatial, Recipient),
   Where \= Self,
-  h_at(Spatial, held_by, Thing, Self, _),
-  h_at(Spatial, in, Recipient, Where, _), exists(Spatial, Where),
-  h_at(Spatial, in, Self, Where, _)],
-  [ h_at(Spatial, held_by, Thing, Recipient, _),
-  ~ h_at(Spatial, held_by, Thing, Self, _)
+  h(Spatial, held_by, Thing, Self),
+  h(Spatial, in, Recipient, Where), exists(Spatial, Where),
+  h(Spatial, in, Self, Where)],
+  [ h(Spatial, held_by, Thing, Recipient),
+  ~ h(Spatial, held_by, Thing, Self)
   ] ).
 oper(Self, put(Self, Spatial, Thing, Relation, What), % in something else
   [ Thing \= Self, What \= Self, Where \= Self,
   Thing \= What, What \= Where, Thing \= Where,
-  h_at(Spatial, held_by, Thing, Self, _), exists(Spatial, Thing),
-  h_at(Spatial, in, What, Where, _), exists(Spatial, What), exists(Spatial, Where),
-  h_at(Spatial, in, Self, Where, _)],
-  [ h_at(Spatial, Relation, Thing, What, _),
-  ~ h_at(Spatial, held_by, Thing, Self, _)] ).
+  h(Spatial, held_by, Thing, Self), exists(Spatial, Thing),
+  h(Spatial, in, What, Where), exists(Spatial, What), exists(Spatial, Where),
+  h(Spatial, in, Self, Where)],
+  [ h(Spatial, Relation, Thing, What),
+  ~ h(Spatial, held_by, Thing, Self)] ).
 oper(Self, put(Self, Spatial, Thing, Relation, Where), % in room
   [ Thing \= Self, exists(Spatial, Thing),
-  h_at(Spatial, held_by, Thing, Self, _),
-  h_at(Spatial, Relation, Self, Where, _)],
-  [ h_at(Spatial, Relation, Thing, Where, _),
-  ~ h_at(Spatial, held_by, Thing, Self, _)] ) :- extra.
+  h(Spatial, held_by, Thing, Self),
+  h(Spatial, Relation, Self, Where)],
+  [ h(Spatial, Relation, Thing, Where),
+  ~ h(Spatial, held_by, Thing, Self)] ) :- extra.
 
 % Return an operator after substituting Agent for Self.
 operagent(Agent, Action, Conds, Effects) :- oper(Agent, Action, Conds, Effects).
@@ -216,7 +216,7 @@ add_orderings([B|Tail], Orderings, NewOrderings) :-
  add_ordering(B, Orderings, Orderings2),
  add_orderings(Tail, Orderings2, NewOrderings).
 
-del_ordering_node(I, [before(I, _)|Tail], Orderings) :-
+del_ordering_node(I, [before(I)|Tail], Orderings) :-
  del_ordering_node(I, Tail, Orderings).
 del_ordering_node(I, [before(_, I)|Tail], Orderings) :-
  del_ordering_node(I, Tail, Orderings).
@@ -268,21 +268,21 @@ test_ordering :- bugout(' END ORDERING TEST~n', planner).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-cond_is_achieved(step(J, _Oper), C, plan(Steps, Orderings, _, _)) :-
+cond_is_achieved(step(J, _Oper), C, plan(Steps, Orderings, _)) :-
  member(step(I, oper(_Self, _, _, Effects)), Steps),
  precondition_matches_effects(C, Effects),
  isbefore(I, J, Orderings),
  bugout('  Cond ~w of step ~w is achieved!~n', [C, J], planner).
-cond_is_achieved(step(J, _Oper), C, plan(_Steps, _Orderings, _, _)) :-
+cond_is_achieved(step(J, _Oper), C, plan(_Steps, _Orderings, _)) :-
  bugout('  Cond ~w of step ~w is NOT achieved.~n', [C, J], planner),
  !, fail.
 
 % Are the preconditions of a given step achieved by the effects of other
 % steps, or are already true?
-step_is_achieved(step(_J, oper(_Self, _, [], _)), _Plan). % No conditions, OK.
-step_is_achieved(step(J, oper(Self, _, [C|Tail], _)), plan(Steps, Orderings, _, _)) :-
- cond_is_achieved(step(J, _), C, plan(Steps, Orderings, _, _)),
- step_is_achieved(step(J, oper(Self, _, Tail, _)), plan(Steps, Orderings, _, _)).
+step_is_achieved(step(_J, oper(_Self, _, [])), _Plan). % No conditions, OK.
+step_is_achieved(step(J, oper(Self, _, [C|Tail])), plan(Steps, Orderings, _)) :-
+ cond_is_achieved(step(J), C, plan(Steps, Orderings, _)),
+ step_is_achieved(step(J, oper(Self, _, Tail)), plan(Steps, Orderings, _)).
 
 all_steps_are_achieved([Step|Tail], Plan) :-
  step_is_achieved(Step, Plan),
@@ -312,7 +312,7 @@ conds_as_goals(ID, [C|R], [G|T]) :-
  conds_as_goals(ID, R, T).
 
 cond_equates(Cond0, Cond1) :- Cond0 = Cond1.
-cond_equates(h_at(Spatial, X, Y, Z, _), h_at(Spatial, X, Y, Z, _)).
+cond_equates(h(Spatial, X, Y, Z), h(Spatial, X, Y, Z)).
 cond_equates(~ ~ Cond0, Cond1) :- cond_equates(Cond0, Cond1).
 cond_equates(Cond0, ~ ~ Cond1) :- cond_equates(Cond0, Cond1).
 
@@ -438,8 +438,8 @@ choose_operator([goal(GoalID, exists(Spatial, GoalCond))|Goals0], Goals0,
      plan(Steps, Order9, Bindings, NewLinks),
      Depth, Depth ) :-
  memberchk(step(start, oper(_Self, _Action, _Preconds, Effects)), Steps),
- ( in_model(h_at(Spatial, _Prep, GoalCond, _Where, _), Effects);
- in_model(h_at(Spatial, _Prep, _What, GoalCond, _), Effects)),
+ ( in_model(h(Spatial, _Prep, GoalCond, _Where), Effects);
+ in_model(h(Spatial, _Prep, _What, GoalCond), Effects)),
  add_ordering(before(start, GoalID), Order0, Order1),
  % Need to protect new link from all existing steps
  protect_link_all(causes(start, GoalCond, GoalID), Steps, Order1, Order9),
@@ -507,21 +507,21 @@ planning_loop(Goals0, Operators, Plan0, Plan2, Depth0, Timeout) :-
 % bugout('Search limit reached!~n', planner),
 % fail.
 
-serialize_plan(plan([], _Orderings, _B, _L), []) :- !.
+serialize_plan(_Knower, _Agent, plan([], _Orderings, _B, _L), []) :- !.
 
-serialize_plan(plan(Steps, Orderings, B, L), Tail) :-
- select(step(_, oper(_Self, true, _, _)), Steps, RemainingSteps),
+serialize_plan(Knower, Agent, plan(Steps, Orderings, B, L), Tail) :-
+ select(step(_, oper(Agent, true, _)), Steps, RemainingSteps),
  !,
- serialize_plan(plan(RemainingSteps, Orderings, B, L), Tail).
+ serialize_plan(Knower, Agent, plan(RemainingSteps, Orderings, B, L), Tail).
 
-serialize_plan(plan(Steps, Orderings, B, L), [Action|Tail]) :-
- select(step(StepI, oper(_Self, Action, _, _)), Steps, RemainingSteps),
+serialize_plan(Knower, Agent, plan(Steps, Orderings, B, L), [Action|Tail]) :-
+ select(step(StepI, oper(Agent, Action, _)), Steps, RemainingSteps),
  \+ (member(step(StepJ, _Oper), RemainingSteps),
   isbefore(StepJ, StepI, Orderings)),
- serialize_plan(plan(RemainingSteps, Orderings, B, L), Tail).
+ serialize_plan(Knower, Agent, plan(RemainingSteps, Orderings, B, L), Tail).
 
-serialize_plan(plan(_Steps, Orderings, _B, _L), _) :-
- bugout('serialize_plan FAILED!~n', planner),
+serialize_plan(Knower, Agent, plan(_Steps, Orderings, _B, _L)) :-
+ bugout('serialize_plan FAILED: Knower=~p, Agent=~p !~n',[Knower, Agent], planner),
  pick_ordering(Orderings, List),
  bugout(' Orderings are ~w~n', [List], planner),
  fail.
@@ -551,9 +551,8 @@ depth_planning_loop(PlannerGoals, Operators, SeedPlan, FullPlan,
  depth_planning_loop(PlannerGoals, Operators, SeedPlan, FullPlan,
       Depth, Timeout).
 
-generate_plan(FullPlan, Mem0) :-
- thought(inst(Agent), Mem0),
- initial_operators(Agent, Operators),
+generate_plan(Knower, Agent, FullPlan, Mem0) :-
+ initial_operators(Knower, Operators),
  bugout('OPERATORS are:~n', planner), pprint(Operators, planner),
  thought_model(ModelData, Mem0),
  %bugout('CURRENT STATE is ~w~n', [Model0], planner),
@@ -577,24 +576,24 @@ generate_plan(FullPlan, Mem0) :-
 
 
 path2directions(Spatial, [Here, There], [ goto(Self, _Walk, loc(Self, Dir, _To, There))], ModelData) :-
- in_model(h_at(Spatial, exit(Dir), Here, There, _), ModelData).
+ in_model(h(Spatial, exit(Dir), Here, There), ModelData).
 
 path2directions(Spatial, [Here, There], [ goto(Self, _Walk, loc(Self, _Dir, in, There))], ModelData) :-
- in_model(h_at(Spatial, descended, Here, There, _), ModelData).
+ in_model(h(Spatial, descended, Here, There), ModelData).
 
 path2directions(Spatial, [Here, Next|Trail], [goto(Self, _Walk, loc(Self, Dir, _To, _There))|Tail], ModelData) :-
- in_model(h_at(Spatial, exit(Dir), Here, Next, _), ModelData),
+ in_model(h(Spatial, exit(Dir), Here, Next), ModelData),
  path2directions(Spatial, [Next|Trail], Tail, ModelData).
 
 path2directions(Spatial, [Here, Next|Trail], [goto(Self, _Walk, loc(Self, _Dir, in, Next))|Tail], ModelData) :-
- in_model(h_at(Spatial, descended, Here, Next, _), ModelData),
+ in_model(h(Spatial, descended, Here, Next), ModelData),
  path2directions(Spatial, [Next|Trail], Tail, ModelData).
 
 find_path1(_Spatial, [First|_Rest], Dest, First, _ModelData) :-
  First = [Dest|_].
 find_path1(Spatial, [[Last|Trail]|Others], Dest, Route, ModelData) :-
  findall([Z, Last|Trail],
-   (in_model(h_at(Spatial, _Prep, Last, Z, _), ModelData), \+ member(Z, Trail)),
+   (in_model(h(Spatial, _Prep, Last, Z), ModelData), \+ member(Z, Trail)),
    List),
  append(Others, List, NewRoutes),
  find_path1(Spatial, NewRoutes, Dest, Route, ModelData).

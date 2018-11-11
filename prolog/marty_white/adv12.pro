@@ -10,8 +10,8 @@ wizard :- true. % Potential to really muck up game.
 :- include('adv_util.pro').
 
 :- dynamic(bugs/1). % Types of logging output.
-%bugs([general, printer, planner, autonomous]).
-bugs([general, autonomous]).
+hide_bugs([printer]).
+bugs([general, autonomous, planner]).
 
 bug(B) :-
   bugs(L),
@@ -1704,9 +1704,8 @@ depth_planning_loop(PlannerGoals, Operators, SeedPlan, FullPlan,
   depth_planning_loop(PlannerGoals, Operators, SeedPlan, FullPlan,
                       Depth, Timeout).
 
-generate_plan(FullPlan, Mem0) :-
-  thought(agent(Agent), Mem0),
-  initial_operators(Agent, Operators),
+generate_plan(Knower, Agent, FullPlan, Mem0) :-  
+  initial_operators(Knower, Operators),
   bugout('OPERATORS are:~n',planner), pprint(Operators,planner),
   thought(model(Model0), Mem0),
   %bugout('CURRENT STATE is ~w~n',[Model0],planner),

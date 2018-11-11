@@ -31,10 +31,10 @@ act_examine(Agent, Sense, Here, State, NewState) :-
  findall(Direction, related(Spatial, exit(Direction), Here, _, State), Exits),
  !,
  queue_agent_percept(Agent,
-    [sense(Agent, Sense, [
+    [sense_each(Agent, Sense, [
              you_are(Agent, Relation, Here), 
              exits_are(Agent,Here,Exits), 
-             here_are(Agent, Sense, Relation, Here, Nearby)]) ],
+             notice_children(Agent, Sense, Here, Relation, Nearby)]) ],
     State, NewState).
 
 act_examine(Agent, Sense, Object, S0, S2):- 

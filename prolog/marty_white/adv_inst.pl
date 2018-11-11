@@ -149,7 +149,7 @@ create_missing_instances(S0,S2):-
  create_instances(Sym,S0,S0,S0,S2).
 
 may_contain_insts(h).
-may_contain_insts(h_at).
+may_contain_insts(holds_at).
 
 create_instances(Suffix,Info,[Prop|TODO],S0,S3):-
  Prop =.. [F, Spatial, Pred | Objs], 

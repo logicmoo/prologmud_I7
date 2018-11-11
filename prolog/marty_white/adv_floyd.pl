@@ -56,8 +56,7 @@ do_autonomous_cycle(Agent):-
 
 % Is powered down
 maybe_autonomous_decide_goal_action(Agent, Mem0, Mem0) :- 
- nb_getval(advstate, S1),
- getprop(Agent, state(powered, f), S1),!.
+ getprop(Agent, state(powered, f), advstate),!.
 
 maybe_autonomous_decide_goal_action(Agent, Mem0, Mem1) :- notrace((do_autonomous_cycle(Agent),
  set_last_action(Agent,[auto(Agent)]))),
@@ -67,47 +66,53 @@ maybe_autonomous_decide_goal_action(_Agent, Mem0, Mem0).
 
 % ......
 autonomous_decide_goal_action(Agent, Mem0, Mem3) :-
- dmust((forget(goals(Goals), Mem0, Mem1),
- thought_model((ModelData), Mem1),
- select_unsatisfied_conditions(Goals, Unsatisfied, ModelData),
- memorize(goals(Unsatisfied), Mem1, Mem2),
- autonomous_decide_action(Agent, Mem2, Mem3))).
+ dmust((
+    forget(goals(Goals), Mem0, Mem1),
+    thought_model((ModelData), Mem1),
+    select_unsatisfied_conditions(Goals, Unsatisfied, ModelData),
+    subtract(Goals,Unsatisfied,Satisfied),
+    memorize(goals(Unsatisfied), Mem1, Mem1a),
+    (Satisfied==[] -> Mem1a=Mem2 ; memorize(satisfied(Satisfied), Mem1a, Mem2)),
+    autonomous_decide_action(Agent, Mem2, Mem3))).
 
 % If actions are queued, no further thinking required. 
 autonomous_decide_action(Agent, Mem0, Mem0) :- 
  thought(todo([Action|_]), Mem0),
- (declared(h(_Spatial, in, Agent, Here), Mem0)->true;Here=somewhere),
- bugout('~w @ ~w: about to: ~w~n', [Agent, Here, Action], autonomous).
+ (declared(h(_Spatial, in, Agent, Here), advstate)->true;Here=somewhere),
+ bugout('~w @ ~w: was already about to: ~w~n', [Agent, Here, Action], autonomous).
 
 % If goals exist, try to solve them.
 autonomous_decide_action(Agent, Mem0, Mem1) :-
+ Knower = Agent,
  thought(goals([_|_]), Mem0),
  bugout('~w: goals exist: generating a plan...~n', [Agent], autonomous),
- generate_plan(NewPlan, Mem0), !,
- serialize_plan(NewPlan, Actions), !,
+ generate_plan(Knower, Agent, NewPlan, Mem0), !,
+ serialize_plan(Knower, Agent, NewPlan, Actions), !,
  bugout('Planned actions are ~w~n', [Actions], autonomous),
  Actions = [Action|_],
  add_todo(Action, Mem0, Mem1).
 % If goals exist, forget them
-autonomous_decide_action(Agent, Mem0, Mem2) :-
+autonomous_decide_action(Agent, Mem0, Mem9) :-
  forget(goals([G0|GS]), Mem0, Mem1),
  memorize(goals([]), Mem1, Mem2),
+ memorize(old_goals([G0|GS]), Mem2, Mem9),
  bugout('~w: Can\'t solve goals ~p. Forgetting them.~n', [Agent,[G0|GS]], autonomous).
 
 % If no actions or goals, but there's an unexplored exit here, go that way.
 autonomous_decide_action(Agent, Mem0, Mem1) :-
  thought_model(ModelData, Mem0),
- in_model(h_at(Spatial, _Prep, Agent, Here, _T0), ModelData),
- in_model(h_at(Spatial, exit(Dir), Here, '<unexplored>', _T1), ModelData),
+ (\+ known_model(Agent, h(_, _, Agent, _), ModelData) -> pprint(ModelData, always) ; true),
+ dmust(known_model(Agent,h(Spatial, _Prep, Agent, Here), ModelData)),
+ known_model(Agent,h(Spatial, exit(Dir), Here, '<unexplored>'), ModelData),
  add_todo( goto(Agent, walk, loc(Agent, Dir, _To, _Place)), Mem0, Mem1).
 
 % Follow Player to adjacent rooms.
 autonomous_decide_action(Agent, Mem0, Mem1) :-
  thought_model(ModelData, Mem0),
- in_model(h_at(Spatial, _, Agent, Here, _), ModelData),
+ known_model(Agent,h(Spatial, _, Agent, Here, _), ModelData),
  dif(Agent, Player), current_player(Player),
- in_model(h_at(Spatial, _, Player, There, _), ModelData),
- in_model(h_at(Spatial, exit(Dir), Here, There, _), ModelData),
+ known_model(Agent,h(Spatial, _, Player, There, _), ModelData),
+ known_model(Agent,h(Spatial, exit(Dir), Here, There, _), ModelData),
  add_todo( goto(Agent, walk, loc(Agent,Dir, _To, _Dest)), Mem0, Mem1).
 
 autonomous_decide_action(Agent, Mem0, Mem1) :-
@@ -115,7 +120,8 @@ autonomous_decide_action(Agent, Mem0, Mem1) :-
  random_noise(Agent, Msg),
  add_todo(emote(Agent, act, *, Msg), Mem0, Mem1).
 autonomous_decide_action(Agent, Mem0, Mem0) :-
- bugout('~w: Can\'t think of anything to do.~n', [Agent], autonomous+verbose).% trace.
+ (declared(h(_Spatial, in, Agent, Here), advstate)->true;Here=somewhere),
+ bugout('~w: Can\'t think of anything to do.~n', [Agent-Here], autonomous+verbose).% trace.
 
 
 
@@ -133,7 +139,7 @@ consider_request(_Speaker, Agent, Action, _M0, _M1) :-
  bugout('~w: considering request: ~w.~n', [Agent, Action], autonomous),
  fail.
 consider_request(_Speaker, Agent, take(Agent, Object), M0, M1) :-
- add_goal(h_at(_Spatial, held_by, Object, Agent, _), M0, M1).
+ add_goal(h(_Spatial, held_by, Object, Agent), M0, M1).
 consider_request(Requester, Agent, Query, M0, M1) :-
  do_introspect(Agent,Query, Answer, M0),
  %add_todo(print_(Answer), M0, M1).
@@ -148,11 +154,11 @@ consider_request(_Speaker, Agent, Action, M0, M1) :-
  add_todo(Action, M0, M1).
 consider_request(Speaker, _Agent, fetch(Spatial, Object), M0, M1) :-
  % Bring object back to Speaker.
- add_goal(h_at(Spatial, held_by, Object, Speaker, _), M0, M1).
+ add_goal(h(Spatial, held_by, Object, Speaker), M0, M1).
 consider_request(_Speaker, Agent, put(Agent, Spatial, Thing, Relation, Where), M0, M) :-
- add_goal(h_at(Spatial, Relation, Thing, Where, _), M0, M).
+ add_goal(h(Spatial, Relation, Thing, Where), M0, M).
 consider_request(_Speaker, Agent, take(Agent, Thing), M0, M) :-
- add_goal(h_at(_Spatial, held_by, Thing, Agent, _), M0, M).
+ add_goal(h(_Spatial, held_by, Thing, Agent), M0, M).
 consider_request(_Speaker, Agent, Action, M0, M1) :-
  bugout('Finding goals for action: ~w~n', [Action], autonomous),
  initial_operators(Agent, Operators),

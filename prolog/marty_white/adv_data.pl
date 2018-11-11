@@ -82,7 +82,7 @@ type_functor(memory, todo(list_of(doing))).
 type_functor(memory, model(list_of(state_with_stamps))).
 type_functor(event, timestamp(ordinal, timept)).
 
-type_functor(state_with_stamps, h_at(domain, domrel, inst, inst, timept)).
+type_functor(state_with_stamps, holds_at(h(domain, domrel, inst, inst), timept)).
 
 type_functor(state, type_props(type, list_of(nv))).
 type_functor(state, props(inst, list_of(nv))).
@@ -141,8 +141,7 @@ type_functor(event, destroyed(inst)).
 type_functor(event, did(doing)).
 type_functor(event, sense_each(agnt, sense, list_of(event))).
 type_functor(event, exits_are(agnt, dest, list_of(exit))).
-type_functor(event, here_are(agnt, sense, dest, list_of(inst))).
-type_functor(event, notice_children(agnt, sense, inst, domrel, list_of(inst))).
+type_functor(event, notice_children(agnt, sense, dest, domrel, list_of(inst))).
 type_functor(event, failed(doing, msg)).
 type_functor(event, transformed(inst, inst2)).
 
@@ -188,15 +187,6 @@ istate([
     todo([look('player~1')]),
     inst('player~1'),
     name('player~1')
-    /*,
-    oper( put(Agent, Spatial, Thing, Relation, What), % in something else
-           [ Thing \= Agent, What \= Agent, Where \= Agent, 
-  Thing \= What, What \= Where, Thing \= Where,
-           h_at(Spatial, held_by, Thing, Agent, _), exists(Spatial, Thing), 
-           h_at(Spatial, in, What, Where, _), exists(Spatial, What), exists(Spatial, Where), 
-           h_at(Spatial, in, Agent, Where, _)], 
-           [ h_at(Spatial, Relation, Thing, What, _), 
-           ~ h_at(Spatial, held_by, Thing, Agent, _)] )*/
   ]),
 
   % props(telnet, [inherit(telnet,t),isnt(console),inherit('player~1')]),

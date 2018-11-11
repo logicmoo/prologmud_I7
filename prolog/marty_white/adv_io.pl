@@ -308,15 +308,23 @@ init_logging :-
 stop_logging :-
  adv:input_log(FH) -> close(FH) ; true.
 
-:- dynamic(bugs/1). % Types of logging output.
+% :- dynamic(bugs/1). % Types of logging output.
 %bugs([general, printer, planner, autonomous]).
-bugs([always, general, planner, autonomous, telnet]).
+bug_contexts([always, general, planner, autonomous, telnet, general, parser, printer]).
+:- bug_contexts(List),foreach(member(E,List),debug(adv(E))).
+:- debug(adv_skip(printer)).
+:- debug(adv(unknown)).
+:- nodebug(adv(unknown)).
+:- debug(adv(all)).
 %bugs([general, autonomous]).
-bug(B) :-
- bugs(L),
- member(B, L).
-bug(B) :- debugging(B).
-bug(B) :- debugging(adv(B)).
+
+bug(B) :- debugging(B,false),!,fail.
+bug(B) :- debugging(adv_skip(B),true),!,fail.
+bug(_) :- debugging(adv_skip(all),true),!,fail.
+bug(_) :- debugging(adv(all)).
+bug(B) :- debugging(adv(B),YN),!,YN.
+bug(_) :- debugging(adv(unknown),YN),!,YN.
+
 
 bugout(A, B) :-
  bug(B),

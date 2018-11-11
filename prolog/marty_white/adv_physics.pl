@@ -18,7 +18,11 @@
 */
 
 
+
+known_model(_Knower, E, L):- in_model(E, L).
 in_model(E, L):- member(E, L).
+in_model(E, L):- member(holds_at(E,_), L).
+
 thought_model(E, L):- in_model(model(E), L).
 
 

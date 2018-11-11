@@ -104,7 +104,7 @@ add_todo_all([Action|Rest], Mem0, Mem2) :-
 do_introspect(Agent, [path,_TO,There], Answer, S0) :-
  getprop(Agent, memories(Memory), S0), 
  thought_model(ModelData, Memory),
- in_model(h_at(Spatial, _Prep, Agent, Here, _T), ModelData),
+ in_model(h(Spatial, _Prep, Agent, Here), ModelData),
  find_path(Spatial, Here, There, Route, ModelData),
  Answer = ['Model is', ModelData, '\nShortest path is', Route].
 
@@ -114,25 +114,9 @@ do_introspect(Agent1, recall(Agent, WHQ, Target), Answer, S0) :-
  thought_model(ModelData, Memory),
  recall_whereis(S0, Agent1, WHQ, Target, Answer, ModelData).
 
-do_introspect(Agent1, recall(Agent, Target), Answer, S0) :-
- getprop(Agent, memories(Memory), S0), 
- thought_model(ModelData, Memory),
- recall_whereis(S0, Agent1, _WHQ, Target, Answer, ModelData).
+do_introspect(Agent1, recall(Agent, Target), Answer, S0) :- !,
+  do_introspect(Agent1, recall(Agent,what, Target), Answer, S0).
 
-
-/*
-recall_whereis(_S0,_Self,  _WHQ, Thing, Answer, ModelData) :- fail,
- in_model(h_at(Spatial, Prep, Thing, Where, T), ModelData),
- Prep \= exit(_), 
- Answer = h_at(Spatial, Prep, Thing, Where, T). % ['At time', T, subj(Agent), 'saw the', Thing, Prep, the, Where, .].
-
-recall_whereis(S0,Agent,  _WHQ, Place, AnswerO, ModelData) :- 
- in_model(h(Spatial, child, Agent, Here), S0),
- in_model(h_at(Spatial, Prep2, Place, There, T), ModelData),
- (find_path(Spatial, Here, There, Route, ModelData) ; Route = 'Unknown'),
- Answer = [h_at(Spatial, Prep2, Place, There, T),['To get to the', There, ', ', Route]],
- AnswerO = sense(Agent,sees,Answer).
-*/
 recall_whereis(_S0,_Self,  _WHQ, There, Answer, ModelData) :-
  findall(Data, (member(Data,ModelData), related_answer(Data, There)), Memories),
  Memories\==[],

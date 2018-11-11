@@ -374,8 +374,7 @@ log2eng_( Obj, Prop, [cap(N), Value, aux(be), English]):- Prop =..[N, V| Range],
 log2eng_(_Obj, Prop, [String]):- format(atom(String), '~w', [Prop]), !.
 
 
-timestamped_pred(h_at).
-timestamped_pred(props_at).
+timestamped_pred(holds_at).
 
 pretty.
 
@@ -417,20 +416,21 @@ logic2eng(_Agent, you_are(Self, Prep, Here), [cap(subj(Self)), person(are, is), 
 
 logic2eng(Context, exits_are(_Agent, Here, Exits), ['Exits of',Here,' are', ExitText, '\n']):- list2eng(Context, Exits, ExitText).
 
-logic2eng(Context, here_are(Agent, see, Prep, Here, Nearby), [cap(Prep),Here, ':', SeeText]):-
+logic2eng(_Agent, notice_children(_Self, _See, _Parent, _Prep, []), []).
+logic2eng(_Context, notice_children(Agent, Sense, Parent, Prep, List),
+   [cap(Prep), 'the', Parent, subj(Agent), person(Sense, s(Sense)), ':'|Text]) :-
+ list2eng(Parent, List, Text).
+
+logic2eng(Context, notice_children(Agent, see, Here, Prep, Nearby), [cap(Prep),Here, ':', SeeText]):-
  exclude(=@=(Agent), Nearby, OtherNearby), list2eng(Context, OtherNearby, SeeText).
 
-logic2eng(Context, here_are(Agent, Sense, Prep, Here, Nearby), [cap(subj(Agent)), person(Sense, s(Sense)),Prep,Here, ':', SeeText]):-
+logic2eng(Context, notice_children(Agent, Sense, Here, Prep, Nearby), [cap(subj(Agent)), person(Sense, s(Sense)),Prep,Here, ':', SeeText]):-
  exclude(=@=(Agent), Nearby, OtherNearby), list2eng(Context, OtherNearby, SeeText).
 
 logic2eng(Context, carrying(Agent, Items),
    [cap(subj(Agent)), 'carrying:'|Text]) :-
  list2eng(Context, Items, Text).
                                
-logic2eng(_Agent, notice_children(_Self, _See, _Parent, _Prep, []), []).
-logic2eng(_Context, notice_children(Agent, Sense, Parent, Prep, List),
-   [cap(Prep), 'the', Parent, subj(Agent), person(Sense, s(Sense)), ':'|Text]) :-
- list2eng(Parent, List, Text).
 
 logic2eng(_Agent, moved( What, From, Prep, To),
    [cap(subj(What)), 'moves', ' from', From, Prep, 'to', To]).
@@ -480,7 +480,7 @@ logic2eng(_Agent, emote(Speaker, Says, Audience, Eng),
 
 logic2eng(_Agent, failure(Action), ['Action failed:', Action]).
 
-logic2eng(Context, sense(Agent, See, Sensing), [cap(subj(Agent)), person(See, s(See)), ': '|SensedText]) :- 
+logic2eng(Context, sense_each(Agent, See, Sensing), [cap(subj(Agent)), person(See, s(See)), ': '|SensedText]) :- 
  log2eng(Context, Sensing, SensedText).
 
 %logic2eng( Obj, effect(_, _), Out):- log2eng(Obj, adjs(special), Out), !.
@@ -590,9 +590,9 @@ append_if_new(Text1, Text2, Text):- append_if_new1(Text1, Text2, Text), !.
 append_if_new(Text2, Text1, Text):- append_if_new1(Text1, Text2, Text), !.
 append_if_new(Text1, Text2, Text):- append(Text1, Text2, Text), !.
 
-%print_percept(Agent, sense(Sense, [you_are(Self, Prep, Here),
+%print_percept(Agent, sense_each(Sense, [you_are(Self, Prep, Here),
 %       exits_are(Agent,Here,Exits),
-%       here_are(Agent, Sence, Prep,Here,Nearby)...])) :-
+%       notice_children(Agent, Sence, Here, Prep, Nearby)...])) :-
 % findall(X, (member(X, Nearby), X\=Agent), OtherNearby),
 % player_format('You are ~p the ~p. Exits are ~p.~nYou see: ~p.~n',
 %   [Prep, Here, Exits, OtherNearby]).
