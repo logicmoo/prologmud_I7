@@ -139,6 +139,8 @@ update_model(_Agent, failure(_,_), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Agent, success(_,_), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Agent, failure(_), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Agent, emoted(_,_,_,_), _Timestamp, _Mem, M0, M0) :- !.
+update_model(_Agent, emote(_,_,_,_), _Timestamp, _Mem, M0, M0) :- !.
+update_model(_Agent, msg(_), _Timestamp, _Mem, M0, M0) :- !.
 
 update_model(Agent, time_passes(Target), Timestamp, _Memory, M, M):-
  nop(bugout(unused_update_model(Agent, time_passes(Target), Timestamp, M))).

@@ -123,7 +123,7 @@ autonomous_decide_action(Agent, Mem0, Mem0) :-
 :- nop(ensure_loaded('adv_agent_listen')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-consider_text(Speaker, Agent, Words, Mem0, Mem1):-
+consider_text(Speaker, _EmoteType, Agent, Words, Mem0, Mem1):-
  parse_command(Agent, Words, Action, Mem0),
  consider_request(Speaker, Agent, Action, Mem0, Mem1).
 
@@ -170,6 +170,4 @@ consider_request(_Speaker, _Agent, Action, M0, M1) :-
 consider_request(_Speaker, Agent, Action, M0, M0) :-
  bugout('~w: did not understand request: ~w~n', [Agent, Action], autonomous).
 
-
-addressing_whom([Agent, Words], Agent, Words).
 

@@ -195,13 +195,13 @@ problem_solution(noisy, hear, quiet).
 %process_percept_auto(Agent, with_msg(Percept, _Msg), Timestamp, M0, M2) :- !, 
 % process_percept_auto(Agent, Percept, Timestamp, M0, M2).
 
-process_percept_auto(_Agent, msg(_), _Stamp, Mem0, Mem0) :- !.
-process_percept_auto(_Agent, [], _Stamp, Mem0, Mem0) :- !.
-process_percept_auto(Agent, [Percept|Tail], Stamp, Mem0, Mem4) :-
- process_percept_auto(Agent, Percept, Stamp, Mem0, Mem1),
- process_percept_auto(Agent, Tail, Stamp, Mem1, Mem4).
+process_percept_auto(_Agent, msg(_), _Stamp, M0, M0) :- !.
+process_percept_auto(_Agent, [], _Stamp, M0, M0) :- !.
+process_percept_auto(Agent, [Percept|Tail], Stamp, M0, M9) :-
+ process_percept_auto(Agent, Percept, Stamp, M0, M1),
+ process_percept_auto(Agent, Tail, Stamp, M1, M9).
 
-process_percept_auto(Agent, Percept, _Stamp, Mem0, Mem0) :- was_own_self(Agent, Percept),!.
+process_percept_auto(Agent, Percept, _Stamp, M0, M0) :- was_own_self(Agent, Percept),!.
 
 process_percept_auto(_Agent2, sense_each(Agent,_See, List), Timestamp, M0, M2) :- !, 
  process_percept_auto(Agent, List, Timestamp, M0, M2).
@@ -235,12 +235,16 @@ process_percept_auto(Agent, sense_props(Agent, Sense, Object, PropList), _Stamp,
  add_todo_all([take(Agent, Object), print_(Agent, 'My shiny precious!')], Mem0, Mem2).
 
 
-process_percept_auto(_Agent, _Percept, _Stamp, Mem0, Mem0).
+process_percept_auto(_Agent, _Percept, _Stamp, M0, M0).
+
+addressing_whom(List, Agent, Words):- Words = [_|_], append(Words,[Agent],List).
+addressing_whom(List, Agent, Words):- Words = [_|_], append(_,[Agent|Words],List).
 
 
 %was_own_self(Agent, say(Agent, _)).
 was_own_self(Agent, emote(Agent, _, _Targ, _)).
 was_own_self(Agent, emoted(Agent, _, _Targ, _)).
+% was_own_self(Agent, Action):- action_doer(Action, Was), Was == Agent.
 
 % Ignore own speech.
 process_percept_player(Agent,Percept, _Stamp, Mem0, Mem0) :- was_own_self(Agent, Percept),!.
@@ -250,11 +254,10 @@ process_percept_player(Agent, Percept, _Stamp, Mem0, Mem0) :-
  percept2txt(Agent, Percept, Text),
  player_format('~N~w~n', [Text]),!,
  redraw_prompt(Agent).
-process_percept_player(Agent, Percept, _Stamp, Mem0, Mem0) :-
+process_percept_player(Agent, Percept, _Stamp, M0, M0) :-
  player_format('~N~q~n', [Agent:Percept]),
  dmust(redraw_prompt(Agent)),!.
 
-% once(( notrace((thought(inherited(console), Mem0);thought(inherit(player,t), Mem0);thought(inherit(telnet,t), Mem0))).
 is_player(Agent):- \+ is_non_player(Agent).
 is_non_player(Agent):- Agent == 'floyd~1'.
 
@@ -268,7 +271,7 @@ process_percept_main(Agent, Percept, Stamp, Mem0, Mem2) :-
  quietly(process_percept_player(Agent, Percept, Stamp, Mem0, Mem1)),
  process_percept_auto(Agent, Percept, Stamp, Mem1, Mem2).
 process_percept_main(Agent, Percept, Stamp, Mem0, Mem0):- 
- bugout('~q FAILED!~n', [bprocess_percept(Agent, Percept, Stamp)], todo), !.
+ bugout('~q FAILED!~n', [bprocess_percept(Agent, Percept, Stamp)], perceptq), !.
 
 
 % caller memorizes PerceptList

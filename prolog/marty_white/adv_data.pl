@@ -377,7 +377,8 @@ extra_decl(T,P):-
     can_be(touch, t),
     can_be(examine, t), 
     inherit(thinkable,t),
-   adjs($class), 
+    state(cleanliness,clean),
+    adjs($class), 
     class_desc(['kind is corporial'])]),
 
         type_props(object, [
@@ -415,6 +416,7 @@ extra_decl(T,P):-
    has_sense(Sense),
    inherit(perceptq,t),
    inherit(memorize,t),
+   inherit(autoscan,t),
    inherit(partly_noncorporial,t)
   ]),
 
@@ -511,7 +513,7 @@ extra_decl(T,P):-
    inherit(flask, t), 
    volume_capacity(2),
    fragile(shards),
-   state(dirty,t),
+   state(cleanliness,dirty),
    name('porcelain bowl'),
    desc('This is a modest glass cooking bowl with a yellow flower motif glazed into the outside surface.')
   ]),
@@ -520,7 +522,7 @@ extra_decl(T,P):-
    inherit(object,t),
    volume_capacity(2),
    fragile(shards),
-   state(dirty,t),
+   state(cleanliness,dirty),
    name('plate')
   ]),
   type_props(box, [
@@ -533,9 +535,9 @@ extra_decl(T,P):-
    TooDark
   ]),
   type_props(sink, [
-   state(dirty, t), 
-   inherit(furnature,t),
-   inherit(flask, t), 
+   state(cleanliness,dirty),
+   inherit(flask, t),   
+   inherit(furnature,t),   
    volume_capacity(5)  
   ]),
   type_props(cabinate, [
@@ -584,7 +586,7 @@ extra_decl(T,P):-
  effect(switch(off), true) % calls true(S0, S1) !
  ]),
 
-   type_props(surface, [has_rel(Spatial, on, t),adjs(physical), inherit(flask, f)]), 
+   type_props(surface, [has_rel(Spatial, on, t),adjs(physical), inherit(flask, f), state(cleanliness,clean)]), 
 
    type_props(shelf, [inherit(surface, t),adjs(physical),inherit(furnature, t)]), 
 

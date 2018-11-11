@@ -133,9 +133,9 @@ do_todo(_Agent, S0, S0).
 % In TADS:
 % "verification" methods perferm tests only
 
-get_actor(Action,Agent):- \+ compound(Action),!,Agent = _ .
-get_actor(Action,Agent):- arg(1,Action,Agent),nonvar(Agent), \+ preposition(_,Agent),!.
-get_actor(Action,Agent):-
+action_doer(Action,Agent):- \+ compound(Action),!,Agent = _ .
+action_doer(Action,Agent):- arg(1,Action,Agent),nonvar(Agent), \+ preposition(_,Agent),!.
+action_doer(Action,Agent):-
   dmust(act_verb_thing_model_sense(Agent, Action, _Verb, _Thing, _Spatial, _Sense)).
 
 
@@ -160,7 +160,7 @@ apply_act( Action, State, NewState) :-
  queue_agent_percept(Agent, [failure(Action, Reason)], State, NewState), !.
 
 apply_act( Action, S0, S1) :-
- get_actor(Action,Agent), 
+ action_doer(Action,Agent), 
  do_introspect(Agent,Action, Answer, S0),
  queue_agent_percept(Agent, [answer(Answer), Answer], S0, S1), !.
  %player_format('~w~n', [Answer]).
@@ -168,12 +168,12 @@ apply_act( Action, S0, S1) :-
 apply_act( Action, State, NewState):- act( Action, State, NewState), !.
 
 apply_act( Action, State, NewState):- fail, 
-  get_actor(Action, Agent),
+  action_doer(Action, Agent),
   copy_term(Action,ActionG),
   related(Spatial, child, Agent, Here, State),  
   % queue_local_event(spatial, [attempting(Agent, Action)], [Here], S0, S1),
   act( Action, State, S0), !,
-  queue_local_event(Spatial, [emoted(Agent, act, '*', ActionG)], [Here], S0, NewState).
+  queue_local_event(Spatial, [emoted(Agent, act, '*'(Here), ActionG)], [Here], S0, NewState).
   
 apply_act( Act, State, NewState):- ((cmd_workarround(Act, NewAct) -> Act\==NewAct)), !, apply_act( NewAct, State, NewState).
 apply_act( Action, State, State):- notrace((bugout(failed_act( Action), general))),!, \+ tracing,
@@ -183,7 +183,7 @@ apply_act( Action, State, State):- notrace((bugout(failed_act( Action), general)
 must_act( Action, State, NewState):- dmust_tracing(apply_act( Action, State, NewState)) *-> ! ; fail.
 % must_act( Action, S0, S1) :- rtrace(apply_act( Action, S0, S1)), !.
 must_act( Action, S0, S1) :-
- get_actor(Action,Agent), 
+ action_doer(Action,Agent), 
  queue_agent_percept(Agent, [failure(Action, unknown_to(Agent,Action))], S0, S1).
 
 
@@ -431,15 +431,14 @@ act( print_(Agent, Msg), S0, S1) :-
 
 %act( say(Message), S0, S1) :-   % undirected message
 % related(Spatial, OpenTraverse, Agent, Here, S0),
-% queue_local_event(Spatial, [emoted(Agent,  say, (*), Message)], [Here], S0, S1).
-act( emote(Agent, SAYTO, Object, Message), S0, S1) :- !, % directed message
+act( emote(Agent, EmoteType, Object, Message), S0, S1) :- !, % directed message
  dmust((
- action_sensory(SAYTO, Sense),
+ action_sensory(EmoteType, Sense),
  sensory_model(Sense, Spatial), 
  can_sense( Sense, Object, Agent, S0),
 
- get_open_traverse(SAYTO, Spatial, OpenTraverse), related(Spatial, OpenTraverse, Agent, Here, S0), 
- queue_local_event(Spatial, [emoted(Agent, SAYTO, Object, Message)], [Here,Object], S0, S1))).
+ get_open_traverse(EmoteType, Spatial, OpenTraverse), related(Spatial, OpenTraverse, Agent, Here, S0), 
+ queue_local_event(Spatial, [emoted(Agent, EmoteType, Object, Message)], [Here,Object], S0, S1))).
 
 
 act(_Agent, true, S, S).
@@ -517,7 +516,7 @@ moveto_verb(Walk, Agent, Here, Dir, Relation, There, S0, S9) :-
  dmsg((moveto_verb(Walk, Agent, Here, Dir, Relation, There))),
  dmust(((
  queue_local_event(Spatial, 
-   [emoted(Agent, act, '*', [person(ed(Walk), s(Walk)), exiting, to, the, Dir]) ], [Here], S0, S1)),
+   [emoted(Agent, act, '*'(Here), [person(ed(Walk), s(Walk)), exiting, to, the, Dir]) ], [Here], S0, S1)),
  dmust((undeclare(h(_OldSpatial,_OldRel,Agent,Here), S1, VoidState),
  declare(h(Spatial, Relation, Agent,There), VoidState, S2))),
  dmust((queue_agent_percept(Agent,
@@ -526,7 +525,7 @@ moveto_verb(Walk, Agent, Here, Dir, Relation, There, S0, S9) :-
  (related(Spatial, exit(RDir), There, Here, S0)-> true ; reverse_dir(Dir,RDir,S0)),
 
  queue_local_event(Spatial, 
-   [emoted(Agent, act, '*', [person(ed(Walk), s(Walk)), entering, from, the, RDir]) ], [There], S3, S4),
+   [emoted(Agent, act, '*'(There), [person(ed(Walk), s(Walk)), entering, from, the, RDir]) ], [There], S3, S4),
 
 
 

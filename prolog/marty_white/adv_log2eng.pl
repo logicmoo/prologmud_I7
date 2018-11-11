@@ -103,9 +103,13 @@ capitalize(Atom, Capitalized) :-
  atom_chars(Capitalized, [Upper|Rest]).
 
 context_agent(Agent, Context):-
- declared(agent(Agent), Context).
+ declared(agent(Agent), Context), !.
 context_agent(Agent, Context):-
- declared(inst(Agent), Context).
+ declared(inst(Agent), Context), !.
+context_agent(Agent, Context):- \+ is_list(Context),
+ action_doer(Context, Agent).
+
+
 % compile_eng(Context, Atom/Term/List, TextAtom).
 % Compile Eng terms to ensure subject/verb agreement:
 % If subject is agent, convert to 2nd person, else use 3rd person.
@@ -455,28 +459,16 @@ logic2eng(_Agent, memories(Object, PropList), ['\n\n', the(Object), ' remembers:
 logic2eng(_Agent, perceptq(Object, PropList), ['\n\n', the(Object), ' notices:\n'|English] ) :- 
  list2eng([','=',\n'],Object, PropList, English).
 
-logic2eng(_Context, did(Action), [the(Agent), 'did: ', English] ) :- 
-  act_verb_thing_model_sense(Agent, Action, _Verb, _Thing, _Spatial, _Sense),
-  format(atom(English),'~q',[Action]).
 
-logic2eng(Context, did(Action), [the(Agent), 'did: '|English] ) :- 
- act_verb_thing_model_sense(Agent, Action, _Verb, _Thing, _Spatial, _Sense),
- logic2eng(Context, Action, English ).
-
-%log2eng(_Agent, emote(Speaker, say, (*), Eng), [cap(subj(Speaker)), ': "', Text, '"']) :- eng2txt(Speaker, 'I', Eng, Text).
-logic2eng(_, emoted(Speaker, act, *, Eng), [the(Speaker), Text]) :-
+logic2eng(Context, did(Action), ['did happen: '|English] ) :- !, logic2eng(Context, Action, English ).
+logic2eng(Context, emoted(Speaker, EmoteType, Audience, Eng), ['happened: '|Rest]) :- !,
+ logic2eng(Context, emote(Speaker, EmoteType, Audience, Eng), Rest).
+logic2eng(_, emote(Speaker, act, '*'(_Place), Eng), [the(Speaker), Text]) :- !,
  eng2txt(Speaker, Speaker, Eng, Text).
-logic2eng(_, emoted(Speaker, act, Audience, Eng),
- [Audience, notices, the(Speaker), Text]) :-
+logic2eng(_, emote(Speaker, act, Audience, Eng), [Audience, notices, the(Speaker), Text]) :-
  eng2txt(Speaker, Speaker, Eng, Text).
-
-logic2eng(_Agent, emoted(Speaker,  Says, Audience, Eng),
- [cap(subj(Speaker)), s(Says), 'to', Audience, ', "', Text, '"']) :-
+logic2eng(_, emote(Speaker, EmoteType, Audience, Eng), [cap(subj(Speaker)), s(EmoteType), 'to', Audience, ', "', Text, '"']) :-
  eng2txt(Speaker, 'I', Eng, Text).
-
-logic2eng(_Agent, emote(Speaker, Says, Audience, Eng),
- [cap(subj(Speaker)), s(Says), 'to', Audience, ', "', Text, '"']) :-
- eng2txt(me, 'I', Eng, Text).
 
 logic2eng(_Agent, failure(Action), ['Action failed:', Action]).
 
