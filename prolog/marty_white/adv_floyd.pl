@@ -46,13 +46,6 @@ do_autonomous_cycle(Agent):-
  retractall(adv:agent_last_action(Other,_,_)),
  nop(bugout(time_since_last_action_for(Other,When,Agent))).
 
-/*maybe_autonomous_decide_goal_action(Agent, Mem0, Mem0) :-
- % If actions are queued, no further thinking required.
- thought(todo([Action|_]), Mem0),
- (declared(h(_Spatial, in, Agent, Here), Mem0)->true;Here=somewhere),
- bugout('~w @ ~w: was about to: ~w~n', [Agent, Here, Action], autonomous),fail.
-*/
-
 
 % Is powered down
 maybe_autonomous_decide_goal_action(Agent, Mem0, Mem0) :- 
@@ -60,7 +53,7 @@ maybe_autonomous_decide_goal_action(Agent, Mem0, Mem0) :-
 
 maybe_autonomous_decide_goal_action(Agent, Mem0, Mem1) :- notrace((do_autonomous_cycle(Agent),
  set_last_action(Agent,[auto(Agent)]))),
- autonomous_decide_goal_action(Agent, Mem0, Mem1).
+ autonomous_decide_goal_action(Agent, Mem0, Mem1),!.
 maybe_autonomous_decide_goal_action(_Agent, Mem0, Mem0).
 
 
@@ -68,7 +61,7 @@ maybe_autonomous_decide_goal_action(_Agent, Mem0, Mem0).
 autonomous_decide_goal_action(Agent, Mem0, Mem3) :-
  dmust((
     forget(goals(Goals), Mem0, Mem1),
-    thought_model((ModelData), Mem1),
+    thought_model(ModelData, Mem1),
     select_unsatisfied_conditions(Goals, Unsatisfied, ModelData),
     subtract(Goals,Unsatisfied,Satisfied),
     memorize(goals(Unsatisfied), Mem1, Mem1a),
@@ -79,7 +72,7 @@ autonomous_decide_goal_action(Agent, Mem0, Mem3) :-
 autonomous_decide_action(Agent, Mem0, Mem0) :- 
  thought(todo([Action|_]), Mem0),
  (declared(h(_Spatial, in, Agent, Here), advstate)->true;Here=somewhere),
- bugout('~w @ ~w: was already about to: ~w~n', [Agent, Here, Action], autonomous).
+ bugout('~w @ ~w: already about todo: ~w~n', [Agent, Here, Action], autonomous).
 
 % If goals exist, try to solve them.
 autonomous_decide_action(Agent, Mem0, Mem1) :-
@@ -107,7 +100,7 @@ autonomous_decide_action(Agent, Mem0, Mem1) :-
  add_todo( goto(Agent, walk, loc(Agent, Dir, _To, _Place)), Mem0, Mem1).
 
 % Follow Player to adjacent rooms.
-autonomous_decide_action(Agent, Mem0, Mem1) :-
+autonomous_decide_action(Agent, Mem0, Mem1) :- fail, 
  thought_model(ModelData, Mem0),
  known_model(Agent,h(Spatial, _, Agent, Here, _), ModelData),
  dif(Agent, Player), current_player(Player),
@@ -135,30 +128,33 @@ consider_text(Speaker, Agent, Words, Mem0, Mem1):-
  consider_request(Speaker, Agent, Action, Mem0, Mem1).
 
 % For now, agents will attempt to satisfy all commands.
-consider_request(_Speaker, Agent, Action, _M0, _M1) :-
- bugout('~w: considering request: ~w.~n', [Agent, Action], autonomous),
+consider_request(Requester, Agent, Action, _M0, _M1) :-
+ bugout('~w: considering request from: ~w.~n', [Requester, Agent, Action], autonomous),
  fail.
-consider_request(_Speaker, Agent, take(Agent, Object), M0, M1) :-
- add_goal(h(_Spatial, held_by, Object, Agent), M0, M1).
+
 consider_request(Requester, Agent, Query, M0, M1) :-
  do_introspect(Agent,Query, Answer, M0),
  %add_todo(print_(Answer), M0, M1).
  add_todo(emote(Agent, say, Requester, Answer), M0, M1).
+
 consider_request(_Speaker, Agent, forget(goals), M0, M2) :-
  bugout('~w: forgetting goals.~n', [Agent], autonomous),
  forget_always(goals(_), M0, M1),
  memorize(goals([]), M1, M2).
-consider_request(_Speaker, Agent, Action, M0, M1) :- 
- Action = goto(Agent, _How, _LOC), % LOC = loc(Agent, Dir, Prep, Dest),
- bugout('Queueing action ~w~n', Action, autonomous),
- add_todo(Action, M0, M1).
-consider_request(Speaker, _Agent, fetch(Spatial, Object), M0, M1) :-
- % Bring object back to Speaker.
+% Bring object back to Speaker.
+consider_request(Speaker, _Agent, fetch(Spatial, Object), M0, M1) :- 
  add_goal(h(Spatial, held_by, Object, Speaker), M0, M1).
 consider_request(_Speaker, Agent, put(Agent, Spatial, Thing, Relation, Where), M0, M) :-
  add_goal(h(Spatial, Relation, Thing, Where), M0, M).
 consider_request(_Speaker, Agent, take(Agent, Thing), M0, M) :-
  add_goal(h(_Spatial, held_by, Thing, Agent), M0, M).
+consider_request(_Speaker, Agent, drop(Agent, Object), M0, M1) :-
+ add_goal(~(h(_Spatial, held_by, Object, Agent)), M0, M1).
+consider_request(_Speaker, Agent, goto(Agent, How, LOC), M0, M1) :-  
+ Action = goto(Agent, How, LOC), 
+ bugout('Queueing action ~w~n', Action, autonomous),
+ add_todo(Action, M0, M1).
+
 consider_request(_Speaker, Agent, Action, M0, M1) :-
  bugout('Finding goals for action: ~w~n', [Action], autonomous),
  initial_operators(Agent, Operators),
@@ -167,6 +163,7 @@ consider_request(_Speaker, Agent, Action, M0, M1) :-
    [UnambiguousGoals]),
  bugout('Request: ~w --> goals ~w.~n', [Action, UnambiguousGoals], autonomous),
  add_goals(UnambiguousGoals, M0, M1).
+
 consider_request(_Speaker, _Agent, Action, M0, M1) :-
  bugout('Queueing action: ~w~n', [Action], autonomous),
  add_todo(Action, M0, M1).

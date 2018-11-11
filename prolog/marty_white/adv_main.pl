@@ -126,7 +126,7 @@ update_telnet_clients(S0,S0).
 telnet_decide_action(Agent, Mem0, Mem0):-
  % If actions are queued, no further thinking required.
  thought(todo([Action|_]), Mem0),
- (declared(h(_Spatial, in, Agent, Here), Mem0)->true;Here=somewhere),
+ (declared(h(_Spatial, in, Agent, Here), advstate)->true;Here=somewhere),
  bugout('~w @ ~w telnet: Already about to: ~w~n', [Agent, Here, Action], telnet).
 
 telnet_decide_action(Agent, Mem0, Mem1) :-

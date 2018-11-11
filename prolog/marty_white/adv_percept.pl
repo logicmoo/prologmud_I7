@@ -76,7 +76,8 @@ can_sense( Sense, Thing, Agent, State) :-
  has_sensory(Spatial, Sense, Agent, State),
  related(Spatial, OpenTraverse, Agent, Here, State),
  (Thing=Here; related(Spatial, OpenTraverse, Thing, Here, State)).
-can_sense( Sense, Thing, Agent, _State):- bugout(pretending_can_sense( Sense, Thing, Agent)),!.
+can_sense( Sense, Thing, Agent, _State):- 
+ bugout(pretending_can_sense( Sense, Thing, Agent)),!.
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -88,9 +89,9 @@ can_sense( Sense, Thing, Agent, _State):- bugout(pretending_can_sense( Sense, Th
 queue_agent_percept(Agent, Event, S0, S2) :- 
  \+ is_list(Event),!, 
  queue_agent_percept(Agent, [Event], S0, S2).
-queue_agent_percept(Agent, Event, S0, S2) :-
+queue_agent_percept(Agent, Events, S0, S2) :-
  dmust((select(perceptq(Agent, Queue), S0, S1),
- append(Queue, [Event], NewQueue),
+ append(Queue, Events, NewQueue),
  append([perceptq(Agent, NewQueue)], S1, S2))).
 
 queue_event(Event, S0, S2) :-
@@ -101,8 +102,7 @@ queue_event(Event, S0, S2) :-
 queue_local_percept(Agent, Spatial, Event, Places, S0, S1) :-
  ignore(current_spatial(Spatial)),
  member(Where, Places),
- get_open_traverse(look, Spatial, OpenTraverse),
- related(Spatial, OpenTraverse, Agent, Where, S0),
+ ((get_open_traverse(look, Spatial, OpenTraverse), related(Spatial, OpenTraverse, Agent, Where, S0));Where=Agent),
  queue_agent_percept(Agent, Event, S0, S1),!.
 queue_local_percept(_Agent, _Spatial, _Event, _Places, S0, S0).
 
@@ -219,7 +219,7 @@ process_percept_auto(_Agent, _Percept, _Timestamp, M0, M0):-  \+ declared(inheri
 
 % Auto Answer
 process_percept_auto(Agent, emoted(Speaker,  _Say, Agent, Words), _Stamp, Mem0, Mem1) :-
- consider_text(Speaker, Agent, Words, Mem0, Mem1).
+ trace, consider_text(Speaker, Agent, Words, Mem0, Mem1).
 process_percept_auto(Agent, emoted(Speaker,  _Say, (*), WordsIn), _Stamp, Mem0, Mem1) :-
  addressing_whom(WordsIn, Whom, Words),
  Whom == Agent,

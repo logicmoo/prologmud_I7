@@ -257,7 +257,7 @@ istate([
   h(Spatial, in, a(table), kitchen), % a table is in kitchen
   h(Spatial, on, a(lamp), a(table)), % a lamp is on the table
 
-  h(Spatial, in, a(sink), kitchen), 
+  h(Spatial, in, a(sink), kitchen),
   h(Spatial, in, a(plate), a(sink)),
   h(Spatial, in, a(cabinate), kitchen), 
   h(Spatial, in, a(cup), a(cabinate)),
@@ -405,8 +405,6 @@ extra_decl(T,P):-
 
   % People
   type_props(character, [
-   has_rel(Spatial, worn_by),
-   has_rel(Spatial, held_by),   
    has_rel(Spatial, worn_by, t), 
    has_rel(Spatial, held_by, t), 
    % overridable defaults

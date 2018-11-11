@@ -17,15 +17,6 @@
 %
 */
 
-
-
-known_model(_Knower, E, L):- in_model(E, L).
-in_model(E, L):- member(E, L).
-in_model(E, L):- member(holds_at(E,_), L).
-
-thought_model(E, L):- in_model(model(E), L).
-
-
 get_open_traverse(Open, Sense, Traverse, Spatial, OpenTraverse):- get_open_traverse(Traverse, Spatial, OpenTraverse),
  ((ignore(Open=open), ignore(Sense=see))).
 

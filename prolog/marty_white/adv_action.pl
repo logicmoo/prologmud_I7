@@ -151,7 +151,7 @@ do_action(Agent, Action, S0, S3) :-
 
 
 
-apply_act( Action, _State, _NewState):- notrace((bugout(apply_act( Action), action))),fail.
+% apply_act( Action, _State, _NewState):- notrace((bugout(apply_act( Action), action))),fail.
 
 apply_act( Action, State, NewState) :- 
  act_verb_thing_model_sense(Agent, Action, _Verb, _Thing, _Spatial, _Sense),
@@ -435,10 +435,10 @@ act( print_(Agent, Msg), S0, S1) :-
 act( emote(Agent, SAYTO, Object, Message), S0, S1) :- !, % directed message
  dmust((
  action_sensory(SAYTO, Sense),
- sensory_model(Sense, Spatial),
- get_open_traverse(SAYTO, Spatial, OpenTraverse),
+ sensory_model(Sense, Spatial), 
  can_sense( Sense, Object, Agent, S0),
- related(Spatial, OpenTraverse, Agent, Here, S0), 
+
+ get_open_traverse(SAYTO, Spatial, OpenTraverse), related(Spatial, OpenTraverse, Agent, Here, S0), 
  queue_local_event(Spatial, [emoted(Agent, SAYTO, Object, Message)], [Here,Object], S0, S1))).
 
 

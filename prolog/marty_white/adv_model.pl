@@ -37,6 +37,15 @@ forget_always(Figment, M0, M1) :- select_always(Figment, M0, M1).
 thought(Figment, M) :- member(Figment, M).
 
 
+known_model(_Knower, E, L):- in_model(E, L).
+
+in_model(E, L):- member(E, L).
+in_model(E, L):- member(holds_at(E,_), L).
+
+thought_model(E, L):- in_model(model(E), L).
+
+
+
 % TODO: change agent storage into a term:
 % mind(AgentName, AgentType, History, ModelData, Goals /*, ToDo*/)
 
@@ -44,7 +53,8 @@ thought(Figment, M) :- member(Figment, M).
 
 % Fundamental predicate that actually modifies the list:
 update_relation( NewHow, Item, NewParent, Timestamp, M0, M2) :-
- select_always(holds_at(h(Spatial, _How, Item, _Where), _T), M0, M1),
+ select_always(holds_at(h(Spatial, _OldHow, Item, _OldWhere), _T), M0, M1a),
+ select_always(h(Spatial, _OldHow2, Item, _OldWhere2), M1a, M1),
  ignore(Spatial=spatial),
  append([holds_at(h(Spatial, NewHow, Item, NewParent), Timestamp)], M1, M2).
 
@@ -59,8 +69,10 @@ update_relations( NewHow, [Item|Tail], NewParent, Timestamp, M0, M2) :-
 update_model_exit(Spatial, How, From, Timestamp, M0, M2) :-
  select(holds_at(h(Spatial, How, From, To), _T), M0, M1),
  append([holds_at(h(Spatial, How, From, To), Timestamp)], M1, M2).
+
 update_model_exit(Spatial, How, From, Timestamp, M0, M1) :-
  append([holds_at(h(Spatial, How, From, '<unexplored>'), Timestamp)], M0, M1).
+
 update_model_exit(Spatial, How, From, To, Timestamp, M0, M2) :-
  select_always(holds_at(h(Spatial, How, From, _To), _T), M0, M1),
  append([holds_at(h(Spatial, How, From, To), Timestamp)], M1, M2).
@@ -77,6 +89,27 @@ update_model_exits(Spatial, [Exit|Tail], From, Timestamp, M0, M2) :-
 % copy_term(Figment, FreshFigment),
 % append(RecentMemory, [Figment|_Tail], Memory),
 % \+ member(FreshFigment, RecentMemory).
+
+update_model(Knower, moved( Agent, There, How, Here), Timestamp, Mem, M0, M2) :-
+ Knower = Agent,
+ dmust((
+ % According to model, where was I?
+ known_model(Knower,  h(Spatial, _, Agent, There), M0),
+ % TODO: Handle goto(Agent, on, table)
+ % How did I get Here?
+ append(RecentMem, [did( goto(_, _HowGo, loc(_, A,C,B)))|OlderMem], Mem), % find figment
+ member(ExitName,[A,B,C]),atom(ExitName),
+ \+ member(did( goto(_, _, _)), RecentMem),   % guarrantee recentness
+ memberchk(timestamp(_T1,_WhenNow), OlderMem),   % get associated stamp
+
+ %player_format('~p moved: goto(Agent, ~p, ~p) from ~p leads to ~p~n',
+ %  [Agent, HowGo, Dest, There, Here]),
+ update_model_exit(Spatial, exit(ExitName), There, Here, Timestamp, M0, M1), % Model the path.
+ update_relation(How, Agent, Here, Timestamp, M1, M2))). % And update location.
+
+update_model(_Agent, moved( Object, _From, How, To), Timestamp, _Mem, M0, M1) :-
+ update_relation( How, Object, To, Timestamp, M0, M1).
+
 
 update_model(Agent, carrying(Agent, _Spatial, Objects), Timestamp, _Memory, M0, M1) :-
  update_relations( held_by, Objects, Agent, Timestamp, M0, M1).
@@ -101,25 +134,6 @@ update_model(Agent, exits_are(Agent,Here,Exits), Timestamp, _Mem, M3, M4):- !,
 % Model objects seen Here
 update_model(Agent, notice_children(Agent, _Sense, Here, Prep, Objects), Timestamp, _Mem, M0, M3):- !,
    update_relations(Prep, Objects, Here, Timestamp, M0, M3). 
-
-update_model(Knower, moved( Agent, There, How, Here), Timestamp, Mem, M0, M2) :-
- Knower = Agent,
- % According to model, where was I?
- known_model(Knower,  h(Spatial, _, Agent, There, _T0), M0),
- % TODO: Handle goto(Agent, on, table)
- % How did I get Here?
- append(RecentMem, [did( goto(_, _HowGo, loc(_, A,C,B)))|OlderMem], Mem), % find figment
- member(ExitName,[A,B,C]),atom(ExitName),
- \+ member(did( goto(_, _, _)), RecentMem),   % guarrantee recentness
- memberchk(timestamp(_T1,_WhenNow), OlderMem),   % get associated stamp
-
- %player_format('~p moved: goto(Agent, ~p, ~p) from ~p leads to ~p~n',
- %  [Agent, HowGo, Dest, There, Here]),
- update_model_exit(Spatial, exit(ExitName), There, Here, Timestamp, M0, M1), % Model the path.
- update_relation(How, Agent, Here, Timestamp, M1, M2). % And update location.
-
-update_model(_Agent, moved( Object, _From, How, To), Timestamp, _Mem, M0, M1) :-
- update_relation( How, Object, To, Timestamp, M0, M1).
 
 update_model(_Agent, failure(_,_), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Agent, success(_,_), _Timestamp, _Mem, M0, M0) :- !.

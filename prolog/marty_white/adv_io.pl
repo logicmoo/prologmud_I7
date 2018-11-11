@@ -520,7 +520,7 @@ line_to_tokens(NegOne,NegOne,end_of_file):-!.
 line_to_tokens([NegOne],NegOne,end_of_file):-!.
 line_to_tokens(LineCodes,_NegOne,Tokens) :- 
  append(NewLineCodes,[L],LineCodes),
- member(L,[46]),
+ member(L,`).`),
  catch((read_term_from_codes(NewLineCodes,Term,
   [syntax_errors(error),var_prefix(false),
   % variables(Vars),

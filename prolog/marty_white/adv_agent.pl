@@ -101,7 +101,7 @@ add_todo_all([Action|Rest], Mem0, Mem2) :-
 % -----------------------------------------------------------------------------
 
 % do_introspect(Agent,Query, Answer, Memory)
-do_introspect(Agent, [path,_TO,There], Answer, S0) :-
+do_introspect(Agent, path(There), Answer, S0) :-
  getprop(Agent, memories(Memory), S0), 
  thought_model(ModelData, Memory),
  in_model(h(Spatial, _Prep, Agent, Here), ModelData),
