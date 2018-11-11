@@ -124,7 +124,7 @@ update_model(Agent, sense_props(Agent, _Sense, Object, PropList), Stamp, _Mem, M
 update_model(Agent, sense_each(Agent, _Sense, List), Timestamp, Mem, M0, M4) :- !, update_model(Agent, List, Timestamp, Mem, M0, M4).
 
 % Don't update map here, it's better done in the moved( ) clause.
-update_model(Agent, you_are(Agent, _How, _Here), _Timestamp, _Mem, M0, M0):- !.
+%update_model(Agent, you_are(Agent, _How, _Here), _Timestamp, _Mem, M0, M0):- !.
 
 % Model exits from Here.
 update_model(Agent, exits_are(Agent,Here,Exits), Timestamp, _Mem, M3, M4):- !,

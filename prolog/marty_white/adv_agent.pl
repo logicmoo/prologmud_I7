@@ -236,13 +236,15 @@ run_agent_pass_1_0(Agent, S0, S) :-
  must_input_state(S0),
  %dmust((
  undeclare(memories(Agent, Mem0), S0, S1),
- undeclare(perceptq(Agent, PerceptQ), S1, S2),
+ undeclare(perceptq(Agent, PerceptQ0), S1, S2),
  nb_setval(advstate,S2), % backtrackable leaks :(
  % b_setval(advstate,S2),
  thought(timestamp(T0,_OldNow), Mem0), 
+ refilter_preceptQ(PerceptQ0,PerceptQ),
  (PerceptQ==[] -> (T1 is T0 + 0, Mem0 = Mem1) ; (T1 is T0 + 1, memorize(timestamp(T1,Now), Mem0, Mem1))), 
  process_percept_list(Agent, PerceptQ, T1, Mem1, Mem2),
- notrace(memorize_list(PerceptQ, Mem2, Mem3)),
+ refilter_memory(PerceptQ,MemoList),
+ notrace(memorize_list(MemoList, Mem2, Mem3)),
  decide_action(Agent, Mem3, Mem4),
  declare(memories(Agent, Mem4), S2, S3),
  declare(perceptq(Agent, []), S3, S),
@@ -251,7 +253,10 @@ run_agent_pass_1_0(Agent, S0, S) :-
  % pprint(S, general),
  
  notrace(must_output_state(S)),!.
- 
+
+refilter_preceptQ(PerceptQ,MemoList):- exclude('='(msg(_)),PerceptQ,MemoList).
+refilter_memory(PerceptQ,MemoList):- reverse(PerceptQ,MemoListSP),exclude('='(sense_props(_,_,_,_)),MemoListSP,MemoList).
+
 %run_agent_pass_2_0(_Agent, S0, S0):-!.
 run_agent_pass_2_0(Agent, S0, S) :-
  must_input_state(S0),

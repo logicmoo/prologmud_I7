@@ -40,6 +40,7 @@ get_some_agents(Precond, LiveAgents, S0):-
 
 
 
+is_prop_public(_,Prop):- is_prop_nonpublic(Prop),!,fail.
 is_prop_public(_,P) :-
  \+ \+ 
  member(P, [
@@ -53,12 +54,17 @@ is_prop_public(_,P) :-
     can_be(open, _), state(open, _), 
     can_be(lock, t), state(locked, _),
     inherit(shiny,t)]).
-is_prop_public(_,Prop):- is_prop_nonpublic(Prop),!,fail.
 
 is_prop_public(_,_):-!.
 
 
 is_prop_nonpublic(has_sense(_)).
+is_prop_nonpublic(has_rel(_,_,_)).
+is_prop_nonpublic(has_rel(_,_)).
+is_prop_nonpublic(effect(_,_)).
+is_prop_nonpublic(oper(_,_,_)).
+is_prop_nonpublic(co(_)).
+is_prop_nonpublic(can_do(_,_)).
 is_prop_nonpublic(_):- !, fail.
 
 has_sensory(Spatial, Sense, Agent, State) :-
@@ -69,8 +75,10 @@ has_sensory(Spatial, Sense, Agent, State) :-
  \+ related_with_prop(Spatial, OpenTraverse, _Obj, Here, EmittingLight, State), !, fail.
 has_sensory(_Spatial, _Sense, _Agent, _State) .
 
+is_star(Star):- Star == '*'.
+is_star('*'(Star)):- nonvar(Star).
 
-can_sense( _See, Star, _Agent, _State) :- Star == '*', !.
+can_sense( _See, Star, _Agent, _State) :- is_star(Star), !.
 can_sense( Sense, Thing, Agent, State) :-
  get_open_traverse(_Open, Sense, _Traverse, Spatial, OpenTraverse),
  has_sensory(Spatial, Sense, Agent, State),
@@ -99,16 +107,16 @@ queue_event(Event, S0, S2) :-
 
 
 % Room-level simulation percepts
-queue_local_percept(Agent, Spatial, Event, Places, S0, S1) :-
+queue_local_agent_percept(Agent, Spatial, Event, Places, S0, S1) :-
  ignore(current_spatial(Spatial)),
  member(Where, Places),
  ((get_open_traverse(look, Spatial, OpenTraverse), related(Spatial, OpenTraverse, Agent, Where, S0));Where=Agent),
  queue_agent_percept(Agent, Event, S0, S1),!.
-queue_local_percept(_Agent, _Spatial, _Event, _Places, S0, S0).
+queue_local_agent_percept(_Agent, _Spatial, _Event, _Places, S0, S0).
 
 
 queue_local_event(Spatial, Event, Places, S0, S2) :- 
- each_sensing_agent(_All, queue_local_percept(Spatial, Event, Places), S0, S2).
+ each_sensing_agent(_All, queue_local_agent_percept(Spatial, Event, Places), S0, S2).
 
 
 
@@ -210,7 +218,7 @@ process_percept_auto(_Agent2, sense_each(Agent,_See, List), Timestamp, M0, M2) :
 process_percept_auto(Agent, notice_children(Agent, Sense, _Here, _Prep, Objects), _Stamp, Mem0, Mem2) :- 
  thought_model(ModelData, Mem0),
  findall( examine(Agent, Sense, Obj),
-   ( member(Obj, Objects),
+   ( member(Obj, Objects),    
    \+ member(holds_at(props(Obj, _), _), ModelData)),
    ExamineNewObjects),
  add_todo_all(ExamineNewObjects, Mem0, Mem2).

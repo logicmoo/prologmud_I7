@@ -153,7 +153,7 @@ in_scope(Spatial, Thing, Agent, _State):- bugout(pretending_in_scope(Spatial, Th
 reachable(_Spatial, Star, _Agent, _State) :- Star == '*', ! .
 reachable(Spatial, Thing, Agent, State) :-
  get_open_traverse(touch, Spatial, OpenTraverse),
- related(Spatial, child, Agent, Here, State), % can't reach out of boxes, etc.
+ related(Spatial, child, Agent, Here,State), % can't reach out of boxes, etc.
  (Thing=Here; related(Spatial, OpenTraverse, Thing, Here, State)).
 
 
@@ -236,7 +236,7 @@ relative_dest(Here, Exit, Dest, Src, Target, State):-
    Src = Here,
    ignore(Target = Dest).
 relative_dest(Agent, Prep, Dest, Src, Target, State):-
-  related(_Spatial, child, Agent, Here, State),
+  related(Spatial, child, Agent, Here,State),
   relative_dest(Here, Prep, Dest, Src, Target, State).
 
 

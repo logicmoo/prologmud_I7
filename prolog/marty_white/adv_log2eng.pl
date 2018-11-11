@@ -416,14 +416,9 @@ logic2eng( Obj, ~(Type), ['(','logically','not','(',Out, '))']):- dmust(log2eng(
 %logic2eng(_Agent, time_passes, []).
 logic2eng(_Context, time_passes(Agent), ['Time passes for',Agent,'.']).
 
-logic2eng(_Agent, you_are(Self, Prep, Here), [cap(subj(Self)), person(are, is), Prep, 'the', Here, '\n']).
+%logic2eng(_Agent, you_are(Self, Prep, Here), [cap(subj(Self)), person(are, is), Prep, 'the', Here, '\n']).
 
-logic2eng(Context, exits_are(_Agent, Here, Exits), ['Exits of',Here,' are', ExitText, '\n']):- list2eng(Context, Exits, ExitText).
-
-logic2eng(_Agent, notice_children(_Self, _See, _Parent, _Prep, []), []).
-logic2eng(_Context, notice_children(Agent, Sense, Parent, Prep, List),
-   [cap(Prep), 'the', Parent, subj(Agent), person(Sense, s(Sense)), ':'|Text]) :-
- list2eng(Parent, List, Text).
+logic2eng(Context, exits_are(_Agent, Here, Exits), ['exits of',Here,' are', ExitText, '\n']):- list2eng(Context, Exits, ExitText).
 
 logic2eng(Context, notice_children(Agent, see, Here, Prep, Nearby), [cap(Prep),Here, ':', SeeText]):-
  exclude(=@=(Agent), Nearby, OtherNearby), list2eng(Context, OtherNearby, SeeText).
@@ -463,7 +458,7 @@ logic2eng(_Agent, perceptq(Object, PropList), ['\n\n', the(Object), ' notices:\n
 logic2eng(Context, did(Action), ['did happen: '|English] ) :- !, logic2eng(Context, Action, English ).
 logic2eng(Context, emoted(Speaker, EmoteType, Audience, Eng), ['happened: '|Rest]) :- !,
  logic2eng(Context, emote(Speaker, EmoteType, Audience, Eng), Rest).
-logic2eng(_, emote(Speaker, act, '*'(_Place), Eng), [the(Speaker), Text]) :- !,
+logic2eng(_, emote(Speaker, act, '*'(Place), Eng), [the(Speaker),at,Place,Text]) :- !,
  eng2txt(Speaker, Speaker, Eng, Text).
 logic2eng(_, emote(Speaker, act, Audience, Eng), [Audience, notices, the(Speaker), Text]) :-
  eng2txt(Speaker, Speaker, Eng, Text).
@@ -581,15 +576,6 @@ append_if_new1(Text1, Text2, Text):- flatten([Text1], TextF1), flatten([Text2], 
 append_if_new(Text1, Text2, Text):- append_if_new1(Text1, Text2, Text), !.
 append_if_new(Text2, Text1, Text):- append_if_new1(Text1, Text2, Text), !.
 append_if_new(Text1, Text2, Text):- append(Text1, Text2, Text), !.
-
-%print_percept(Agent, sense_each(Sense, [you_are(Self, Prep, Here),
-%       exits_are(Agent,Here,Exits),
-%       notice_children(Agent, Sence, Here, Prep, Nearby)...])) :-
-% findall(X, (member(X, Nearby), X\=Agent), OtherNearby),
-% player_format('You are ~p the ~p. Exits are ~p.~nYou see: ~p.~n',
-%   [Prep, Here, Exits, OtherNearby]).
-
-% log2eng(_Agent, Logical, ['percept:', Logical]).
 
 percept2eng(_Agent, [_Logical, English], English) :- !.
 percept2eng(_Agent, [_Logical, English|More], [English|More]) :- !.

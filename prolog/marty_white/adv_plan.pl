@@ -37,10 +37,10 @@ precond_matches_effects(Cond, Effects) :-
  precond_matches_effect(Cond, E).
 
  
-% oper(Self, Action, Desc, Preconds, Effects)
+% oper(_Self, Action, Desc, Preconds, Effects)
 
 % go north
-oper(Self, goto(Self, Walk, loc(Self, Dir, Rel, There)),
+oper(_Self, goto(Self, Walk, loc(Self, Dir, Rel, There)),
   [ %Desc: cap(subj(Agent)), person(go, goes)
   cap(subj(actor(Self))), does(Walk), from(place(Here)), via(exit(Dir)) , Rel, to(place(There)) ],
   [ %Preconds:
@@ -52,51 +52,54 @@ oper(Self, goto(Self, Walk, loc(Self, Dir, Rel, There)),
   \+ is_state(~(open), There),
   \+ is_state(~(open), Here),
   \+ is_state(~(open), Dir),
+  reverse_dir(Dir,RDir),
   h(Spatial, exit(Dir), Here, There)], % path(Spatial, Here, There)
   [ %Postconds:
-  h(Spatial, Rel, Self, There),
-  ~ h(Spatial, WasRel, Self, Here)]).
+   ~h(Spatial, WasRel, Self, Here),
+    notice(Here,leaves(Self,Here,WasRel)),
+    h(Spatial, Rel, Self, There),
+    notice(There,enters(Self,There,RDir))]).
 
 
 
-% oper(Self, Action, Preconds, Effects)
+% oper(_Self, Action, Preconds, Effects)
 oper(Self, Action, Preconds, Effects):- % Hooks to better KR above
  oper(Self, Action, _Desc, Preconds, Effects).
 
 
-oper(Self, goto(Self, _Walk, loc(Self, Dir, Rel, There)),
+oper(_Self, goto(Self, _Walk, loc(Self, Dir, Rel, There)),
   [ Here \= Self, There \= Self,
   h(Spatial, WasRel, Self, Here),
   h(Spatial, exit(Dir), Here, There)], % path(Spatial, Here, There)
   [ h(Spatial, Rel, Self, There),
   ~ h(Spatial, WasRel, Self, Here)]).
 
-oper(Self, take(Self, Thing), % from same room
+oper(_Self, take(Self, Thing), % from same room
   [ Thing \= Self, exists(Spatial, Thing),
   There \= Self,
   h(Spatial, At, Thing, There),
   h(Spatial, At, Self, There)],
   [ h(Spatial, held_by, Thing, Self),
   ~ h(Spatial, At, Thing, There)]).
-oper(Self, take(Self, Thing), % from something else
+oper(_Self, take(Self, Thing), % from something else
   [ Thing \= Self, exists(Spatial, Thing),
   h(Spatial, Prep, Thing, What),
   h(Spatial, At, What, There),
   h(Spatial, At, Self, There) ],
   [ h(Spatial, held_by, Thing, Self),
   ~ h(Spatial, Prep, Thing, There)]):- extra.
-oper(Self, drop(Self, Thing),
+oper(_Self, drop(Self, Thing),
   [ Thing \= Self, exists(Spatial, Thing),
   h(Spatial, held_by, Thing, Self)],
   [ ~ h(Spatial, held_by, Thing, Self)] ).
-oper(Self, emote(Self, say, Player, [please, give, Self, the(Thing)]),
+oper(_Self, emote(Self, say, Player, [please, give, Self, the(Thing)]),
   [ Thing \= Self, exists(Spatial, Thing),
   h(Spatial, held_by, Thing, Player),
   h(Spatial, Prep, Player, Where),
   h(Spatial, Prep, Self, Where) ],
   [ h(Spatial, held_by, Thing, Self),
   ~ h(Spatial, held_by, Thing, Player)] ):- extra.
-oper(Self, give(Self, Thing, Recipient),
+oper(_Self, give(Self, Thing, Recipient),
   [ Thing \= Self, Recipient \= Self,
   exists(Spatial, Thing), exists(Spatial, Recipient),
   Where \= Self,
@@ -106,7 +109,7 @@ oper(Self, give(Self, Thing, Recipient),
   [ h(Spatial, held_by, Thing, Recipient),
   ~ h(Spatial, held_by, Thing, Self)
   ] ).
-oper(Self, put(Self, Spatial, Thing, Relation, What), % in something else
+oper(_Self, put(Self, Spatial, Thing, Relation, What), % in something else
   [ Thing \= Self, What \= Self, Where \= Self,
   Thing \= What, What \= Where, Thing \= Where,
   h(Spatial, held_by, Thing, Self), exists(Spatial, Thing),
@@ -114,7 +117,7 @@ oper(Self, put(Self, Spatial, Thing, Relation, What), % in something else
   h(Spatial, in, Self, Where)],
   [ h(Spatial, Relation, Thing, What),
   ~ h(Spatial, held_by, Thing, Self)] ).
-oper(Self, put(Self, Spatial, Thing, Relation, Where), % in room
+oper(_Self, put(Self, Spatial, Thing, Relation, Where), % in room
   [ Thing \= Self, exists(Spatial, Thing),
   h(Spatial, held_by, Thing, Self),
   h(Spatial, Relation, Self, Where)],
@@ -146,7 +149,7 @@ preconditions_match_effects([Cond|Tail], Effects) :-
 
 % plan(steps, orderings, bindings, links)
 % step(id, operation)
-new_plan(_Agent, CurrentState, GoalState, Plan) :-
+new_plan(Self, CurrentState, GoalState, Plan) :-
  Plan = plan([step(start , oper(Self, true, [], CurrentState)),
     step(finish, oper(Self, true, GoalState, []))],
     [before(start, finish)],
@@ -457,7 +460,7 @@ choose_operator([goal(GoalID, GoalCond)|Goals0], Goals2,
  %operators_as_steps(Operators, FreshSteps),
  copy_term(Operators, FreshOperators),
  % Find a new operator.
- %member(step(StepID, oper(Self, Action, Preconds, Effects)), FreshSteps),
+ %member(step(StepID, oper(_Self, Action, Preconds, Effects)), FreshSteps),
  member(oper(Self, Action, Preconds, Effects), FreshOperators),
  precondition_matches_effects(GoalCond, Effects),
  operator_as_step(oper(Self, Action, Preconds, Effects),
@@ -481,7 +484,7 @@ choose_operator([goal(GoalID, GoalCond)|Goals0], Goals2,
  bindings_valid(Bindings),
  bugout(' ~w CREATED ~w to satisfy ~w~n',
    [Depth, StepID, GoalCond], autonomous),
- pprint(oper(_Self, Action, Preconds, Effects), planner),
+ pprint(oper(Self, Action, Preconds, Effects), planner),
  once(pick_ordering(Order9, List)),
  bugout(' Orderings are ~w~n', [List], planner).
 choose_operator([goal(GoalID, GoalCond)|_G0], _G2, _Op, _P0, _P2, D, D) :-

@@ -114,7 +114,7 @@ autonomous_decide_action(Agent, Mem0, Mem1) :-
  add_todo(emote(Agent, act, *, Msg), Mem0, Mem1).
 autonomous_decide_action(Agent, Mem0, Mem0) :-
  (declared(h(_Spatial, in, Agent, Here), advstate)->true;Here=somewhere),
- bugout('~w: Can\'t think of anything to do.~n', [Agent-Here], autonomous+verbose).% trace.
+ nop(bugout('~w: Can\'t think of anything to do.~n', [Agent-Here], autonomous+verbose)).% trace.
 
 
 
@@ -125,7 +125,7 @@ autonomous_decide_action(Agent, Mem0, Mem0) :-
 
 consider_text(Speaker, _EmoteType, Agent, Words, Mem0, Mem1):-
  parse_command(Agent, Words, Action, Mem0),
- consider_request(Speaker, Agent, Action, Mem0, Mem1).
+ trace, consider_request(Speaker, Agent, Action, Mem0, Mem1).
 
 % For now, agents will attempt to satisfy all commands.
 consider_request(Requester, Agent, Action, _M0, _M1) :-

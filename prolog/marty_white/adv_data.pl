@@ -504,7 +504,6 @@ extra_decl(T,P):-
      precond(getprop(Thing, inherit(corporial,t)), ['non-physical would spill out']),
     % body(clause)
      body(move(Agent, Spatial, Thing, in, $self))),
-    inherit(surface, f), 
     inherit(container, t), 
     inherit(object, t)
    ]),
@@ -586,7 +585,7 @@ extra_decl(T,P):-
  effect(switch(off), true) % calls true(S0, S1) !
  ]),
 
-   type_props(surface, [has_rel(Spatial, on, t),adjs(physical), inherit(flask, f), state(cleanliness,clean)]), 
+   type_props(surface, [has_rel(Spatial, on, t),adjs(physical), state(cleanliness,clean)]), 
 
    type_props(shelf, [inherit(surface, t),adjs(physical),inherit(furnature, t)]), 
 

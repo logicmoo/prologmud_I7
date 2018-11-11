@@ -19,9 +19,10 @@
 
 
 act_examine(Agent, Sense, Here, State, NewState) :- 
- \+ \+ related(_, exit(_), Here, _, State), 
- sensory_model_problem_solution(Sense, Spatial, _TooDark, _EmittingLight),
+ \+ \+ related(_, exit(_), Here, _, State),
+ sensory_model_problem_solution(Sense, Spatial, _TooDark, _EmittingLight), 
  related(Spatial, Relation, Agent, Here, State), !,
+
  findall(What,
    (related(Spatial, Relation, What, Here, State),
     (related(Spatial, descended, What, Here, State),
@@ -32,7 +33,7 @@ act_examine(Agent, Sense, Here, State, NewState) :-
  !,
  queue_agent_percept(Agent,
     [sense_each(Agent, Sense, [
-             you_are(Agent, Relation, Here), 
+             %you_are(Agent, Relation, Here), 
              exits_are(Agent,Here,Exits), 
              notice_children(Agent, Sense, Here, Relation, Nearby)]) ],
     State, NewState).

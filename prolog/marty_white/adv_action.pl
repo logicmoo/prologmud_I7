@@ -170,7 +170,7 @@ apply_act( Action, State, NewState):- act( Action, State, NewState), !.
 apply_act( Action, State, NewState):- fail, 
   action_doer(Action, Agent),
   copy_term(Action,ActionG),
-  related(Spatial, child, Agent, Here, State),  
+  related(Spatial, child, Agent, Here,State),  
   % queue_local_event(spatial, [attempting(Agent, Action)], [Here], S0, S1),
   act( Action, State, S0), !,
   queue_local_event(Spatial, [emoted(Agent, act, '*'(Here), ActionG)], [Here], S0, NewState).
@@ -208,7 +208,7 @@ act( examine(Agent, Sense, Object), S0, S2) :- act_examine(Agent, Sense, Object,
 act( Action, State, NewState) :-
  act_verb_thing_model_sense(Agent, Action, Verb, _Thing, Spatial, Sense),
  sensory_verb(Sense, Verb), !, 
- dmust(related(Spatial, child, Agent, Here, State)),
+ dmust(related(Spatial, child, Agent, Here,State)),
  act_examine(Agent, Sense, Here, State, NewState).
 
 % Remember that Agent might be on the inside or outside of Object.
@@ -511,26 +511,16 @@ act_goto( Agent, Walk, Dir, _To, There, S0, S9) :- nonvar(There),
  related(Spatial, exit(Dir), Here, There, S0),
  moveto_verb(Walk, Agent, Here, Dir, Relation, There, S0, S9).
 
-
-moveto_verb(Walk, Agent, Here, Dir, Relation, There, S0, S9) :-
- dmsg((moveto_verb(Walk, Agent, Here, Dir, Relation, There))),
- dmust(((
- queue_local_event(Spatial, 
-   [emoted(Agent, act, '*'(Here), [person(ed(Walk), s(Walk)), exiting, to, the, Dir]) ], [Here], S0, S1)),
- dmust((undeclare(h(_OldSpatial,_OldRel,Agent,Here), S1, VoidState),
- declare(h(Spatial, Relation, Agent,There), VoidState, S2))),
- dmust((queue_agent_percept(Agent,
-   [moved( Agent, Here, Relation, There)], S2, S3),
-
- (related(Spatial, exit(RDir), There, Here, S0)-> true ; reverse_dir(Dir,RDir,S0)),
-
- queue_local_event(Spatial, 
-   [emoted(Agent, act, '*'(There), [person(ed(Walk), s(Walk)), entering, from, the, RDir]) ], [There], S3, S4),
-
-
-
- add_look(Agent, S4, S9))))),!.
-
+% [person(ed(Walk), s(Walk)), exiting, to, the, Dir]
+moveto_verb(Walk, Agent, Here, Dir, Relation, There) -->  
+    {dmsg((moveto_verb(Walk, Agent, Here, Dir, Relation, RDir, There)))},
+    undeclare(h(_OldSpatial,_OldRel,Agent,Here)),
+    declare(h(Spatial, Relation, Agent,There)),
+    queue_agent_percept(Agent,[moved( Agent, Here, Relation, There)]),    
+    queue_local_event(Spatial, [emoted(Agent, act, '*'(Here), leaving(Agent, Walk, Here, Dir )) ], [Here]),
+    with_state(S0, (related(Spatial, exit(RDir), There, Here, S0)-> true ; reverse_dir(Dir,RDir,S0))),
+    queue_local_event(Spatial,[emoted(Agent, act, '*'(There), entering(Agent, Walk, There, RDir )) ], [There]),    
+    add_look(Agent).
   
 
 reverse_dir(Dir,RDir,S0):-
