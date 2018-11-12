@@ -49,8 +49,10 @@ declare_inst_type(Inst,Type,S0,S2):-
     %h(Spatial, in, Bag, Coins),
     %h(Spatial, held_by, Bag, Agent),
 create_agent_conn(Agent,Named,Info,S0,S9):- 
- apply_state(( declare(((props(Agent, [name(['Telnet:',Named]), inherit(telnet,t), inherit(humanoid,t), inherit(player,t), info(Info)]),
-    h(spatial, in, Agent, kitchen))))),S0,S1),
+ declare(((props(Agent, 
+      [name(['Telnet:',Named]), inherit(telnet,t), inherit(humanoid,t), inherit(player,t), info(Info)]),
+      h(spatial, in, Agent, kitchen))),
+  S0,S1),
  init_objects(S1,S9).
 
 

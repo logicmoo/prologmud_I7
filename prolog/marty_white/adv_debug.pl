@@ -103,9 +103,14 @@ dshow_fail((G1,G2)):- !,dshow_fail(G1),dshow_fail(G2).
 dshow_fail(\+(G1)):- !, \+ dshow_true(G1).
 dshow_fail(G):- simplify_dbug(G,GG), (call(G)*-> true ; (bugout(failed_dshow_call(GG)),!,fail)).
 dshow_true(G):- simplify_dbug(G,GG), (call(G)*-> bugout(success_dshow_call(GG)) ; (!,fail)).
+found_bug(S0,open_list(Open)) :- \+is_list(S0),
+  get_open_segement(S0,Open).
 found_bug(S0,duplicated_object(X,R,L)) :-
  append(Left,[prop(X,R)|_],S0),
  member(prop(X,L),Left).
+
+get_open_segement(S0,Open):- append(Left,_,S0),is_list(Left),length(Left,N),N>2,!,append([_,_],S1,S0),get_open_segement(S1,Open).
+get_open_segement(S0,S0).
 
 
 check4bugs(S0) :- found_bug(S0,Bug),throw(check4bugs_failed(Bug)).

@@ -141,7 +141,7 @@ apply_state(NonGoal, S0, S2) :- \+ callable(NonGoal),!,trace, S0=S2.
 apply_state(M:Goal, S0, S2) :- !, assertion(atom(M)),
  M:apply_state(Goal, S0, S2).
 apply_state(Goal,S0,S0):- Goal==[],!.
-apply_state(List, S0, S2) :- \+ is_list(List),!,append(S0,List,S2),!.
+apply_state(List, S0, S2) :- is_list(List),!,append(S0,List,S2),!.
 
 apply_state(ignore(Goal), S0, S2) :- !, apply_state(Goal, S0, S2)->true;S0=S2.
 apply_state(findall(_,Goal,_), S0, S2) :- !, apply_state(Goal, S0, S2).
@@ -199,7 +199,7 @@ apply_state(Goal, S0, S2) :-
  dmust(Call),
  notrace(must_output_state(S2)).
 
- apply_state(Goal, S0, S2):- phrase(Goal,S0,S2).
+ %apply_state(Goal, S0, S2):- phrase(Goal,S0,S2).
 
 
 
