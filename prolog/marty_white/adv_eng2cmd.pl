@@ -172,13 +172,9 @@ txt2goto(Self, Walk, Dest, goto(Self, Walk, loc(Self, _Dir, _To, Where)), Mem) :
  txt2place(Dest, Where, Mem).
 
 
-txt2place(List, Place, Mem):- is_list(List), parse2object(List,Object,Mem),
- txt2place(Object, Place, Mem).
-txt2place(Dest, Place, Mem):- 
- thought_model(ModelData, Mem),
- known_model(advstate, h(_Spatial, _, _, Dest), ModelData),
- Dest = Place.
-
+txt2place(List, Place, Mem):- is_list(List), parse2object(List,Object,Mem), txt2place(Object, Place, Mem),!.
+txt2place(Dest, Place, Mem):-  thought_model(ModelData, Mem), known_model(advstate, h(_Spatial, _, _, Dest), ModelData), Dest = Place.
+txt2place(Dest, Place, Mem):- parse2object(Dest, Place, Mem).
 
 % %%%%%%%%%%%%%%
 % Take
@@ -242,7 +238,7 @@ parse2logical(Self, [Verb|TheArgs], Action, M) :-
 
 verbatum(Verb):- member(Verb, [prolog, make, cls, mem, props, ls, debug, cd, pwd, 
  agent, create, delprop, destroy, echo, quit,
- memory, model, path, properties, setprop, state, help, 
+ memory, model, path, properties, setprop, status, help, 
 
  rtrace, nortrace, 
  trace, notrace %, %whereami, whereis, whoami
@@ -263,17 +259,38 @@ parse2object([Det| Type], TheThing, Mem):-
 parse2object(Type, TheThing, Mem):-
  show_call(as1object(Type, TheThing, Mem)), !.
 
-as1object([TheThing], Thing, Mem):- !,nonvar(TheThing), as1object(TheThing, Thing, Mem).
-%as1object(TheThing, Thing, Mem):- as1object(TheThing, Thing, Mem).
 
+
+as1object([TheThing], Thing, Mem):- !, nonvar(TheThing), as1object(TheThing, Thing, Mem).
+as1object(TheThing, Thing, _Mem):- atom(TheThing), atom_number(TheThing,Thing),!.
+as1object(TheThing, Thing, Mem):- obj_props(Mem,Thing,Props),(same_word(TheThing,Thing)->true;(sub_term(Sub,Props),(atom(Sub);string(Sub)),same_word(TheThing,Sub))).
 as1object(TheThing, Thing, _Mem):- \+ atom(TheThing),!, TheThing=Thing.
-as1object(TheThing, Thing, _Mem):- atom_number(TheThing,Thing).
-as1object(TheThing, Thing, Mem):- atom_concat(TheThing,'~1',TheThing2), sub_term(Thing,Mem),atom(Thing),TheThing2==Thing,!.
-as1object(TheThing, Thing, Mem):- atom_concat(TheThing,'~2',TheThing2), sub_term(Thing,Mem),atom(Thing),TheThing2==Thing,!.
 as1object(TheThing, Thing, Mem):- atom_of(inst, TheThing, Thing, Mem),!.
-as1object(TheThing, Thing, _Mem):- b_getval(advstate,Mem), atom_of(inst, TheThing, Thing, Mem),!.
+as1object(TheThing, Thing, Mem):- b_getval(advstate,Mem2),Mem2\=Mem,as1object(TheThing, Thing, Mem2).
 % as1object(Thing, Thing, _Mem).
 
+to_string_lc(S,L):- atomic(S), S\=[], string_lower(S,L).
+to_string_lc(S,L):- is_list(S), maplist(to_string_lc,S,W),atomics_to_string(W,' ',L).
+same_word(T1,T2):- to_string_lc(T1,S1),to_string_lc(T2,S2),S1=S2.
+
+same_props(Props1,Props1):- !.
+same_props(Props1,Props2):- each_prop(Props1,Prop1),each_prop(Props2,Prop2),same_prop(Prop1,Prop2).
+each_prop(Props,Prop):- is_list(Props),!,member(PropsZ,Props),each_prop(PropsZ,Prop).
+each_prop(PropC,Prop):- compound(PropC),PropC=Prop.
+
+
+obj_props(Mem,Obj,Props):- var(Mem),!,b_getval(advstate,Mem2),obj_props(Mem2,Obj,Props).
+obj_props(Mem,Obj,Props):- nonvar(Obj),!,obj_props(Mem,Obj2,Props),Obj=@=Obj2.
+obj_props(Mem,Obj,Props):- nonvar(Props),!,obj_props_v(Mem,Obj,Props2),same_props(Props,Props2).
+obj_props(Mem,Obj,Props):- obj_props_v(Mem,Obj,Props).
+
+obj_props_v(Mem,_,_):- \+ compound(Mem),!,fail.
+obj_props_v(Mem,Obj,Props):- is_list(Mem),!,member(E,Mem),obj_props_v(E,Obj,Props).
+obj_props_v(props(Obj,Props),Obj,Props):- !.
+obj_props_v(sense_props(_,_,Obj,_,Props),Obj,Props):- !.
+obj_props_v(Term,Obj,Props):- arg(_,Term,Mem),obj_props_v(Mem,Obj,Props).
+
+same_prop(X,Y):- X=@=Y,X=Y.
 
 args2logical(TheArgs, [Thing], Mem):- parse2object(TheArgs, Thing, Mem),!. % TheArgs\==[Thing],!.
 args2logical(TheArgs, TheArgs, _M).

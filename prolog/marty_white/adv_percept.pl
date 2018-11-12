@@ -27,15 +27,15 @@ get_sensing_objects(Objects, S0):-
  setof(O,member(perceptq(O,_),S0),Objects).
 
 get_sensing_objects(Sense, Agents, S0):-
- get_objects((has_sense(Sense);inherited(memorize)), Agents, S0).
+ get_objects((has_sense(Sense);inherits(memorize)), Agents, S0).
 
 get_live_agents(LiveAgents, S0):-
- get_some_agents( \+ state(_Spatial, powered, f), LiveAgents, S0).
+ get_some_agents( \+ status(_Spatial, powered, f), LiveAgents, S0).
 
 get_some_agents(Precond, LiveAgents, S0):-
  dmust((
   get_objects(  
-  (inherited(character),Precond), LiveAgents, S0),
+  (inherits(character),Precond), LiveAgents, S0),
  LiveAgents = [_|_])).
 
 
@@ -46,26 +46,33 @@ is_prop_public(_,P) :-
  member(P, [
     name(_),
     desc(_),
-    fragile(_),emitting(_,_Light), 
+    breaks_into(_),emitting(_,_Light), 
     %has_rel(_Spatial, _), 
     
     can_be(eat, _), 
     can_be(move, _), 
-    can_be(open, _), state(open, _), 
-    can_be(lock, t), state(locked, _),
+    can_be(open, _), status(open, _), 
+    can_be(lock, t), status(locked, _),
     inherit(shiny,t)]).
 
 is_prop_public(_,_):-!.
 
+is_prop_nonpublic(P):- \+ callable(P),!,fail.
+is_prop_nonpublic(inherit(_,f)):- !,fail.
+is_prop_nonpublic(P):- compound(P),functor(P,F,_),!,is_prop_nonpublic(F).
+is_prop_nonpublic(has_sense).
+is_prop_nonpublic(has_rel).
+is_prop_nonpublic(effect).
+is_prop_nonpublic(oper).
+is_prop_nonpublic(co).
+is_prop_nonpublic(class_desc).
+is_prop_nonpublic(inherits).
+is_prop_nonpublic(knows_verbs).
+is_prop_nonpublic(can_be).
+is_prop_nonpublic(breaks_into).
+is_prop_nonpublic(before).
+is_prop_nonpublic(after).
 
-is_prop_nonpublic(has_sense(_)).
-is_prop_nonpublic(has_rel(_,_,_)).
-is_prop_nonpublic(has_rel(_,_)).
-is_prop_nonpublic(effect(_,_)).
-is_prop_nonpublic(oper(_,_,_)).
-is_prop_nonpublic(co(_)).
-is_prop_nonpublic(can_do(_,_)).
-is_prop_nonpublic(_):- !, fail.
 
 has_sensory(Spatial, Sense, Agent, State) :-
  sensory_model_problem_solution(Sense, Spatial, TooDark, EmittingLight),
@@ -184,7 +191,7 @@ verb_sensory(Verb, Sense):- verb_alias(Verb, Verb2), Verb\=Verb2,
 
 
 % sensory_model(Visual, Spatial, TooDark, EmittingLight))
-sensory_model_problem_solution(Sense, Spatial, state(Dark, t), emitting(Sense, Light)):-
+sensory_model_problem_solution(Sense, Spatial, status(Dark, t), emitting(Sense, Light)):-
  problem_solution(Dark, Sense, Light), sensory_model(Sense, Spatial).
 
 problem_solution(dark, see, light).
@@ -192,6 +199,8 @@ problem_solution(stinky, smell, pure).
 problem_solution(noisy, hear, quiet).
 
 
+%percept_todo(Actions, Mem0, Mem2):- apply_all(Actions,add_goal(),Mem0, Mem2).
+percept_todo(Actions, Mem0, Mem2):- add_todo_all(Actions, Mem0, Mem2),!.
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
@@ -211,33 +220,34 @@ process_percept_auto(Agent, [Percept|Tail], Stamp, M0, M9) :-
 
 process_percept_auto(Agent, Percept, _Stamp, M0, M0) :- was_own_self(Agent, Percept),!.
 
-process_percept_auto(_Agent2, sense_each(Agent,_See, List), Timestamp, M0, M2) :- !, 
- process_percept_auto(Agent, List, Timestamp, M0, M2).
-
 % Auto examine room items
-process_percept_auto(Agent, notice_children(Agent, Sense, _Here, _Prep, Objects), _Stamp, Mem0, Mem2) :- 
+process_percept_auto(Agent, notice_children(Agent, Sense, _Here, _Prep, Depth, Objects), _Stamp, Mem0, Mem2) :- 
  thought_model(ModelData, Mem0),
- findall( examine(Agent, Sense, Obj),
+ Depth = depth(DepthN),
+ DepthN > 1, DepthLess is DepthN - 1,
+ findall( examine(Agent, Sense, Obj, depth(DepthLess)),
    ( member(Obj, Objects),    
    \+ member(holds_at(props(Obj, _), _), ModelData)),
-   ExamineNewObjects),
- add_todo_all(ExamineNewObjects, Mem0, Mem2).
+   Actions),
+ percept_todo(Actions, Mem0, Mem2).
 
-process_percept_auto(_Agent, _Percept, _Timestamp, M0, M0):-  \+ declared(inherited(autonomous), M0),!.
+process_percept_auto(_Agent, _Percept, _Timestamp, M0, M0):-  \+ declared(inherits(autonomous), M0),!.
 
 % Auto Answer
-process_percept_auto(Agent, emoted(Speaker,  _Say, Agent, Words), _Stamp, Mem0, Mem1) :-
- trace, consider_text(Speaker, Agent, Words, Mem0, Mem1).
-process_percept_auto(Agent, emoted(Speaker,  _Say, (*), WordsIn), _Stamp, Mem0, Mem1) :-
+process_percept_auto(Agent, emoted(Speaker,  EmoteType, Agent, Words), _Stamp, Mem0, Mem1) :-
+ trace, consider_text(Speaker,EmoteType, Agent, Words, Mem0, Mem1).
+process_percept_auto(Agent, emoted(Speaker,  EmoteType, Star, WordsIn), _Stamp, Mem0, Mem1) :- is_star(Star),
  addressing_whom(WordsIn, Whom, Words),
  Whom == Agent,
- consider_text(Speaker, Agent, Words, Mem0, Mem1).
+ consider_text(Speaker,EmoteType, Agent, Words, Mem0, Mem1).
 
 % Auto take
-process_percept_auto(Agent, sense_props(Agent, Sense, Object, PropList), _Stamp, Mem0, Mem2) :-
- bugout('~w: ~p~n', [Agent, sense_props(Agent, Sense, Object, PropList)], autonomous),
- (member(inherited(shiny), PropList)),
+process_percept_auto(Agent, sense_props(Agent, Sense, Object, Depth, PropList), _Stamp, Mem0, Mem2) :-
+ Depth = depth(DepthN),
+ DepthN > 1, 
+ (member(inherits(shiny), PropList)),
  Object \== Agent,
+ bugout('~w: ~p~n', [Agent, sense_props(Agent, Sense, Object, Depth, PropList)], autonomous),
  thought_model(ModelData, Mem0),
  \+ related(_Spatial, descended, Object, Agent, ModelData), % Not holding it? 
  add_todo_all([take(Agent, Object), print_(Agent, 'My shiny precious!')], Mem0, Mem2).
@@ -255,13 +265,15 @@ was_own_self(Agent, emoted(Agent, _, _Targ, _)).
 % was_own_self(Agent, Action):- action_doer(Action, Was), Was == Agent.
 
 % Ignore own speech.
-process_percept_player(Agent,Percept, _Stamp, Mem0, Mem0) :- was_own_self(Agent, Percept),!.
-
 process_percept_player(Agent, _Percept, _Stamp, Mem0, Mem0) :- \+ is_player(Agent),!.
+process_percept_player(_, [], _Stamp, Mem0, Mem0) :- !.
+process_percept_player(Agent, [Percept|Tail], Stamp, Mem0, Mem4) :- !,
+ process_percept_player(Agent, Percept, Stamp, Mem0, Mem1),
+ process_percept_player(Agent, Tail, Stamp, Mem1, Mem4).
+process_percept_player(Agent,Percept, _Stamp, Mem0, Mem0) :- was_own_self(Agent, Percept),!.
 process_percept_player(Agent, Percept, _Stamp, Mem0, Mem0) :-
- percept2txt(Agent, Percept, Text),
- player_format('~N~w~n', [Text]),!,
- redraw_prompt(Agent).
+ percept2txt(Agent, Percept, Text),!, player_format('~N~w~n', [Text]),!.
+
 process_percept_player(Agent, Percept, _Stamp, M0, M0) :-
  player_format('~N~q~n', [Agent:Percept]),
  dmust(redraw_prompt(Agent)),!.
@@ -272,11 +284,9 @@ is_non_player(Agent):- Agent == 'floyd~1'.
 
 % process_percept_main(Agent, PerceptsList, Stamp, OldModel, NewModel)
 process_percept_main(_Agent, [], _Stamp, Mem0, Mem0) :- !.
-process_percept_main(Agent, [Percept|Tail], Stamp, Mem0, Mem4) :-
- process_percept_main(Agent, Percept, Stamp, Mem0, Mem1),
- process_percept_main(Agent, Tail, Stamp, Mem1, Mem4).
 process_percept_main(Agent, Percept, Stamp, Mem0, Mem2) :-
  quietly(process_percept_player(Agent, Percept, Stamp, Mem0, Mem1)),
+ dmust(redraw_prompt(Agent)),
  process_percept_auto(Agent, Percept, Stamp, Mem1, Mem2).
 process_percept_main(Agent, Percept, Stamp, Mem0, Mem0):- 
  bugout('~q FAILED!~n', [bprocess_percept(Agent, Percept, Stamp)], perceptq), !.
@@ -284,7 +294,7 @@ process_percept_main(Agent, Percept, Stamp, Mem0, Mem0):-
 
 % caller memorizes PerceptList
 process_percept_list(_Agent, _, _Stamp, Mem, Mem) :-
- declared(inherited(no_perceptq), Mem),
+ declared(inherits(no_perceptq), Mem),
  !.
 process_percept_list(Agent, Percept, Stamp, Mem0, Mem3) :-
  dmust((

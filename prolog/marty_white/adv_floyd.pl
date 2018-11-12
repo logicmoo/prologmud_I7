@@ -49,7 +49,7 @@ do_autonomous_cycle(Agent):-
 
 % Is powered down
 maybe_autonomous_decide_goal_action(Agent, Mem0, Mem0) :- 
- getprop(Agent, state(powered, f), advstate),!.
+ getprop(Agent, status(powered, f), advstate),!.
 
 maybe_autonomous_decide_goal_action(Agent, Mem0, Mem1) :- notrace((do_autonomous_cycle(Agent),
  set_last_action(Agent,[auto(Agent)]))),
@@ -72,7 +72,7 @@ autonomous_decide_goal_action(Agent, Mem0, Mem3) :-
 autonomous_decide_action(Agent, Mem0, Mem0) :- 
  thought(todo([Action|_]), Mem0),
  (declared(h(_Spatial, in, Agent, Here), advstate)->true;Here=somewhere),
- bugout('~w @ ~w: already about todo: ~w~n', [Agent, Here, Action], autonomous).
+ (trival_act(Action)->true;bugout('~w @ ~w: already about todo: ~w~n', [Agent, Here, Action], autonomous)).
 
 % If goals exist, try to solve them.
 autonomous_decide_action(Agent, Mem0, Mem1) :-
@@ -100,7 +100,7 @@ autonomous_decide_action(Agent, Mem0, Mem1) :-
  add_todo( goto(Agent, walk, loc(Agent, Dir, _To, _Place)), Mem0, Mem1).
 
 % Follow Player to adjacent rooms.
-autonomous_decide_action(Agent, Mem0, Mem1) :- fail, 
+autonomous_decide_action(Agent, Mem0, Mem1) :- % 1 is random(2),
  thought_model(ModelData, Mem0),
  known_model(Agent,h(Spatial, _, Agent, Here, _), ModelData),
  dif(Agent, Player), current_player(Player),

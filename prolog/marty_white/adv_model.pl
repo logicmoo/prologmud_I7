@@ -115,24 +115,26 @@ update_model(Agent, carrying(Agent, _Spatial, Objects), Timestamp, _Memory, M0, 
  update_relations( held_by, Objects, Agent, Timestamp, M0, M1).
 update_model(Agent, wearing(Agent, _Spatial, Objects), Timestamp, _Memory, M0, M1) :-
  update_relations( worn_by, Objects, Agent, Timestamp, M0, M1).
-update_model(Agent, notice_children(Agent, _Sense, Object, How, Children), Timestamp, _Mem, M0, M1) :-
+update_model(Agent, notice_children(Agent, _Sense, Object, How, _Depth, Children), Timestamp, _Mem, M0, M1) :-
  update_relations( How, Children, Object, Timestamp, M0, M1).
-update_model(Agent, sense_props(Agent, _Sense, Object, PropList), Stamp, _Mem, M0, M2) :-
+update_model(Agent, sense_props(Agent, _Sense, Object, _Depth, PropList), Stamp, _Mem, M0, M2) :-
  select_always(holds_at(props(Object, _), _), M0, M1),
  append([holds_at(props(Object, PropList), Stamp)], M1, M2).
 
-update_model(Agent, sense_each(Agent, _Sense, List), Timestamp, Mem, M0, M4) :- !, update_model(Agent, List, Timestamp, Mem, M0, M4).
 
-% Don't update map here, it's better done in the moved( ) clause.
-%update_model(Agent, you_are(Agent, _How, _Here), _Timestamp, _Mem, M0, M0):- !.
+
+%update_model(Agent, you_are(Agent, _How, _He\re), _Timestamp, _Mem, M0, M0):- !.
 
 % Model exits from Here.
-update_model(Agent, exits_are(Agent,Here,Exits), Timestamp, _Mem, M3, M4):- !,
+update_model(Agent, exits_are(Agent, Relation, Here, Exits), Timestamp, _Mem, M0, M4):- !,
   findall(exit(E), member(E, Exits), ExitRelations),
+    % Don't update map here? it's better done in the moved( ) clause?
+    update_relations(Relation, [Agent], Here, Timestamp, M0, M3),
   update_model_exits(spatial, ExitRelations, Here, Timestamp, M3, M4).
+update_model(_Agent, exits_are('$fake',_,_,_), _Timestamp, _Mem, M0, M0):-!.
 
 % Model objects seen Here
-update_model(Agent, notice_children(Agent, _Sense, Here, Prep, Objects), Timestamp, _Mem, M0, M3):- !,
+update_model(Agent, notice_children(Agent, _Sense, Here, Prep, _Depth, Objects), Timestamp, _Mem, M0, M3):- !,
    update_relations(Prep, Objects, Here, Timestamp, M0, M3). 
 
 update_model(_Agent, failure(_,_), _Timestamp, _Mem, M0, M0) :- !.

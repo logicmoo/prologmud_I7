@@ -244,6 +244,9 @@ make_atomic(Atom, Atom) :-
 make_atomic(Term, Atom) :-
  term_to_atom(Term, Atom).
 
+eng2txt(Agent, _Person, LogicalEnglish, Text) :- compound(LogicalEnglish), \+ is_list(LogicalEnglish),!,  
+  percept2txt(Agent, LogicalEnglish, Text),!.
+
 eng2txt(Agent, Person, Eng, Text) :- assertion(nonvar(Eng)),
  % Find subject, if any.
  quietly((findall(subj(Subject), findterm(subj(Subject), Eng), Context),
@@ -418,12 +421,13 @@ logic2eng(_Context, time_passes(Agent), ['Time passes for',Agent,'.']).
 
 %logic2eng(_Agent, you_are(Self, Prep, Here), [cap(subj(Self)), person(are, is), Prep, 'the', Here, '\n']).
 
-logic2eng(Context, exits_are(_Agent, Here, Exits), ['exits of',Here,' are', ExitText, '\n']):- list2eng(Context, Exits, ExitText).
+logic2eng(Context, exits_are(_Agent, Relation, Here, Exits), ['Exits',Relation,Here,' are:', ExitText, '\n']):-
+  list2eng(Context, Exits, ExitText).
 
-logic2eng(Context, notice_children(Agent, see, Here, Prep, Nearby), [cap(Prep),Here, ':', SeeText]):-
+logic2eng(Context, notice_children(Agent, see, Here, Prep, _Depth, Nearby), [cap(Prep),Here, ':', SeeText]):-
  exclude(=@=(Agent), Nearby, OtherNearby), list2eng(Context, OtherNearby, SeeText).
 
-logic2eng(Context, notice_children(Agent, Sense, Here, Prep, Nearby), [cap(subj(Agent)), person(Sense, s(Sense)),Prep,Here, ':', SeeText]):-
+logic2eng(Context, notice_children(Agent, Sense, Here, Prep, _Depth, Nearby), [cap(subj(Agent)), person(Sense, s(Sense)),Prep,Here, ':', SeeText]):-
  exclude(=@=(Agent), Nearby, OtherNearby), list2eng(Context, OtherNearby, SeeText).
 
 logic2eng(Context, carrying(Agent, Items),
@@ -439,13 +443,15 @@ logic2eng(_Agent, transformed(Before, After), [Before, 'turns into', After, .]).
 
 logic2eng(_Agent, destroyed(Thing), [Thing, aux(be), 'destroyed.']).
 
+logic2eng(_Context, sense_props(_Agent, _Sense, _Object, _Depth, []),  [] ) :- !.
 
-logic2eng(Context, sense_props(Agent, Sense, Object, PropList), 
+logic2eng(Context, sense_props(Agent, Sense, Object, _Depth, PropList), 
    [ %cap(subj(Agent)),
     subj(Agent),
     person(Sense, s(Sense))| English] ) :-
  log2eng(Context, props(Object, PropList),English).
 
+logic2eng(_Agent, props(_Object, []),  [] ) :- !.
 logic2eng(_Agent, props(Object, PropList), [the(Object), ': ('|English] ) :- list2eng(['.'=')'],Object, PropList, English).
 
 logic2eng(_Agent, memories(Object, PropList), ['\n\n', the(Object), ' remembers:\n'|English] ) :- 
@@ -454,10 +460,14 @@ logic2eng(_Agent, memories(Object, PropList), ['\n\n', the(Object), ' remembers:
 logic2eng(_Agent, perceptq(Object, PropList), ['\n\n', the(Object), ' notices:\n'|English] ) :- 
  list2eng([','=',\n'],Object, PropList, English).
 
+logic2eng(_Context, leaving(Actor,How,Where,Dir), [Actor,left,Where,ing(How),Dir] ) :- !.
+logic2eng(_Context, entering(Actor,How,Where,Dir), [Actor,came,ing(How),Dir,to,Where] ) :- !.
 
 logic2eng(Context, did(Action), ['did happen: '|English] ) :- !, logic2eng(Context, Action, English ).
+
 logic2eng(Context, emoted(Speaker, EmoteType, Audience, Eng), ['happened: '|Rest]) :- !,
  logic2eng(Context, emote(Speaker, EmoteType, Audience, Eng), Rest).
+
 logic2eng(_, emote(Speaker, act, '*'(Place), Eng), [the(Speaker),at,Place,Text]) :- !,
  eng2txt(Speaker, Speaker, Eng, Text).
 logic2eng(_, emote(Speaker, act, Audience, Eng), [Audience, notices, the(Speaker), Text]) :-
@@ -466,9 +476,6 @@ logic2eng(_, emote(Speaker, EmoteType, Audience, Eng), [cap(subj(Speaker)), s(Em
  eng2txt(Speaker, 'I', Eng, Text).
 
 logic2eng(_Agent, failure(Action), ['Action failed:', Action]).
-
-logic2eng(Context, sense_each(Agent, See, Sensing), [cap(subj(Agent)), person(See, s(See)), ': '|SensedText]) :- 
- log2eng(Context, Sensing, SensedText).
 
 %logic2eng( Obj, effect(_, _), Out):- log2eng(Obj, adjs(special), Out), !.
 
@@ -495,7 +502,7 @@ logic2eng(_Obj, h(Held_by , Object, Speaker), [the(Object), aux(be), Held_by, Sp
 
 
 logic2eng(_Obj, EmittingLight, [aux(be), 'glowing']):- EmittingLight == emmiting(light), !.
-logic2eng(_Obj, fragile(_), ['looks fragile']).
+logic2eng(_Obj, breaks_into(_), ['looks breaks_into']).
 logic2eng(_Obj, shiny, [aux(be), 'shiny!']).
 
 
@@ -515,7 +522,7 @@ logic2eng(_Aobj, alreadyhave(It), ['already have', the(It)]).
 logic2eng(_Aobj, mustgetout(It), ['must get out/off ',It,' first.']).
 logic2eng(_Aobj, self_relation(_Spatial, It), ['can\'t put ',It,' inside itself!']).
 logic2eng(_Aobj, moibeus_relation( _, _), ['Topological error!']).
-logic2eng(_Aobj, state(Dark, t),  ['It''s too ', Dark, ' to ', ly(Sense), '!']):- problem_solution(Dark, Sense, _Light).
+logic2eng(_Aobj, status(Dark, t),  ['It''s too ', Dark, ' to ', ly(Sense), '!']):- problem_solution(Dark, Sense, _Light).
 logic2eng(_Aobj, mustdrop(It), [ 'will have to drop', It, ' first.']).
 logic2eng(_Aobj, cant( move(_Agent, Spatial, It)), [It,aux(be),'immobile', ly(Spatial)]).
 logic2eng(_Aobj, cantdothat(EatCmd), [ 'can\'t do: ', EatCmd]).
@@ -531,13 +538,13 @@ logic2eng(_Obj, has_rel(exit(_)), ['has exits']).
 logic2eng(_Obj, can_be(eat), ['looks tasty ', '!']).
 logic2eng(_Obj, can_be(Eat), ['Can be', tense(Eat, past)]).
 logic2eng(_Obj, can_be(Eat, f), ['Can\'t be', tense(Eat, past)]).
-logic2eng(_Obj, can_do(Eat), ['Able to', Eat ]).
-logic2eng(_Obj, can_do(Eat, f), ['Unable to', Eat ]).
-logic2eng(_Obj, state(Open), [aux(be), Open ]).
-logic2eng(_Obj, state(Open, f), [aux(be), 'not', Open ]).
+logic2eng(_Obj, knows_verbs(Eat), ['Able to', Eat ]).
+logic2eng(_Obj, knows_verbs(Eat, f), ['Unable to', Eat ]).
+logic2eng(_Obj, status(Open), [aux(be), Open ]).
+logic2eng(_Obj, status(Open, f), [aux(be), 'not', Open ]).
 logic2eng( Obj, inherit(Type), ['is',Out]):- log2eng(Obj, [Type], Out), !.
 logic2eng( Obj, inherit(Type, f), ['isnt '|Out]):- log2eng(Obj, [Type], Out), !.
-logic2eng( Obj, inherited(Type), ['inherits',Out]):- log2eng(Obj, [Type], Out), !.
+logic2eng( Obj, inherits(Type), ['inherit',Out]):- log2eng(Obj, [Type], Out), !.
 logic2eng( _Obj, msg(Msg), Msg):- !.
 
 logic2eng(_Obj, class_desc(_), []).

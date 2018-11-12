@@ -57,7 +57,7 @@ select_always(Item, List, ListWithoutItem) :- select(Item, List, ListWithoutItem
 % select(Item, List, ListWithoutItem).
 %select_default(DefaultItem, DefaultItem, ListWithoutItem, ListWithoutItem).
 
-% Manipulate simulation state
+% Manipulate simulation status
 %declare(Fact, State):- player_local(Fact, Player), !, declare(wishes(Player, Fact), State).
 declare((Fact1,Fact2), State, NewState) :- !,declare(Fact1, State, MidState),declare(Fact2, MidState, NewState).
 declare([Fact1|Fact2], State, NewState) :- !,declare(Fact1, State, MidState),declare(Fact2, MidState, NewState).
@@ -91,17 +91,17 @@ declared_link(Fact, Object):- callable(Fact), Fact=..[F|List],Call=..[F,Object|L
 
 % extra_decl(Object, PropList):- nb_current(advstate,State), direct_props(Object,PropList,State).
 
-% Entire state of simulation & agents is held in one list, so it can be easy
-% to roll back. The state of the simulation consists of:
+% Entire status of simulation & agents is held in one list, so it can be easy
+% to roll back. The status of the simulation consists of:
 % object properties
 % object relations
 % percept queues for agents
 % memories for agents (actually logically distinct from the simulation)
 % Note that the simulation does not maintain any history.
-% TODO: change state into a term:
+% TODO: change status into a term:
 % ss(Objects, Relationships, PerceptQueues, AgentMinds)
 % TODO:
-% store initial state as clauses which are collected up and put into a list,
+% store initial status as clauses which are collected up and put into a list,
 % like the operators are, to provide proper prolog variable management.
 must_input_state(S0):- notrace(assertion(is_list(S0);must_state(S0))).
 must_output_state(S0):- notrace(assertion(must_state(S0);is_list(S0))),notrace(check4bugs(S0)).
@@ -140,7 +140,7 @@ getprop(Object, Prop, S0):-
 getprop0(Object, Prop, S0):- Prop=..[Name,Value], Element =..[Name, Object, Value], member(Element,S0).
 
 getprop_from_state(Orig, Object, Prop, Memory):- 
- member(state(S0), Memory), !, getprop1(Orig, [], Object, Prop, S0).
+ member(status(S0), Memory), !, getprop1(Orig, [], Object, Prop, S0).
 
 getprop1(Orig, AlreadyUsed, Object, Prop, S0) :- 
  direct_props(Object, PropList, S0),
@@ -150,9 +150,9 @@ getprop1(Orig, AlreadyUsed, Object, Prop, S0) :-
 inherited_prop1(Orig, AlreadyUsed, _Object, Prop, PropList, S0):- 
  member(inherit(Delegate,t), PropList),
  \+ member(inherit(Delegate,t), AlreadyUsed),
- \+ member(inherited(Delegate), PropList),
+ \+ member(inherits(Delegate), PropList),
  \+ member(isnt(Delegate), PropList),
- \+ member(inherited(Delegate), AlreadyUsed),
+ \+ member(inherits(Delegate), AlreadyUsed),
  \+ member(isnt(Delegate), AlreadyUsed),
  append(AlreadyUsed,PropList,AllPropList),
  getprop1(Orig, AllPropList, Delegate, Prop, S0).

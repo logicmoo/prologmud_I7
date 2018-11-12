@@ -120,7 +120,7 @@ create_objprop(Self, inherit(memorize,t), S0, S2):- !, clock_time(Now),
 
 
 create_objprop(Object, inherit(Other,t), S0, S2):- getprop(Object,inherit(Other,f),S0),!,updateprop(Object, inherit(Other,t), S0, S1),create_objprop(Object, inherit(Other,t), S1, S2).
-create_objprop(Object, inherit(Other,t), S0, S0):- getprop(Object,inherited(Other),S0),!.
+create_objprop(Object, inherit(Other,t), S0, S0):- getprop(Object,inherits(Other),S0),!.
 create_objprop(Object, inherit(Other,t), S0, S0):- getprop(Object,isnt(Other),S0),!.
 create_objprop(Object, inherit(Other,t), S0, S0):- Other==Object,!.
 create_objprop(_Object, inherit(Other,t), S0, S0):- direct_props(Other, PropList, S0), member(no_copy(t),PropList),!.
@@ -131,13 +131,13 @@ create_objprop(Object, inherit(Other,t), S0, S9):-
  copy_term(PropList,PropListC),!,
  % dmust(updateprop(Object, inherit(Other,t), S5, S9)), !,
  %dmust(updateprop(Object, visited(Other), S0, S1)),
- dmust(updateprop(Object, inherited(Other), S0, S2)),
+ dmust(updateprop(Object, inherits(Other), S0, S2)),
  
  dmust(create_objprop(Object, PropListC, S2, S9)),
- %dmust(setprop(Object, inherited(Other), S3, S9)),
+ %dmust(setprop(Object, inherits(Other), S3, S9)),
  !.
 
-%create_objprop(Object, inherit(Other,t), S0, S0):- getprop(Object,inherited(Other),S0),!.
+%create_objprop(Object, inherit(Other,t), S0, S0):- getprop(Object,inherits(Other),S0),!.
 
 create_objprop(Object, Prop, S0, S2):- 
  subst(equivalent,$self,Object,Prop,NewProp),Prop\==NewProp,!,

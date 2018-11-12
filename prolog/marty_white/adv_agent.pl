@@ -48,7 +48,7 @@ each_agent(Precond, NewGoal, S0, S2) :-
 % moved( obj, from, how, to)
 
 % -----------------------------------------------------------------------------
-% The state of an Agent is stored in its memory.
+% The status of an Agent is stored in its memory.
 % Agent memory is stored as a list in reverse chronological order, implicitly
 % ordering and timestamping everything.
 % Types of memories:
@@ -70,6 +70,7 @@ each_agent(Precond, NewGoal, S0, S2) :-
 :- nop(ensure_loaded('adv_agent_goal')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+add_goal(Goal, Mem0, Mem2) :- is_list(Goal),!,apply_all(Goal,add_goal(),Mem0, Mem2).
 add_goal(Goal, Mem0, Mem2) :-
  bugout('adding goal ~w~n', [Goal], planner),
  forget(goals(OldGoals), Mem0, Mem1),
@@ -99,15 +100,25 @@ add_todo_all([Action|Rest], Mem0, Mem2) :-
 
 
 % -----------------------------------------------------------------------------
+% do_introspect(Agent, Query, Answer, Memory)
+do_introspect(Agent, path(There), Answer, S0) :- !, 
+   declared(h(Spatial, _, _, There), S0),
+   declared(h(Spatial, _, Agent, Here), S0),
+  do_introspect(Agent, path(Spatial, Here, There), Answer, S0).
 
-% do_introspect(Agent,Query, Answer, Memory)
-do_introspect(Agent, path(There), Answer, S0) :-
+do_introspect(Agent, path(Here, There), Answer, S0) :- !,
+  declared(h(Spatial, _, _, There), S0),
+ do_introspect(Agent, path(Spatial, Here, There), Answer, S0).
+
+do_introspect(Agent, path(Spatial, Here, There), Answer, S0) :- 
  getprop(Agent, memories(Memory), S0), 
  thought_model(ModelData, Memory),
- in_model(h(Spatial, _Prep, Agent, Here), ModelData),
- find_path(Spatial, Here, There, Route, ModelData),
- Answer = ['Model is', ModelData, '\nShortest path is', Route].
+ find_path(Spatial, Here, There, Route, ModelData), !, 
+ Answer = msg(['Model is:',Agent,'Shortest path is:\n', Route]).
 
+do_introspect(_Agent, path(Spatial, Here, There), Answer, ModelData) :- 
+ find_path(Spatial, Here, There, Route, ModelData), !, 
+ Answer = msg(['Model is:','State','Shortest path is\n:', Route]).
 
 do_introspect(Agent1, recall(Agent, WHQ, Target), Answer, S0) :-
  getprop(Agent, memories(Memory), S0), 
@@ -126,6 +137,8 @@ recall_whereis(_S0,Agent,  _WHQ, There, Answer, _ModelData) :-
  sensory_model(Sense, spatial),
  Answer = [subj(Agent), person('don\'t', 'doesn\'t'),
    'recall ever ', ing(Sense), ' a "', There, '".'].
+
+
 
 
 related_answer(Data, There):- sub_term(E,Data),nonvar(E),E=There.
@@ -176,15 +189,15 @@ makep:-
 
 % Telnet client
 decide_action(Agent, Mem0, Mem1) :-
- notrace(declared(inherited(telnet), Mem0)),!,
+ notrace(declared(inherits(telnet), Mem0)),!,
  dmust(telnet_decide_action(Agent, Mem0, Mem1)).
 
 % Stdin Client
 decide_action(Agent, Mem0, Mem1) :-
- notrace((declared(inherited(console), Mem0),current_input(In))),!,
+ notrace((declared(inherits(console), Mem0),current_input(In))),!,
  
  % agent_to_input(Agent,In),
- (tracing->catch(wait_for_input([In,user_input],Found,20),_,(nortrace,notrace,break));wait_for_input([In,user_input],Found,0.1)),
+ (tracing->catch(wait_for_input([In,user_input],Found,20),_,(nortrace,notrace,break));wait_for_input([In,user_input],Found,0)),
 
      % Found = [some],
  % read_pending_codes(In,Codes,Missing), 
@@ -193,11 +206,11 @@ decide_action(Agent, Mem0, Mem1) :-
 
 % Autonomous
 decide_action(Agent, Mem0, Mem3) :-
- declared(inherited(autonomous), Mem0),
+ declared(inherits(autonomous), Mem0),
  maybe_autonomous_decide_goal_action(Agent, Mem0, Mem3).
 
 decide_action(_Agent, Mem, Mem) :-
- declared(inherited(memorize), Mem), !. % recorders don't decide much.
+ declared(inherits(memorize), Mem), !. % recorders don't decide much.
 decide_action(Agent, Mem0, Mem0) :-
  set_last_action(Agent,[auto(Agent)]),
  nop(bugout('decide_action(~w) FAILED!~n', [Agent], general)).
@@ -254,8 +267,20 @@ run_agent_pass_1_0(Agent, S0, S) :-
  
  notrace(must_output_state(S)),!.
 
-refilter_preceptQ(PerceptQ,MemoList):- exclude('='(msg(_)),PerceptQ,MemoList).
-refilter_memory(PerceptQ,MemoList):- reverse(PerceptQ,MemoListSP),exclude('='(sense_props(_,_,_,_)),MemoListSP,MemoList).
+refilter_preceptQ(PerceptQ,MemoList):- exclude(preProcessedQ,PerceptQ,MemoList).
+refilter_memory(PerceptQ,MemoList):- reverse(PerceptQ,MemoListSP),exclude(dontRemember,MemoListSP,MemoList).
+
+match_functor_or_arg(Q,P):- compound(P),functor(P,F,_),(call(Q,F)->true;(arg(1,P,E),call(Q,E))),!.
+
+preProcessedQ(P):- \+ atom(P),!,match_functor_or_arg(preProcessedQ,P).
+preProcessedQ(examine).
+preProcessedQ(msg).
+
+dontRemember(P):- \+ atom(P),!,match_functor_or_arg(dontRemember,P).
+%dontRemember(notice_children).
+dontRemember(msg).
+dontRemember(sense_props).
+
 
 %run_agent_pass_2_0(_Agent, S0, S0):-!.
 run_agent_pass_2_0(Agent, S0, S) :-

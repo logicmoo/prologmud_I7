@@ -107,6 +107,7 @@ do_todo(Agent, S0, S9) :-
  append([Action], NewToDo, OldToDo),
  memorize(todo(NewToDo), Mem1, Mem2),
  declare(memories(Agent, Mem2), S1, S2),
+ set_last_action(Agent,Action),
  apply_first_arg_state(Agent, do_command(Action), S2, S9).
 do_todo(_Agent, S0, S0).
 
@@ -133,7 +134,8 @@ do_todo(_Agent, S0, S0).
 % In TADS:
 % "verification" methods perferm tests only
 
-action_doer(Action,Agent):- \+ compound(Action),!,Agent = _ .
+action_doer(Action,Agent):- \+ compound(Action),!,current_player(Agent),!.
+action_doer(Action,Agent):- functor(Action,Verb,_),verbatum(Verb),current_player(Agent),!.
 action_doer(Action,Agent):- arg(1,Action,Agent),nonvar(Agent), \+ preposition(_,Agent),!.
 action_doer(Action,Agent):-
   dmust(act_verb_thing_model_sense(Agent, Action, _Verb, _Thing, _Spatial, _Sense)).
@@ -149,9 +151,12 @@ do_action(Agent, Action, S0, S3) :-
  dmust_tracing(must_act( Action, S2, S3)), !.
  
 
+trival_act(look(_)).
+trival_act(goto(_,_,loc(_,_,_,_))).
+trival_act(examine(_,see,_,depth(2))).
+trival_act(examine(_,see,_,depth(1))).
 
-
-% apply_act( Action, _State, _NewState):- notrace((bugout(apply_act( Action), action))),fail.
+apply_act( Action, _State, _NewState):- \+ trival_act(Action),notrace((bugout(apply_act( Action), action))),fail.
 
 apply_act( Action, State, NewState) :- 
  act_verb_thing_model_sense(Agent, Action, _Verb, _Thing, _Spatial, _Sense),
@@ -159,7 +164,7 @@ apply_act( Action, State, NewState) :-
  % log2eng(Agent, Reason, Eng),
  queue_agent_percept(Agent, [failure(Action, Reason)], State, NewState), !.
 
-apply_act( Action, S0, S1) :-
+apply_act( Action, S0, S1) :- 
  action_doer(Action,Agent), 
  do_introspect(Agent,Action, Answer, S0),
  queue_agent_percept(Agent, [answer(Answer), Answer], S0, S1), !.
@@ -170,7 +175,7 @@ apply_act( Action, State, NewState):- act( Action, State, NewState), !.
 apply_act( Action, State, NewState):- fail, 
   action_doer(Action, Agent),
   copy_term(Action,ActionG),
-  related(Spatial, child, Agent, Here,State),  
+  related(Spatial, child, Agent, Here, State),  
   % queue_local_event(spatial, [attempting(Agent, Action)], [Here], S0, S1),
   act( Action, State, S0), !,
   queue_local_event(Spatial, [emoted(Agent, act, '*'(Here), ActionG)], [Here], S0, NewState).
@@ -192,24 +197,28 @@ must_act( Action, S0, S1) :-
 act( wait(Agent), State, NewState) :-
  queue_agent_percept(Agent, [time_passes(Agent)], State, NewState).
 
-act( inventory(Agent), State, NewState) :- act( examine(Agent, Agent), State, NewState).
+act( inventory(Agent), State, NewState) :- !, act( examine(Agent, Agent), State, NewState).
 /* Spatial = spatial,
  findall(What, related(Spatial, child, What, Agent, State), Inventory),
  queue_agent_percept(Agent, [carrying(Agent, Spatial, Inventory)], State, NewState).
 */
-act( examine(Agent), S0, S2) :- act( look(Agent), S0, S2) .
-act( examine(Agent, Object), S0, S2) :- act_examine(Agent, see, Object, S0, S2).
-act( examine(Agent, How, Object), S0, S2) :-
- (equals_efffectly(sense, Sense, _), equals_efffectly(model, Spatial, _)) ->
- Sense \== Spatial, How == Spatial, !, act_examine(Agent, Sense, Object, S0, S2).
-act( examine(Agent, Sense, Object), S0, S2) :- act_examine(Agent, Sense, Object, S0, S2).
- %declared(props(Object, PropList), S0),
+act( look(Agent), S0, S2) :- !, act( examine(Agent, see), S0, S2) .
+act( look(Agent, spatial), S0, S2) :- !, act( examine(Agent, see), S0, S2) .
+act( examine(Agent), S0, S2) :- !, act( examine(Agent, see), S0, S2).
+act( examine(Agent, Sense), S0, S2) :- Sense == spatial, !, act( examine(Agent, see), S0, S2).
+act( examine(Agent, Sense), S0, S2) :- 
+   is_sense(Sense), !, 
+   dmust(related(spatial, child, Agent, Place, S0)),
+   act(examine(Agent, Sense, Place), S0, S2).
 
-act( Action, State, NewState) :-
- act_verb_thing_model_sense(Agent, Action, Verb, _Thing, Spatial, Sense),
+
+act( examine(Agent, Object), S0, S2) :- !, act( examine(Agent, see, Object, depth(3)), S0, S2).
+act( examine(Agent, Sense, Object), S0, S2) :- act( examine(Agent, Sense, Object, depth(3)), S0, S2).
+act( examine(Agent, Sense, Object, Depth), S0, S2) :- act_examine(Agent, Sense, Object, Depth, S0, S2). 
+act( Action, S0, S2) :-
+ Action=..[Verb,Agent|Args],
  sensory_verb(Sense, Verb), !, 
- dmust(related(Spatial, child, Agent, Here,State)),
- act_examine(Agent, Sense, Here, State, NewState).
+ NewAction=..[examine,Agent,Sense|Args],act( NewAction, S0, S2).
 
 % Remember that Agent might be on the inside or outside of Object.
 act( goto(Agent, Walk, TO), S0, S1):- !,  % loc(Agent, Dir, Relation, Place)
@@ -328,13 +337,13 @@ act( switch(Open, Thing), S0, S) :-
  act_prevented_by(Open, TF),
  reachable(Spatial, Thing, Agent, S0),
  %getprop(Thing, can_be(open, S0),
- %\+ getprop(Thing, state(open, t), S0),
+ %\+ getprop(Thing, status(open, t), S0),
  Open = open, get_open_traverse(Open, Spatial, OpenTraverse),
- %delprop(Thing, state(Open, f), S0, S1),
- %setprop(Thing, state(open, t), S0, S1),
- setprop(Thing, state(Open, TF), S0, S2),
+ %delprop(Thing, status(Open, f), S0, S1),
+ %setprop(Thing, status(open, t), S0, S1),
+ setprop(Thing, status(Open, TF), S0, S2),
  related(Spatial, OpenTraverse, Agent, Here, S2),
- queue_local_event(Spatial, [setprop(Thing, state(Open, TF)),[Open,is,TF]], [Here, Thing], S2, S).
+ queue_local_event(Spatial, [setprop(Thing, status(Open, TF)),[Open,is,TF]], [Here, Thing], S2, S).
 
 act( switch(OnOff, Thing), S0, S) :-
  reachable(Spatial, Thing, Agent, S0),
@@ -391,20 +400,20 @@ act( OpenThing, S0, S) :-
   required_reason(Agent, reachable(Spatial, Thing, Agent, S0))),
  
  %getprop(Thing, can_be(open, S0),
- %\+ getprop(Thing, state(open, t), S0),
+ %\+ getprop(Thing, status(open, t), S0),
 
  required_reason(Agent, \+ getprop(Thing, can_be(Open, f), S0)),
 
  ignore(dshow_fail(getprop(Thing, can_be(Open, t), S0))),
  
  forall(act_prevented_by(Open,Locked,Prevented), 
-   required_reason(Agent, \+ getprop(Thing, state(Locked, Prevented), S0))),
+   required_reason(Agent, \+ getprop(Thing, status(Locked, Prevented), S0))),
 
 
   %act_verb_thing_model_sense(Agent, OpenThing, Verb, Thing, Spatial, _Sense),
 
- %delprop(Thing, state(Open, f), S0, S1),
- %setprop(Thing, state(open, t), S0, S1),
+ %delprop(Thing, status(Open, f), S0, S1),
+ %setprop(Thing, status(open, t), S0, S1),
  get_open_traverse(Open, Spatial, OpenTraverse),
   related(Spatial, OpenTraverse, Agent, Here, S0),
 
@@ -415,9 +424,9 @@ act( OpenThing, S0, S) :-
   subst(equivalent,$here, Here, Term2, Term)),
   call(Term),S0,S1),
 
- setprop(Thing, state(Opened, TF), S1, S2),
+ setprop(Thing, status(Opened, TF), S1, S2),
 
- queue_local_event(Spatial, [setprop(Thing, state(Opened, TF)),msg([Thing,is,TF,Opened])], [Here, Thing], S2, S))),!.
+ queue_local_event(Spatial, [setprop(Thing, status(Opened, TF)),msg([Thing,is,TF,Opened])], [Here, Thing], S2, S))),!.
 
 % used mainly to debug if things are reachable
 act( touch(Agent, Thing), S0, S9) :-
@@ -453,7 +462,7 @@ cmd_workarround(VerbObj, VerbObj2):-
 
 cmd_workarround_l([Verb|ObjS], [Verb|ObjS2]):-
  append(ObjS2, ['.'], ObjS).
-cmd_workarround_l([Verb|ObjS], [Verb|ObjS2]):-
+cmd_workarround_l([Verb|ObjS], [Verb|ObjS2]):- fail,
  append(Left, [L, R|More], ObjS), atom(L), atom(R),
  current_atom(Atom), atom_concat(L, RR, Atom), RR=R,
  append(Left, [Atom|More], ObjS2).
@@ -513,12 +522,12 @@ act_goto( Agent, Walk, Dir, _To, There, S0, S9) :- nonvar(There),
 
 % [person(ed(Walk), s(Walk)), exiting, to, the, Dir]
 moveto_verb(Walk, Agent, Here, Dir, Relation, There) -->  
-    {dmsg((moveto_verb(Walk, Agent, Here, Dir, Relation, RDir, There)))},
+    with_state(S0, (related(Spatial, exit(RDir), There, Here, S0)-> true ; reverse_dir(Dir,RDir,S0))),
+   {nop(dmsg((moveto_verb(Walk, Agent, Here, Dir, Relation, RDir, There))))},
     undeclare(h(_OldSpatial,_OldRel,Agent,Here)),
     declare(h(Spatial, Relation, Agent,There)),
     queue_agent_percept(Agent,[moved( Agent, Here, Relation, There)]),    
     queue_local_event(Spatial, [emoted(Agent, act, '*'(Here), leaving(Agent, Walk, Here, Dir )) ], [Here]),
-    with_state(S0, (related(Spatial, exit(RDir), There, Here, S0)-> true ; reverse_dir(Dir,RDir,S0))),
     queue_local_event(Spatial,[emoted(Agent, act, '*'(There), entering(Agent, Walk, There, RDir )) ], [There]),    
     add_look(Agent).
   
@@ -538,6 +547,6 @@ add_agent_todo(Agent, Action, S0, S9):-
 
 add_look(Agent, S0, S9):- 
   related(_Spatial, inside, Agent, _Somewhere, S0),
-  add_agent_todo(Agent, look(Agent, spatial), S0, S9).
+  add_agent_todo(Agent, look(Agent), S0, S9).
 % add_look(Agent, S1, S9):- dmust(act( look(Agent, spatial), S1, S9)).
 

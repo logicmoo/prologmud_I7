@@ -184,7 +184,7 @@ adv_tlnet_readloop(Id, InStream, Alias):-
 adv_tlnet_readloop(Id, InStream, Alias):- 
  srv_catch(adv:console_info(Id,Alias,InStream,OutStream, Host, Peer, Agent)), 
  tflush(OutStream),
- current_input(In), wait_for_input([In,InStream,user_input],Found,0.2),
+ current_input(In), wait_for_input([In,InStream,user_input],Found,0.1),
  Found\==[], 
  %format(OutStream, '~N[~p: ~p] ==> ', [Alias, Agent]),
  tflush(OutStream),

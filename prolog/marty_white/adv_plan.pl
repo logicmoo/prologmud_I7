@@ -45,7 +45,7 @@ oper(_Self, goto(Self, Walk, loc(Self, Dir, Rel, There)),
   cap(subj(actor(Self))), does(Walk), from(place(Here)), via(exit(Dir)) , Rel, to(place(There)) ],
   [ %Preconds:
   Here \= Self, There \= Self,
-  \+ props(Self, can_do(goto, f)),
+  \+ props(Self, knows_verbs(goto, f)),
   h(Spatial, WasRel, Self, Here),
   props(Here, inherit(place, t)),
   props(There, inherit(place, t)),
@@ -92,6 +92,7 @@ oper(_Self, drop(Self, Thing),
   [ Thing \= Self, exists(Spatial, Thing),
   h(Spatial, held_by, Thing, Self)],
   [ ~ h(Spatial, held_by, Thing, Self)] ).
+
 oper(_Self, emote(Self, say, Player, [please, give, Self, the(Thing)]),
   [ Thing \= Self, exists(Spatial, Thing),
   h(Spatial, held_by, Thing, Player),
@@ -99,6 +100,7 @@ oper(_Self, emote(Self, say, Player, [please, give, Self, the(Thing)]),
   h(Spatial, Prep, Self, Where) ],
   [ h(Spatial, held_by, Thing, Self),
   ~ h(Spatial, held_by, Thing, Player)] ):- extra.
+
 oper(_Self, give(Self, Thing, Recipient),
   [ Thing \= Self, Recipient \= Self,
   exists(Spatial, Thing), exists(Spatial, Recipient),

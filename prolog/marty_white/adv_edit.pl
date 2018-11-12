@@ -36,6 +36,9 @@ meta_pprint(_Doer, D,K):- pprint(D,K).
 
 % do_metacmd(Doer, Action, S0, S1)
 :- add_help(quit,"Quits the game.").
+
+:- defn_state_setter(do_metacmd).
+
 do_metacmd(_Doer, quit(Agent), S0, S1) :-
  declare(wishes(Agent, quit), S0, S1),
  player_format('Bye!~n', []).
@@ -79,7 +82,7 @@ do_metacmd(Doer, Echo, S0, S0) :-
  security_of(Doer,admin),
  Echo =.. [echo|Args],
  player_format('~w~n', [Args]).
-do_metacmd(Doer, state, S0, S0) :-
+do_metacmd(Doer, status, S0, S0) :-
  security_of(Doer,wizard),
  printable_state(S0,S),
  meta_pprint(Doer, S, always),

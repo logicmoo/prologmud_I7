@@ -28,10 +28,10 @@
 % clothing - can be worn
 % worn - is being worn
 % container
-% state(opened, t) - container is open (must be opened) to be used. there is no "closed").
+% status(opened, t) - container is open (must be opened) to be used. there is no "closed").
 % can_be(open, t) - can be opened and closed
 % capacity(N) - number of objects a container or supporter can hold
-% state(locked, t) - cannot be opened
+% status(locked, t) - cannot be opened
 % can_be(lock, t), with_key
 % enterable
 % supporter
@@ -44,7 +44,7 @@
 % list_together - way to handle "5 fish"
 % plural - pluralized-name if different from singular
 % when_closed - description when closed
-% when_open - description when state(opened, t)
+% when_open - description when status(opened, t)
 % when_on, when_off - like when_closed, etc.
 % Some TADS properties:
 % thedesc
@@ -84,18 +84,17 @@ type_functor(event, timestamp(ordinal, timept)).
 
 type_functor(state_with_stamps, holds_at(h(domain, domrel, inst, inst), timept)).
 
-type_functor(state, type_props(type, list_of(nv))).
-type_functor(state, props(inst, list_of(nv))).
-type_functor(state, memories(inst, list_of(event))).
-type_functor(state, preceptq(inst, list_of(event))).
-type_functor(state, h(domain, domrel, inst, inst)).
+type_functor(status, type_props(type, list_of(nv))).
+type_functor(status, props(inst, list_of(nv))).
+type_functor(status, memories(inst, list_of(event))).
+type_functor(status, preceptq(inst, list_of(event))).
+type_functor(status, h(domain, domrel, inst, inst)).
 
 
 type_functor(doing, inventory(agnt)). 
 type_functor(doing, look(agnt, optional(domain, spatial))).
-type_functor(doing, examine(agnt, inst)).
-type_functor(doing, examine(agnt, sense, inst)).
-type_functor(event, sense_props(agnt, sense, inst, list_of(nv))).
+type_functor(doing, examine(agnt, optional(sense, see), optional(inst, here), optional(depth, 1))).
+type_functor(event, sense_props(agnt, sense, inst, depth, list_of(nv))).
 
 
 type_functor(doing, dig(agnt, holetype, loc, inst)).
@@ -139,9 +138,8 @@ type_functor(event, moved(inst, dest1, verb, dest2)).
 type_functor(event, carrying(agnt, list_of(inst))).
 type_functor(event, destroyed(inst)).
 type_functor(event, did(doing)).
-type_functor(event, sense_each(agnt, sense, list_of(event))).
-type_functor(event, exits_are(agnt, dest, list_of(exit))).
-type_functor(event, notice_children(agnt, sense, dest, domrel, list_of(inst))).
+type_functor(event, exits_are(agnt, in, dest, list_of(exit))).
+type_functor(event, notice_children(agnt, sense, dest, domrel, depth, list_of(inst))).
 type_functor(event, failed(doing, msg)).
 type_functor(event, transformed(inst, inst2)).
 
@@ -149,18 +147,18 @@ type_functor(event, transformed(inst, inst2)).
 
 type_functor(nv, adjs(list_of(text))).
 type_functor(nv, can_be(actverb, tf)).
-type_functor(nv, can_do(actverb, tf)).
+type_functor(nv, knows_verbs(actverb, tf)).
 type_functor(nv, cant_go(inst, dir, text)).
 type_functor(nv, class_desc(list_of(text))).
 type_functor(nv, co(list_of(nv))).
 type_functor(nv, desc(sv(text))).
 type_functor(nv, door_to(inst)).
 type_functor(nv, effect(verb_targeted, script)).
-type_functor(nv, fragile(type)).
+type_functor(nv, breaks_into(type)).
 type_functor(nv, has_rel(domain, domrel, tf)).
 type_functor(nv, has_sense(sense)).
 type_functor(nv, inherit(type, tf)).
-type_functor(nv, inherited(type)).
+type_functor(nv, inherits(type)).
 type_functor(nv, inheriting(type)).
 type_functor(nv, inst(sv(term))).
 type_functor(nv, isnt(type)).
@@ -168,14 +166,14 @@ type_functor(nv, name(sv(text))).
 type_functor(nv, nominals(list_of(text))).
 type_functor(nv, nouns(list_of(text))).
 type_functor(nv, oper(doing, preconds, postconds)).
-type_functor(nv, state(tfstate, tf)).
+type_functor(nv, status(tfstate, tf)).
 
 
 
 istate([
   structure_label(istate),
 
-  props('floyd~1', [name('Floyd the robot'), inherit(autonomous,t), % can_do(eat, f), 
+  props('floyd~1', [name('Floyd the robot'), inherit(autonomous,t), % knows_verbs(eat, f), 
    inherit(robot,t)]),
   props('player~1', [name($self),inherit(console,t), inherit(humanoid,t)]),
 
@@ -242,9 +240,9 @@ istate([
  cant_go(Agent, up, 'You lack the ability to fly.'), 
  oper( /*garden, */ goto(Agent, _, loc(Agent, south, _Prep, _Object)), 
    % precond(Test, FailureMessage)
-   precond(getprop(screendoor, state(opened, t)), ['you must open the door first']),
+   precond(getprop(screendoor, status(opened, t)), ['you must open the door first']),
    % body(clause)
-   body(inherited)
+   body(inherits)
  ),
  % cant_go provides last-ditch special handling for Go.
  cant_go(Agent, _Dir, 'The fence surrounding the garden is too tall and solid to pass.')
@@ -288,7 +286,7 @@ istate([
   % see DM4
   door_to(kitchen),
   door_to(garden),
-  state(opened, f),
+  status(opened, f),
   inherit(door,t)
  ])
 
@@ -320,7 +318,7 @@ extra_decl(T,P):-
   inherit(food,t),
   nouns([mushroom, fungus, toadstool]),
   adjs([speckled]),
-  % initial(description used until initial state changes)
+  % initial(description used until initial status changes)
   initial('A speckled mushroom grows out of the sodden earth, on a long stalk.'),
   % description(examination description)
   desc('The mushroom is capped with blotches, and you aren\'t at all sure it\'s not a toadstool.'),
@@ -336,7 +334,7 @@ extra_decl(T,P):-
    can_be(move, f),
    can_be(open, t),
    can_be(close, t),
-   state(opened, t),
+   status(opened, t),
    nouns(door),
    inherit(corporial,t)
   ]),
@@ -377,7 +375,7 @@ extra_decl(T,P):-
     can_be(touch, t),
     can_be(examine, t), 
     inherit(thinkable,t),
-    state(cleanliness,clean),
+    status(cleanliness,clean),
     adjs($class), 
     class_desc(['kind is corporial'])]),
 
@@ -410,9 +408,9 @@ extra_decl(T,P):-
    has_rel(Spatial, held_by, t), 
    % overridable defaults
    mass(50), volume(50), % liters  (water is 1 kilogram per liter)
-   can_do(eat, t),
-   can_do(examine, t),
-   can_do(touch, t),
+   knows_verbs(eat, t),
+   knows_verbs(examine, t),
+   knows_verbs(touch, t),
    has_sense(Sense),
    inherit(perceptq,t),
    inherit(memorize,t),
@@ -421,9 +419,9 @@ extra_decl(T,P):-
   ]),
 
    type_props(natural_force, [
-    can_do(eat, f),
+    knows_verbs(eat, f),
 
-    can_do(examine, t),
+    knows_verbs(examine, t),
     can_be(touch, f),
     has_rel(Spatial, held_by, f), 
     has_rel(Spatial, worn_by, f), 
@@ -434,7 +432,7 @@ extra_decl(T,P):-
    ]),
 
    type_props(humanoid, [
-   can_do(eat, t),
+   knows_verbs(eat, t),
     volume(50), % liters  (water is 1 kilogram per liter)
     mass(50), % kilograms
     inherit(character,t),
@@ -442,13 +440,13 @@ extra_decl(T,P):-
     inherit(player,t),
  
     % players use power but cant be powered down
-    can_be(switch(off), f), state(powered, t)
+    can_be(switch(off), f), status(powered, t)
    ]),
 
   type_props(autonomous, [inherit(autoscan,t)]),
 
   type_props(robot, [
-  can_do(eat, f),
+  knows_verbs(eat, f),
   inherit(autonomous,t),
   EmittingLight,
   volume(50), mass(200), % density(4) % kilograms per liter
@@ -460,10 +458,10 @@ extra_decl(T,P):-
   nouns($class), 
   inherit(shiny,t),
   inherit(character,t),
-  state(powered, t),
+  status(powered, t),
   % TODO: 'floyd~1' should `look(Agent, Spatial)` when turned back on.
-   effect(switch(on), setprop($self, state(powered, t))),
-   effect(switch(off), setprop($self, state(powered, f)))
+   effect(switch(on), setprop($self, status(powered, t))),
+   effect(switch(off), setprop($self, status(powered, f)))
   ]),
 
   % Places
@@ -511,8 +509,8 @@ extra_decl(T,P):-
   type_props(bowl, [
    inherit(flask, t), 
    volume_capacity(2),
-   fragile(shards),
-   state(cleanliness,dirty),
+   breaks_into(shards),
+   status(cleanliness,dirty),
    name('porcelain bowl'),
    desc('This is a modest glass cooking bowl with a yellow flower motif glazed into the outside surface.')
   ]),
@@ -520,21 +518,21 @@ extra_decl(T,P):-
    inherit(surface, t),
    inherit(object,t),
    volume_capacity(2),
-   fragile(shards),
-   state(cleanliness,dirty),
+   breaks_into(shards),
+   status(cleanliness,dirty),
    name('plate')
   ]),
   type_props(box, [
    inherit(container,t),
    inherit(object,t),
    volume_capacity(11), 
-   fragile(splinters),
+   breaks_into(splinters),
    can_be(open, t), 
-   state(opened, f),
+   status(opened, f),
    TooDark
   ]),
   type_props(sink, [
-   state(cleanliness,dirty),
+   status(cleanliness,dirty),
    inherit(flask, t),   
    inherit(furnature,t),   
    volume_capacity(5)  
@@ -548,7 +546,7 @@ extra_decl(T,P):-
    volume_capacity(150),
    inherit(place,t),
    inherit(flask, t), 
-%   state(locked, f), 
+%   status(locked, f), 
    can_be(lock, f)
   ]),
 
@@ -567,12 +565,12 @@ extra_decl(T,P):-
  nominals(brass),
  inherit(shiny,t),
  can_be(switch, t),
- state(powered, t),
+ status(powered, t),
  inherit(object,t),
  EmittingLight,
  effect(switch(on), setprop($self, EmittingLight)),
  effect(switch(off), delprop($self, EmittingLight)),
- fragile(inherit(broken_lamp,t))
+ breaks_into(inherit(broken_lamp,t))
  ]),
  type_props(broken_lamp, [
  name('dented brass lamp'),
@@ -585,7 +583,7 @@ extra_decl(T,P):-
  effect(switch(off), true) % calls true(S0, S1) !
  ]),
 
-   type_props(surface, [has_rel(Spatial, on, t),adjs(physical), state(cleanliness,clean)]), 
+   type_props(surface, [has_rel(Spatial, on, t),adjs(physical), status(cleanliness,clean)]), 
 
    type_props(shelf, [inherit(surface, t),adjs(physical),inherit(furnature, t)]), 
 
@@ -596,12 +594,12 @@ extra_decl(T,P):-
    inherit(memorize,t),
    inherit(perceptq,t), 
    can_be(switch, t),
-    effect(switch(on), setprop($self, state(powered, t))),
-    effect(switch(off), setprop($self, state(powered, f))),
-   state(powered, t),
+    effect(switch(on), setprop($self, status(powered, t))),
+    effect(switch(off), setprop($self, status(powered, f))),
+   status(powered, t),
    has_sense(Sense),
-   fragile(broken_videocam)
+   breaks_into(broken_videocam)
    ]),
-   type_props(broken_videocam, [can_be(switch, f),state(powered, f), inherit(videocamera,t)])
+   type_props(broken_videocam, [can_be(switch, f),status(powered, f), inherit(videocamera,t)])
  ]).
 

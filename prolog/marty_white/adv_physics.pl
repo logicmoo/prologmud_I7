@@ -17,11 +17,13 @@
 %
 */
 
+:- defn_state0(get_open_traverse).
 get_open_traverse(Open, Sense, Traverse, Spatial, OpenTraverse):- get_open_traverse(Traverse, Spatial, OpenTraverse),
  ((ignore(Open=open), ignore(Sense=see))).
 
 get_open_traverse(_Need, Spatial, OpenTraverse):- ignore(OpenTraverse = open_traverse(_Prep, Spatial)).
 
+:- defn_state0(equals_efffectly).
 %% equals_efffectly(Type, Model, Value).
 equals_efffectly(sense, see, _).
 equals_efffectly(model, spatial, _).
@@ -34,12 +36,15 @@ equals_efffectly(_, Value, Value).
 :- nop(ensure_loaded('adv_relation')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+:- defn_state0(never_equal).
 never_equal(Sense,Thing,Agent):- nop(never_equal(Sense,Thing,Agent)),!.
 never_equal(Sense,Thing,Agent):-
   never_equal(Sense,Thing),never_equal(Sense,Agent).
 never_equal(Sense,Thing):-
  notrace((freeze(Thing, (dmust(Thing\==Sense))), freeze(Sense, (dmust(Thing\==Sense))))).
 
+
+:- defn_state_getter(cant).
 cant( Action, Why, State) :-
  never_equal(Sense,Thing, Agent),
  act_verb_thing_model_sense(Agent, Action, Verb, Thing, Spatial, Sense),
@@ -123,7 +128,7 @@ cant( goto(Agent, _Walk, Dest), mustdrop(Target), State) :-
 
 cant( EatCmd, cantdothat(Verb), State) :-
  act_verb_thing_model_sense(Agent, EatCmd, Verb, _Thing, _Spatial, _Sense),
- getprop(Agent, can_do(Verb, f), State).
+ getprop(Agent, knows_verbs(Verb, f), State).
 
 
 
@@ -137,20 +142,22 @@ related_with_prop(Spatial, Prep, Object, Place, Prop, State) :-
  getprop(Object, Prop, State).
 
 is_state(~(Open), Object, State) :- ground(Open),!,
- getprop(Object, state(Open, f), State).
+ getprop(Object, status(Open, f), State).
 is_state(Open, Object, State) :-
- getprop(Object, state(Open, t), State).
+ getprop(Object, status(Open, t), State).
 % getprop(Object, can_be(open, State),
-% \+ getprop(Object, state(open, t), State).
+% \+ getprop(Object, status(open, t), State).
 
-in_scope(_Spatial, Thing, _Agent, _State) :- Thing == '*', !.
+:- defn_state_getter(in_scope).
+in_scope(_Spatial, Star, _Agent, _State) :- is_star(Star), !.
 in_scope(Spatial, Thing, Agent, State) :-
  get_open_traverse(_Open, _See, _Traverse, Spatial, OpenTraverse),
  related(Spatial, OpenTraverse, Agent, Here, State),
  (Thing=Here; related(Spatial, OpenTraverse, Thing, Here, State)).
 in_scope(Spatial, Thing, Agent, _State):- bugout(pretending_in_scope(Spatial, Thing, Agent)).
 
-reachable(_Spatial, Star, _Agent, _State) :- Star == '*', ! .
+:- defn_state_pred(reachable,1).
+reachable(_Spatial, Star, _Agent, _State) :- is_star(Star), !.
 reachable(Spatial, Thing, Agent, State) :-
  get_open_traverse(touch, Spatial, OpenTraverse),
  related(Spatial, child, Agent, Here,State), % can't reach out of boxes, etc.
@@ -170,6 +177,7 @@ subrelation(reverse(on), child).
 subrelation(worn_by, child).
 subrelation(held_by, child).
 
+:- defn_state_getter(has_rel).
 has_rel(Spatial, How, X, State) :-
  getprop(X, has_rel(Spatial, How, t), State).
 has_rel(Spatial, How, X, State) :-
@@ -177,10 +185,11 @@ has_rel(Spatial, How, X, State) :-
  subrelation(Specific, How).
 
 %related(_Spatial, How, _X, _Y, _State) :- assertion(nonvar(How)), fail.
+:- defn_state_getter(related).
 related(_Spatial, _How, _X, _Y, []) :- !, fail.
 related(Spatial, How, X, Y, State):- related_hl(Spatial, How, X, Y, State).
 
-
+:- defn_state_getter(related_hl).
 related_hl(Spatial, How, X, Y, State) :- declared(h(Spatial, How, X, Y), State).
 related_hl(_Spatial, How, _X, _Y, _State) :- var(How), !, fail.
 related_hl(Spatial, child, X, Y, State) :- subrelation(How, child), related_hl(Spatial, How, X, Y, State).
@@ -227,6 +236,7 @@ related_hl(Spatial, exit(escape), Inner, Outer, State) :-
 :- nop(ensure_loaded('adv_action')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+:- defn_state_getter(relative_dest).
 % relative_dest(Here, Prep, Dest, Src, Targ).
 relative_dest(Here, in, Dest, Src, Target, _State):- 
   Src = Here,
@@ -236,47 +246,48 @@ relative_dest(Here, Exit, Dest, Src, Target, State):-
    Src = Here,
    ignore(Target = Dest).
 relative_dest(Agent, Prep, Dest, Src, Target, State):-
-  related(Spatial, child, Agent, Here,State),
+  related(_Spatial, child, Agent, Here, State),
   relative_dest(Here, Prep, Dest, Src, Target, State).
 
 
-moveto(Spatial, Object, Prep, Dest, Vicinity, Msg, State, S9) :-
- undeclare(h(Spatial, _, Object, Here), State, VoidState),
- declare(h(Spatial, Prep, Object, Dest), VoidState, S2),
- queue_local_event(Spatial, [moved( Object, Here, Prep, Dest), msg(Msg)], Vicinity, S2, S9).
+moveto(Spatial, Object, Prep, Dest, Vicinity, Msg) -->
+ undeclare(h(Spatial, _, Object, Here)),
+ declare(h(Spatial, Prep, Object, Dest)),
+ queue_local_event(Spatial, [moved( Object, Here, Prep, Dest), msg(Msg)], Vicinity).
 
-moveallto(_Spatial, [], _R, _D, _V, _M, S, S).
+/*moveallto(_Spatial, [], _R, _D, _V, _M, S, S).
 moveallto(Spatial, [Object|Tail], Relation, Destination, Vicinity, Msg, S0, S2) :-
  moveto(Spatial, Object, Relation, Destination, Vicinity, Msg, S0, S1),
  moveallto(Spatial, Tail, Relation, Destination, Vicinity, Msg, S1, S2).
+*/
+moveallto(_Spatial, [], _R, _D, _V, _M, S, S).
+moveallto(Spatial, List, Relation, Destination, Vicinity, Msg, S0, S2) :-
+ apply_map_state(moveto(Spatial),List,rest(Relation, Destination, Vicinity, Msg), S0,S2).
 
 disgorge(Spatial, Container, Prep, Here, Vicinity, Msg, S0, S9) :-
- findall(Inner, related(Spatial, child, Inner, Container, S0), Contents),
- bugout('~p contained ~p~n', [Container, Contents], general),
- moveallto(Spatial, Contents, Prep, Here, Vicinity, Msg, S0, S9).
-disgorge(_Spatial, _Container, _Prep, _Here, _Vicinity, _Msg, S0, S0).
+ rapply_state(S0,S9,
+  (findall(Inner, related(Spatial, child, Inner, Container), Contents),
+   bugout('~p contained ~p~n', [Container, Contents], general),
+   map_each_state(moveto(Spatial), Contents, Prep, Here, Vicinity, Msg))).
 
-thrown( Thing, _Target, Prep, Here, Vicinity, S0, S9) :-
- getprop(Thing, fragile(Broken), S0),
- bugout('object ~p is fragile~n', [Thing], general),
- undeclare(h(Spatial, _, Thing, _), S0, S1),
- declare(h(Spatial, Prep, Broken, Here), S1, S2),
- queue_local_event(Spatial, [transformed(Thing, Broken)], Vicinity, S2, S3),
- disgorge(Spatial, Thing, Prep, Here, Vicinity, 'Something falls out.', S3, S9).
-thrown( Thing, _Target, Prep, Here, Vicinity, S0, S9) :-
- moveto(spatial, Thing, Prep, Here, Vicinity, 'Thrown.', S0, S9).
+event_props(thrown( Thing, _Target, Prep, Here, Vicinity),
+ [getprop(Thing, breaks_into(Broken)),
+ bugout('object ~p is breaks_into~n', [Thing], general),
+ undeclare(h(Spatial, _, Thing, _)),
+ declare(h(Spatial, Prep, Broken, Here)),
+ queue_local_event(Spatial, [transformed(Thing, Broken)], Vicinity),
+ disgorge(Spatial, Thing, Prep, Here, Vicinity, 'Something falls out.')]).
 
-hit(Spatial, Target, _Thing, Vicinity, S0, S9) :-
- Spatial = spatial,
- getprop(Target, fragile(Broken), S0),
- bugout('target ~p is fragile~n', [Target], general),
- undeclare(h(Spatial, Prep, Target, Here), S0, S1),
- queue_local_event(Spatial, [transformed(Target, Broken)], Vicinity, S1, S2),
- declare(h(Spatial, Prep, Broken, Here), S2, S3),
- disgorge(Spatial, Target, Prep, Here, Vicinity, 'Something falls out.', S3, S9).
-hit(_Spatial, _Target, _Thing, _Vicinity, S0, S0).
+thrown( Thing, _Target, Prep, Here, Vicinity) --> moveto(spatial, Thing, Prep, Here, Vicinity, 'Thrown.').
 
-
+hit(Spatial, Target, _Thing, Vicinity) -->
+ ignoreable((Spatial = spatial,
+  getprop(Target, breaks_into(Broken)),
+  bugout('target ~p is breaks_into~n', [Target], general),
+  undeclare(h(Spatial, Prep, Target, Here)),
+  queue_local_event(Spatial, [transformed(Target, Broken)], Vicinity),
+  declare(h(Spatial, Prep, Broken, Here)),
+  disgorge(Spatial, Target, Prep, Here, Vicinity, 'Something falls out.'))).
 
 
 act_verb_thing_model_sense(Agent, Action, Verb, Thing, Spatial, Sense):- 
@@ -286,9 +297,9 @@ act_verb_thing_model_sense(Agent, Action, Verb, Thing, Spatial, Sense):-
 
 
 act_verb_thing_model_sense0(_Agent, Atom, Atom, _Target, spatial, Sense):- \+ compound(Atom), !, is_sense(Sense),!.
+%act_verb_thing_model_sense0(_Agent, Action, _Look, _Star, _Spatial, _See):- assertion(ground(Action)),fail.
 
 act_verb_thing_model_sense0(Agent, goto(Agent, _Walk, loc(Agent, _Dir, _Rel, Thing)), goto, Thing, spatial, see):-!.
-act_verb_thing_model_sense0(_Agent, Action, _Look, _Star, _Spatial, _See):- assertion(ground(Action)),fail.
 act_verb_thing_model_sense0(Agent, look(Agent, spatial), look, *, spatial, see):-!.
 act_verb_thing_model_sense0(Agent, look(Agent, spatial, spatial), look, *, spatial, see):-!.
 act_verb_thing_model_sense0(Agent, look(Agent), look, *, spatial, see):-!.
