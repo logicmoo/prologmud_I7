@@ -127,7 +127,7 @@ do_metacmd(Doer, inspect(Self, getprop(Target,NamedProperty)), S0, S0) :-
  meta_pprint(Self, DataList, always),
  maybe_pause(Doer).
 
-do_metacmd(Doer, create(Type, _Why), S0, S9) :-
+do_metacmd(Doer, create(Type), S0, S9) :-
  security_of(Doer,wizard),
  dmust((current_player(Agent),
  related(Spatial, Prep, Agent, Here, S0),
@@ -135,7 +135,7 @@ do_metacmd(Doer, create(Type, _Why), S0, S9) :-
  declare(h(Spatial, Prep, Object, Here), S1, S9),
  player_format('You now see a ~w.~n', [Object]))).
 
-do_metacmd(Doer, destroy(Object, _Why), S0, S1) :-
+do_metacmd(Doer, destroy(Object), S0, S1) :-
  security_of(Doer,wizard),
  undeclare(h(_Spatial, _, Object, _), S0, S1),
  player_format('It vanishes instantly.~n', []).

@@ -21,7 +21,7 @@
  read_line_to_tokens/4,
  clear_overwritten_chars/1,
  is_main_console/0,
- redraw_prompt/1,
+ overwrote_prompt/1,ensure_has_prompt/1,
  player_format/2,
  player_format/3,
  bugout/2,
@@ -337,7 +337,7 @@ bugout(A, L, B) :-
  !,
  dmust(maplist(simplify_dbug, L, LA)),
  ansi_format([fg(cyan)], '~N% ', []), ansi_format([fg(cyan)], A, LA),
- dmust((console_player(Player),redraw_prompt(Player))),!.
+ dmust((console_player(Player),overwrote_prompt(Player))),!.
 bugout(_, _, _).
 
       
@@ -385,14 +385,6 @@ our_pretty_printer(Term):- compound(Term),!,
  flag(our_pretty_printer,_,Was)).
 
 our_pretty_printer(Term):- format(current_output,'~w',[Term]).
-/*
-redraw_prompt(Agent):- (Agent == 'floyd~1'),
-
-redraw_prompt(_Agent):- 
- % console_player(Player),
- current_player(Player),
- player_format(Player,'~w@spatial> ',[Player]),!.
-*/
 
 :- export(console_player/1).
 console_player(Agent):-
@@ -408,9 +400,13 @@ current_player(Agent):- thread_self(Id),adv:console_info(Id,_Alias,_InStream,_Ou
 current_player('player~1').
 :- export(current_player/1).
 
-redraw_prompt(Agent):- notrace(((Agent \== 'floyd~1'), 
- player_format(Agent,'~w@spatial> ',[Agent]))),!.
-redraw_prompt(_Agent).
+:- dynamic(adv:need_redraw/1).
+overwrote_prompt(Agent):- retractall(adv:need_redraw(Agent)), asserta(adv:need_redraw(Agent)),!.
+
+ensure_has_prompt(Agent):- 
+ ignore((retract(adv:need_redraw(Agent)),
+  player_format(Agent,'~w@spatial> ',[Agent]),retractall(adv:need_redraw(Agent)))).
+
 
 player_format(Fmt,List):-
  current_player(Agent) ->
@@ -418,8 +414,10 @@ player_format(Fmt,List):-
 
 player_format(Agent,Fmt,List):-
  agent_to_output(Agent,OutStream),
- dmust(format(OutStream,Fmt,List)),!.
-player_format(_, Fmt,List):- dmust(format(Fmt,List)).
+ dmust(format(OutStream,Fmt,List)),!,
+ overwrote_prompt(Agent).
+player_format(Agent, Fmt,List):- dmust(format(Fmt,List)),
+ overwrote_prompt(Agent).
 
 
 

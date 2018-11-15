@@ -86,16 +86,12 @@ psubsetof(A, C) :-
 maybe_pause(Agent):- console_player(CP),(Agent==CP -> wait_for_input([user_input],_,0) ; true).
 
 do_command(Agent, Action, S0, S1) :-
- quietly((do_metacmd(Agent, Action, S0, S1), 
- redraw_prompt(Agent))),!.
-
-do_command(Agent, Action, _, _) :- set_last_action(Agent,Action), fail.
+  do_metacmd(Agent, Action, S0, S1),!. 
 do_command(Agent, Action, S0, S1) :-
+  set_last_action(Agent,Action),
  do_action(Agent, Action, S0, S1), !.
- % nop(redraw_prompt(Agent)).
 do_command(Agent, Action, S0, S0) :-
- player_format('Failed or No Such Command: ~w~n', Action), !,
- nop(redraw_prompt(Agent)).
+ player_format(Agent, 'Failed or No Such Command: ~w~n', Action).
 
 % --------
 
@@ -181,9 +177,7 @@ apply_act( Action, State, NewState):- fail,
   queue_local_event(Spatial, [emoted(Agent, act, '*'(Here), ActionG)], [Here], S0, NewState).
   
 apply_act( Act, State, NewState):- ((cmd_workarround(Act, NewAct) -> Act\==NewAct)), !, apply_act( NewAct, State, NewState).
-apply_act( Action, State, State):- notrace((bugout(failed_act( Action), general))),!, \+ tracing,
-  current_player(Agent),
-  redraw_prompt(Agent).
+apply_act( Action, State, State):- notrace((bugout(failed_act( Action), general))),!, \+ tracing.
 
 must_act( Action, State, NewState):- dmust_tracing(apply_act( Action, State, NewState)) *-> ! ; fail.
 % must_act( Action, S0, S1) :- rtrace(apply_act( Action, S0, S1)), !.

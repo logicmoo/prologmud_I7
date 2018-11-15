@@ -84,8 +84,7 @@ add_goals(Goals, Mem0, Mem2) :-
 
 add_todo(Auto, Mem0, Mem3) :- Auto = auto(Agent),
  %dmust(member(inst(Agent), Mem0)),
- autonomous_decide_goal_action(Agent, Mem0, Mem3),!,
- redraw_prompt(Agent).
+ autonomous_decide_goal_action(Agent, Mem0, Mem3),!.
 
 add_todo(Action, Mem0, Mem2) :- 
  forget(todo(OldToDo), Mem0, Mem1),
@@ -129,7 +128,7 @@ do_introspect(Agent1, recall(Agent, Target), Answer, S0) :- !,
   do_introspect(Agent1, recall(Agent,what, Target), Answer, S0).
 
 recall_whereis(_S0,_Self,  _WHQ, There, Answer, ModelData) :-
- findall(Data, (member(Data,ModelData), related_answer(Data, There)), Memories),
+ findall(Data, (member(Data,ModelData), nonvar_subterm(There, Data)), Memories),
  Memories\==[],
  Answer = Memories.
 
@@ -139,21 +138,16 @@ recall_whereis(_S0,Agent,  _WHQ, There, Answer, _ModelData) :-
    'recall ever ', ing(Sense), ' a "', There, '".'].
 
 
-
-
-related_answer(Data, There):- sub_term(E,Data),nonvar(E),E=There.
-
-
-
 console_decide_action(Agent, Mem0, Mem1):- 
  %thought(timestamp(T0), Mem0),
  %bugout(read_pending_codes(In,Codes,Found,Missing)),
  repeat,
- notrace((ttyflush,
- %player_format('[~p: ~p] ==> ', [T0, Agent]), ttyflush,
+ notrace((
+ ttyflush,
  agent_to_input(Agent,In),
  dmust(is_stream(In)),
  setup_console,
+ ensure_has_prompt(Agent),
  read_line_to_tokens(Agent, In,[], Words0), 
  (Words0==[]->(Words=[wait],makep);Words=Words0))),
  parse_command(Agent, Words, Action, Mem0),      
@@ -187,6 +181,11 @@ makep:-
 :- bugout(ensure_loaded('adv_agents')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+decide_action(Agent, Mem0, Mem0) :- 
+ thought(todo([Action|_]), Mem0),
+ (declared(h(_Spatial, in, Agent, Here), advstate)->true;Here=somewhere),
+ (trival_act(Action)->true;bugout('~w @ ~w: already about todo: ~w~n', [Agent, Here, Action], autonomous)).
+
 % Telnet client
 decide_action(Agent, Mem0, Mem1) :-
  notrace(declared(inherits(telnet), Mem0)),!,
@@ -195,14 +194,10 @@ decide_action(Agent, Mem0, Mem1) :-
 % Stdin Client
 decide_action(Agent, Mem0, Mem1) :-
  notrace((declared(inherits(console), Mem0),current_input(In))),!,
- 
+ ensure_has_prompt(Agent),
  % agent_to_input(Agent,In),
  (tracing->catch(wait_for_input([In,user_input],Found,20),_,(nortrace,notrace,break));wait_for_input([In,user_input],Found,0)),
-
-     % Found = [some],
- % read_pending_codes(In,Codes,Missing), 
- (Found==[] -> (Mem0=Mem1) ; 
- quietly(((console_decide_action(Agent, Mem0, Mem1))))).
+ (Found==[] -> (Mem0=Mem1) ;  quietly(((console_decide_action(Agent, Mem0, Mem1))))).
 
 % Autonomous
 decide_action(Agent, Mem0, Mem3) :-
@@ -270,6 +265,7 @@ run_agent_pass_1_0(Agent, S0, S) :-
 refilter_preceptQ(PerceptQ,MemoList):- exclude(preProcessedQ,PerceptQ,MemoList).
 refilter_memory(PerceptQ,MemoList):- reverse(PerceptQ,MemoListSP),exclude(dontRemember,MemoListSP,MemoList).
 
+:- meta_predicate match_functor_or_arg(1,*).
 match_functor_or_arg(Q,P):- compound(P),functor(P,F,_),(call(Q,F)->true;(arg(1,P,E),call(Q,E))),!.
 
 preProcessedQ(P):- \+ atom(P),!,match_functor_or_arg(preProcessedQ,P).

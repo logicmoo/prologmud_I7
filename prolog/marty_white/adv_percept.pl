@@ -275,8 +275,7 @@ process_percept_player(Agent, Percept, _Stamp, Mem0, Mem0) :-
  percept2txt(Agent, Percept, Text),!, player_format('~N~w~n', [Text]),!.
 
 process_percept_player(Agent, Percept, _Stamp, M0, M0) :-
- player_format('~N~q~n', [Agent:Percept]),
- dmust(redraw_prompt(Agent)),!.
+ player_format(Agent, '~N~q~n', [Agent:Percept]).
 
 is_player(Agent):- \+ is_non_player(Agent).
 is_non_player(Agent):- Agent == 'floyd~1'.
@@ -286,7 +285,6 @@ is_non_player(Agent):- Agent == 'floyd~1'.
 process_percept_main(_Agent, [], _Stamp, Mem0, Mem0) :- !.
 process_percept_main(Agent, Percept, Stamp, Mem0, Mem2) :-
  quietly(process_percept_player(Agent, Percept, Stamp, Mem0, Mem1)),
- dmust(redraw_prompt(Agent)),
  process_percept_auto(Agent, Percept, Stamp, Mem1, Mem2).
 process_percept_main(Agent, Percept, Stamp, Mem0, Mem0):- 
  bugout('~q FAILED!~n', [bprocess_percept(Agent, Percept, Stamp)], perceptq), !.

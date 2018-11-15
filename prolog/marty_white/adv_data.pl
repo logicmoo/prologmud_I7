@@ -98,11 +98,11 @@ type_functor(event, sense_props(agnt, sense, inst, depth, list_of(nv))).
 
 
 type_functor(doing, dig(agnt, holetype, loc, inst)).
-type_functor(doing, create(type, msg)).
+type_functor(doing, create(type)).
 
 type_functor(doing, eat(agnt, inst)).
 type_functor(doing, hit(agnt, inst)).
-type_functor(doing, destroy(inst, msg)).
+type_functor(doing, destroy(inst)).
 
 type_functor(doing, switch(agnt, tfstate, tf, inst)).
 type_functor(doing, touch(agnt, inst)).

@@ -137,6 +137,10 @@ update_model(_Agent, exits_are('$fake',_,_,_), _Timestamp, _Mem, M0, M0):-!.
 update_model(Agent, notice_children(Agent, _Sense, Here, Prep, _Depth, Objects), Timestamp, _Mem, M0, M3):- !,
    update_relations(Prep, Objects, Here, Timestamp, M0, M3). 
 
+update_model(_Agent, [], _Timestamp, _Memory, M, M).
+update_model(Agent, [Percept|Tail], Timestamp, Memory, M0, M2) :-
+ update_model(Agent, Percept, Timestamp, Memory, M0, M1),
+ update_model_all( Agent, Tail, Timestamp, Memory, M1, M2),!.
 update_model(_Agent, failure(_,_), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Agent, success(_,_), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Agent, failure(_), _Timestamp, _Mem, M0, M0) :- !.
@@ -147,10 +151,6 @@ update_model(_Agent, msg(_), _Timestamp, _Mem, M0, M0) :- !.
 update_model(Agent, time_passes(Target), Timestamp, _Memory, M, M):-
  nop(bugout(unused_update_model(Agent, time_passes(Target), Timestamp, M))).
 
-update_model(_Agent, [], _Timestamp, _Memory, M, M).
-update_model(Agent, [Percept|Tail], Timestamp, Memory, M0, M2) :-
- update_model(Agent, Percept, Timestamp, Memory, M0, M1),
- update_model_all( Agent, Tail, Timestamp, Memory, M1, M2),!.
 
 
 update_model(Agent, Percept, Timestamp, _Memory, M, M):-

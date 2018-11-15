@@ -46,6 +46,9 @@ complex(C, R, I):- ground((R, I)), mk_complex(R, I, C0), !, C=C0.
 complex(C, R, I):- freeze(C, complex(C, R, I)), freeze(R, complex(C, R, I)), freeze(I, complex(C, R, I)).
 
 
+nonvar_subterm(Var, Data):- var(Var), !, sub_term(Var, Data),nonvar(Var).
+nonvar_subterm(Bound, Data):- sub_term(E, Data),nonvar(E),E=@=Bound.
+
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION

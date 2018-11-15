@@ -17,18 +17,21 @@
 %
 */
 
-
-act_examine(Agent, Sense, Here, Depth, State, NewState) :- % next_depth(Depth2 is Depth -1),
- \+ \+ related(_, exit(_), Here, _, State),
- Depth = depth(3),
- sensory_model_problem_solution(Sense, Spatial, _TooDark, _EmittingLight), 
+nearby_objs(Agent, Relation, Here, Nearby):- 
  related(Spatial, Relation, Agent, Here, State), !,
  findall(What,
    (related(Spatial, Relation, What, Here, State),
     (related(Spatial, descended, What, Here, State),
      \+ (related(Spatial, inside, What, Container, State),
      related(Spatial, descended, Container, Here, State)))),
-   Nearby),
+   Nearby).
+
+
+act_examine(Agent, Sense, Here, Depth, State, NewState) :- % next_depth(Depth2 is Depth -1),
+ \+ \+ related(_, exit(_), Here, _, State),
+ Depth = depth(3),
+ sensory_model_problem_solution(Sense, Spatial, _TooDark, _EmittingLight), 
+ nearby_objs(Agent, Relation, Here, Nearby),
  findall(Direction, related(Spatial, exit(Direction), Here, _, State), Exits),
  !,
  queue_agent_percept(Agent,
