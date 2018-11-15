@@ -51,11 +51,11 @@
 % pluraldesc
 % is_indistinguishable
 % is_visible(vantage)
-% is_reachable(actor)
-% valid(verb) - is object seeable, reachable, etc.
+% is_reachable(Agent, actor)
+% valid(verb) - is object seeable, is_reachable, etc.
 % verification(verb) - is verb logical for this object
 % Parser disambiguation:
-% eliminate objs not see, reachable, etc.
+% eliminate objs not see, is_reachable, etc.
 % check preconditions for acting on a candidate object
 
 

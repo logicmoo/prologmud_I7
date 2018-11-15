@@ -23,20 +23,24 @@
 
 %:- user:listing(adventure).
 
+
+:- defn_state_getter(get_sensing_objects//1).
 get_sensing_objects(Objects, S0):-
  setof(O,member(perceptq(O,_),S0),Objects).
 
 get_sensing_objects(Sense, Agents, S0):-
  get_objects((has_sense(Sense);inherits(memorize)), Agents, S0).
 
+:- defn_state_getter(get_live_agents//1).
 get_live_agents(LiveAgents, S0):-
  get_some_agents( \+ status(_Spatial, powered, f), LiveAgents, S0).
 
+:- defn_state_getter(get_some_agents//1).
 get_some_agents(Precond, LiveAgents, S0):-
  dmust((
   get_objects(  
   (inherits(character),Precond), LiveAgents, S0),
- LiveAgents = [_|_])).
+  LiveAgents \== [])).
 
 
 
@@ -74,25 +78,26 @@ is_prop_nonpublic(before).
 is_prop_nonpublic(after).
 
 
-has_sensory(Spatial, Sense, Agent, State) :-
+can_sense_here(Agent, Spatial, Sense, State) :-
  sensory_model_problem_solution(Sense, Spatial, TooDark, EmittingLight),
  get_open_traverse(_Open, Sense, _Traverse, Spatial, OpenTraverse),
  related(Spatial, OpenTraverse, Agent, Here, State),
  getprop(Here, TooDark, State) , 
  \+ related_with_prop(Spatial, OpenTraverse, _Obj, Here, EmittingLight, State), !, fail.
-has_sensory(_Spatial, _Sense, _Agent, _State) .
+can_sense_here(_Agent, _Spatial, _Sense, _State) .
 
 is_star(Star):- Star == '*'.
 is_star('*'(Star)):- nonvar(Star).
 
-can_sense( _See, Star, _Agent, _State) :- is_star(Star), !.
-can_sense( Sense, Thing, Agent, State) :-
+:- defn_state_getter(can_sense).
+can_sense(_Agent, _See, Star, _State) :- is_star(Star), !.
+can_sense(Agent, Sense, Thing, State) :-
  get_open_traverse(_Open, Sense, _Traverse, Spatial, OpenTraverse),
- has_sensory(Spatial, Sense, Agent, State),
+ can_sense_here(Agent, Spatial, Sense, State),
  related(Spatial, OpenTraverse, Agent, Here, State),
  (Thing=Here; related(Spatial, OpenTraverse, Thing, Here, State)).
-can_sense( Sense, Thing, Agent, _State):- 
- bugout(pretending_can_sense( Sense, Thing, Agent)),!.
+can_sense(Agent, Sense, Thing, Agent, _State):- 
+ bugout(pretending_can_sense(Agent, Sense, Thing, Agent)),!.
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -100,6 +105,7 @@ can_sense( Sense, Thing, Agent, _State):-
 :- nop(ensure_loaded('adv_events')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+:- defn_state_setter(queue_agent_percept//2).
 % Manipulate one agents percepts
 queue_agent_percept(Agent, Event, S0, S2) :- 
  \+ is_list(Event),!, 
@@ -109,10 +115,13 @@ queue_agent_percept(Agent, Events, S0, S2) :-
  append(Queue, Events, NewQueue),
  append([perceptq(Agent, NewQueue)], S1, S2))).
 
+
+:- defn_state_setter(queue_event//1).
 queue_event(Event, S0, S2) :-
  each_sensing_agent(_All, queue_agent_percept(Event), S0, S2).
 
 
+:- defn_state_setter(queue_local_agent_percept//4).
 % Room-level simulation percepts
 queue_local_agent_percept(Agent, Spatial, Event, Places, S0, S1) :-
  ignore(current_spatial(Spatial)),
@@ -200,6 +209,7 @@ problem_solution(noisy, hear, quiet).
 
 
 %percept_todo(Actions, Mem0, Mem2):- apply_all(Actions,add_goal(),Mem0, Mem2).
+:- defn_state_setter(percept_todo//1).
 percept_todo(Actions, Mem0, Mem2):- add_todo_all(Actions, Mem0, Mem2),!.
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -212,6 +222,7 @@ percept_todo(Actions, Mem0, Mem2):- add_todo_all(Actions, Mem0, Mem2),!.
 %process_percept_auto(Agent, with_msg(Percept, _Msg), Timestamp, M0, M2) :- !, 
 % process_percept_auto(Agent, Percept, Timestamp, M0, M2).
 
+:- defn_state_setter(process_percept_auto//3).
 process_percept_auto(_Agent, msg(_), _Stamp, M0, M0) :- !.
 process_percept_auto(_Agent, [], _Stamp, M0, M0) :- !.
 process_percept_auto(Agent, [Percept|Tail], Stamp, M0, M9) :-
@@ -264,6 +275,7 @@ was_own_self(Agent, emote(Agent, _, _Targ, _)).
 was_own_self(Agent, emoted(Agent, _, _Targ, _)).
 % was_own_self(Agent, Action):- action_doer(Action, Was), Was == Agent.
 
+:- defn_state_setter(process_percept_player//3).
 % Ignore own speech.
 process_percept_player(Agent, _Percept, _Stamp, Mem0, Mem0) :- \+ is_player(Agent),!.
 process_percept_player(_, [], _Stamp, Mem0, Mem0) :- !.
@@ -281,6 +293,7 @@ is_player(Agent):- \+ is_non_player(Agent).
 is_non_player(Agent):- Agent == 'floyd~1'.
 
 
+:- defn_state_setter(process_percept_main//3).
 % process_percept_main(Agent, PerceptsList, Stamp, OldModel, NewModel)
 process_percept_main(_Agent, [], _Stamp, Mem0, Mem0) :- !.
 process_percept_main(Agent, Percept, Stamp, Mem0, Mem2) :-
@@ -290,6 +303,7 @@ process_percept_main(Agent, Percept, Stamp, Mem0, Mem0):-
  bugout('~q FAILED!~n', [bprocess_percept(Agent, Percept, Stamp)], perceptq), !.
 
 
+:- defn_state_setter(process_percept_list//3).
 % caller memorizes PerceptList
 process_percept_list(_Agent, _, _Stamp, Mem, Mem) :-
  declared(inherits(no_perceptq), Mem),

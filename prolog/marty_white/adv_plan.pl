@@ -49,9 +49,9 @@ oper(_Self, goto(Self, Walk, loc(Self, Dir, Rel, There)),
   h(Spatial, WasRel, Self, Here),
   props(Here, inherit(place, t)),
   props(There, inherit(place, t)),
-  \+ is_state(~(open), There),
-  \+ is_state(~(open), Here),
-  \+ is_state(~(open), Dir),
+  \+ in_state(~(open), There),
+  \+ in_state(~(open), Here),
+  \+ in_state(~(open), Dir),
   reverse_dir(Dir,RDir),
   h(Spatial, exit(Dir), Here, There)], % path(Spatial, Here, There)
   [ %Postconds:
@@ -61,6 +61,27 @@ oper(_Self, goto(Self, Walk, loc(Self, Dir, Rel, There)),
     notice(There,enters(Self,There,RDir))]).
 
 
+
+sequenced(_Self,
+  [ %Preconds:
+  Here \= Self, There \= Self,
+  \+ props(Self, knows_verbs(goto, f)),
+  h(Spatial, WasRel, Self, Here),
+  props(Here, inherit(place, t)),
+  props(There, inherit(place, t)),
+  \+ in_state(~(open), There),
+  \+ in_state(~(open), Here),
+  \+ in_state(~(open), Dir),
+  reverse_dir(Dir,RDir),
+  h(Spatial, exit(Dir), Here, There), % path(Spatial, Here, There)
+  % %Action:
+  did(goto(Self, Walk, loc(Self, Dir, Rel, There))),
+  %PostConds:
+  ~h(Spatial, WasRel, Self, Here),
+  notice(Here,leaves(Self,Here,WasRel)),
+  notice(Self,msg(cap(subj(actor(Self))),does(Walk), from(place(Here)), via(exit(Dir)) , Rel, to(place(There)))),
+  h(Spatial, Rel, Self, There),
+  notice(There,enters(Self,There,RDir))]).
 
 % oper(_Self, Action, Preconds, Effects)
 oper(Self, Action, Preconds, Effects):- % Hooks to better KR above

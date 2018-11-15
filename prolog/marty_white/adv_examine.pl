@@ -75,7 +75,7 @@ add_child_precepts_rel_list(_Depth,_Sense, _Agent,_Object,exit(_),S1,S1).
 add_child_precepts_rel_list(Depth,Sense, Agent,Object,Relation,S1,S2):- 
  findall(What,
    (related(_Spatial, Relation, What, Object, S1),
-    nop(once(can_sense(_VSense, What, Agent, S1)))),
+    nop(once(can_sense(Agent, _VSense, What, S1)))),
    ChildrenL),
  list_to_set(ChildrenL,Children),
  queue_agent_percept(Agent, notice_children(Agent, Sense, Object, Relation, Depth, Children), S1, S2).

@@ -232,7 +232,7 @@ act( goto(Agent, Walk, TO), S0, S1):- !,  % loc(Agent, Dir, Relation, Place)
 %  preposition-introducing-obj2
 %sim( put(Agent, Spatial, Thing,Relation, Where),
 % ( related(Spatial, descended, Thing, $self),
-%  has_sensory(Spatial, Sense, $self, Where),
+%  can_sense_here($self, Spatial, Sense, Where),
 %  has_rel(Spatial, Relation, Where),
 %  related(Spatial, descended, $self, Here)),
 % moveto(Spatial, Thing, Relation, Where, [Here],
@@ -260,8 +260,8 @@ act( put(Agent, Thing1, Relation, Thing2), State, NewState) :-
 act( put(Agent, Spatial, Thing1, Relation, Dest), State, NewState) :-
  has_rel(Spatial, Relation, Dest, State),
  get_open_traverse(Open, _See, _Traverse, Spatial, OpenTraverse),
- (Relation \= in ; \+ is_state(~(Open), Dest, State)),
- reachable(Spatial, Dest, Agent, State), % what if "under" an "untouchable" thing?
+ (Relation \= in ; \+ in_state(~(Open), Dest, State)),
+ is_reachable(Agent, Spatial, Dest, State), % what if "under" an "untouchable" thing?
  % OK, put it
  related(Spatial, OpenTraverse, Agent, Here, State),
  moveto(Spatial, Thing1, Relation, Dest, [Here],
@@ -272,7 +272,7 @@ act( put(Agent, Spatial, Thing1, Relation, Dest), State, NewState) :-
  
 act( give(Agent, Thing, Recipient), S0, S9) :-
  has_rel(Spatial, held_by, Recipient, S0),
- reachable(Spatial, Recipient, Agent, S0),
+ is_reachable(Agent, Spatial, Recipient, S0),
  get_open_traverse(give, Spatial, OpenTraverse),
  % OK, give it
  related(Spatial, OpenTraverse, Agent, Here, S0),
@@ -282,17 +282,17 @@ act( give(Agent, Thing, Recipient), S0, S9) :-
 
 act( throw(Agent, Thing, at, Target), S0, S9) :-
  equals_efffectly(sense, Sense, see),
- can_sense( Sense, Target, Agent, S0),
+ can_sense(Agent, Sense, Target, S0),
  get_open_traverse(_Open, Sense, throw, Spatial, _OpenTraverse),
  % OK, throw it
  related(Spatial, Relation, Agent, Here, S0),
  thrown( Thing, Target, Relation, Here, [Here], S0, S1),
  hit(Agent, Target, Thing, [Here], S1, S9).
+% throw to a Direction
 act( throw(Agent, Thing, Dir), S0, S9) :-
- related(Spatial, _Relation, Agent, Here, S0),
- related(Spatial, exit(Dir), Here, There, S0),
- has_rel(Spatial, Relation, There, S0),
+ applied_direction(Agent, Here, Dir, Relation, There, S0),
  thrown( Thing, There, Relation, There, [Here, There], S0, S9).
+
 
 act( hit(Agent, Thing), S0, S9) :-
  related(spatial, _Relation, Agent, Here, S0),
@@ -329,7 +329,7 @@ act( eat(Agent, Thing), S0, S9) :-
 /*
 act( switch(Open, Thing), S0, S) :-
  act_prevented_by(Open, TF),
- reachable(Spatial, Thing, Agent, S0),
+ is_reachable(Agent, Spatial, Thing, S0),
  %getprop(Thing, can_be(open, S0),
  %\+ getprop(Thing, status(open, t), S0),
  Open = open, get_open_traverse(Open, Spatial, OpenTraverse),
@@ -340,7 +340,7 @@ act( switch(Open, Thing), S0, S) :-
  queue_local_event(Spatial, [setprop(Thing, status(Open, TF)),[Open,is,TF]], [Here, Thing], S2, S).
 
 act( switch(OnOff, Thing), S0, S) :-
- reachable(Spatial, Thing, Agent, S0),
+ is_reachable(Agent, Spatial, Thing, Agent, S0),
  getprop(Thing, can_be(switch, t), S0),
  getprop(Thing, effect(switch(OnOff), Term0), S0),
  subst(equivalent, $self, Thing, Term0, Term),
@@ -391,7 +391,7 @@ act( OpenThing, S0, S) :-
  dshow_fail((
 
  maybe_when(psubsetof(Open, touch),
-  required_reason(Agent, reachable(Spatial, Thing, Agent, S0))),
+  required_reason(Agent, is_reachable(Agent, Spatial, Thing, S0))),
  
  %getprop(Thing, can_be(open, S0),
  %\+ getprop(Thing, status(open, t), S0),
@@ -422,9 +422,9 @@ act( OpenThing, S0, S) :-
 
  queue_local_event(Spatial, [setprop(Thing, status(Opened, TF)),msg([Thing,is,TF,Opened])], [Here, Thing], S2, S))),!.
 
-% used mainly to debug if things are reachable
+% used mainly to debug if things are is_reachable
 act( touch(Agent, Thing), S0, S9) :-
- unless_reason(Agent, reachable(Spatial, Thing, Agent, S0),
+ unless_reason(Agent, is_reachable(Agent, Spatial, Thing, S0),
    cant( reach(Agent, Spatial, Thing))),
  queue_agent_percept(Agent, [success(touch(Agent, Thing),'Ok.')], S0, S9).
 
@@ -438,7 +438,7 @@ act( emote(Agent, EmoteType, Object, Message), S0, S1) :- !, % directed message
  dmust((
  action_sensory(EmoteType, Sense),
  sensory_model(Sense, Spatial), 
- can_sense( Sense, Object, Agent, S0),
+ can_sense(Agent, Sense, Object, S0),
 
  get_open_traverse(EmoteType, Spatial, OpenTraverse), related(Spatial, OpenTraverse, Agent, Here, S0), 
  queue_local_event(Spatial, [emoted(Agent, EmoteType, Object, Message)], [Here,Object], S0, S1))).
@@ -487,7 +487,7 @@ act_goto( Agent, Walk, _Dir, Relation, Object, S0, S9) :- nonvar(Object),
  ignore(target_default_prep(Object, Relation, S0)),
  related(Spatial, OpenTraverse, Agent, Here, S0),
  related(Spatial, OpenTraverse, Object, Here, S0),
- \+ is_state(~(open), Object, S0),
+ \+ in_state(~(open), Object, S0),
  moveto_verb(Walk, Agent, Here, reverse(Relation), Relation, Object, S0, S9).
 
 % go n/s/e/w/u/d/in/out

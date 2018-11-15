@@ -17,13 +17,13 @@
 %
 */
 
-:- defn_state0(get_open_traverse).
+:- defn_state_0(get_open_traverse).
 get_open_traverse(Open, Sense, Traverse, Spatial, OpenTraverse):- get_open_traverse(Traverse, Spatial, OpenTraverse),
  ((ignore(Open=open), ignore(Sense=see))).
 
 get_open_traverse(_Need, Spatial, OpenTraverse):- ignore(OpenTraverse = open_traverse(_Prep, Spatial)).
 
-:- defn_state0(equals_efffectly).
+:- defn_state_0(equals_efffectly).
 %% equals_efffectly(Type, Model, Value).
 equals_efffectly(sense, see, _).
 equals_efffectly(model, spatial, _).
@@ -36,7 +36,7 @@ equals_efffectly(_, Value, Value).
 :- nop(ensure_loaded('adv_relation')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-:- defn_state0(never_equal).
+:- defn_state_0(never_equal).
 never_equal(Sense,Thing,Agent):- nop(never_equal(Sense,Thing,Agent)),!.
 never_equal(Sense,Thing,Agent):-
   never_equal(Sense,Thing),never_equal(Sense,Agent).
@@ -44,13 +44,13 @@ never_equal(Sense,Thing):-
  notrace((freeze(Thing, (dmust(Thing\==Sense))), freeze(Sense, (dmust(Thing\==Sense))))).
 
 
-:- defn_state_getter(cant).
+:- defn_state_getter(cant//2).
 cant( Action, Why, State) :-
  never_equal(Sense,Thing, Agent),
  act_verb_thing_model_sense(Agent, Action, Verb, Thing, Spatial, Sense),
  psubsetof(Verb, _),
- \+ in_scope(Spatial, Thing, Agent, State),
- (Why = (\+ in_scope(Spatial, Thing, Agent))).
+ \+ in_scope(Agent, Spatial, Thing, State),
+ (Why = (\+ in_scope(Agent, Spatial, Thing, Agent))).
 
 
 cant( Action,  Why, State) :-
@@ -58,14 +58,14 @@ cant( Action,  Why, State) :-
  % sensory_model(Sense, Spatial),
  act_verb_thing_model_sense(Agent, Action, Verb, Thing, _Spatial, Sense),
  psubsetof(Verb, examine(Agent, Sense)),
- \+ can_sense( Sense, Thing, Agent, State),
- (Why = ( \+ can_sense( Sense, Thing, Agent))).
+ \+ can_sense(Agent, Sense, Thing, State),
+ (Why = ( reason( \+ can_sense(Agent, Sense, Thing)))).
 
 /*
 cant( Agent, Action, cant( reach(Agent, Spatial, Thing)), State) :-
  act_verb_thing_model_sense(Agent, Action, Verb, Thing, Spatial, _Sense),
  psubsetof(Verb, touch),
- \+ reachable(Spatial, Thing, Agent, State).
+ \+ is_reachable(Agent, Spatial, Thing, State).
 */
 
 cant( Action, getprop(Thing, can_be(Move, f)), State) :-
@@ -102,23 +102,23 @@ cant( look(Agent, Spatial), TooDark, State) :-
  sensory_model_problem_solution(Sense, _Spatial, TooDark, _EmittingLight),
  % Perhaps this should return a logical description along the lines of
  % failure(look(Agent, Spatial), requisite(look(Agent, Spatial), getprop(SomethingNearby, EmittingLight)))
- \+ has_sensory(Spatial, Sense, Agent, State).
+ \+ can_sense_here(Agent, Spatial, Sense, State).
 
 % Can always know inventory
 %cant( Agent, inventory, TooDark, State) :- equals_efffectly(sense, Sense, look),
 % sensory_model_problem_solution(Sense, Spatial, TooDark, _EmittingLight),
-% \+ has_sensory(Spatial, Sense, Agent, State).
+% \+ can_sense_here(Agent, Spatial, Sense, State).
 
 cant( examine(Agent, Sense, Thing), TooDark, State) :- 
  equals_efffectly(sense, Sense, see),
  never_equal(Sense,Thing, Agent),
  sensory_model_problem_solution(Sense, Spatial, TooDark, _EmittingLight),
- \+ has_sensory(Spatial, Sense, Agent, State).
+ \+ can_sense_here(Agent, Spatial, Sense, State).
 
 cant( examine(Agent, Sense, Thing), Why, State) :-
  never_equal(Sense,Thing, Agent),
- \+ can_sense( Sense, Thing, Agent, State),
- (Why = ( \+ can_sense( Sense, Thing, Agent, State))).
+ \+ can_sense(Agent, Sense, Thing, State),
+ (Why = ( reason(  \+ can_sense(Agent, Sense, Thing)))).
 
 
 cant( goto(Agent, _Walk, Dest), mustdrop(Target), State) :- 
@@ -137,28 +137,29 @@ cant( EatCmd, cantdothat(Verb), State) :-
 :- nop(ensure_loaded('adv_relation')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+:- defn_state_getter(related_with_prop).
 related_with_prop(Spatial, Prep, Object, Place, Prop, State) :-
  related(Spatial, Prep, Object, Place, State),
  getprop(Object, Prop, State).
 
-is_state(~(Open), Object, State) :- ground(Open),!,
+in_state(~(Open), Object, State) :- ground(Open),!,
  getprop(Object, status(Open, f), State).
-is_state(Open, Object, State) :-
+in_state(Open, Object, State) :-
  getprop(Object, status(Open, t), State).
 % getprop(Object, can_be(open, State),
 % \+ getprop(Object, status(open, t), State).
 
-:- defn_state_getter(in_scope).
-in_scope(_Spatial, Star, _Agent, _State) :- is_star(Star), !.
-in_scope(Spatial, Thing, Agent, State) :-
+:- defn_state_getter(in_scope(agent,domain,thing)).
+in_scope(_Agent, _Spatial, Star, _State) :- is_star(Star), !.
+in_scope(Agent, Spatial, Thing, State) :-
  get_open_traverse(_Open, _See, _Traverse, Spatial, OpenTraverse),
  related(Spatial, OpenTraverse, Agent, Here, State),
  (Thing=Here; related(Spatial, OpenTraverse, Thing, Here, State)).
-in_scope(Spatial, Thing, Agent, _State):- bugout(pretending_in_scope(Spatial, Thing, Agent)).
+in_scope(Agent, Spatial, Thing, _State):- bugout(pretending_in_scope(Agent, Spatial, Thing)).
 
-:- defn_state_pred(reachable,1).
-reachable(_Spatial, Star, _Agent, _State) :- is_star(Star), !.
-reachable(Spatial, Thing, Agent, State) :-
+:- defn_state_getter(is_reachable(agent,domain,thing)).
+is_reachable(_Agent, _Spatial, Star, _State) :- is_star(Star), !.
+is_reachable(Agent, Spatial, Thing, State) :-
  get_open_traverse(touch, Spatial, OpenTraverse),
  related(Spatial, child, Agent, Here,State), % can't reach out of boxes, etc.
  (Thing=Here; related(Spatial, OpenTraverse, Thing, Here, State)).
@@ -177,7 +178,7 @@ subrelation(reverse(on), child).
 subrelation(worn_by, child).
 subrelation(held_by, child).
 
-:- defn_state_getter(has_rel).
+:- defn_state_getter(has_rel(domain,domrel,inst)).
 has_rel(Spatial, How, X, State) :-
  getprop(X, has_rel(Spatial, How, t), State).
 has_rel(Spatial, How, X, State) :-
@@ -185,11 +186,11 @@ has_rel(Spatial, How, X, State) :-
  subrelation(Specific, How).
 
 %related(_Spatial, How, _X, _Y, _State) :- assertion(nonvar(How)), fail.
-:- defn_state_getter(related).
+:- defn_state_getter(related(domain,domrel,source,target)).
 related(_Spatial, _How, _X, _Y, []) :- !, fail.
 related(Spatial, How, X, Y, State):- related_hl(Spatial, How, X, Y, State).
 
-:- defn_state_getter(related_hl).
+:- defn_state_getter(related_hl(domain,domrel,source,target)).
 related_hl(Spatial, How, X, Y, State) :- declared(h(Spatial, How, X, Y), State).
 related_hl(_Spatial, How, _X, _Y, _State) :- var(How), !, fail.
 related_hl(Spatial, child, X, Y, State) :- subrelation(How, child), related_hl(Spatial, How, X, Y, State).
@@ -207,7 +208,7 @@ related_hl(Spatial, open_traverse(Traverse, Spatial), X, Z, State) :- !,
  (nonvar(X);nonvar(Z)),
  get_open_traverse(Open, _See, _Traverse, Spatial, open_traverse(Traverse, Spatial)),
  related_hl(Spatial, child, Y, Z, State),
- \+ is_state(~(Open), Y, State),
+ \+ in_state(~(Open), Y, State),
  related_hl(Spatial, open_traverse(Traverse, Spatial), X, Y, State).
 
 related_hl(Spatial, inside, X, Z, State) :- related_hl(Spatial, in, X, Z, State).
@@ -218,7 +219,7 @@ related_hl(Spatial, exit(out), Inner, Outer, State) :-
  has_rel(Spatial, in, Inner, State),
  has_rel(Spatial, child, Outer, State),
  get_open_traverse(Open, _See, _Traverse, Spatial, _OpenTraverse),
- \+ is_state(~(Open), Inner, State).
+ \+ in_state(~(Open), Inner, State).
 related_hl(Spatial, exit(off), Inner, Outer, State) :-
  related_hl(Spatial, child, Inner, Outer, State),
  has_rel(Spatial, on, Inner, State),
@@ -236,8 +237,14 @@ related_hl(Spatial, exit(escape), Inner, Outer, State) :-
 :- nop(ensure_loaded('adv_action')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-:- defn_state_getter(relative_dest).
-% relative_dest(Here, Prep, Dest, Src, Targ).
+:- defn_state_getter(applied_direction(agent,source,domrel,target)).
+applied_direction(Start, Here, Dir, Relation, End, S0):- 
+ related(Spatial, _Relation, Start, Here, S0),
+ related(Spatial, exit(Dir), Here, End, S0),
+ has_rel(Spatial, Relation, End, S0).
+
+
+:- defn_state_getter(relative_dest(source,domrel,dest,source,target)).
 relative_dest(Here, in, Dest, Src, Target, _State):- 
   Src = Here,
   ignore(Target = Dest).
@@ -250,6 +257,7 @@ relative_dest(Agent, Prep, Dest, Src, Target, State):-
   relative_dest(Here, Prep, Dest, Src, Target, State).
 
 
+:- defn_state_setter(moveto(domain,inst,domrel,dest,list_of(places),msg)).
 moveto(Spatial, Object, Prep, Dest, Vicinity, Msg) -->
  undeclare(h(Spatial, _, Object, Here)),
  declare(h(Spatial, Prep, Object, Dest)),
@@ -293,8 +301,6 @@ hit(Spatial, Target, _Thing, Vicinity) -->
 act_verb_thing_model_sense(Agent, Action, Verb, Thing, Spatial, Sense):- 
  never_equal(Sense,Thing, Agent),
  notrace(act_verb_thing_model_sense0(Agent, Action, Verb, Thing, Spatial, Sense)), !.
-
-
 
 act_verb_thing_model_sense0(_Agent, Atom, Atom, _Target, spatial, Sense):- \+ compound(Atom), !, is_sense(Sense),!.
 %act_verb_thing_model_sense0(_Agent, Action, _Look, _Star, _Spatial, _See):- assertion(ground(Action)),fail.

@@ -32,7 +32,7 @@ term_expansion(I,P,O,PO):- notrace((compound(I),nonvar(P))),term_expansion_was_d
 is_state_pred(related,1).
 defn_state_pred(F,N):- is_state_pred(F,N) -> true ; asserta(is_state_pred(F,N)).
 
-defn_state0(F):- defn_state_pred(F,0).
+defn_state_0(F):- defn_state_pred(F,0).
 defn_state_getter(F):- defn_state_pred(F,1).
 defn_state_setter(F):- defn_state_pred(F,2).
 
