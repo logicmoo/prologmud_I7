@@ -82,7 +82,7 @@ do_metacmd(Doer, Echo, S0, S0) :-
  security_of(Doer,admin),
  Echo =.. [echo|Args],
  player_format('~w~n', [Args]).
-do_metacmd(Doer, status, S0, S0) :-
+do_metacmd(Doer, state, S0, S0) :-
  security_of(Doer,wizard),
  printable_state(S0,S),
  meta_pprint(Doer, S, always),

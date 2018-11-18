@@ -21,9 +21,9 @@
 
 was_dcg(M,Kept,S0,S2):- M:phrase(Kept,S0,S2).
 %:- trace.
-term_expansion_was_dcg(DCG --> Keeper, DCG --> was_dcg(M,Keeper)):- Keeper \= was_dcg(_,_), prolog_load_context(module,M).
+term_expansion_was_dcg('-->'(DCG , Keeper), '-->'(DCG , was_dcg(M,Keeper))):- Keeper \= was_dcg(_,_), prolog_load_context(module,M).
 
-term_expansion(I,P,O,PO):- notrace((compound(I),nonvar(P))),term_expansion_was_dcg(I,O),P=PO.
+mu:term_expansion(I,P,O,PO):- notrace((compound(I),nonvar(P))),term_expansion_was_dcg(I,O),P=PO.
 %foo --> bar ,!.
 %foo --> bar,baz.
 %:- break.
@@ -47,12 +47,12 @@ complex(C, R, I):- freeze(C, complex(C, R, I)), freeze(R, complex(C, R, I)), fre
 
 
 nonvar_subterm(Var, Data):- var(Var), !, sub_term(Var, Data),nonvar(Var).
-nonvar_subterm(Bound, Data):- sub_term(E, Data),nonvar(E),E=@=Bound.
+nonvar_subterm(Bound, Data):- sub_term(E, Data),nonvar(E),'=@='(E,Bound).
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
-:- nop(ensure_loaded('adv_util_subst')).
+% :- nop(ensure_loaded('adv_util_subst')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -89,11 +89,6 @@ runnable_goal(Goal, Goal) :- ground(Goal), !.
 %runnable_goal(Goal, Goal_Copy):- copy_term(Goal, Goal_Copy).
 runnable_goal(Goal, Goal).
 
-:- module_transparent(apply_forall//2).
-:- meta_predicate(apply_forall(+,2,+,-)).
-apply_forall(Forall,Apply,S0,S1):-
- findall(Forall,Forall,Frames),
- apply_forall_frames(Frames,Forall,Apply,S0,S1).
 
 :- module_transparent(apply_forall_frames//3).
 :- meta_predicate(apply_forall_frames(+,+,2,+,-)).
@@ -101,6 +96,13 @@ apply_forall_frames([],_Forall,_Apply,S0,S0).
 apply_forall_frames([Frame|Frames],Forall,Apply,S0,S2):-
  Frame=Forall,apply_state(Apply,S0,S1),
  apply_forall_frames(Frames,Forall,Apply,S1,S2).
+
+:- module_transparent(apply_forall//2).
+%:- meta_predicate(apply_forall(+,2,+,-)).
+apply_forall(Forall,Apply,S0,S1):-
+ findall(Forall,Forall,Frames),
+  apply_forall_frames(Frames,Forall,Apply,S0,S1).
+
 
 dmust(Goal,S0,S1):- apply_state(dmust(Goal), S0, S1).
 :- meta_predicate with_state(*,0,*,*).
@@ -126,6 +128,11 @@ is_state_ignorer(=).
 is_state_ignorer(dif).
 is_state_ignorer(nop).
 is_state_ignorer({}).
+
+must_input_state(S0):- quietly(dmust((is_list(S0);must_state(S0)))).
+must_output_state(S0):- quietly(dmust((must_state(S0);is_list(S0)))),quietly(check4bugs(S0)).
+must_state(S0):- is_list(S0), dmust(nb_setval(advstate,S0)),!.
+must_state(S0):- pprint(must_state(S0),always),trace, check4bugs(S0).
 
 :- module_transparent(apply_state//3).
 
@@ -166,9 +173,10 @@ apply_state({Goal}, S0, S0) :- !, call(Goal).
 apply_state([G1|G2], S0, S2) :- !,
  apply_state(G1, S0, S1),
  apply_state(G2, S1, S2).
-apply_state(G1->G2, S0, S2) :- !,
+apply_state((('->'(G1,G2));G3), S0, S2) :- !,
  apply_state(G1, S0, _If) -> 
- apply_state(G2, S0, S2).
+ apply_state(G2, S0, S2);
+ apply_state(G3, S0, S2). 
 apply_state((G1,G2), S0, S2) :- !,
  apply_state(G1, S0, S1),
  apply_state(G2, S1, S2).

@@ -97,7 +97,7 @@ type_functor(doing, examine(agnt, optional(sense, see), optional(inst, here), op
 type_functor(event, sense_props(agnt, sense, inst, depth, list_of(nv))).
 
 
-type_functor(doing, dig(agnt, holetype, loc, inst)).
+type_functor(doing, dig(agnt, holetype, prep, dest, inst)).
 type_functor(doing, create(type)).
 
 type_functor(doing, eat(agnt, inst)).
@@ -238,7 +238,7 @@ istate([
  inherit(place,t),
  % goto(Agent, Prep, Dir, dir, result) provides special handling for going in a direction.
  cant_go(Agent, up, 'You lack the ability to fly.'), 
- oper( /*garden, */ goto(Agent, _, loc(Agent, south, _Prep, _Object)), 
+ oper( /*garden, */ goto(Agent, _, south, _From), 
    % precond(Test, FailureMessage)
    precond(getprop(screendoor, status(opened, t)), ['you must open the door first']),
    % body(clause)

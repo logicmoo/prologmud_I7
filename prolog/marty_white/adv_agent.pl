@@ -1,3 +1,4 @@
+/* -*- Mode:Prolog; coding:iso-8859-1; indent-tabs-mode:nil; prolog-indent-width:8; prolog-paren-indent:4; tab-width:8; -*- */
 /*
 % NomicMUD: A MUD server written in Prolog
 % Maintainer: Douglas Miles
@@ -195,11 +196,10 @@ decide_action(Agent, Mem0, Mem1) :-
 decide_action(Agent, Mem0, Mem1) :-
  notrace((declared(inherits(console), Mem0),current_input(In))),!,
  ensure_has_prompt(Agent),
- % agent_to_input(Agent,In),
+ agent_to_input(Agent,In),
  (tracing->catch(wait_for_input([In,user_input],Found,20),_,(nortrace,notrace,break));wait_for_input([In,user_input],Found,0)),
  (Found==[] -> (Mem0=Mem1) ;  quietly(((console_decide_action(Agent, Mem0, Mem1))))).
 
-% Autonomous
 decide_action(Agent, Mem0, Mem3) :-
  declared(inherits(autonomous), Mem0),
  maybe_autonomous_decide_goal_action(Agent, Mem0, Mem3).

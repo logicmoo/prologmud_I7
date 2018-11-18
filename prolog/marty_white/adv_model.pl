@@ -97,9 +97,9 @@ update_model(Knower, moved( Agent, There, How, Here), Timestamp, Mem, M0, M2) :-
  known_model(Knower,  h(Spatial, _, Agent, There), M0),
  % TODO: Handle goto(Agent, on, table)
  % How did I get Here?
- append(RecentMem, [did( goto(_, _HowGo, loc(_, A,C,B)))|OlderMem], Mem), % find figment
- member(ExitName,[A,B,C]),atom(ExitName),
- \+ member(did( goto(_, _, _)), RecentMem),   % guarrantee recentness
+ append(RecentMem, [did( goto(_, _HowGo, A,B))|OlderMem], Mem), % find figment
+ member(ExitName,[A,B]),atom(ExitName),
+ \+ member(did( goto(_, _, _, _)), RecentMem),   % guarrantee recentness
  memberchk(timestamp(_T1,_WhenNow), OlderMem),   % get associated stamp
 
  %player_format('~p moved: goto(Agent, ~p, ~p) from ~p leads to ~p~n',
@@ -126,12 +126,12 @@ update_model(Agent, sense_props(Agent, _Sense, Object, _Depth, PropList), Stamp,
 %update_model(Agent, you_are(Agent, _How, _He\re), _Timestamp, _Mem, M0, M0):- !.
 
 % Model exits from Here.
-update_model(Agent, exits_are(Agent, Relation, Here, Exits), Timestamp, _Mem, M0, M4):- !,
+update_model(Agent, exits_are(Agent2, Relation, Here, Exits), Timestamp, _Mem, M0, M4):- Agent==Agent2, !,
   findall(exit(E), member(E, Exits), ExitRelations),
     % Don't update map here? it's better done in the moved( ) clause?
     update_relations(Relation, [Agent], Here, Timestamp, M0, M3),
   update_model_exits(spatial, ExitRelations, Here, Timestamp, M3, M4).
-update_model(_Agent, exits_are('$fake',_,_,_), _Timestamp, _Mem, M0, M0):-!.
+update_model(_Agent, exits_are(S,_,_,_), _Timestamp, _Mem, M0, M0):- S == '$fake',!.
 
 % Model objects seen Here
 update_model(Agent, notice_children(Agent, _Sense, Here, Prep, _Depth, Objects), Timestamp, _Mem, M0, M3):- !,

@@ -39,29 +39,6 @@ precond_matches_effects(Cond, Effects) :-
  
 % oper(_Self, Action, Desc, Preconds, Effects)
 
-% go north
-oper(_Self, goto(Self, Walk, loc(Self, Dir, Rel, There)),
-  [ %Desc: cap(subj(Agent)), person(go, goes)
-  cap(subj(actor(Self))), does(Walk), from(place(Here)), via(exit(Dir)) , Rel, to(place(There)) ],
-  [ %Preconds:
-  Here \= Self, There \= Self,
-  \+ props(Self, knows_verbs(goto, f)),
-  h(Spatial, WasRel, Self, Here),
-  props(Here, inherit(place, t)),
-  props(There, inherit(place, t)),
-  \+ in_state(~(open), There),
-  \+ in_state(~(open), Here),
-  \+ in_state(~(open), Dir),
-  reverse_dir(Dir,RDir),
-  h(Spatial, exit(Dir), Here, There)], % path(Spatial, Here, There)
-  [ %Postconds:
-   ~h(Spatial, WasRel, Self, Here),
-    notice(Here,leaves(Self,Here,WasRel)),
-    h(Spatial, Rel, Self, There),
-    notice(There,enters(Self,There,RDir))]).
-
-
-
 sequenced(_Self,
   [ %Preconds:
   Here \= Self, There \= Self,
@@ -75,7 +52,7 @@ sequenced(_Self,
   reverse_dir(Dir,RDir),
   h(Spatial, exit(Dir), Here, There), % path(Spatial, Here, There)
   % %Action:
-  did(goto(Self, Walk, loc(Self, Dir, Rel, There))),
+  did(goto(Self, Walk, Dir, Here)),
   %PostConds:
   ~h(Spatial, WasRel, Self, Here),
   notice(Here,leaves(Self,Here,WasRel)),
@@ -84,14 +61,15 @@ sequenced(_Self,
   notice(There,enters(Self,There,RDir))]).
 
 % oper(_Self, Action, Preconds, Effects)
-oper(Self, Action, Preconds, Effects):- % Hooks to better KR above
- oper(Self, Action, _Desc, Preconds, Effects).
+oper(Self, Action, Preconds, Effects):- % Hooks to KR above
+ sequenced(Self, Whole),
+ append(Preconds,[did(Action)|Effects],Whole).
 
 
-oper(_Self, goto(Self, _Walk, loc(Self, Dir, Rel, There)),
+oper(_Self, goto(Self, _Walk, Rel, Here),
   [ Here \= Self, There \= Self,
   h(Spatial, WasRel, Self, Here),
-  h(Spatial, exit(Dir), Here, There)], % path(Spatial, Here, There)
+  h(Spatial, Rel, Here, There)], % path(Spatial, Here, There)
   [ h(Spatial, Rel, Self, There),
   ~ h(Spatial, WasRel, Self, Here)]).
 
@@ -601,19 +579,17 @@ generate_plan(Knower, Agent, FullPlan, Mem0) :-
 % ----
 
 
-path2directions(Spatial, [Here, There], [ goto(Self, _Walk, loc(Self, Dir, _To, There))], ModelData) :-
+path2dir1(Spatial, Here, There, goto(_Self, _Walk, Dir, Here), ModelData):- 
  in_model(h(Spatial, exit(Dir), Here, There), ModelData).
-
-path2directions(Spatial, [Here, There], [ goto(Self, _Walk, loc(Self, _Dir, in, There))], ModelData) :-
+path2dir1(Spatial, Here, There, goto(_Self, _Walk, to, There), ModelData) :-
  in_model(h(Spatial, descended, Here, There), ModelData).
 
-path2directions(Spatial, [Here, Next|Trail], [goto(Self, _Walk, loc(Self, Dir, _To, _There))|Tail], ModelData) :-
- in_model(h(Spatial, exit(Dir), Here, Next), ModelData),
+path2directions(Spatial, [Here, There], [GOTO], ModelData):-
+  path2dir1(Spatial, Here, There, GOTO, ModelData).
+path2directions(Spatial, [Here, Next|Trail], [GOTO|Tail], ModelData) :-
+ path2dir1(Spatial, Here, Next, GOTO, ModelData),
  path2directions(Spatial, [Next|Trail], Tail, ModelData).
 
-path2directions(Spatial, [Here, Next|Trail], [goto(Self, _Walk, loc(Self, _Dir, in, Next))|Tail], ModelData) :-
- in_model(h(Spatial, descended, Here, Next), ModelData),
- path2directions(Spatial, [Next|Trail], Tail, ModelData).
 
 find_path1(_Spatial, [First|_Rest], Dest, First, _ModelData) :-
  First = [Dest|_].

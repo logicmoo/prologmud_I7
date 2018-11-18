@@ -103,10 +103,6 @@ declared_link(Fact, Object):- callable(Fact), Fact=..[F|List],Call=..[F,Object|L
 % TODO:
 % store initial status as clauses which are collected up and put into a list,
 % like the operators are, to provide proper prolog variable management.
-must_input_state(S0):- quietly(assertion(is_list(S0);must_state(S0))).
-must_output_state(S0):- quietly(assertion(must_state(S0);is_list(S0))),quietly(check4bugs(S0)).
-must_state(S0):- is_list(S0), assertion(nb_setval(advstate,S0)),!.
-must_state(S0):- pprint(must_state(S0),always),trace, check4bugs(S0).
 
 get_objects(Spec, Set, State):- quietly((must_input_state(State), get_objects_(Spec, List, State, im(State)), !, list_to_set(List,Set))).
 %get_objects(_Spec, [player1, floyd], _State):-!.

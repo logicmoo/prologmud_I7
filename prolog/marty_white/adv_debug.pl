@@ -17,7 +17,7 @@
 %
 */
 
-:- user:ensure_loaded(library(poor_bugger)).
+% :- user:ensure_loaded(library(poor_bugger)).
 
 :- meta_predicate reset_prolog_flag(0,*,*,*).
 :- meta_predicate reset_prolog_flag(0,*,*).
@@ -71,24 +71,24 @@ system_default_debug(YN):-
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
-:- nop(ensure_loaded('adv_debug')).
+% :- nop(ensure_loaded('adv_debug')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+:- module_transparent(dshow_call/1).
+:- module_transparent(dshow_true/1).
+:- module_transparent(dshow_fail/1).
+:- module_transparent(dmust_tracing/1).
+:- module_transparent(if_tracing/1).
 
-:- meta_predicate dmust_tracing(0).
 dmust_tracing(G):- notrace((tracing,cls)),!,dmust(G).
 dmust_tracing(G):- call(G).
-:- meta_predicate if_tracing(0).
 if_tracing(G):- tracing -> notrace(G) ; true.
 
- :- meta_predicate dshow_true(0).
- :- meta_predicate dshow_call(0).
- :- meta_predicate dshow_fail(0).
 
 % '$hide'(Pred) :- '$set_predicate_attribute'(Pred, trace, false).
 never_trace(_Spec):- prolog_load_context(reloading,true),!.
 never_trace(Spec):- '$hide'(Spec),'$iso'(Spec),trace(Spec, -all).
-:- use_module(library(lists)).
+:- call(ensure_loaded,library(lists)).
 :- never_trace(lists:append(_,_,_)).
 :- never_trace(lists:list_to_set/2).
 :- never_trace(lists:member_(_,_,_)).
@@ -96,13 +96,18 @@ never_trace(Spec):- '$hide'(Spec),'$iso'(Spec),trace(Spec, -all).
 :- never_trace(prolog_debug:assertion(_)).
 */
 
+
 %:- never_trace(lists:member(_,_)).
 %:- never_trace(lists:append(_,_,_)).
-dshow_call(G):- simplify_dbug(G,GG), (call(G)*-> bugout(success_dshow_call(GG)) ; (bugout(failed_dshow_call(GG)),!,fail)).
-dshow_fail((G1,G2)):- !,dshow_fail(G1),dshow_fail(G2).
-dshow_fail(\+(G1)):- !, \+ dshow_true(G1).
-dshow_fail(G):- simplify_dbug(G,GG), (call(G)*-> true ; (bugout(failed_dshow_call(GG)),!,fail)).
-dshow_true(G):- simplify_dbug(G,GG), (call(G)*-> bugout(success_dshow_call(GG)) ; (!,fail)).
+dshow_call((G1,G2)):- !,dshow_fail(G1),dshow_fail(G2).
+dshow_call(G):- simplify_dbug(G,GG), swi_soft_if_then(G,bugout(success_dshow_call(GG)),(bugout(failed_dshow_call(GG)),!,fail)).
+
+dshow_fail('\\+'(G1)):- !, \+ dshow_true(G1).
+dshow_fail(G):- simplify_dbug(G,GG), swi_soft_if_then(G, true , (bugout(failed_dshow_call(GG)),!,fail)).
+
+dshow_true('\\+'(G1)):- !, \+ dshow_fail(G1).
+dshow_true(G):- simplify_dbug(G,GG),  swi_soft_if_then(G, bugout(success_dshow_call(GG)) , (!,fail)).
+
 found_bug(S0,open_list(Open)) :- \+is_list(S0),
   get_open_segement(S0,Open).
 found_bug(S0,duplicated_object(X,R,L)) :-

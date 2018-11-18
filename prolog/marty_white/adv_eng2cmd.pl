@@ -128,7 +128,7 @@ parse2logical(Self, Words, Action, Mem) :-
 % %%%%%%%%%%%%%%
 
 % get [out,in,..]
-parse2logical(Self, [get, Prep, Object], goto(Self, walk, loc(Self, _, Prep, Object)), _Mem) :-
+parse2logical(Self, [get, Prep, Object], goto(Self, walk, Prep, Object), _Mem) :-
  preposition(spatial, Prep).
 % n/s/e/w
 parse2logical(Self, [Dir], Logic, Mem):- (compass_direction(Dir);Dir==escape), !, dmust(txt2goto(Self, walk, [Dir], Logic, Mem)).
@@ -154,21 +154,21 @@ txt2goto(Self, Walk,[Alias| More], Logic, Mem) :- cmdalias(Alias,Dir), !, txt2go
 
 % go in kitchen
 % go in car
-txt2goto(Self, Walk,[ Prep, Dest], goto(Self, Walk, loc(Self,_Dir, Prep, Where)), Mem) :- 
+txt2goto(Self, Walk,[ Prep, Dest], goto(Self, Walk, Prep, Where), Mem) :- 
  preposition(spatial, Prep),!,
  dmust(txt2place(Dest, Where, Mem)).
 
 % go north
-txt2goto(Self, Walk,[ ExitName], goto(Self, Walk, loc(Self, ExitName, _To, _Where)), Mem) :-
+txt2goto(Self, Walk,[ ExitName], goto(Self, Walk, ExitName, _Here), Mem) :-
  thought_model(ModelData, Mem),
  known_model(Self, h(_Spatial, exit(ExitName), _, _), ModelData).
 % go escape
-txt2goto(Self, Walk,[ Dir], goto(Self, Walk, loc(Self, Dir, _To, _Object)), _Mem) :- (compass_direction(Dir);Dir==escape),!.
-txt2goto(Self, Walk,[ Dir], goto(Self, Walk, loc(Self, Dir, _To, _Object)), _Mem) :- (Dir=down;Dir==up),!.
+txt2goto(Self, Walk,[ Dir], goto(Self, Walk, Dir, _Here), _Mem) :- (compass_direction(Dir);Dir==escape),!.
+txt2goto(Self, Walk,[ Dir], goto(Self, Walk, Dir, _Here), _Mem) :- (Dir=down;Dir==up),!.
 % go [out,in,..] 
-txt2goto(Self, Walk,[ Prep], goto(Self, Walk, loc(Self, _Dir, Prep, _Where)), _Mem) :- preposition(spatial, Prep).
+txt2goto(Self, Walk,[ Prep], goto(Self, Walk, Prep, _Here), _Mem) :- preposition(spatial, Prep).
 % go kitchen
-txt2goto(Self, Walk, Dest, goto(Self, Walk, loc(Self, _Dir, _To, Where)), Mem) :-
+txt2goto(Self, Walk, Dest, goto(Self, Walk, in, Where), Mem) :-
  txt2place(Dest, Where, Mem).
 
 

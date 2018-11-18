@@ -148,7 +148,7 @@ do_action(Agent, Action, S0, S3) :-
  
 
 trival_act(look(_)).
-trival_act(goto(_,_,loc(_,_,_,_))).
+trival_act(goto(_,_,_,_)).
 trival_act(examine(_,see,_,depth(2))).
 trival_act(examine(_,see,_,depth(1))).
 
@@ -215,10 +215,10 @@ act( Action, S0, S2) :-
  NewAction=..[examine,Agent,Sense|Args],act( NewAction, S0, S2).
 
 % Remember that Agent might be on the inside or outside of Object.
-act( goto(Agent, Walk, TO), S0, S1):- !,  % loc(Agent, Dir, Relation, Place)
- (act_goto(Agent, Walk, TO, S0, S1)-> !;
+act( goto(Agent, Walk, Prep, OfWhat), S0, S1):- !,  % loc(Agent, Dir, Relation, OfWhat)
+ (act_goto_must(Agent, Walk, Prep, OfWhat, S0, S1)-> !;
  queue_agent_percept(Agent,
-    [failure( goto(Agent, Walk, TO), 'can\'t go that way')],
+    [failure( goto(Agent, Walk, Prep, OfWhat), 'can\'t go that way')],
     S0, S1)).
 
 
@@ -472,9 +472,8 @@ verb_alias(look, examine) :- fail.
 
 
 
-act_goto( Agent, Walk, loc(Agent, Dir, Relation, Object), S0, S9):- 
-  dmust_tracing((act_goto( Agent, Walk, Dir, Relation, Object, S0, S9))).
-
+act_goto_must( Agent, Walk, Dir, Object, S0, S9):- 
+  dmust_tracing(act_goto( Agent, Walk, Dir, Object, S0, S9)).
 
 target_default_prep(There, Relation, S0):-
  has_rel(_Spatial, Relation, There, S0), 
@@ -482,7 +481,7 @@ target_default_prep(There, Relation, S0):-
 target_default_prep(_There, in, _S0).
 
 % go in/on object
-act_goto( Agent, Walk, _Dir, Relation, Object, S0, S9) :- nonvar(Object),   
+act_goto( Agent, Walk, Relation, Object, S0, S9) :- nonvar(Object),   
  get_open_traverse(Walk, Spatial, OpenTraverse),
  ignore(target_default_prep(Object, Relation, S0)),
  related(Spatial, OpenTraverse, Agent, Here, S0),
@@ -491,28 +490,20 @@ act_goto( Agent, Walk, _Dir, Relation, Object, S0, S9) :- nonvar(Object),
  moveto_verb(Walk, Agent, Here, reverse(Relation), Relation, Object, S0, S9).
 
 % go n/s/e/w/u/d/in/out
-act_goto( Agent, Walk, Dir, Relation, There, S0, S9) :- nonvar(Dir), 
+act_goto( Agent, Walk, Prep, _, S0, S9) :- 
  related(Spatial, child, Agent, Here, S0),
- related(Spatial, exit(Dir), Here, There, S0),!,
+ related(Spatial, exit(Prep), Here, There, S0),
+ %member(Relation, [*, to, at, through, thru]),
+ target_default_prep(There,Relation,S0),  
+ moveto_verb(Walk, Agent, Here, Prep, Relation, There, S0, S9).
+
+/*act_goto( Agent, Walk, Prep, _MaybeHere, S0, S9) :- 
+ related(Spatial, child, Agent, Here, S0),
+ related(Spatial, Prep, Here, There, S0),!,
  %member(Relation, [*, to, at, through, thru]),
  target_default_prep(There,Relation,S0),  
  moveto_verb(Walk, Agent, Here, Dir, Relation, There, S0, S9).
-
-% go in (adjacent) room
-act_goto( Agent, Walk, Dir, Relation, There, S0, S9) :- nonvar(There),   
- ignore(target_default_prep(There, Relation, S0)),
- get_open_traverse(Relation, Spatial, OpenTraverse),
- related(Spatial, OpenTraverse, Agent, Here, S0),
- related(Spatial, exit(Dir), Here, There, S0),
- moveto_verb(Walk, Agent, Here, Dir, Relation, There, S0, S9).
-
- % go to (adjacent) room
-act_goto( Agent, Walk, Dir, _To, There, S0, S9) :- nonvar(There),    
- has_rel(Spatial, Relation, There, S0),
- get_open_traverse(goto, Spatial, OpenTraverse),
- related(Spatial, OpenTraverse, Agent, Here, S0),
- related(Spatial, exit(Dir), Here, There, S0),
- moveto_verb(Walk, Agent, Here, Dir, Relation, There, S0, S9).
+*/
 
 % [person(ed(Walk), s(Walk)), exiting, to, the, Dir]
 moveto_verb(Walk, Agent, Here, Dir, Relation, There) -->  

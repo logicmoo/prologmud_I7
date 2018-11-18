@@ -15,6 +15,8 @@
 :- use_module(library(xlisting)).
 :- endif.
 
+:- op(1050,xfy,('*->')).
+
 update_deps :-
    pack_install(each_call_cleanup,[url('https://github.com/TeamSPoon/each_call_cleanup.git'),upgrade(true),interactive(false)]),
    pack_install(no_repeats,[url('https://github.com/TeamSPoon/no_repeats.git'),upgrade(true),interactive(false)]),
@@ -24,6 +26,14 @@ update_deps :-
    % hoses developement 
    nop(pack_install(small_adventure_games,[url('https://github.com/TeamSPoon/small_adventure_games.git'),upgrade(true),interactive(true)])),
    !.
+
+
+:- module_transparent(dmust/1).
+:- module_transparent(no_repeats_must/1).
+:- module_transparent(failed_dmust/1).
+:- module_transparent(swi_soft_if_then/3).
+
+swi_soft_if_then(C,T,F):-  C *-> T ; F.
 
 :- meta_predicate dmust(0).
 :- meta_predicate failed_dmust(0).
@@ -36,7 +46,9 @@ dmust((A,B)):-!,dmust(A),dmust(B).
 dmust((A;B)):-!,call(A),dmust(B).
 dmust((A->B;C)):-!,call(A)->dmust(B);dmust(C).
 dmust((A*->B;C)):-!,call(A)*->dmust(B);dmust(C).
-dmust(A):- call(A)*-> true ; failed_dmust(A).
+% dmust(A):- !, (call(A)*-> true ; failed_dmust(A)).
+dmust(A):- swi_soft_if_then(call(A), true , failed_dmust(A)).
+
 
 :- module_transparent(failed_dmust/1).
 failed_dmust(once(A)):-!, failed_dmust(A),!.

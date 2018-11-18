@@ -214,12 +214,14 @@ related_hl(Spatial, open_traverse(Traverse, Spatial), X, Z, State) :- !,
 related_hl(Spatial, inside, X, Z, State) :- related_hl(Spatial, in, X, Z, State).
 related_hl(Spatial, inside, X, Z, State) :- related_hl(Spatial, in, Y, Z, State),
         related_hl(Spatial, descended, X, Y, State).
+
 related_hl(Spatial, exit(out), Inner, Outer, State) :-
  related_hl(Spatial, child, Inner, Outer, State),
  has_rel(Spatial, in, Inner, State),
  has_rel(Spatial, child, Outer, State),
  get_open_traverse(Open, _See, _Traverse, Spatial, _OpenTraverse),
  \+ in_state(~(Open), Inner, State).
+
 related_hl(Spatial, exit(off), Inner, Outer, State) :-
  related_hl(Spatial, child, Inner, Outer, State),
  has_rel(Spatial, on, Inner, State),
@@ -305,7 +307,7 @@ act_verb_thing_model_sense(Agent, Action, Verb, Thing, Spatial, Sense):-
 act_verb_thing_model_sense0(_Agent, Atom, Atom, _Target, spatial, Sense):- \+ compound(Atom), !, is_sense(Sense),!.
 %act_verb_thing_model_sense0(_Agent, Action, _Look, _Star, _Spatial, _See):- assertion(ground(Action)),fail.
 
-act_verb_thing_model_sense0(Agent, goto(Agent, _Walk, loc(Agent, _Dir, _Rel, Thing)), goto, Thing, spatial, see):-!.
+act_verb_thing_model_sense0(Agent, goto(Agent, _Walk, _TO, Thing), goto, Thing, spatial, see):-!.
 act_verb_thing_model_sense0(Agent, look(Agent, spatial), look, *, spatial, see):-!.
 act_verb_thing_model_sense0(Agent, look(Agent, spatial, spatial), look, *, spatial, see):-!.
 act_verb_thing_model_sense0(Agent, look(Agent), look, *, spatial, see):-!.

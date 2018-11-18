@@ -97,7 +97,7 @@ autonomous_decide_action(Agent, Mem0, Mem1) :-
  (\+ known_model(Agent, h(_, _, Agent, _), ModelData) -> pprint(ModelData, always) ; true),
  dmust(known_model(Agent,h(Spatial, _Prep, Agent, Here), ModelData)),
  known_model(Agent,h(Spatial, exit(Dir), Here, '<unexplored>'), ModelData),
- add_todo( goto(Agent, walk, loc(Agent, Dir, _To, _Place)), Mem0, Mem1).
+ add_todo( goto(Agent, walk, Dir, Here), Mem0, Mem1).
 
 % Follow Player to adjacent rooms.
 autonomous_decide_action(Agent, Mem0, Mem1) :- % 1 is random(2),
@@ -106,7 +106,7 @@ autonomous_decide_action(Agent, Mem0, Mem1) :- % 1 is random(2),
  dif(Agent, Player), current_player(Player),
  known_model(Agent,h(Spatial, _, Player, There, _), ModelData),
  known_model(Agent,h(Spatial, exit(Dir), Here, There, _), ModelData),
- add_todo( goto(Agent, walk, loc(Agent,Dir, _To, _Dest)), Mem0, Mem1).
+ add_todo( goto(Agent, walk, Dir, Here), Mem0, Mem1).
 
 autonomous_decide_action(Agent, Mem0, Mem1) :-
  0 is random(5),
@@ -150,8 +150,8 @@ consider_request(_Speaker, Agent, take(Agent, Thing), M0, M) :-
  add_goal(h(_Spatial, held_by, Thing, Agent), M0, M).
 consider_request(_Speaker, Agent, drop(Agent, Object), M0, M1) :-
  add_goal(~(h(_Spatial, held_by, Object, Agent)), M0, M1).
-consider_request(_Speaker, Agent, goto(Agent, How, LOC), M0, M1) :-  
- Action = goto(Agent, How, LOC), 
+consider_request(_Speaker, Agent, goto(Agent, How, Prep, OfWhat), M0, M1) :-  
+ Action = goto(Agent, How, Prep, OfWhat), 
  bugout('Queueing action ~w~n', Action, autonomous),
  add_todo(Action, M0, M1).
 

@@ -1,4 +1,4 @@
-/*
+/*                   
 % NomicMUD: A MUD server written in Prolog
 % Maintainer: Douglas Miles
 % Dec 13, 2035
@@ -25,12 +25,9 @@
  player_format/2,
  player_format/3,
  bugout/2,
+ %bugout/1,
  bugout/3,
  with_tty/2,
-
- wait_for_key/0,
-     wait_for_key/1,
-     keyboard_init/0,
  pprint/2,
  init_logging/0,
  stop_logging/0,
@@ -39,18 +36,17 @@
  agent_to_output/2,
  get_overwritten_chars/2,
  restore_overwritten_chars/1,
- setup_console/0,setup_console/1,
+ %setup_console/0, 
+ setup_console/1,
 
- current_error/1,set_error/1, redirect_error_to_string/2,
-   messages_init/0,
+ current_error/1,set_error/1, redirect_error_to_string/2
+   
    /*post_message/1,
    post_message/2,
    sv_message/2,
    svo_message/3,
    svi_message/3,
-   svoi_message/4,*/
-   more_prompt/0,
-   ack_messages/0]).
+   svoi_message/4,*/ ]).
 
 :- dynamic(adv:wants_quit/3).
 :- dynamic(adv:console_info/7).
@@ -77,211 +73,10 @@ redirect_error_to_string(Goal, String) :-
   memory_file_to_string(Handle,String).
 
 
-mutex_create_safe(M):- notrace(catch(mutex_create(M),_,true)).
-
-messages_init:-
- mutex_create_safe(messages).
-
-flag(N,V):-
- flag(N,_,V).
-
-% FIXME - word wrap
-% post_message(M):-
-% atom_length(M,N),N>72
-post_message(M):-
- with_mutex(messages,(post_message_int(M),
-      flag(unacked_messages,_,1))),
- nop(request_screen_update(0,0,1,80)).
-
-post_message(F,L):-
- format(atom(A),F,L),post_message(A).
-
-post_message_int(M):-
- flag(line0,'',M),
- atom_length(M,L),
- flag(requested_cursor_row,_,0),
- flag(requested_cursor_col,_,L),!.
-post_message_int(M):-
- \+(more_prompt),
- flag(line0,OL),
- atom_length(OL,OLL),
- atom_length(M,ML),
- OLL+ML=<70,
- concat_atom([OL,' ',M],NL),
- flag(line0,_,NL),
- atom_length(NL,Len),
- flag(requested_cursor_row,_,0),
- flag(requested_cursor_col,_,Len),!.
-post_message_int(M):-
- more_prompt,
- recordz(messages,M),!.
-post_message_int(M):-
- flag(more_prompt,_,1),
- flag(line0,OL),
- atom_concat(OL,' [More]',NL),
- flag(line0,_,NL),!,
- post_message_int(M).
-
-more_prompt:-flag(more_prompt,1).
-
-ack_messages:-flag(unacked_messages,0).
-ack_messages:-
- with_mutex(messages,(
-  flag(line0,_,''),
-  flag(unacked_messages,_,0),
-  flag(more_prompt,_,0),
-  flag(requested_cursor_row,_,0),
-  flag(requested_cursor_col,_,0),
-  gather_messages(L),
-  (L=[];flag(unacked_messages,_,1),resend_messages(L))
- )),
- nop(request_screen_update(0,0,1,80)).
-
-gather_messages([H|T]):-
- recorded(messages,H,R),
- erase(R),
- !,gather_messages(T).
-gather_messages([]).
-
-resend_messages([H|T]):-
- post_message_int(H),!,resend_messages(T).
-resend_messages([]).
-
-/*
-sv_message(S,V):-
- care_about(S),
- sconj(S,SC),
- vconj(S,V,VC),
- post_message('~w ~w.',[SC,VC]),!.
-sv_message(_,_).
-
-svo_message(S,V,O):-
- care_about(S),care_about(O),
- sconj(S,SC),
- vconj(S,V,VC),
- oconj(S,O,OC),
- post_message('~w ~w ~w.',[SC,VC,OC]),!.
-svo_message(S,V,_):-
- care_about(S), % not care_about(O),
- sconj(S,SC),
- vconj(S,V,VC),
- post_message('~w ~w it.',[SC,VC]),!.
-svo_message(_,V,O):-
- care_about(O), % not care_about(S),
- vconj(it,V,VC),
- oconj(it,O,OC),
- post_message('It ~w ~w.',[VC,OC]),!.
-svo_message(_,_,_).
-
-svi_message(S,V,I):-
- care_about(S),
- sconj(S,SC),
- vconj(S,V,VC),
- post_message('~w ~w ~w.',[SC,VC,I]),!.
-svi_message(_,_,_).
-
-svoi_message(S,V,O,I):-
- care_about(S),care_about(O),
- sconj(S,SC),
- vconj(S,V,VC),
- oconj(S,O,OC),
- post_message('~w ~w ~w ~w.',[SC,VC,OC,I]),!.
-svoi_message(S,V,_,I):-
- care_about(S), % not care_about(O),
- sconj(S,SC),
- vconj(S,V,VC),
- post_message('~w ~w it ~w.',[SC,VC,I]),!.
-svoi_message(_,V,O,I):-
- care_about(O), % not care_about(S),
- vconj(it,V,VC),
- oconj(it,O,OC),
- post_message('It ~w ~w ~w.',[VC,OC,I]),!.
-svoi_message(_,_,_,_).
-
-care_about(player).
-care_about(O):-
- attribute(player-dungeon,D),attribute(O-dungeon,D),
- attribute(player-level,L),attribute(O-level,L),
- attribute(O-row,R),attribute(O-column,C),
- visible(R,C),
-log_stuff('viz~n',[]).
-*/
-
-:-dynamic key_translate/2.
-
-%:-include(gheader).
-
-%:-use_module(screen).
-%:-use_module(messages).
-
-% FIXME dynamify key translations
-
-key_translate(['\014\'],redraw). 
-
-key_translate(['\033\','[','A'],up).
-key_translate(['\033\','[','B'],down).
-key_translate(['\033\','[','C'],right).
-key_translate(['\033\','[','D'],left).
-
-key_translate(['\033\','[','5','~'],page_up).
-key_translate(['\033\','[','6','~'],page_down).
-
-key_translate(['\033\',K],meta(K)):-char_type(K,alnum). %'
-
-keyboard_thread(Buffer):-
- set_stream(user_input,buffer(none)),
- get_single_char(Code),char_code(Key,Code),
- append(Buffer,[Key],NB),
- !,process_buffer(NB).
-
-process_buffer([]):-!,keyboard_thread([]).
-process_buffer(NB):-
- key_translate(NNB,_),
- append(NB,X,NNB),X\=[],
- !,keyboard_thread(NB).
-process_buffer(NB):-
- append(NBA,NBB,NB),
- key_translate(NBA,Key),
-% log_stuff('got key ~w.~n',[Key]),
- global_key_hook(Key),
- !,process_buffer(NBB).
-process_buffer([K|T]):-
- nop(log_stuff('got key ~w.~n',[K])),global_key_hook(K),!,process_buffer(T).
-/*
-global_key_hook(redraw):-!,request_screen_update(redraw).
-global_key_hook(meta(h)):-!,
- attribute(player-hit_points,H),
- HH is H+random(6)+1,
- attribute(player-hit_points,_,HH),
- request_screen_update(23,0,1,10).
-global_key_hook(meta(t)):-!,threads.
-global_key_hook(meta(l)):-
- (dungeon:player_dungeon(R,C,A,B),
- log_stuff('~w~n',[player_dungeon(R,C,A,B)]),fail;true),!.
-*/
-keystrokes_thread_name(keystrokes).
-
-global_key_hook(Key):-
- keystrokes_thread_name(Keystrokes),
- with_mutex(messages,(
-  nop(more_prompt),(Key=' ',nop(ack_messages);true);
-  nop(ack_messages),thread_send_message(Keystrokes,Key)
- )),!.
-
-keyboard_init:-
- keystrokes_thread_name(Keystrokes),
- (message_queue_property(_, alias(Keystrokes))->true;message_queue_create(Keystrokes)),
- thread_create(keyboard_thread([]),_,[]).
-
-wait_for_key(Key):-
- keystrokes_thread_name(Keystrokes),
- thread_get_message(Keystrokes,Key).
-
-wait_for_key:-wait_for_key(_).
-
 user:setup_console :- current_input(In),setup_console(In).
 
 :- dynamic(adv:has_setup_setup_console/1).
+:- volatile(adv:has_setup_setup_console/1).
 
 setup_console(In):- adv:has_setup_setup_console(In),!.
 setup_console(In):- 
@@ -325,6 +120,7 @@ bug(_) :- debugging(adv(all)).
 bug(B) :- debugging(adv(B),YN),!,YN.
 bug(_) :- debugging(adv(unknown),YN),!,YN.
 
+% bugout(L) :- bugout('~q', [L], always).
 
 bugout(A, B) :-
  bug(B),
@@ -337,7 +133,8 @@ bugout(A, L, B) :-
  !,
  dmust(maplist(simplify_dbug, L, LA)),
  ansi_format([fg(cyan)], '~N% ', []), ansi_format([fg(cyan)], A, LA),
- dmust((console_player(Player),overwrote_prompt(Player))),!.
+ dmust((console_player(Player),overwrote_prompt(Player))),!,
+ overwrote_prompt(player).
 bugout(_, _, _).
 
       
@@ -416,7 +213,7 @@ player_format(Agent,Fmt,List):-
  agent_to_output(Agent,OutStream),
  dmust(format(OutStream,Fmt,List)),!,
  overwrote_prompt(Agent).
-player_format(Agent, Fmt,List):- dmust(format(Fmt,List)),
+player_format(Agent,Fmt,List):- dmust(format(Fmt,List)),
  overwrote_prompt(Agent).
 
 
@@ -430,7 +227,7 @@ identifer_code(Char) :- char_type(Char, csym).
 identifer_code(Char) :- char_type(Char,to_lower('~')).
 identifer_code(Char) :- memberchk(Char, `-'`).
 
-punct_code(Punct) :- memberchk(Punct, `,.?;:!&\"`), !.
+punct_code(Punct) :- memberchk(Punct, `,.?;:!&\"`), !. % '
 punct_code(Punct) :- \+ identifer_code(Punct), char_type(Punct, graph).
 
 % -- Split a list of chars into a leading identifier and the rest.
@@ -491,15 +288,6 @@ skip_to_nl(In) :-
  ),
  !.
 
-% -- Input from stdin, convert to a list of atom-tokens.
-
-read_line_to_tokens(_Agent,In,Prev,Tokens):- 
- setup_console(In),
- with_tty(In,(read_line_to_codes(In,LineCodesR),read_pending_input(In,_,[]))), 
- append(Prev,LineCodesR,LineCodes),
- NegOne is -1,  
- dmust(line_to_tokens(LineCodes,NegOne,Tokens0)),!,
- dmust(Tokens0=Tokens).
 
 :- meta_predicate with_tty(+,0).
 with_tty(In,Goal):- 
@@ -513,6 +301,17 @@ with_tty(In,Goal):-
   Goal), prompt(_,Old)),
  (set_stream(In, timeout(TWas)),set_stream(In, tty(Was)))),!.
          
+% -- Input from stdin, convert to a list of atom-tokens.
+
+read_line_to_tokens(_Agent,In,Prev,Tokens):- 
+ setup_console(In),
+ with_tty(In,
+            (read_line_to_codes(In,LineCodesR),read_pending_input(In,_,[]))), 
+ append(Prev,LineCodesR,LineCodes),
+ NegOne is -1,  
+ dmust(line_to_tokens(LineCodes,NegOne,Tokens0)),!,
+ dmust(Tokens0=Tokens).
+
 line_to_tokens([],_,[]):-!.
 line_to_tokens(NegOne,NegOne,end_of_file):-!.
 line_to_tokens([NegOne],NegOne,end_of_file):-!.
@@ -529,10 +328,10 @@ line_to_tokens(LineCodes,NegOne,Tokens) :-
 line_to_tokens(LineCodes,_NegOne,Tokens) :- 
  last(LineCodes,L),
  memberchk(L,[46, 41|`.)`]), 
- catch((read_term_from_codes(LineCodes,Term,
+ notrace(catch((read_term_from_codes(LineCodes,Term,
   [syntax_errors(error),var_prefix(false),
   % variables(Vars),
-  variable_names(VNs),cycles(true),dotlists(true),singletons(_)])),_,fail),
+  variable_names(VNs),cycles(true),dotlists(true),singletons(_)])),_,fail)),
  nb_setval('$variable_names',VNs),
  Tokens=Term,!.
 
@@ -556,6 +355,7 @@ save_to_history(LineCodes):-
 
 
 :- dynamic(overwritten_chars/2).
+:- volatile(overwritten_chars/2).
 
 add_pending_input(Agent,C):- agent_to_input(Agent,In),add_pending_input0(In,C).
 add_pending_input0(In,C):- retract(overwritten_chars(In,SoFar)),append(SoFar,[C],New),!,assert(overwritten_chars(In,New)).
