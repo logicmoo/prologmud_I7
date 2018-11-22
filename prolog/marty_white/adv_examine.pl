@@ -35,6 +35,7 @@ exits_of(in, Object, Exits, S0) :-
 exits_of(in, _Object, [escape], _S0) :- !.
 exits_of(on, _Object, [escape], _S0) :- !.
 exits_of(under, _Object, [escape], _S0) :- !.
+exits_of(at, _Object, [escape], _S0) :- !.
 exits_of(Other, _Object, [reverse(Other)], _S0).
 
 object_props(Object, Sense, PropList, S0):- 
@@ -42,10 +43,10 @@ object_props(Object, Sense, PropList, S0):-
  list_to_set(PropListL,PropList).
 
                                        
-act_examine(Agent, Sense, Here, Depth, S0, S9) :- % next_depth(Depth2 is Depth -1),
+act_examine(Agent, Sense, PrepIn, Here, Depth, S0, S9) :- % next_depth(Depth2 is Depth -1),
  \+ \+ h(exit(_), Here, _, S0),
  Depth = depth(3), 
- h(PrepIn, Agent, Here, S0), !,
+ % h(PrepIn, Agent, Here, S0), !,
 
  nearby_objs(Agent, Here, Nearby, S0),
  object_props(Here, Sense, PropList, S0),
@@ -57,10 +58,10 @@ act_examine(Agent, Sense, Here, Depth, S0, S9) :- % next_depth(Depth2 is Depth -
              exits_are(Agent, PrepIn, Here, Exits) ],
     S0, S9).
 
-act_examine(Agent, Sense, Object, Depth, S0, S2):- Depth = depth(DepthN),
+act_examine(Agent, Sense, PrepIn, Object, Depth, S0, S2):- Depth = depth(DepthN),
  object_props(Object, Sense, PropList, S0),
- queue_agent_percept(Agent, sense_props(Agent, Sense, Object, Depth, PropList), S0, S1),
- (DepthN>1 -> add_child_precepts(Depth,Sense,Agent,Object,S1,S2) ; S1=S2),!.
+ (DepthN>1 -> queue_agent_percept(Agent, sense_props(Agent, Sense, Object, Depth, PropList), S0, S1) ; S0=S1),
+ (DepthN>0 -> add_child_precepts(Depth,Sense,Agent,PrepIn, Object,S1,S2) ; S1=S2),!.
 
 get_relation_list(Object, RelationSet, S1) :- 
   findall_set(Relation, 
@@ -68,11 +69,12 @@ get_relation_list(Object, RelationSet, S1) :-
       (declared(h(Relation, _, Object),S1))),
      Relation\=exit(_)), RelationSet).
 
-add_child_precepts(Depth, Sense, Agent, Object, S1, S2):- 
+add_child_precepts(Depth, Sense, Agent, PrepIn, Object, S1, S2):- 
  get_relation_list(Object, RelationSet, S1),
+ (member(PrepIn,RelationSet) -> UseRelationSet = [PrepIn] ; UseRelationSet= RelationSet),
  % dmsg(get_relation_list(Object, RelationSet)),
  findall(notice_children(Agent, Sense, Object, Relation, Depth, Children),
-     ((member(Relation,RelationSet),
+     ((member(Relation,UseRelationSet),
        child_precepts(Agent, Sense, Object, Relation, Depth, Children, S1))), PreceptS),
  queue_agent_percept(Agent,PreceptS, S1, S2).
 

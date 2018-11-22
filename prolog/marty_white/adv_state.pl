@@ -59,12 +59,49 @@ select_always(Item, List, ListWithoutItem) :- select(Item, List, ListWithoutItem
 
 % Manipulate simulation state
 %declare(Fact, State):- player_local(Fact, Player), !, declare(wishes(Player, Fact), State).
-declare((Fact1,Fact2), State, NewState) :- !,declare(Fact1, State, MidState),declare(Fact2, MidState, NewState).
-declare([Fact1|Fact2], State, NewState) :- !,declare(Fact1, State, MidState),declare(Fact2, MidState, NewState).
-declare(props(Object,Props), State, NewState) :- select(props(Object,OldProps), State, MidState),!,
- dmust((append(Props,OldProps,NewProps),!,declare(props(Object,NewProps), MidState, NewState))),!.
-declare([], State, State) :- !.
-declare(Fact, State, NewState) :- notrace(((assertion(var(NewState)),dmust(append([Fact], State, NewState))))).
+:- export(declare/3).
+
+declare(Fact, State, NewState) :- notrace((assertion(var(NewState)),is_list(State))),!,notrace(declare_list(Fact,State,NewState)).
+declare(Fact, type(Object), type(Object)):- !,
+   nb_current(advstate,State), 
+   (declared(type_props(Object, PropList),State);PropList=[]),!, 
+   declare_list(Fact,PropList,NewPropList),
+   select_always(type_props(Object,_),State,MidState),
+   append([type_props(Object,NewPropList)], MidState, NewState),
+   b_setval(advstate,NewState).
+declare(Fact, inst(Object), inst(Object)):- !,
+   nb_current(advstate,State), 
+   (declared(props(Object, PropList),State);PropList=[]),!, 
+   declare_list(Fact,PropList,NewPropList),
+   select_always(props(Object,_),State,MidState),
+   append([props(Object,NewPropList)], MidState, NewState),
+   b_setval(advstate,NewState).
+declare(Fact, istate, istate):- retract(istate(State)), declare_list(Fact, State, NewState), asserta(istate(NewState)).
+declare(Fact, VarName, VarName):- atom(VarName),nb_current(VarName,PropList), declare_list(Fact,PropList,NewPropList),b_setval(VarName,NewPropList).
+declare(Fact, Object, Object):- callable(Fact),!, Fact=..[F|List], 
+  Call=..[F, NewArg|List], 
+  current_predicate(_,Call),!, 
+  ignore( \+ \+ retract(Call)),
+  NewArg=Object,
+  asserta(Call).
+
+
+declare_list(Fact, State, NewState) :- assertion(compound(Fact)),assertion(var(NewState)), Fact==[], !, NewState = State.
+declare_list((Fact1,Fact2), State, NewState) :- !,declare_list(Fact1, State, MidState),declare_list(Fact2, MidState, NewState).
+declare_list([Fact1|Fact2], State, NewState) :- !,declare_list(Fact1, State, MidState),declare_list(Fact2, MidState, NewState).
+declare_list(HasList, State, [NewFront|NewState]) :- 
+  functor(HasList,F,A), arg(A,HasList,PropList),is_list(PropList),
+  functor(Functor,F,A), \+ \+ type_functor(state,Functor),
+  arg(1,HasList,Object), arg(1,Functor,Object),
+  select(Functor,State,NewState),!,
+  arg(A,Functor,OldPropList),assertion(is_list(OldPropList)),
+  append(PropList,OldPropList,NewPropList),
+  assertion(A=2), NewFront=..[F,Object,NewPropList]. 
+declare_list(Fact, State, NewState) :- append([Fact],State,NewState).
+
+
+
+
 
 %undeclare(Fact, State):- player_local(Fact, Player), !, undeclare(wishes(Player, Fact), State).
 undeclare(Fact, State, NewState):- notrace(undeclare_(Fact, State, NewState)).
@@ -78,16 +115,18 @@ undeclare_always(Fact, State, NewState) :- select_always(Fact, State, NewState).
 
 :- export(declared/2).
 declared(Fact, State) :-
-  quietly(( is_list(State)->declared_list(Fact, State);declared_link(Fact, State))).
+  quietly(( is_list(State)->declared_list(Fact, State);declared_link(declared,Fact, State))).
 
 declared_list(Fact, State) :- member(Fact, State).
-declared_list(Fact, State) :- member(link(VarName), State), declared_link(Fact, VarName).
-declared_list(Fact, State) :- member(inst(Object), State), declared_link(Fact, Object).
+declared_list(Fact, State) :- member(link(VarName), State), declared_link(declared, Fact, VarName).
+declared_list(Fact, State) :- member(inst(Object), State), declared_link(declared, Fact, Object).
 
-declared_link(Fact, VarName):- atom(VarName),nb_current(VarName,PropList), declared(Fact, PropList).
-declared_link(Fact, Object):- nonvar(Object),extra_decl(Object, PropList), declared(Fact, PropList).
-declared_link(Fact, Object):- nb_current(advstate,State), direct_props(Object,PropList,State),!, declared(Fact, PropList).
-declared_link(Fact, Object):- callable(Fact), Fact=..[F|List],Call=..[F,Object|List],current_predicate(_,Call),!,call(Call).
+declared_link(Pred2, Fact, VarName):- atom(VarName), nb_current(VarName,PropList), call(Pred2, Fact, PropList).
+declared_link(Pred2, Fact, Object):- nonvar(Object), extra_decl(Object, PropList), call(Pred2, Fact, PropList).
+declared_link(Pred2, Fact, Object):- nb_current(advstate,State), direct_props(Object,PropList,State),!, call(Pred2, Fact, PropList).
+declared_link(declared, Fact, Object):- callable(Fact), Fact=..[F|List], Call=..[F, Object|List], current_predicate(_,Call),!,call(Call).
+
+
 
 % extra_decl(Object, PropList):- nb_current(advstate,State), direct_props(Object,PropList,State).
 

@@ -51,7 +51,7 @@ strip_noise_words([to|Tokens], NewTokens) :- strip_noise_words(Tokens, NewTokens
 strip_noise_words(Tokens, NewTokens) :-
  findall(Token,
    ( member(Token, Tokens),
-   \+ member(Token, ['please', 'the', 'a', 'an', 'some', 'thee'])),
+   \+ member(Token, ['please', 'the', 'at', 'a', 'an', 'some', 'thee'])),
    NewTokens).
 
 convert_reflexive(Agent, Words, NewWords) :-

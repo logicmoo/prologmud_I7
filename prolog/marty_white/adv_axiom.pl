@@ -275,19 +275,42 @@ aXiom(doing, does_inventory(Agent)) -->
   findall(What, h(child, What, Agent), Inventory),
   queue_agent_percept(Agent, [rel_to(held_by, Inventory)]).
 
-aXiom(doing, look(Agent)) --> !, aXiom(doing, examine(Agent, see)) .
-aXiom(doing, examine(Agent, Sense)) --> 
-   dmust({is_sense(Sense)}), !, 
+
+
+
+% Agent looks
+aXiom(doing, look(Agent)) --> 
+  % Agent is At Here
+  h(At, Agent, Here),
+  % Agent looks At Here
+  aXiom(doing, trys_examine(Agent, see, At, Here, depth(3))).
+
+aXiom(doing, examine(Agent, Sense)) --> {is_sense(Sense)}, !, 
    dmust(from_loc(Agent, Place)),
-   must_act(examine(Agent, Sense, Place)).
+   aXiom(doing, trys_examine(Agent, see, in, Place, depth(3))).
+
+aXiom(doing, examine(Agent, Object)) --> aXiom(doing, trys_examine(Agent, see, at, Object, depth(3))). 
+aXiom(doing, examine(Agent, Sense, Object)) --> aXiom(doing, trys_examine(Agent, Sense, at, Object, depth(3))), !.
+aXiom(doing, examine(Agent, Sense, Prep, Object)) --> aXiom(doing, trys_examine(Agent, Sense, Prep, Object, depth(3))), !.
+
+% listen, smell ...
+aXiom(doing, Action) -->
+ {Action=..[Verb,Agent|Args], 
+ sensory_verb(Sense, Verb)}, !,
+ {NewAction=..[examine,Agent,Sense|Args]},
+ aXiom(doing, NewAction).
+
+% Here does not allow Sense?
+aXiom(doing, trys_examine(Agent, Sense, Prep, Object, Depth)) -->
+  \+ sg(can_sense_here(Agent, Sense)), !,
+  must_act( failed(examine(Agent, Sense, Prep, Object, Depth), \+ can_sense_here(Agent, Sense))).
+aXiom(doing, trys_examine(Agent, Sense, Prep, Object, Depth)) -->
+  \+ can_sense(Agent, Sense, Object), !,
+  must_act( failed(examine(Agent, Sense, Prep, Object, Depth), \+ can_sense(Agent, Sense, Object))).
+aXiom(doing, trys_examine(Agent, Sense, Prep, Object, Depth)) --> aXiom(doing, does_examine(Agent, Sense, Prep, Object, Depth)).
 
 
-aXiom(doing, examine(Agent, Object)) --> !, aXiom(doing, examine(Agent, see, Object, depth(3))).
-aXiom(doing, examine(Agent, Sense, Object)) --> aXiom(doing, examine(Agent, Sense, Object, depth(3))), !.
-aXiom(doing, examine(Agent, Sense, Object)) --> 
-  can_sense(Agent, Sense, Object), 
-  must_act( does_examine(Agent, Sense, Object)), !.
-
+aXiom(doing, does_examine(Agent, Sense, Prep, Object, Depth)) -->  dmust(act_examine(Agent, Sense, Prep, Object, Depth)),!.
 aXiom(doing, does_examine(Agent, Sense, Object)) --> {trace},
   %declared(props(Object, PropList)),
   findall(P, (getprop(Object, P), is_prop_public(Sense, P)), PropList),
@@ -299,13 +322,11 @@ aXiom(doing, does_examine(Agent, Sense, Object)) --> {trace},
           Children),
   queue_agent_percept(Agent, [sense_childs(Agent, Sense, Object, At, Children)]).
 
-aXiom(doing, examine(Agent, Sense, Object, Depth)) --> !, dmust(act_examine(Agent, Sense, Object, Depth)).
 
-aXiom(doing, Action) -->
- {Action=..[Verb,Agent|Args], 
- sensory_verb(Sense, Verb)}, !,
- {NewAction=..[examine,Agent,Sense|Args]},
- aXiom(doing, NewAction).
+
+
+
+
 
 aXiom(doing, OpenThing, S0, S9) :- fail, 
  act_to_cmd_thing(Agent, OpenThing, Open, Thing), 

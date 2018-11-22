@@ -368,7 +368,7 @@ log2eng_( Obj, Prop, English):-
  \+ ground(Prop), copy_term(Prop,Prop2),!,
  numbervars(Prop2,55,_),
  log2eng( Obj, Prop2, English).
-log2eng_(Obj, Some, English):- logic2eng(Obj, Some, English),!.
+log2eng_(Obj, Some, English):- dif(English,[]), logic2eng(Obj, Some, English),!.
 log2eng_( Obj, Prop, English):- Prop =..[N, Obj1, A| VRange],Obj1==Obj,Prop2 =..[N, A| VRange], log2eng( Obj, Prop2, English).
 log2eng_(Context, Inst, TheThing):- atom(Inst), inst_of(Inst, Type, N), !,
  (nth0(N, [(unknown), '', thee, old, some, a], Det) -> true; atom_concat('#',N,Det)),
@@ -433,6 +433,7 @@ logic2eng(Context, can_sense_from_here(Agent, At, Here, Sense, Nearby),
 logic2eng(Context, exits_are(_Agent, Relation, Here, Exits), ['Exits',Relation,Here,' are:', ExitText, '\n']):-
   list2eng(Context, Exits, ExitText).
 
+logic2eng(_Context, notice_children(_Agent, _Sense, _Here, _Prep, Depth, []),[]):- Depth \= depth(3).
 logic2eng(Context, notice_children(Agent, Sense, Here, Prep, _Depth, Nearby), 
     [cap(subj(Agent)), is, Prep, Here, and, es(Sense), ':'  | SeeText]):- 
  select(Agent, Nearby, OthersNearby),!,  list2eng(Context, OthersNearby, SeeText).
@@ -514,7 +515,7 @@ logic2eng(_Obj, h(Held_by , Object, Speaker), [the(Object), aux(be), Held_by, Sp
 
 
 logic2eng(_Obj, EmittingLight, [aux(be), 'glowing']):- EmittingLight == emmiting(light), !.
-logic2eng(_Obj, breaks_into(_), ['looks breaks_into']).
+logic2eng(_Obj, breaks_into(_), ['looks breakable']).
 logic2eng(_Obj, shiny, [aux(be), 'shiny!']).
 
 
@@ -534,31 +535,31 @@ logic2eng(_Aobj, alreadyhave(It), ['already have', the(It)]).
 logic2eng(_Aobj, mustgetout(It), ['must get out/off ',It,' first.']).
 logic2eng(_Aobj, self_relation(It), ['can\'t put ',It,' inside itself!']).
 logic2eng(_Aobj, moibeus_relation( _, _), ['Topological error!']).
-logic2eng(_Aobj, state(Dark, t),  ['It''s too ', Dark, ' to ', ly(Sense), '!']):- problem_solution(Dark, Sense, _Light).
+logic2eng(_Aobj, state(Dark, t),  ['It''s too ', Dark, ' to ', Sense, in, '!']):- problem_solution(Dark, Sense, _Light).
 logic2eng(_Aobj, mustdrop(It), [ 'will have to drop', It, ' first.']).
 logic2eng(_Aobj, cant( move(_Agent, It)), [It,aux(be),'immobile']).
 logic2eng(_Aobj, cantdothat(EatCmd), [ 'can\'t do: ', EatCmd]).
 
 %log2eng(_Obj, oper(OProp, [cap(N), aux(be), V]):- Prop =..[N, V].
 
-logic2eng(_Obj, has_rel(Ammount,TF) , [TF,that,'has,',Ammount]).
+logic2eng(_Obj, has_rel(Value,TF) , [TF,'that it has,',Value]).
 logic2eng( Obj, Prop, English):- Prop =..[N, V, T| VRange],T==t,Prop2 =..[N, V| VRange], log2eng( Obj, Prop2, English).
 logic2eng(_Obj, has_rel(on), ['has a surface']).
 logic2eng(_Obj, has_rel(in), ['has an interior']).
 logic2eng(_Obj, has_rel(exit(_)), ['has exits']).
 logic2eng(_Obj, can_be(eat), ['looks tasty ', '!']).
-logic2eng(_Obj, can_be(Eat), ['Can be', tense(Eat, past)]).
-logic2eng(_Obj, can_be(Eat, f), ['Can\'t be', tense(Eat, past)]).
-logic2eng(_Obj, knows_verbs(Eat), ['Able to', Eat ]).
-logic2eng(_Obj, knows_verbs(Eat, f), ['Unable to', Eat ]).
-logic2eng(_Obj, state(_, clean), []).
-logic2eng(_Obj, state(Open), [aux(be), Open ]).
-logic2eng(_Obj, state(Open, f), [aux(be), 'not', Open ]).
+logic2eng(_Obj, can_be(Verb), ['Can', aux(be), tense(Verb, past)]).
+logic2eng(_Obj, can_be(Verb, f), ['Can\'t', aux(be), tense(Verb, past)]).
+logic2eng(_Obj, knows_verbs(Verb), ['Able to', Verb ]).
+logic2eng(_Obj, knows_verbs(Verb, f), ['Unable to', Verb ]).
+logic2eng(_Obj, state(cleanliness, clean), []).
+logic2eng(_Obj, state(cleanliness, clean), [clean]).
+logic2eng(_Obj, state(Statused), [aux(be), Statused ]).
+logic2eng(_Obj, state(Statused, f), [aux(be), 'not', Statused ]).
 logic2eng( Obj, inherit(Type), ['is',Out]):- log2eng(Obj, [Type], Out), !.
 logic2eng( Obj, inherit(Type, f), ['isnt '|Out]):- log2eng(Obj, [Type], Out), !.
 logic2eng( Obj, inherits(Type), ['inherit',Out]):- log2eng(Obj, [Type], Out), !.
-logic2eng( _Obj, msg(Msg), Msg):- !.
-
+logic2eng( _Obj,msg(Msg), Msg):- !.
 logic2eng(_Obj, class_desc(_), []).
 
 logic2eng( Obj, oper(Act,Precond,PostCond), OUT) :- 

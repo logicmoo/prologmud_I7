@@ -83,15 +83,15 @@ is_prop_nonpublic(before).
 is_prop_nonpublic(after).
 
 
-sense_here(_Sense, _Here, _S0):-!.
-sense_here(Sense, Here, S0):- 
+sense_here(_Sense, _In, _Here, _S0):-!.
+sense_here(Sense, _In, Here, S0):- 
  getprop(Here, TooDark, S0),
  (sensory_problem_solution(Sense, TooDark, EmittingLight) -> 
    related_with_prop(Sense, _Obj, Here, EmittingLight, S0) ; true).
 
 can_sense_here(Agent, Sense, S0) :-
  from_loc(Agent, Here, S0),
- sense_here(Sense, Here, S0), !.
+ sense_here(Sense, in, Here, S0), !.
 can_sense_here(_Agent, _Sense, _State) .
 
 is_star(Star):- Star == '*'.
@@ -103,7 +103,7 @@ can_sense(_Agent, _See, Star, _State) :- is_star(Star), !.
 can_sense(Agent, Sense, Thing, S0) :- Agent == Thing, !, can_sense_here(Agent, Sense, S0).
 can_sense(_Agent, Sense, Here, S0) :- 
   getprop(Here, has_rel(exit(_),t), S0), 
-  sense_here(Sense, Here, S0),!.
+  sense_here(Sense, in, Here, S0),!.
 
 can_sense(Agent, Sense, Thing, S0) :-
   can_sense_here(Agent, Sense, S0),
@@ -202,7 +202,7 @@ sensory_problem_solution(Sense, state(Dark, t), emitting(Sense, Light)):-
  problem_solution(Dark, Sense, Light).
 
 problem_solution(dark, see, light).
-problem_solution(stinky, smell, pure).
+problem_solution(stinky, smell, purity).
 problem_solution(noisy, hear, quiet).
 
 
@@ -234,7 +234,7 @@ process_percept_auto(Agent, notice_children(Agent, Sense, _Here, _Prep, Depth, O
  agent_thought_model(Agent, ModelData, Mem0),
  Depth = depth(DepthN),
  DepthN > 1, DepthLess is DepthN - 1,
- findall( examine(Agent, Sense, Obj, depth(DepthLess)),
+ findall( trys_examine(Agent, Sense, child, Obj, depth(DepthLess)),
    ( member(Obj, Objects),    
    \+ member(holds_at(props(Obj, _), _), ModelData)),
    Actions),

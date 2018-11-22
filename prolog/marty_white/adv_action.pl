@@ -163,12 +163,13 @@ do_action(Agent, Action, S0, S3) :-
  declare(memories(Agent, Mem1), S1, S2))),
  dmust_tracing(must_act( Action, S2, S3)), !.
  
-trival_act(examine(_,see,_,depth(1))).
+trival_act(V):- \+ callable(V), !, fail.
+trival_act(V):- \+ compound(V), !, fail.
+trival_act(Action):- functor(Action,_,A),arg(A,Action,E),compound(E),E=depth(_),!.
 trival_act(_):- !, fail.
 trival_act(look(_)).
 trival_act(wait(_)).
 trival_act(goto(_,_,_,_)).
-trival_act(examine(_,see,_,depth(2))).
 
 apply_act( Action) --> 
  {action_doer(Action, Agent)}, 
