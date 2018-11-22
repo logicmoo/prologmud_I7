@@ -37,12 +37,14 @@ forget_always(Figment, M0, M1) :- select_always(Figment, M0, M1).
 thought(Figment, M) :- member(Figment, M).
 
 
-known_model(_Knower, E, L):- in_model(E, L).
+in_model(_Knower, E, L):- in_model(E, L).
 
+in_model(E, L):- member(model(M), L), in_model(E,M).
 in_model(E, L):- member(E, L).
 in_model(E, L):- member(holds_at(E,_), L).
 
-thought_model(E, L):- in_model(model(E), L).
+agent_thought_model(_Agent,E, L):- in_model(model(E), L), nonvar(E).
+% agent_thought_model(Agent,Model,List):- dmust((nop(memberchk(agent(Agent),List)), member(model(Model),List))).
 
 
 
@@ -53,10 +55,9 @@ thought_model(E, L):- in_model(model(E), L).
 
 % Fundamental predicate that actually modifies the list:
 update_relation( NewHow, Item, NewParent, Timestamp, M0, M2) :-
- select_always(holds_at(h(Spatial, _OldHow, Item, _OldWhere), _T), M0, M1a),
- select_always(h(Spatial, _OldHow2, Item, _OldWhere2), M1a, M1),
- ignore(Spatial=spatial),
- append([holds_at(h(Spatial, NewHow, Item, NewParent), Timestamp)], M1, M2).
+ select_always(holds_at(h(_OldHow, Item, _OldWhere), _T), M0, M1a),
+ select_always(h(_OldHow2, Item, _OldWhere2), M1a, M1),
+ append([holds_at(h(NewHow, Item, NewParent), Timestamp)], M1, M2).
 
 % Batch-update relations.
 update_relations(_NewHow, [], _NewParent, _Timestamp, M, M).
@@ -65,23 +66,23 @@ update_relations( NewHow, [Item|Tail], NewParent, Timestamp, M0, M2) :-
  update_relations( NewHow, Tail, NewParent, Timestamp, M1, M2).
 
 % If dynamic topology needs remembering, use
-%  related(Spatial, exit(E), Here, [There1|ThereTail], Timestamp)
-update_model_exit(Spatial, How, From, Timestamp, M0, M2) :-
- select(holds_at(h(Spatial, How, From, To), _T), M0, M1),
- append([holds_at(h(Spatial, How, From, To), Timestamp)], M1, M2).
+%  h(exit(E), Here, [There1|ThereTail], Timestamp)
+update_model_exit(How, From, Timestamp, M0, M2) :-
+ select(holds_at(h(How, From, To), _T), M0, M1),
+ append([holds_at(h(How, From, To), Timestamp)], M1, M2).
 
-update_model_exit(Spatial, How, From, Timestamp, M0, M1) :-
- append([holds_at(h(Spatial, How, From, '<unexplored>'), Timestamp)], M0, M1).
+update_model_exit(How, From, Timestamp, M0, M1) :-
+ append([holds_at(h(How, From, '<unexplored>'), Timestamp)], M0, M1).
 
-update_model_exit(Spatial, How, From, To, Timestamp, M0, M2) :-
- select_always(holds_at(h(Spatial, How, From, _To), _T), M0, M1),
- append([holds_at(h(Spatial, How, From, To), Timestamp)], M1, M2).
+update_model_exit(How, From, To, Timestamp, M0, M2) :-
+ select_always(holds_at(h(How, From, _To), _T), M0, M1),
+ append([holds_at(h(How, From, To), Timestamp)], M1, M2).
 
 
-update_model_exits(_Spatial, [], _From, _T, M, M).
-update_model_exits(Spatial, [Exit|Tail], From, Timestamp, M0, M2) :-
- update_model_exit(Spatial, Exit, From, Timestamp, M0, M1),
- update_model_exits(Spatial, Tail, From, Timestamp, M1, M2).
+update_model_exits([], _From, _T, M, M).
+update_model_exits([Exit|Tail], From, Timestamp, M0, M2) :-
+ update_model_exit(Exit, From, Timestamp, M0, M1),
+ update_model_exits(Tail, From, Timestamp, M1, M2).
 
 
 % Match only the most recent Figment in Memory.
@@ -94,7 +95,7 @@ update_model(Knower, moved( Agent, There, How, Here), Timestamp, Mem, M0, M2) :-
  Knower = Agent,
  dmust((
  % According to model, where was I?
- known_model(Knower,  h(Spatial, _, Agent, There), M0),
+ in_model(Knower,  h(_, Agent, There), M0),
  % TODO: Handle goto(Agent, on, table)
  % How did I get Here?
  append(RecentMem, [did( goto(_, _HowGo, A,B))|OlderMem], Mem), % find figment
@@ -104,16 +105,16 @@ update_model(Knower, moved( Agent, There, How, Here), Timestamp, Mem, M0, M2) :-
 
  %player_format('~p moved: goto(Agent, ~p, ~p) from ~p leads to ~p~n',
  %  [Agent, HowGo, Dest, There, Here]),
- update_model_exit(Spatial, exit(ExitName), There, Here, Timestamp, M0, M1), % Model the path.
+ update_model_exit(exit(ExitName), There, Here, Timestamp, M0, M1), % Model the path.
  update_relation(How, Agent, Here, Timestamp, M1, M2))). % And update location.
 
 update_model(_Agent, moved( Object, _From, How, To), Timestamp, _Mem, M0, M1) :-
  update_relation( How, Object, To, Timestamp, M0, M1).
 
 
-update_model(Agent, carrying(Agent, _Spatial, Objects), Timestamp, _Memory, M0, M1) :-
+update_model(Agent, carrying(Agent, Objects), Timestamp, _Memory, M0, M1) :-
  update_relations( held_by, Objects, Agent, Timestamp, M0, M1).
-update_model(Agent, wearing(Agent, _Spatial, Objects), Timestamp, _Memory, M0, M1) :-
+update_model(Agent, wearing(Agent, Objects), Timestamp, _Memory, M0, M1) :-
  update_relations( worn_by, Objects, Agent, Timestamp, M0, M1).
 update_model(Agent, notice_children(Agent, _Sense, Object, How, _Depth, Children), Timestamp, _Mem, M0, M1) :-
  update_relations( How, Children, Object, Timestamp, M0, M1).
@@ -130,7 +131,7 @@ update_model(Agent, exits_are(Agent2, Relation, Here, Exits), Timestamp, _Mem, M
   findall(exit(E), member(E, Exits), ExitRelations),
     % Don't update map here? it's better done in the moved( ) clause?
     update_relations(Relation, [Agent], Here, Timestamp, M0, M3),
-  update_model_exits(spatial, ExitRelations, Here, Timestamp, M3, M4).
+  update_model_exits( ExitRelations, Here, Timestamp, M3, M4).
 update_model(_Agent, exits_are(S,_,_,_), _Timestamp, _Mem, M0, M0):- S == '$fake',!.
 
 % Model objects seen Here
@@ -154,9 +155,9 @@ update_model(Agent, time_passes(Target), Timestamp, _Memory, M, M):-
 
 
 update_model(Agent, Percept, Timestamp, _Memory, M, M):-
- bugout(failed_update_model(Agent, Percept, Timestamp), model).
+ nop(bugout(failed_update_model(Agent, Percept, Timestamp), model)).
 
-% update_model_all(Spatial, Agent, PerceptsList, Stamp, ROMemory, OldModel, NewModel)
+% update_model_all(Agent, PerceptsList, Stamp, ROMemory, OldModel, NewModel)
 update_model_all(_Agent, [], _Timestamp, _Memory, M, M).
 update_model_all( Agent, [Percept|Tail], Timestamp, Memory, M0, M2) :-
  update_model(Agent, Percept, Timestamp, Memory, M0, M1),

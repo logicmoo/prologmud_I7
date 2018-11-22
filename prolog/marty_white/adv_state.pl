@@ -57,7 +57,7 @@ select_always(Item, List, ListWithoutItem) :- select(Item, List, ListWithoutItem
 % select(Item, List, ListWithoutItem).
 %select_default(DefaultItem, DefaultItem, ListWithoutItem, ListWithoutItem).
 
-% Manipulate simulation status
+% Manipulate simulation state
 %declare(Fact, State):- player_local(Fact, Player), !, declare(wishes(Player, Fact), State).
 declare((Fact1,Fact2), State, NewState) :- !,declare(Fact1, State, MidState),declare(Fact2, MidState, NewState).
 declare([Fact1|Fact2], State, NewState) :- !,declare(Fact1, State, MidState),declare(Fact2, MidState, NewState).
@@ -84,24 +84,24 @@ declared_list(Fact, State) :- member(Fact, State).
 declared_list(Fact, State) :- member(link(VarName), State), declared_link(Fact, VarName).
 declared_list(Fact, State) :- member(inst(Object), State), declared_link(Fact, Object).
 
-declared_link(Fact, VarName):- atom(VarName),nb_current(VarName,PropList),!, declared(Fact, PropList).
+declared_link(Fact, VarName):- atom(VarName),nb_current(VarName,PropList), declared(Fact, PropList).
 declared_link(Fact, Object):- nonvar(Object),extra_decl(Object, PropList), declared(Fact, PropList).
-declared_link(Fact, Object):- nb_current(advstate,State), direct_props(Object,PropList,State), declared(Fact, PropList).
-declared_link(Fact, Object):- callable(Fact), Fact=..[F|List],Call=..[F,Object|List],current_predicate(_,Call),call(Call).
+declared_link(Fact, Object):- nb_current(advstate,State), direct_props(Object,PropList,State),!, declared(Fact, PropList).
+declared_link(Fact, Object):- callable(Fact), Fact=..[F|List],Call=..[F,Object|List],current_predicate(_,Call),!,call(Call).
 
 % extra_decl(Object, PropList):- nb_current(advstate,State), direct_props(Object,PropList,State).
 
-% Entire status of simulation & agents is held in one list, so it can be easy
-% to roll back. The status of the simulation consists of:
+% Entire state of simulation & agents is held in one list, so it can be easy
+% to roll back. The state of the simulation consists of:
 % object properties
 % object relations
 % percept queues for agents
 % memories for agents (actually logically distinct from the simulation)
 % Note that the simulation does not maintain any history.
-% TODO: change status into a term:
+% TODO: change state into a term:
 % ss(Objects, Relationships, PerceptQueues, AgentMinds)
 % TODO:
-% store initial status as clauses which are collected up and put into a list,
+% store initial state as clauses which are collected up and put into a list,
 % like the operators are, to provide proper prolog variable management.
 
 get_objects(Spec, Set, State):- quietly((must_input_state(State), get_objects_(Spec, List, State, im(State)), !, list_to_set(List,Set))).
@@ -131,13 +131,10 @@ getprop(Object, Prop, S0):-
  *-> true ; 
  quietly(( assertion(\+ atom(Prop)), 
    getprop1(Object, [], Object, Prop, S0)))
- *-> true; 
- getprop_from_state(Object, Object, Prop, S0).
+ *-> true ;
+ fail.
 
 getprop0(Object, Prop, S0):- Prop=..[Name,Value], Element =..[Name, Object, Value], member(Element,S0).
-
-getprop_from_state(Orig, Object, Prop, Memory):- 
- member(status(S0), Memory), !, getprop1(Orig, [], Object, Prop, S0).
 
 getprop1(Orig, AlreadyUsed, Object, Prop, S0) :- 
  direct_props(Object, PropList, S0),

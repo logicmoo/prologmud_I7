@@ -16,68 +16,70 @@
 % Main file.
 %
 */
+findall_set(E,G,S):- findall(E,G,L),list_to_set(L,S).
 
-nearby_objs(Agent, Relation, Here, Nearby):- 
- related(Spatial, Relation, Agent, Here, State), !,
- findall(What,
-   (related(Spatial, Relation, What, Here, State),
-    (related(Spatial, descended, What, Here, State),
-     \+ (related(Spatial, inside, What, Container, State),
-     related(Spatial, descended, Container, Here, State)))),
+nearby_objs(Agent, Here, Nearby, S0):- 
+ ignore(h(Relation, Agent, Here, S0)),
+ findall_set(What,  
+   (h(Relation, What, Here, S0),
+    sub_objs(descended, Here, What, S0)),
    Nearby).
 
+sub_objs(Relation, Here, What, S0):- 
+  h(Relation, What, Here, S0),
+ \+ ((h(inside, What, Container, S0), 
+   Container\==Here, h(descended, Container, Here, S0))).
 
-act_examine(Agent, Sense, Here, Depth, State, NewState) :- % next_depth(Depth2 is Depth -1),
- \+ \+ related(_, exit(_), Here, _, State),
- Depth = depth(3),
- sensory_model_problem_solution(Sense, Spatial, _TooDark, _EmittingLight), 
- nearby_objs(Agent, Relation, Here, Nearby),
- findall(Direction, related(Spatial, exit(Direction), Here, _, State), Exits),
- !,
- queue_agent_percept(Agent,
-    [       %you_are(Agent, Relation, Here), 
-             exits_are(Agent, Relation, Here, Exits), 
-             notice_children(Agent, Sense, Here, Relation, Depth, Nearby) ],
-    State, NewState).
+exits_of(in, Object, Exits, S0) :- 
+  findall(Direction, h(exit(Direction), Object, _, S0), Exits), Exits\==[], !.
+exits_of(in, _Object, [escape], _S0) :- !.
+exits_of(on, _Object, [escape], _S0) :- !.
+exits_of(under, _Object, [escape], _S0) :- !.
+exits_of(Other, _Object, [reverse(Other)], _S0).
 
-act_examine(Agent, Sense, Object, Depth, S0, S2):- Depth= depth(DepthN),
+object_props(Object, Sense, PropList, S0):- 
  findall(P, (getprop(Object, P, S0), is_prop_public(Sense,P)), PropListL),
- list_to_set(PropListL,PropList),
+ list_to_set(PropListL,PropList).
+
+                                       
+act_examine(Agent, Sense, Here, Depth, S0, S9) :- % next_depth(Depth2 is Depth -1),
+ \+ \+ h(exit(_), Here, _, S0),
+ Depth = depth(3), 
+ h(PrepIn, Agent, Here, S0), !,
+
+ nearby_objs(Agent, Here, Nearby, S0),
+ object_props(Here, Sense, PropList, S0),
+ exits_of(PrepIn, Here, Exits, S0),
+ queue_agent_percept(Agent,
+    [       %you_are(Agent, Relation, Here),
+             notice_children(Agent, Sense, Here, PrepIn, Depth, Nearby), 
+             sense_props(Agent, Sense, Here, depth(2), PropList),
+             exits_are(Agent, PrepIn, Here, Exits) ],
+    S0, S9).
+
+act_examine(Agent, Sense, Object, Depth, S0, S2):- Depth = depth(DepthN),
+ object_props(Object, Sense, PropList, S0),
  queue_agent_percept(Agent, sense_props(Agent, Sense, Object, Depth, PropList), S0, S1),
  (DepthN>1 -> add_child_precepts(Depth,Sense,Agent,Object,S1,S2) ; S1=S2),!.
 
-add_child_precepts(Depth,Sense,Agent,Object,S1,S2):- 
- findall(Relation, 
-     (getprop(Object,has_rel(_Domain1,Relation,t),S1);      
-      declared(h(_Domain2, Relation, _, Object),S1)), RelationList),
- list_to_set(RelationList,RelationSet),
- %dmsg(list_to_set(RelationList,RelationSet)),
- add_child_precepts_rel_list(Depth,Sense, Agent,Object,RelationSet,S1,S2).
+get_relation_list(Object, RelationSet, S1) :- 
+  findall_set(Relation, 
+     ((getprop(Object,has_rel(Relation,t),S1);      
+      (declared(h(Relation, _, Object),S1))),
+     Relation\=exit(_)), RelationSet).
+
+add_child_precepts(Depth, Sense, Agent, Object, S1, S2):- 
+ get_relation_list(Object, RelationSet, S1),
+ % dmsg(get_relation_list(Object, RelationSet)),
+ findall(notice_children(Agent, Sense, Object, Relation, Depth, Children),
+     ((member(Relation,RelationSet),
+       child_precepts(Agent, Sense, Object, Relation, Depth, Children, S1))), PreceptS),
+ queue_agent_percept(Agent,PreceptS, S1, S2).
 
 
-add_child_precepts_rel_list(Depth,Sense, Agent,Here,[Prep|More],S0,S2):-    
-  (exclude(=(exit(_)),[Prep|More],RelationSet)-> RelationSet \== [Prep|More]),!, 
-  dmust(related(Spatial, Relation, Agent, Here, S0)->Object=Agent;
-    (((related(Spatial, Relation, Object, Here, S0),Relation\=exit(_)))
-     ;(Relation=in,Object='$fake'))), !,
-  findall(Direction, related(Spatial, exit(Direction), Here, _, S0), Exits),  
-  (Depth==depth(3)-> queue_agent_percept(Agent,[exits_are(Object,Relation,Here,Exits)],S0,S1) ; S0=S1),
-  add_child_precepts_rel_list(Depth,Sense, Agent,Here,RelationSet,S1,S2),!.
-
-  
-add_child_precepts_rel_list(_Depth,_Sense, _Agent,_Object,[],S1,S1).
-add_child_precepts_rel_list(Depth,Sense, Agent,Object,[Prep|More],S0,S2):- !, 
-  add_child_precepts_rel_list(Depth,Sense, Agent,Object,More,S0,S1),
-  add_child_precepts_rel_list(Depth,Sense, Agent,Object,Prep,S1,S2).
-
-add_child_precepts_rel_list(_Depth,_Sense, _Agent,_Object,exit(_),S1,S1).
-
-add_child_precepts_rel_list(Depth,Sense, Agent,Object,Relation,S1,S2):- 
- findall(What,
-   (related(_Spatial, Relation, What, Object, S1),
-    nop(once(can_sense(Agent, _VSense, What, S1)))),
-   ChildrenL),
- list_to_set(ChildrenL,Children),
- queue_agent_percept(Agent, notice_children(Agent, Sense, Object, Relation, Depth, Children), S1, S2).
-                                 
+child_precepts(Agent, Sense, Object, Relation, _Depth, Children, S1):- 
+ findall_set(What,  
+  (h(Relation, What, Object, S1), 
+   nop(once(can_sense(Agent, Sense, What, S1)))), 
+   Children). 
 

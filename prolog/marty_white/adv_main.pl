@@ -39,6 +39,7 @@ extra :- true. % Fuller, but questionable if needed yet.
 
 :- user:ensure_loaded(library(parser_sharing)).
 
+
 :- consult(adv_debug).
 :- consult(adv_help).
 :- consult(adv_util).
@@ -49,6 +50,8 @@ extra :- true. % Fuller, but questionable if needed yet.
 
 :- consult(adv_inst).
 :- consult(adv_edit).
+:- ensure_loaded(adv_axiom).
+
 
 :- consult(adv_examine).
 :- consult(adv_action).
@@ -126,7 +129,7 @@ update_telnet_clients(S0,S0).
 telnet_decide_action(Agent, Mem0, Mem0):-
  % If actions are queued, no further thinking required.
  thought(todo([Action|_]), Mem0),
- (declared(h(_Spatial, in, Agent, Here), advstate)->true;Here=somewhere),
+ (declared(h(in, Agent, Here), advstate)->true;Here=somewhere),
  bugout('~w @ ~w telnet: Already about to: ~w~n', [Agent, Here, Action], telnet).
 
 telnet_decide_action(Agent, Mem0, Mem1) :-
@@ -199,5 +202,5 @@ save_term(Filename, _) :-
  access_file(Filename, exist),
  player_format('Save FAILED! Does file "~w" already exist?~n', [Filename]).
 save_term(Filename, _) :-
- player_format('Failed to status(open, t) file "~w" for saving.~n', [Filename]).
+ player_format('Failed to state(open, t) file "~w" for saving.~n', [Filename]).
 

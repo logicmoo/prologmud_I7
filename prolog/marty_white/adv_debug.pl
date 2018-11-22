@@ -96,6 +96,30 @@ never_trace(Spec):- '$hide'(Spec),'$iso'(Spec),trace(Spec, -all).
 :- never_trace(prolog_debug:assertion(_)).
 */
 
+:- export(simplify_dbug/2).
+simplify_dbug(G,GG):- \+ compound(G),!,GG=G.
+simplify_dbug({O},{O}):- !.
+simplify_dbug(List,O):-
+ ( is_list(List) -> clip_cons(List,'...'(_),O) ;
+ ( List = [_|_], append(LeftSide,Open,List),
+  Open \= [_|_], !, assertion(is_list(LeftSide)),
+ clip_cons(LeftSide,'...'(Open),O))).
+simplify_dbug(G,GG):- compound_name_arguments(G,F,GL), F\==sense_props, !,
+ maplist(simplify_dbug,GL,GGL),!,compound_name_arguments(GG,F,GGL).
+simplify_dbug(G,G).              
+
+is_state_list(G,_):- \+ compound(G),!,fail.
+is_state_list([G1|_],{GG,'...'}):- compound(G1),G1=structure_label(GG),!.
+is_state_list([_|G],GG):- is_state_list(G,GG).
+clip_cons(G,GG):- is_state_list(G,GG),!.
+clip_cons(List,ClipTail,{Len,LeftS,ClipTail}):- 
+ length(List,Len),
+ MaxLen = 5, Len>MaxLen,
+ length(Left,MaxLen),
+ append(Left,_,List),!,
+ maplist(simplify_dbug,Left,LeftS).
+clip_cons(Left,_,List):-maplist(simplify_dbug,Left,List).
+
 
 %:- never_trace(lists:member(_,_)).
 %:- never_trace(lists:append(_,_,_)).

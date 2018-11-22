@@ -28,10 +28,10 @@
 % clothing - can be worn
 % worn - is being worn
 % container
-% status(opened, t) - container is open (must be opened) to be used. there is no "closed").
+% state(opened, t) - container is open (must be opened) to be used. there is no "closed").
 % can_be(open, t) - can be opened and closed
 % capacity(N) - number of objects a container or supporter can hold
-% status(locked, t) - cannot be opened
+% state(locked, t) - cannot be opened
 % can_be(lock, t), with_key
 % enterable
 % supporter
@@ -44,18 +44,18 @@
 % list_together - way to handle "5 fish"
 % plural - pluralized-name if different from singular
 % when_closed - description when closed
-% when_open - description when status(opened, t)
+% when_open - description when state(opened, t)
 % when_on, when_off - like when_closed, etc.
 % Some TADS properties:
 % thedesc
 % pluraldesc
 % is_indistinguishable
 % is_visible(vantage)
-% is_reachable(Agent, actor)
-% valid(verb) - is object seeable, is_reachable, etc.
+% touchable(Agent, actor)
+% valid(verb) - is object seeable, touchable, etc.
 % verification(verb) - is verb logical for this object
 % Parser disambiguation:
-% eliminate objs not see, is_reachable, etc.
+% eliminate objs not see, touchable, etc.
 % check preconditions for acting on a candidate object
 
 
@@ -82,17 +82,17 @@ type_functor(memory, todo(list_of(doing))).
 type_functor(memory, model(list_of(state_with_stamps))).
 type_functor(event, timestamp(ordinal, timept)).
 
-type_functor(state_with_stamps, holds_at(h(domain, domrel, inst, inst), timept)).
+type_functor(state_with_stamps, holds_at(h(domrel, inst, inst), timept)).
 
-type_functor(status, type_props(type, list_of(nv))).
-type_functor(status, props(inst, list_of(nv))).
-type_functor(status, memories(inst, list_of(event))).
-type_functor(status, preceptq(inst, list_of(event))).
-type_functor(status, h(domain, domrel, inst, inst)).
+type_functor(state, type_props(type, list_of(nv))).
+type_functor(state, props(inst, list_of(nv))).
+type_functor(state, memories(inst, list_of(event))).
+type_functor(state, preceptq(inst, list_of(event))).
+type_functor(state, h(domrel, inst, inst)).
 
 
 type_functor(doing, inventory(agnt)). 
-type_functor(doing, look(agnt, optional(domain, spatial))).
+type_functor(doing, look(agnt)).
 type_functor(doing, examine(agnt, optional(sense, see), optional(inst, here), optional(depth, 1))).
 type_functor(event, sense_props(agnt, sense, inst, depth, list_of(nv))).
 
@@ -128,7 +128,10 @@ type_functor(doing, give(agnt, inst, agnt2)).
 type_functor(doing, take(agnt, inst)).
 type_functor(doing, drop(agnt, inst)).
 
-type_functor(doing, goto(agnt, movetype, dest)).
+type_functor(doing, goto_dir(agnt, movetype, dir)).
+type_functor(doing, goto_loc(agnt, movetype, dest)).
+type_functor(doing, goto_obj(agnt, movetype, obj)).
+type_functor(doing, goto_prep_obj(agnt, movetype, domrel, obj)).
 type_functor(doing, throw(agnt, inst, dest)).
 type_functor(doing, put(agnt, inst, dest)).
 type_functor(event, moved(inst, dest1, verb, dest2)).
@@ -155,7 +158,7 @@ type_functor(nv, desc(sv(text))).
 type_functor(nv, door_to(inst)).
 type_functor(nv, effect(verb_targeted, script)).
 type_functor(nv, breaks_into(type)).
-type_functor(nv, has_rel(domain, domrel, tf)).
+type_functor(nv, has_rel(domrel, tf)).
 type_functor(nv, has_sense(sense)).
 type_functor(nv, inherit(type, tf)).
 type_functor(nv, inherits(type)).
@@ -166,7 +169,7 @@ type_functor(nv, name(sv(text))).
 type_functor(nv, nominals(list_of(text))).
 type_functor(nv, nouns(list_of(text))).
 type_functor(nv, oper(doing, preconds, postconds)).
-type_functor(nv, status(tfstate, tf)).
+type_functor(nv, state(tfstate, tf)).
 
 
 
@@ -191,41 +194,41 @@ istate([
 	
 	
 	
-  h(Spatial, in, 'floyd~1', pantry),
+  h(in, 'floyd~1', pantry),
 	
 	
-	h(Spatial, in, 'player~1', kitchen),
-	h(Spatial, worn_by, 'watch~1', 'player~1'),
-	h(Spatial, held_by, 'bag~1', 'player~1'),
+	h(in, 'player~1', kitchen),
+	h(worn_by, 'watch~1', 'player~1'),
+	h(held_by, 'bag~1', 'player~1'),
 	
-  h(Spatial, in, 'coins~1', 'bag~1'),
-  h(Spatial, held_by, 'wrench~1', 'floyd~1'),
+  h(in, 'coins~1', 'bag~1'),
+  h(held_by, 'wrench~1', 'floyd~1'),
  props('coins~1', [inherit(coins, t)]), 
 
  % Relationships
 
- h(Spatial, exit(south), pantry, kitchen), % pantry exits south to kitchen
- h(Spatial, exit(north), kitchen, pantry),
- h(Spatial, exit(down), pantry, basement),
- h(Spatial, exit(up), basement, pantry),
- h(Spatial, exit(south), kitchen, garden),
- h(Spatial, exit(north), garden, kitchen),
- h(Spatial, exit(east), kitchen, dining_room),
- h(Spatial, exit(west), dining_room, kitchen),
- h(Spatial, exit(north), dining_room, living_room),
- h(Spatial, exit(east), living_room, dining_room),
- h(Spatial, exit(south), living_room, kitchen),
- h(Spatial, exit(west), kitchen, living_room),
+ h(exit(south), pantry, kitchen), % pantry exits south to kitchen
+ h(exit(north), kitchen, pantry),
+ h(exit(down), pantry, basement),
+ h(exit(up), basement, pantry),
+ h(exit(south), kitchen, garden),
+ h(exit(north), garden, kitchen),
+ h(exit(east), kitchen, dining_room),
+ h(exit(west), dining_room, kitchen),
+ h(exit(north), dining_room, living_room),
+ h(exit(east), living_room, dining_room),
+ h(exit(south), living_room, kitchen),
+ h(exit(west), kitchen, living_room),
 
- h(Spatial, in, a(shelf), pantry), % shelf is in pantry
- h(Spatial, in, a(rock), garden),
- h(Spatial, in, a(fountain), garden),
- h(Spatial, in, a(mushroom), garden),
- h(Spatial, in, a(shovel), basement), % FYI shovel has no props (this is a lttle test to see what happens)
- h(Spatial, in, a(videocamera), living_room),
- h(Spatial, in, screendoor, kitchen),
- h(Spatial, in, screendoor, garden),
- h(Spatial, in, brklamp, garden),
+ h(in, a(shelf), pantry), % shelf is in pantry
+ h(in, a(rock), garden),
+ h(in, a(fountain), garden),
+ h(in, a(mushroom), garden),
+ h(in, a(shovel), basement), % FYI shovel has no props (this is a lttle test to see what happens)
+ h(in, a(videocamera), living_room),
+ h(in, screendoor, kitchen),
+ h(in, screendoor, garden),
+ h(in, brklamp, garden),
 
 
  props(basement, [
@@ -238,9 +241,9 @@ istate([
  inherit(place,t),
  % goto(Agent, Prep, Dir, dir, result) provides special handling for going in a direction.
  cant_go(Agent, up, 'You lack the ability to fly.'), 
- oper( /*garden, */ goto(Agent, _, south, _From), 
+ oper( /*garden, */ goto_dir(Agent, _, south), 
    % precond(Test, FailureMessage)
-   precond(getprop(screendoor, status(opened, t)), ['you must open the door first']),
+   precond(getprop(screendoor, state(opened, t)), ['you must open the door first']),
    % body(clause)
    body(inherits)
  ),
@@ -248,17 +251,17 @@ istate([
  cant_go(Agent, _Dir, 'The fence surrounding the garden is too tall and solid to pass.')
  ]),
  props(kitchen, [inherit(place,t)]),
-  h(Spatial, reverse(on), a(table), a(table_leg)),
-  h(Spatial, on, a(box), a(table)),
-  h(Spatial, in, a(bowl), a(box)),
-  h(Spatial, in, a(flour), a(bowl)),
-  h(Spatial, in, a(table), kitchen), % a table is in kitchen
-  h(Spatial, on, a(lamp), a(table)), % a lamp is on the table
+  h(reverse(on), a(table), a(table_leg)),
+  h(on, a(box), a(table)),
+  h(in, a(bowl), a(box)),
+  h(in, a(flour), a(bowl)),
+  h(in, a(table), kitchen), % a table is in kitchen
+  h(on, a(lamp), a(table)), % a lamp is on the table
 
-  h(Spatial, in, a(sink), kitchen),
-  h(Spatial, in, a(plate), a(sink)),
-  h(Spatial, in, a(cabinate), kitchen), 
-  h(Spatial, in, a(cup), a(cabinate)),
+  h(in, a(sink), kitchen),
+  h(in, a(plate), a(sink)),
+  h(in, a(cabinate), kitchen), 
+  h(in, a(cup), a(cabinate)),
   
 
  props(living_room, [inherit(place,t)]),
@@ -286,12 +289,12 @@ istate([
   % see DM4
   door_to(kitchen),
   door_to(garden),
-  status(opened, f),
+  state(opened, f),
   inherit(door,t)
  ])
 
 ]) :-  clock_time(Now), Agent = $agent, 
- sensory_model_problem_solution(_Sense, Spatial, TooDark, _EmittingLight).
+ sensory_problem_solution(_Sense, TooDark, _EmittingLight).
 
 
 %:- op(0, xfx, props).
@@ -300,7 +303,7 @@ istate([
 :- dynamic(extra_decl/2).
 extra_decl(T,P):-
  Agent = $agent, 
- sensory_model_problem_solution(Sense, Spatial, TooDark, EmittingLight),
+ sensory_problem_solution(Sense, TooDark, EmittingLight),
  member(type_props(T,P), 
  [
    type_props(broken, [
@@ -318,7 +321,7 @@ extra_decl(T,P):-
   inherit(food,t),
   nouns([mushroom, fungus, toadstool]),
   adjs([speckled]),
-  % initial(description used until initial status changes)
+  % initial(description used until initial state changes)
   initial('A speckled mushroom grows out of the sodden earth, on a long stalk.'),
   % description(examination description)
   desc('The mushroom is capped with blotches, and you aren\'t at all sure it\'s not a toadstool.'),
@@ -334,7 +337,7 @@ extra_decl(T,P):-
    can_be(move, f),
    can_be(open, t),
    can_be(close, t),
-   status(opened, t),
+   state(opened, t),
    nouns(door),
    inherit(corporial,t)
   ]),
@@ -375,7 +378,7 @@ extra_decl(T,P):-
     can_be(touch, t),
     can_be(examine, t), 
     inherit(thinkable,t),
-    status(cleanliness,clean),
+    state(cleanliness,clean),
     adjs($class), 
     class_desc(['kind is corporial'])]),
 
@@ -404,8 +407,8 @@ extra_decl(T,P):-
 
   % People
   type_props(character, [
-   has_rel(Spatial, worn_by, t), 
-   has_rel(Spatial, held_by, t), 
+   has_rel(worn_by, t), 
+   has_rel(held_by, t), 
    % overridable defaults
    mass(50), volume(50), % liters  (water is 1 kilogram per liter)
    knows_verbs(eat, t),
@@ -423,8 +426,8 @@ extra_decl(T,P):-
 
     knows_verbs(examine, t),
     can_be(touch, f),
-    has_rel(Spatial, held_by, f), 
-    has_rel(Spatial, worn_by, f), 
+    has_rel(held_by, f), 
+    has_rel(worn_by, f), 
     has_sense(Sense),
     inherit(no_perceptq, t), 
     inherit(noncorporial,t),
@@ -440,7 +443,7 @@ extra_decl(T,P):-
     inherit(player,t),
  
     % players use power but cant be powered down
-    can_be(switch(off), f), status(powered, t)
+    can_be(switch(off), f), state(powered, t)
    ]),
 
   type_props(autonomous, [inherit(autoscan,t)]),
@@ -458,28 +461,28 @@ extra_decl(T,P):-
   nouns($class), 
   inherit(shiny,t),
   inherit(character,t),
-  status(powered, t),
-  % TODO: 'floyd~1' should `look(Agent, Spatial)` when turned back on.
-   effect(switch(on), setprop($self, status(powered, t))),
-   effect(switch(off), setprop($self, status(powered, f)))
+  state(powered, t),
+  % TODO: 'floyd~1' should `look(Agent)` when turned back on.
+   effect(switch(on), setprop($self, state(powered, t))),
+   effect(switch(off), setprop($self, state(powered, f)))
   ]),
 
   % Places
   type_props(place, [
      volume_capacity(10000),
-     has_rel(Spatial, in, t), 
+     default_rel(in, t), 
      can_be(move, f), 
-     has_rel(Spatial, exit(_), t),
+     has_rel(exit(_), t),
      inherit(container,t)
   ]),
 
   type_props(container, [
-    has_rel(Spatial, in, t),     
-    oper( put(Agent, Spatial, Thing, in, $self), 
+    has_rel(in, t),     
+    oper( put(Agent, Thing, in, $self), 
     % precond(Test, FailureMessage)
     precond(( ~(getprop(Thing, inherit(liquid,t)))), ['liquids would spill out']),
     % body(clause)
-    body(move(Agent, Spatial, Thing, in, $self)))
+    body(move(Agent, Thing, in, $self)))
       % inherit(flask, f), 
     % adjs(flask, f)
    ]),
@@ -497,11 +500,11 @@ extra_decl(T,P):-
 
   type_props(flask, [
     adjs(physical),
-    oper( put(Agent, Spatial, Thing, in, $self), 
+    oper( put(Agent, Thing, in, $self), 
      % precond(Test, FailureMessage)
      precond(getprop(Thing, inherit(corporial,t)), ['non-physical would spill out']),
     % body(clause)
-     body(move(Agent, Spatial, Thing, in, $self))),
+     body(move(Agent, Thing, in, $self))),
     inherit(container, t), 
     inherit(object, t)
    ]),
@@ -510,7 +513,7 @@ extra_decl(T,P):-
    inherit(flask, t), 
    volume_capacity(2),
    breaks_into(shards),
-   status(cleanliness,dirty),
+   state(cleanliness,dirty),
    name('porcelain bowl'),
    desc('This is a modest glass cooking bowl with a yellow flower motif glazed into the outside surface.')
   ]),
@@ -519,7 +522,7 @@ extra_decl(T,P):-
    inherit(object,t),
    volume_capacity(2),
    breaks_into(shards),
-   status(cleanliness,dirty),
+   state(cleanliness,dirty),
    name('plate')
   ]),
   type_props(box, [
@@ -528,11 +531,11 @@ extra_decl(T,P):-
    volume_capacity(11), 
    breaks_into(splinters),
    can_be(open, t), 
-   status(opened, f),
+   state(opened, f),
    TooDark
   ]),
   type_props(sink, [
-   status(cleanliness,dirty),
+   state(cleanliness,dirty),
    inherit(flask, t),   
    inherit(furnature,t),   
    volume_capacity(5)  
@@ -546,11 +549,11 @@ extra_decl(T,P):-
    volume_capacity(150),
    inherit(place,t),
    inherit(flask, t), 
-%   status(locked, f), 
+%   state(locked, f), 
    can_be(lock, f)
   ]),
 
- type_props(measurable, [adjs($class), has_rel(quantity, ammount, t)]), 
+ type_props(measurable, [adjs($class), has_rel(ammount, t)]), 
 
  
  % shiny things are corporial
@@ -565,7 +568,7 @@ extra_decl(T,P):-
  nominals(brass),
  inherit(shiny,t),
  can_be(switch, t),
- status(powered, t),
+ state(powered, t),
  inherit(object,t),
  EmittingLight,
  effect(switch(on), setprop($self, EmittingLight)),
@@ -583,23 +586,23 @@ extra_decl(T,P):-
  effect(switch(off), true) % calls true(S0, S1) !
  ]),
 
-   type_props(surface, [has_rel(Spatial, on, t),adjs(physical), status(cleanliness,clean)]), 
+   type_props(surface, [has_rel(on, t),adjs(physical), state(cleanliness,clean)]), 
 
    type_props(shelf, [inherit(surface, t),adjs(physical),inherit(furnature, t)]), 
 
-   type_props(table, [inherit(surface, t),adjs(physical),has_rel(Spatial, reverse(on), t)]), 
+   type_props(table, [inherit(surface, t),adjs(physical),default_rel(on, t)]), 
 
    type_props(wrench, [inherit(shiny,t)]),
    type_props(videocamera, [
    inherit(memorize,t),
    inherit(perceptq,t), 
    can_be(switch, t),
-    effect(switch(on), setprop($self, status(powered, t))),
-    effect(switch(off), setprop($self, status(powered, f))),
-   status(powered, t),
+    effect(switch(on), setprop($self, state(powered, t))),
+    effect(switch(off), setprop($self, state(powered, f))),
+   state(powered, t),
    has_sense(Sense),
    breaks_into(broken_videocam)
    ]),
-   type_props(broken_videocam, [can_be(switch, f),status(powered, f), inherit(videocamera,t)])
+   type_props(broken_videocam, [can_be(switch, f),state(powered, f), inherit(videocamera,t)])
  ]).
 

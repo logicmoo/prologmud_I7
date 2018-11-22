@@ -49,7 +49,7 @@ each_agent(Precond, NewGoal, S0, S2) :-
 % moved( obj, from, how, to)
 
 % -----------------------------------------------------------------------------
-% The status of an Agent is stored in its memory.
+% The state of an Agent is stored in its memory.
 % Agent memory is stored as a list in reverse chronological order, implicitly
 % ordering and timestamping everything.
 % Types of memories:
@@ -57,7 +57,7 @@ each_agent(Precond, NewGoal, S0, S2) :-
 % timestamp(T) - agent may add a new timestamp whenever a sequence point
 %      is desired.
 % [percept]  - received perceptions.
-% model([...]) - Agent's internal model of the Spatial world.
+% model([...]) - Agent's internal model of the world.
 %      Model is a collection of timestampped relations.
 % goals([...]) - states the agent would like to achieve, or
 %      acts the agent would like to be able to do.
@@ -83,10 +83,10 @@ add_goals(Goals, Mem0, Mem2) :-
  append(Goals, OldGoals, NewGoals),
  memorize(goals(NewGoals), Mem1, Mem2).
 
+
 add_todo(Auto, Mem0, Mem3) :- Auto = auto(Agent),
  %dmust(member(inst(Agent), Mem0)),
  autonomous_decide_goal_action(Agent, Mem0, Mem3),!.
-
 add_todo(Action, Mem0, Mem2) :- 
  forget(todo(OldToDo), Mem0, Mem1),
  append(OldToDo, [Action], NewToDo),
@@ -98,31 +98,31 @@ add_todo_all([Action|Rest], Mem0, Mem2) :-
  add_todo_all(Rest, Mem1, Mem2).
 
 
-
+ 
 % -----------------------------------------------------------------------------
 % do_introspect(Agent, Query, Answer, Memory)
 do_introspect(Agent, path(There), Answer, S0) :- !, 
-   declared(h(Spatial, _, _, There), S0),
-   declared(h(Spatial, _, Agent, Here), S0),
-  do_introspect(Agent, path(Spatial, Here, There), Answer, S0).
+   declared(h(_, _, There), S0),
+   declared(h(_, Agent, Here), S0),
+  do_introspect(Agent, path(Here, There), Answer, S0).
 
 do_introspect(Agent, path(Here, There), Answer, S0) :- !,
-  declared(h(Spatial, _, _, There), S0),
- do_introspect(Agent, path(Spatial, Here, There), Answer, S0).
+  declared(h(_, _, There), S0),
+ do_introspect(Agent, path(Here, There), Answer, S0).
 
-do_introspect(Agent, path(Spatial, Here, There), Answer, S0) :- 
+do_introspect(Agent, path(Here, There), Answer, S0) :- 
  getprop(Agent, memories(Memory), S0), 
- thought_model(ModelData, Memory),
- find_path(Spatial, Here, There, Route, ModelData), !, 
+ agent_thought_model(Agent, ModelData, Memory),
+ find_path(Here, There, Route, ModelData), !, 
  Answer = msg(['Model is:',Agent,'Shortest path is:\n', Route]).
 
-do_introspect(_Agent, path(Spatial, Here, There), Answer, ModelData) :- 
- find_path(Spatial, Here, There, Route, ModelData), !, 
+do_introspect(_Agent, path(Here, There), Answer, ModelData) :- 
+ find_path(Here, There, Route, ModelData), !, 
  Answer = msg(['Model is:','State','Shortest path is\n:', Route]).
 
 do_introspect(Agent1, recall(Agent, WHQ, Target), Answer, S0) :-
  getprop(Agent, memories(Memory), S0), 
- thought_model(ModelData, Memory),
+ agent_thought_model(Agent, ModelData, Memory),
  recall_whereis(S0, Agent1, WHQ, Target, Answer, ModelData).
 
 do_introspect(Agent1, recall(Agent, Target), Answer, S0) :- !,
@@ -134,9 +134,8 @@ recall_whereis(_S0,_Self,  _WHQ, There, Answer, ModelData) :-
  Answer = Memories.
 
 recall_whereis(_S0,Agent,  _WHQ, There, Answer, _ModelData) :- 
- sensory_model(Sense, spatial),
  Answer = [subj(Agent), person('don\'t', 'doesn\'t'),
-   'recall ever ', ing(Sense), ' a "', There, '".'].
+   'recall a "', There, '".'].
 
 
 console_decide_action(Agent, Mem0, Mem1):- 
@@ -184,7 +183,7 @@ makep:-
 
 decide_action(Agent, Mem0, Mem0) :- 
  thought(todo([Action|_]), Mem0),
- (declared(h(_Spatial, in, Agent, Here), advstate)->true;Here=somewhere),
+ (declared(h(in, Agent, Here), advstate)->true;Here=somewhere),
  (trival_act(Action)->true;bugout('~w @ ~w: already about todo: ~w~n', [Agent, Here, Action], autonomous)).
 
 % Telnet client
@@ -194,9 +193,10 @@ decide_action(Agent, Mem0, Mem1) :-
 
 % Stdin Client
 decide_action(Agent, Mem0, Mem1) :-
- notrace((declared(inherits(console), Mem0),current_input(In))),!,
- ensure_has_prompt(Agent),
+ notrace((declared(inherits(console), Mem0),current_input(In))),!, 
  agent_to_input(Agent,In),
+ ensure_has_prompt(Agent),
+ ttyflush,
  (tracing->catch(wait_for_input([In,user_input],Found,20),_,(nortrace,notrace,break));wait_for_input([In,user_input],Found,0)),
  (Found==[] -> (Mem0=Mem1) ;  quietly(((console_decide_action(Agent, Mem0, Mem1))))).
 

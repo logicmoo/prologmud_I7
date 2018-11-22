@@ -88,6 +88,8 @@ english_directve(silent(_)).
 english_directve(P):- english_suffix(S), functor(P,S,1).
 
 english_suffix(s).
+english_suffix(es).
+english_suffix(er).
 english_suffix(ed).
 english_suffix(ly).
 english_suffix(ing).
@@ -102,6 +104,7 @@ capitalize(Atom, Capitalized) :-
  upcase_atom(First, Upper),
  atom_chars(Capitalized, [Upper|Rest]).
 
+context_agent(Agent, Context):- atom(Context),!,Context=Agent.
 context_agent(Agent, Context):-
  declared(agent(Agent), Context), !.
 context_agent(Agent, Context):-
@@ -169,15 +172,14 @@ compile_eng(Context, Atom, Text):- fail, atom(Atom), dmust(atomic_list_concat(AB
 */
 compile_eng(_Context, Inst, Text):- \+ compound(Inst),!, format(atom(Text),'~w',[Inst]).
 
-compile_eng(_Context, ly(spatial), '').
-compile_eng(Context, s(Word), Spatially) :- % TODO make actually plural
- compile_eng_txt(Context, Word, Spatial),
- atom(Spatial),
- atom_concat(Spatial, "s", Spatially).
-compile_eng(Context, Wordly, Spatially) :- functor(Wordly,S,1),english_suffix(S),
+compile_eng(Context, s(Word), Textually) :- % TODO make actually plural
+ compile_eng_txt(Context, Word, Textual),
+ atom(Textual),
+ atom_concat("s", Textual, Textually).
+compile_eng(Context, Wordly, Textually) :- functor(Wordly,S,1), english_suffix(S),
  Wordly =..[S, Word],
- compile_eng_txt(Context, Word, Spatial),
- atom(Spatial), atom_concat(Spatial, S, Spatially).
+ compile_eng_txt(Context, Word, Textual),
+ atom(Textual), add_suffix(Textual, S, Textually).
 
 compile_eng(Context, DetWord, AThing) :-
  compound(DetWord), DetWord=..[Det, Word],
@@ -198,6 +200,8 @@ verb_tensed(Context, Verb, past, Compiled):-
 verb_tensed(Context, Verb, _Tense, Compiled):- 
  compile_eng_txt(Context, Verb, Compiled).
 
+add_suffix(Textual, es, Textually):- atom_concat(Textual, s, Textually). 
+add_suffix(Textual, S, Textually):- atom_concat(Textual, S, Textually). 
 
 pasitfy_word(take,took).
 pasitfy_word(make,made).
@@ -421,14 +425,20 @@ logic2eng(_Context, time_passes(Agent), ['Time passes for',Agent,'.']).
 
 %logic2eng(_Agent, you_are(Self, Prep, Here), [cap(subj(Self)), person(are, is), Prep, 'the', Here, '\n']).
 
+logic2eng(Context, can_sense_from_here(Agent, At, Here, Sense, Nearby),
+            ['From', At, cap(subj(Here)), cap(subj(Agent)), ',',  'can', person(Sense, es(Sense)), ':', SeeText, '.']) :-
+  findall(X, (member(X, Nearby), X\=Agent), OtherNearby),
+  list2eng(Context, OtherNearby, SeeText).
+
 logic2eng(Context, exits_are(_Agent, Relation, Here, Exits), ['Exits',Relation,Here,' are:', ExitText, '\n']):-
   list2eng(Context, Exits, ExitText).
 
-logic2eng(Context, notice_children(Agent, see, Here, Prep, _Depth, Nearby), [cap(Prep),Here, ':', SeeText]):-
- exclude(=@=(Agent), Nearby, OtherNearby), list2eng(Context, OtherNearby, SeeText).
+logic2eng(Context, notice_children(Agent, Sense, Here, Prep, _Depth, Nearby), 
+    [cap(subj(Agent)), is, Prep, Here, and, es(Sense), ':'  | SeeText]):- 
+ select(Agent, Nearby, OthersNearby),!,  list2eng(Context, OthersNearby, SeeText).
 
-logic2eng(Context, notice_children(Agent, Sense, Here, Prep, _Depth, Nearby), [cap(subj(Agent)), person(Sense, s(Sense)),Prep,Here, ':', SeeText]):-
- exclude(=@=(Agent), Nearby, OtherNearby), list2eng(Context, OtherNearby, SeeText).
+logic2eng(Context, notice_children(Agent, Sense, Here, Prep, _Depth, Nearby), 
+ [cap(subj(Agent)), person(Sense, es(Sense)),Prep,Here, ':', SeeText]):-  list2eng(Context, Nearby, SeeText).
 
 logic2eng(Context, carrying(Agent, Items),
    [cap(subj(Agent)), 'carrying:'|Text]) :-
@@ -445,10 +455,12 @@ logic2eng(_Agent, destroyed(Thing), [Thing, aux(be), 'destroyed.']).
 
 logic2eng(_Context, sense_props(_Agent, _Sense, _Object, _Depth, []),  [] ) :- !.
 
+logic2eng(Context, sense_props(Agent, see, Object, _Depth, PropList), [cap(subj(Agent)), notices | English ] ) :-
+ log2eng(Context, props(Object, PropList), English).
+
 logic2eng(Context, sense_props(Agent, Sense, Object, _Depth, PropList), 
-   [ %cap(subj(Agent)),
-    subj(Agent),
-    person(Sense, s(Sense))| English] ) :-
+   [cap(subj(Agent)),
+    person(Sense, es(Sense))| English] ) :-
  log2eng(Context, props(Object, PropList),English).
 
 logic2eng(_Agent, props(_Object, []),  [] ) :- !.
@@ -472,7 +484,7 @@ logic2eng(_, emote(Speaker, act, '*'(Place), Eng), [the(Speaker),at,Place,Text])
  eng2txt(Speaker, Speaker, Eng, Text).
 logic2eng(_, emote(Speaker, act, Audience, Eng), [Audience, notices, the(Speaker), Text]) :-
  eng2txt(Speaker, Speaker, Eng, Text).
-logic2eng(_, emote(Speaker, EmoteType, Audience, Eng), [cap(subj(Speaker)), s(EmoteType), 'to', Audience, ', "', Text, '"']) :-
+logic2eng(_, emote(Speaker, EmoteType, Audience, Eng), [cap(subj(Speaker)), es(EmoteType), 'to', Audience, ', "', Text, '"']) :-
  eng2txt(Speaker, 'I', Eng, Text).
 
 logic2eng(_Agent, failure(Action), ['Action failed:', Action]).
@@ -516,21 +528,20 @@ logic2eng( Obj, co(Desc), ['(Created as: ', Out, ')']):- list2eng( Obj, Desc, Ou
 %logic2eng(_Obj, nouns(Type), ['nouns:',Type]).
 
 logic2eng(_Aobj, cant( sense(_Agent, Sense, It, Why)), [ 'can''t sense', It, ' ', ly(Sense), ' here', cuz(Why)]).
-logic2eng(_Aobj, cant( reach(_Agent, Spatial, It)), [ 'can''t reach ', It, ' ', ly(Spatial)]).
-logic2eng(_Aobj, cant( manipulate(Spatial, self)), [ 'can''t manipulate yourself like that', ly(Spatial)]).
+logic2eng(_Aobj, cant( reach(_Agent, It)), [ 'can''t reach ', It]).
+logic2eng(_Aobj, cant( manipulate(self)), [ 'can''t manipulate yourself like that']).
 logic2eng(_Aobj, alreadyhave(It), ['already have', the(It)]).
 logic2eng(_Aobj, mustgetout(It), ['must get out/off ',It,' first.']).
-logic2eng(_Aobj, self_relation(_Spatial, It), ['can\'t put ',It,' inside itself!']).
+logic2eng(_Aobj, self_relation(It), ['can\'t put ',It,' inside itself!']).
 logic2eng(_Aobj, moibeus_relation( _, _), ['Topological error!']).
-logic2eng(_Aobj, status(Dark, t),  ['It''s too ', Dark, ' to ', ly(Sense), '!']):- problem_solution(Dark, Sense, _Light).
+logic2eng(_Aobj, state(Dark, t),  ['It''s too ', Dark, ' to ', ly(Sense), '!']):- problem_solution(Dark, Sense, _Light).
 logic2eng(_Aobj, mustdrop(It), [ 'will have to drop', It, ' first.']).
-logic2eng(_Aobj, cant( move(_Agent, Spatial, It)), [It,aux(be),'immobile', ly(Spatial)]).
+logic2eng(_Aobj, cant( move(_Agent, It)), [It,aux(be),'immobile']).
 logic2eng(_Aobj, cantdothat(EatCmd), [ 'can\'t do: ', EatCmd]).
 
 %log2eng(_Obj, oper(OProp, [cap(N), aux(be), V]):- Prop =..[N, V].
-logic2eng(Obj, has_rel(Spatial,Prep,TF) , Eng):- Spatial == spatial,!, logic2eng(Obj, has_rel(Prep,TF) , Eng).
 
-logic2eng(_Obj, has_rel(Quantity,Ammount,TF) , [TF,that,'has a,',Quantity,Ammount]).
+logic2eng(_Obj, has_rel(Ammount,TF) , [TF,that,'has,',Ammount]).
 logic2eng( Obj, Prop, English):- Prop =..[N, V, T| VRange],T==t,Prop2 =..[N, V| VRange], log2eng( Obj, Prop2, English).
 logic2eng(_Obj, has_rel(on), ['has a surface']).
 logic2eng(_Obj, has_rel(in), ['has an interior']).
@@ -540,8 +551,9 @@ logic2eng(_Obj, can_be(Eat), ['Can be', tense(Eat, past)]).
 logic2eng(_Obj, can_be(Eat, f), ['Can\'t be', tense(Eat, past)]).
 logic2eng(_Obj, knows_verbs(Eat), ['Able to', Eat ]).
 logic2eng(_Obj, knows_verbs(Eat, f), ['Unable to', Eat ]).
-logic2eng(_Obj, status(Open), [aux(be), Open ]).
-logic2eng(_Obj, status(Open, f), [aux(be), 'not', Open ]).
+logic2eng(_Obj, state(_, clean), []).
+logic2eng(_Obj, state(Open), [aux(be), Open ]).
+logic2eng(_Obj, state(Open, f), [aux(be), 'not', Open ]).
 logic2eng( Obj, inherit(Type), ['is',Out]):- log2eng(Obj, [Type], Out), !.
 logic2eng( Obj, inherit(Type, f), ['isnt '|Out]):- log2eng(Obj, [Type], Out), !.
 logic2eng( Obj, inherits(Type), ['inherit',Out]):- log2eng(Obj, [Type], Out), !.
@@ -555,7 +567,6 @@ logic2eng( Obj, oper(Act,Precond,PostCond), OUT) :-
  maplist(log2eng(Obj), [Act,Precond,PostCond], [ActE,PrecondE,PostCondE]).
 
 
-logic2eng( Obj, Prop, English):- Prop =..[N, Spatial| VRange],Spatial==spatial,Prop2 =..[N| VRange], log2eng( Obj, Prop2, English).
 logic2eng( Obj, Prop, English):- Prop =..[N, Obj1, A| VRange],Obj1==Obj,Prop2 =..[N, A| VRange], log2eng( Obj, Prop2, English).
 logic2eng( Obj, Prop, English):- Prop =..[N, V, T| VRange],T==t,Prop2 =..[N, V| VRange], log2eng( Obj, Prop2, English).
 

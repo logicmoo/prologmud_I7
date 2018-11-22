@@ -39,9 +39,9 @@ meta_pprint(_Doer, D,K):- pprint(D,K).
 
 :- defn_state_setter(do_metacmd).
 
-do_metacmd(_Doer, quit(Agent), S0, S1) :-
- declare(wishes(Agent, quit), S0, S1),
- player_format('Bye!~n', []).
+do_metacmd(_Doer, quit(Agent)) -->
+ declare(wishes(Agent, quit)),
+ {player_format('Bye!~n', [])}.
 
 do_metacmd(_Doer, help, S0, S0) :- !,
  listing(adv:cmd_help).
@@ -104,17 +104,20 @@ do_metacmd(Doer, mem, S0, S0) :-
 
 do_metacmd(Doer, make, S0, S0) :-
  security_of(Doer,wizard),
- thread_signal(main,make).
+ thread_signal(main,make),
+ ensure_has_prompt(Doer).
 
 do_metacmd(Doer, prolog, S0, S0) :-
  security_of(Doer,wizard),
  '$current_typein_module'(Was),
- setup_call_cleanup('$set_typein_module'(mu),prolog,'$set_typein_module'(Was)).
+ setup_call_cleanup('$set_typein_module'(mu),prolog,'$set_typein_module'(Was)),
+ ensure_has_prompt(Doer).
 
 do_metacmd(Doer, CLS, S0, S0) :- security_of(Doer,wizard), 
  current_predicate(_, CLS), 
  (is_main_console -> catch(CLS,E,(bugout(CLS:- throw(E)),fail)) ;
- (redirect_error_to_string(catch(CLS,E,(bugout(CLS:- throw(E)),fail)),Str),!, write(Str))),!.
+ (redirect_error_to_string(catch(CLS,E,(bugout(CLS:- throw(E)),fail)),Str),!, write(Str))),!,
+ ensure_has_prompt(Doer).
 
 do_metacmd(Doer, inspect(Self, NamedProperty, Target), S0, S1) :-
  do_metacmd(Doer, inspect(Self, getprop(Target,NamedProperty)), S0, S1).
@@ -130,14 +133,14 @@ do_metacmd(Doer, inspect(Self, getprop(Target,NamedProperty)), S0, S0) :-
 do_metacmd(Doer, create(Type), S0, S9) :-
  security_of(Doer,wizard),
  dmust((current_player(Agent),
- related(Spatial, Prep, Agent, Here, S0),
+ h(Prep, Agent, Here, S0),
  create_new_unlocated(Type, Object, S0, S1),
- declare(h(Spatial, Prep, Object, Here), S1, S9),
+ declare(h(Prep, Object, Here), S1, S9),
  player_format('You now see a ~w.~n', [Object]))).
 
 do_metacmd(Doer, destroy(Object), S0, S1) :-
  security_of(Doer,wizard),
- undeclare(h(_Spatial, _, Object, _), S0, S1),
+ undeclare(h(_, Object, _), S0, S1),
  player_format('It vanishes instantly.~n', []).
 do_metacmd(Doer, AddProp, S0, S1) :-
  security_of(Doer,wizard),

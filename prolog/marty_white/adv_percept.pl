@@ -31,33 +31,38 @@ get_sensing_objects(Objects, S0):-
 get_sensing_objects(Sense, Agents, S0):-
  get_objects((has_sense(Sense);inherits(memorize)), Agents, S0).
 
-:- defn_state_getter(get_live_agents//1).
+:- defn_state_getter(get_live_agents(-listof(agnt))).
 get_live_agents(LiveAgents, S0):-
- get_some_agents( \+ status(_Spatial, powered, f), LiveAgents, S0).
+ get_some_agents( \+ state(powered, f), LiveAgents, S0).
 
-:- defn_state_getter(get_some_agents//1).
+:- defn_state_getter(get_some_agents(conds,-listof(agnt))).
 get_some_agents(Precond, LiveAgents, S0):-
  dmust((
   get_objects(  
   (inherits(character),Precond), LiveAgents, S0),
-  LiveAgents \== [])).
+  LiveAgents \== [])).                
 
 
 
+is_prop_public(_,P) :-
+  member(P, [has_rel(_),
+     emits_light, can_be(eat,t), name(_), desc(_), breaks_into(_),
+             can_be(move, f), openable, open, closed(_), lockable, locked, locked(_),
+             shiny]).
 is_prop_public(_,Prop):- is_prop_nonpublic(Prop),!,fail.
 is_prop_public(_,P) :-
  \+ \+ 
- member(P, [
+ member(P, [                            
     name(_),
     desc(_),
     breaks_into(_),emitting(_,_Light), 
-    %has_rel(_Spatial, _), 
+    %has_rel(_), 
     
     can_be(eat, _), 
     can_be(move, _), 
-    can_be(open, _), status(open, _), 
-    can_be(lock, t), status(locked, _),
-    inherit(shiny,t)]).
+    can_be(open, _), state(open, _), 
+    can_be(lock, t), state(locked, _),
+    inherit(shiny,t)]).            
 
 is_prop_public(_,_):-!.
 
@@ -65,7 +70,7 @@ is_prop_nonpublic(P):- \+ callable(P),!,fail.
 is_prop_nonpublic(inherit(_,f)):- !,fail.
 is_prop_nonpublic(P):- compound(P),functor(P,F,_),!,is_prop_nonpublic(F).
 is_prop_nonpublic(has_sense).
-is_prop_nonpublic(has_rel).
+is_prop_nonpublic(has_rel).                            
 is_prop_nonpublic(effect).
 is_prop_nonpublic(oper).
 is_prop_nonpublic(co).
@@ -78,26 +83,42 @@ is_prop_nonpublic(before).
 is_prop_nonpublic(after).
 
 
-can_sense_here(Agent, Spatial, Sense, State) :-
- sensory_model_problem_solution(Sense, Spatial, TooDark, EmittingLight),
- get_open_traverse(_Open, Sense, _Traverse, Spatial, OpenTraverse),
- related(Spatial, OpenTraverse, Agent, Here, State),
- getprop(Here, TooDark, State) , 
- \+ related_with_prop(Spatial, OpenTraverse, _Obj, Here, EmittingLight, State), !, fail.
-can_sense_here(_Agent, _Spatial, _Sense, _State) .
+sense_here(_Sense, _Here, _S0):-!.
+sense_here(Sense, Here, S0):- 
+ getprop(Here, TooDark, S0),
+ (sensory_problem_solution(Sense, TooDark, EmittingLight) -> 
+   related_with_prop(Sense, _Obj, Here, EmittingLight, S0) ; true).
+
+can_sense_here(Agent, Sense, S0) :-
+ from_loc(Agent, Here, S0),
+ sense_here(Sense, Here, S0), !.
+can_sense_here(_Agent, _Sense, _State) .
 
 is_star(Star):- Star == '*'.
 is_star('*'(Star)):- nonvar(Star).
 
-:- defn_state_getter(can_sense).
+can_sense(Agent, Sense, Thing, S0, S9):- can_sense(Agent, Sense, Thing, S0),S9=S0.
+:- defn_state_getter(can_sense(agent,sense,thing)).
 can_sense(_Agent, _See, Star, _State) :- is_star(Star), !.
-can_sense(Agent, Sense, Thing, State) :-
- get_open_traverse(_Open, Sense, _Traverse, Spatial, OpenTraverse),
- can_sense_here(Agent, Spatial, Sense, State),
- related(Spatial, OpenTraverse, Agent, Here, State),
- (Thing=Here; related(Spatial, OpenTraverse, Thing, Here, State)).
-can_sense(Agent, Sense, Thing, Agent, _State):- 
+can_sense(Agent, Sense, Thing, S0) :- Agent == Thing, !, can_sense_here(Agent, Sense, S0).
+can_sense(_Agent, Sense, Here, S0) :- 
+  getprop(Here, has_rel(exit(_),t), S0), 
+  sense_here(Sense, Here, S0),!.
+
+can_sense(Agent, Sense, Thing, S0) :-
+  can_sense_here(Agent, Sense, S0),
+  from_loc(Agent, Here, S0),
+  (Thing=Here;  open_traverse(Thing, Here, S0)), !.
+/*can_sense(Agent, Sense, Thing, S0) :-
+ % get_open_traverse(_Open, Sense, _Traverse, Sense),
+ can_sense_here(Agent, Sense, S0),
+ h(Sense, Agent, Here, S0),
+ (Thing=Here; h(Sense, Thing, Here, S0)).
+*/
+can_sense(Agent, Sense, Thing, _State):- 
  bugout(pretending_can_sense(Agent, Sense, Thing, Agent)),!.
+
+
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -123,47 +144,25 @@ queue_event(Event, S0, S2) :-
 
 :- defn_state_setter(queue_local_agent_percept//4).
 % Room-level simulation percepts
-queue_local_agent_percept(Agent, Spatial, Event, Places, S0, S1) :-
- ignore(current_spatial(Spatial)),
- member(Where, Places),
- ((get_open_traverse(look, Spatial, OpenTraverse), related(Spatial, OpenTraverse, Agent, Where, S0));Where=Agent),
+queue_local_agent_percept(Agent, Event, Places, S0, S1) :-
+ member(Where, Places),can_sense(Agent,_,Where,S0),!,
  queue_agent_percept(Agent, Event, S0, S1),!.
-queue_local_agent_percept(_Agent, _Spatial, _Event, _Places, S0, S0).
+queue_local_agent_percept(_Agent, _Event, _Places, S0, S0).
 
 
-queue_local_event(Spatial, Event, Places, S0, S2) :- 
- each_sensing_agent(_All, queue_local_agent_percept(Spatial, Event, Places), S0, S2).
+queue_local_event(Event, Places, S0, S2) :- 
+ each_sensing_agent(_All, queue_local_agent_percept(Event, Places), S0, S2).
 
 
 
-/*
 
-sensory_model(olfactory, spatial).
-sensory_model(taste, spatial).
-sensory_model(tactile, spatial).
-
-sensory_model(sixth, _).
-*/
-
-
-current_spatial(spatial).
-
-
-is_sense(X):- sensory_model(X, _).
-
-sensory_model(see, spatial).
-sensory_model(hear, spatial).
-sensory_model(taste, spatial).
-sensory_model(smell, spatial).
-sensory_model(feel, spatial).
-
-action_model(_, spatial).
+is_sense(X):- sensory_verb(X, _).
 
 sensory_verb(see, look).
 sensory_verb(hear, listen).
 sensory_verb(taste, taste).
 sensory_verb(smell, smell).
-sensory_verb(feel, touch).
+sensory_verb(touch, feel).
 
 
 action_sensory(Action, Sense):-
@@ -175,10 +174,9 @@ action_sensory(Action, Sense):-
  compound(Action),
  Action=..[Verb|_],
  verb_sensory(Verb, Sense).
-action_sensory(Action, Sense):- verb_sensory(Action, Sense) *-> true; Sense=see.
+action_sensory(Action, Sense):- 
+ verb_sensory(Action, Sense) *-> true; Sense=see.
 
-
- % sensory_model(Spatial1, Spatial2):- Spatial1 == Spatial2, !.
 
 % listen->hear
 verb_sensory(goto, Sense):- is_sense(Sense).
@@ -199,9 +197,9 @@ verb_sensory(Verb, Sense):- verb_alias(Verb, Verb2), Verb\=Verb2,
 
 
 
-% sensory_model(Visual, Spatial, TooDark, EmittingLight))
-sensory_model_problem_solution(Sense, Spatial, status(Dark, t), emitting(Sense, Light)):-
- problem_solution(Dark, Sense, Light), sensory_model(Sense, Spatial).
+% sensory_model(Visual, TooDark, EmittingLight))
+sensory_problem_solution(Sense, state(Dark, t), emitting(Sense, Light)):-
+ problem_solution(Dark, Sense, Light).
 
 problem_solution(dark, see, light).
 problem_solution(stinky, smell, pure).
@@ -233,7 +231,7 @@ process_percept_auto(Agent, Percept, _Stamp, M0, M0) :- was_own_self(Agent, Perc
 
 % Auto examine room items
 process_percept_auto(Agent, notice_children(Agent, Sense, _Here, _Prep, Depth, Objects), _Stamp, Mem0, Mem2) :- 
- thought_model(ModelData, Mem0),
+ agent_thought_model(Agent, ModelData, Mem0),
  Depth = depth(DepthN),
  DepthN > 1, DepthLess is DepthN - 1,
  findall( examine(Agent, Sense, Obj, depth(DepthLess)),
@@ -259,8 +257,8 @@ process_percept_auto(Agent, sense_props(Agent, Sense, Object, Depth, PropList), 
  (member(inherits(shiny), PropList)),
  Object \== Agent,
  bugout('~w: ~p~n', [Agent, sense_props(Agent, Sense, Object, Depth, PropList)], autonomous),
- thought_model(ModelData, Mem0),
- \+ related(_Spatial, descended, Object, Agent, ModelData), % Not holding it? 
+ agent_thought_model(Agent,ModelData, Mem0),
+ \+ h(descended, Object, Agent, ModelData), % Not holding it? 
  add_todo_all([take(Agent, Object), print_(Agent, 'My shiny precious!')], Mem0, Mem2).
 
 

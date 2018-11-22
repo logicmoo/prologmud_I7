@@ -45,13 +45,13 @@ declare_inst_type(Inst,Type,S0,S2):-
  %create_new_unlocated('watch',Watch),
     %create_new_unlocated('bag',Bag),
     %create_new_unlocated('coins',Coins),
-     % h(Spatial, worn_by, Watch, Agent),
-    %h(Spatial, in, Bag, Coins),
-    %h(Spatial, held_by, Bag, Agent),
+     % h(worn_by, Watch, Agent),
+    %h(in, Bag, Coins),
+    %h(held_by, Bag, Agent),
 create_agent_conn(Agent,Named,Info,S0,S9):- 
  declare(((props(Agent, 
       [name(['Telnet:',Named]), inherit(telnet,t), inherit(humanoid,t), inherit(player,t), info(Info)]),
-      h(spatial, in, Agent, kitchen))),
+      h(in, Agent, kitchen))),
   S0,S1),
  init_objects(S1,S9).
 
@@ -117,7 +117,7 @@ create_objprop(Self, inherit(memorize,t), S0, S2):- !, clock_time(Now),
  timestamp(0,Now),
  model([]),
  goals([]),
- todo([look(Self, spatial)]),
+ todo([look(Self)]),
  inst(Self)]), S0, S2).
 
 
@@ -156,11 +156,11 @@ may_contain_insts(h).
 may_contain_insts(holds_at).
 
 create_instances(Suffix,Info,[Prop|TODO],S0,S3):-
- Prop =.. [F, Spatial, Pred | Objs], 
+ Prop =.. [F, Pred | Objs], 
  may_contain_insts(F),member(Obj,Objs),compound(Obj),!,
  dmust((select(Prop,S0,S1))),
  dmust((create_objs(Objs,NewObjs,Suffix,Info,S1,S2),
- NewProp =.. [F, Spatial, Pred | NewObjs],
+ NewProp =.. [F, Pred | NewObjs],
  create_instances(Suffix,Info,TODO,[NewProp|S2],S3))).
  
 create_instances(Suffix,Info,[_|TODO],S0,S2):-

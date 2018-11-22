@@ -36,15 +36,14 @@ cmdalias(a, auto).
 cmdalias(turn, switch).
 cmdalias(flip, switch).
 
-preposition(Spatial, P) :- (Spatial==spatial-> !; atom(P)),
- atom(P),
- notrace(member(P, [at, down, in, inside, into, of, off, on, onto, out, over, to, under, up, with])).
+preposition(_,P) :- notrace(member(P, [at, down, in, inside, into, of, off, on, onto, out, over, to, under, up, with])).
 
 preposition(_Other, P) :-
  member(P, [of, beside]).
 
-compass_direction(D) :-
- member(D, [north, south, east, west]).
+compass_direction(D) :- 
+ member(D, [north, south, east, west, up, down]).
+maybe_compass_direction(D, Actual) :- (cmdalias(D,Actual);D=Actual), compass_direction(Actual).
 
 reflexive(W) :- member(W, [self, me, myself , i]). % 'i' inteferes with inventory
 
@@ -110,9 +109,8 @@ parse2logical(Self, [ask, Object | Msg], emote(Self, say, Object, Msg), _M):- !.
 parse2logical(Self, [request, Object | Msg], emote(Self, say, Object, Msg), _M):- !.
 parse2logical(Self, [tell, Object | Msg], emote(Self, say, Object, Msg), _M):- !.
 parse2logical(Self, [talk, Object | Msg], emote(Self, say, Object, Msg), _M):- !.
-parse2logical(Self, [Object, ',' | Msg], emote(Self, say, Object, Msg), Mem):- current_spatial(Spatial),
- thought_model(ModelData, Mem),
- known_model(Self, h(Spatial, _, Object, _), ModelData).
+parse2logical(Self, [Object, ',' | Msg], emote(Self, say, Object, Msg), Mem):- 
+ in_model(Self, h(_, Object, _), Mem).
 
 parse2logical(Self, Words, Action, Mem) :- 
  fail, 
@@ -127,21 +125,23 @@ parse2logical(Self, Words, Action, Mem) :-
 % Movement
 % %%%%%%%%%%%%%%
 
-% get [out,in,..]
-parse2logical(Self, [get, Prep, Object], goto(Self, walk, Prep, Object), _Mem) :-
- preposition(spatial, Prep).
-% n/s/e/w
-parse2logical(Self, [Dir], Logic, Mem):- (compass_direction(Dir);Dir==escape), !, dmust(txt2goto(Self, walk, [Dir], Logic, Mem)).
-% escape .. 
-parse2logical(Self, [escape|Info], Logic, Mem):- !, dmust(txt2goto(Self, run, Info, Logic, Mem)).
+flee_run_escape(flee).
+flee_run_escape(run).
+flee_run_escape(escape).
+
+% get [out,in,..] Object
+parse2logical(Self, [get, Prep, Object], goto_prep_obj(Self, walk, Prep, Object), _Mem) :- preposition(spatial, Prep).
+% n/s/e/w/u/d
+parse2logical(Self, [Dir], Logic, Mem):- maybe_compass_direction(Dir,Actual), !, dmust(txt2goto(Self, walk, [Actual], Logic, Mem)).
+% escape/flee/run .. 
+parse2logical(Self, [Escape|Info], Logic, Mem):- flee_run_escape(Escape), !, dmust(txt2goto(Self, run, Info, Logic, Mem)).
+% out/into
+parse2logical(Self, [Prep], Logic, Mem) :- preposition(spatial, Prep), !, dmust(txt2goto(Self, walk, [Prep], Logic, Mem)).
 % go .. 
 parse2logical(Self, [go|Info], Logic, Mem):- !, dmust(txt2goto(Self, walk, Info, Logic, Mem)).
-% run .. 
-parse2logical(Self, [run|Info], Logic, Mem):- !, dmust(txt2goto(Self, run, Info, Logic, Mem)).
-parse2logical(Self, [Prep], Logic, Mem) :- preposition(spatial, Prep), !, dmust(txt2goto(Self, walk, [Prep], Logic, Mem)).
+% outside
 parse2logical(Self, [ExitName], Logic, Mem) :- 
- thought_model(ModelData, Mem),
- known_model(Self, h(_Spatial, exit(ExitName), _, _), ModelData),
+ in_model(Self, h(exit(ExitName), _, _), Mem),
  !, dmust(txt2goto(Self, walk, [ExitName], Logic, Mem)).
 
 parse2logical(Self, [get, Prep| More], Logic, Mem) :- preposition(spatial, Prep), !, dmust(txt2goto(Self, walk, [Prep| More], Logic, Mem)).
@@ -149,31 +149,31 @@ parse2logical(Self, [get, Prep| More], Logic, Mem) :- preposition(spatial, Prep)
 % x shelf~1
 % go on shelf~1
 
+txt2goto(Self, run, [], goto_dir(Self, run, escape), _Mem) :- !.
 txt2goto(Self, Walk,[to, Prep| More], Logic, Mem) :- !, txt2goto(Self, Walk, [Prep| More], Logic, Mem).
 txt2goto(Self, Walk,[Alias| More], Logic, Mem) :- cmdalias(Alias,Dir), !, txt2goto(Self, Walk,[Dir| More], Logic, Mem).
 
 % go in kitchen
 % go in car
-txt2goto(Self, Walk,[ Prep, Dest], goto(Self, Walk, Prep, Where), Mem) :- 
+txt2goto(Self, Walk,[ Prep, Dest], goto_prep_obj(Self, Walk, Prep, Where), Mem) :- 
  preposition(spatial, Prep),!,
  dmust(txt2place(Dest, Where, Mem)).
 
 % go north
-txt2goto(Self, Walk,[ ExitName], goto(Self, Walk, ExitName, _Here), Mem) :-
- thought_model(ModelData, Mem),
- known_model(Self, h(_Spatial, exit(ExitName), _, _), ModelData).
+txt2goto(Self, Walk,[ ExitName], goto_dir(Self, Walk, ExitName), Mem) :-
+ in_model(Self, h(exit(ExitName), _, _), Mem).
 % go escape
-txt2goto(Self, Walk,[ Dir], goto(Self, Walk, Dir, _Here), _Mem) :- (compass_direction(Dir);Dir==escape),!.
-txt2goto(Self, Walk,[ Dir], goto(Self, Walk, Dir, _Here), _Mem) :- (Dir=down;Dir==up),!.
+txt2goto(Self, Walk,[ Dir], goto_dir(Self, Walk, Dir), _Mem) :- (compass_direction(Dir);Dir==escape),!.
+txt2goto(Self, Walk,[ Dir], goto_dir(Self, Walk, Dir), _Mem) :- (Dir=down;Dir==up),!.
 % go [out,in,..] 
-txt2goto(Self, Walk,[ Prep], goto(Self, Walk, Prep, _Here), _Mem) :- preposition(spatial, Prep).
+txt2goto(Self, Walk,[ Prep], goto_dir(Self, Walk, Prep), _Mem) :- preposition(spatial, Prep).
 % go kitchen
-txt2goto(Self, Walk, Dest, goto(Self, Walk, in, Where), Mem) :-
+txt2goto(Self, Walk, Dest, goto_loc(Self, Walk, Where), Mem) :-
  txt2place(Dest, Where, Mem).
 
 
 txt2place(List, Place, Mem):- is_list(List), parse2object(List,Object,Mem), txt2place(Object, Place, Mem),!.
-txt2place(Dest, Place, Mem):-  thought_model(ModelData, Mem), known_model(advstate, h(_Spatial, _, _, Dest), ModelData), Dest = Place.
+txt2place(Dest, Place, Mem):- in_model(advstate, h(_, _, Dest), Mem), Dest = Place.
 txt2place(Dest, Place, Mem):- parse2object(Dest, Place, Mem).
 
 % %%%%%%%%%%%%%%
@@ -195,7 +195,7 @@ parse2logical(Self, [light, Thing], Result, Mem):- !, parse2logical(Self, [switc
 parse2logical(Self, [switch, Thing, OnOff], Result, Mem) :- preposition(_, OnOff), !, parse2logical(Self, [switch, OnOff, Thing], Result, Mem).
 
 parse2logical(Self, [switch, OnOff| TheThing], switch(Self, OnOff, Thing), Mem) :- parse2object(TheThing, Thing, Mem),
- preposition(Spatial, OnOff), current_spatial(Spatial).
+ preposition(switch, OnOff).
 
 %parse2logical(Self, [open| Thing], Result, Mem) :- parse2logical(Self, [switch, open| Thing], Result, Mem).
 %parse2logical(Self, [close| Thing], Result, Mem) :- parse2logical(Self, [switch, close| Thing], Result, Mem).
@@ -205,9 +205,8 @@ parse2logical(Self, [switch, OnOff| TheThing], switch(Self, OnOff, Thing), Mem) 
 % Dig
 % %%%%%%%%%%%%%%
 parse2logical(Agent, [dig, Hole], dig(Agent, Hole, Where, Tool), Mem) :-
- thought_model(ModelData, Mem),
- thought(inst(Agent), Mem),
- known_model(Agent, h(_Spatial, _, Agent, Where), ModelData),
+ in_model(Agent, inst(Agent), Mem),
+ in_model(Agent, h(_, Agent, Where), Mem),
  Tool=shovel.
 
 parse2logical(Self, [CmdAlias|Tail], Action, Mem) :-
@@ -227,7 +226,7 @@ parse2logical(Self, [TheVerb|Args], Action, M) :- fail,
  Verb\==TheVerb,!,
  parse2logical(Self, [Verb|Args], Action, M).
 
-parse2logical(_Self, [Verb|Args], Action, _M) :- verbatum(Verb), !,
+parse2logical(_Self, [Verb|Args], Action, _M) :- verbatum_anon(Verb), !,
  Action =.. [Verb|Args].
 
 parse2logical(Self, [Verb], Action, _M) :- Action=..[Verb,Self], !.
@@ -236,10 +235,10 @@ parse2logical(Self, [Verb|TheArgs], Action, M) :-
  args2logical(TheArgs, Args, M), wdmsg( TheArgs->Args), !, 
  Action =.. [Verb,Self|Args].
 
-verbatum(Verb):- member(Verb, [prolog, make, cls, mem, props, ls, debug, cd, pwd, 
- agent, create, delprop, destroy, echo, quit,
- memory, model, path, properties, setprop, status, help, 
-
+verbatum_anon(Verb):- member(Verb, [prolog, make, cls, mem, props, ls, debug, cd, pwd, 
+ agent, create, delprop, destroy, echo, halt, getprops,
+ memory, model, path, properties, setprop, state, state, help, threads,
+ spy,nospy,call,
  rtrace, nortrace, 
  trace, notrace %, %whereami, whereis, whoami
  ]).

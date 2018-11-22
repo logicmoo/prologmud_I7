@@ -53,7 +53,7 @@ dmust(A):- swi_soft_if_then(call(A), true , failed_dmust(A)).
 :- module_transparent(failed_dmust/1).
 failed_dmust(once(A)):-!, failed_dmust(A),!.
 failed_dmust((A,B)):- !,bugout(dmust_start(A)),ignore(rtrace(A)),bugout(dmust_mid(A)), failed_dmust(B).
-failed_dmust(A):- bugout(failed_dmust_start(A)),ignore(rtrace(A)),bugout(failed_dmust_end(A)),
+failed_dmust(A):- simplify_dbug(A,AA), bugout(failed_dmust_start(AA)),ignore(rtrace(A)),bugout(failed_dmust_end(AA)),
   break,nortrace,notrace,trace.
 
 no_repeats_must(Call):-

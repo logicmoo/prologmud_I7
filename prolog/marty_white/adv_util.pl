@@ -19,17 +19,21 @@
 
 % Miscellaneous generic utility predicates.
 
-was_dcg(M,Kept,S0,S2):- M:phrase(Kept,S0,S2).
+% was_dcg(M,Kept,S0,S2):- !, M:apply_state(Kept,S0,S2).
+was_dcg(M,Kept,S0,S2):- call(M:phrase(Kept,S0,S2)).
 %:- trace.
 term_expansion_was_dcg('-->'(DCG , Keeper), '-->'(DCG , was_dcg(M,Keeper))):- Keeper \= was_dcg(_,_), prolog_load_context(module,M).
 
-mu:term_expansion(I,P,O,PO):- notrace((compound(I),nonvar(P))),term_expansion_was_dcg(I,O),P=PO.
+
+sg(G,S0,S9):- call(G,S0),S0=S9.
+
+%mu:term_expansion(I,P,O,PO):- notrace((compound(I),nonvar(P))),term_expansion_was_dcg(I,O),P=PO.
 %foo --> bar ,!.
 %foo --> bar,baz.
 %:- break.
 
 :- dynamic(is_state_pred/2).
-is_state_pred(related,1).
+is_state_pred(h,1).
 defn_state_pred(F,N):- is_state_pred(F,N) -> true ; asserta(is_state_pred(F,N)).
 
 defn_state_0(F):- defn_state_pred(F,0).
@@ -103,11 +107,16 @@ apply_forall(Forall,Apply,S0,S1):-
  findall(Forall,Forall,Frames),
   apply_forall_frames(Frames,Forall,Apply,S0,S1).
 
+findall(E,Goal,L, S0, S2):- apply_state(findall(E,Goal,L), S0, S2).
 
-dmust(Goal,S0,S1):- apply_state(dmust(Goal), S0, S1).
+unless(G,Else,S0,S2):- apply_state(unless(G,Else), S0, S2).
+dmust(Goal,S0,S2):- apply_state(dmust(Goal), S0, S2).
+ignore(Goal,S0,S2):- apply_state(ignore(Goal), S0, S2).
+
 :- meta_predicate with_state(*,0,*,*).
 with_state(S,Goal,S0,S2):- S0=S,call(Goal),S0=S2.
 
+is_state_getter(P):- compound(P),functor(P,F,Am1),A is Am1+1, current_predicate(F/A),!.
 is_state_getter(P):- \+ atom(P),!,compound(P),functor(P,F,_),!,is_state_getter(F).
 is_state_getter(getprops).
 is_state_getter(F):- is_state_pred(F,1).
@@ -135,6 +144,8 @@ must_state(S0):- is_list(S0), dmust(nb_setval(advstate,S0)),!.
 must_state(S0):- pprint(must_state(S0),always),trace, check4bugs(S0).
 
 :- module_transparent(apply_state//3).
+:- meta_predicate(apply_state(*,+,-)).
+:- meta_predicate(apply_state(*,+,-,+,-)).
 
 apply_state(Goal,S0,S2,DCG0,DCG2):-
   DCG0=S0,
@@ -150,11 +161,18 @@ rapply_state(S0,S2,Goal):- apply_state(Goal, S0, S2).
 apply_state(NonGoal, S0, S2) :- \+ callable(NonGoal),!,trace, S0=S2.
 apply_state(M:Goal, S0, S2) :- !, assertion(atom(M)),
  M:apply_state(Goal, S0, S2).
+apply_state({Goal}, S0, S0) :- !, call(Goal).
+apply_state(M:{Goal}, S0, S0) :- !, call(M:Goal).
 apply_state(Goal,S0,S0):- Goal==[],!.
-apply_state(List, S0, S2) :- is_list(List),!,append(S0,List,S2),!.
 
+apply_state(List, S0, S2) :- is_list(List),!,append(S0,List,S2),!.
+apply_state(G12, S0, S2) :- G12 = [_|_],!, 
+ append(GL,G2,G12), (((is_list(GL),append(S0,GL,S1))-> apply_state(G2, S1, S2))).
+
+apply_state((unless(Unless,Error),More), S0, S2) :- !, (apply_state(Unless, S0, S1)->apply_state(More, S1, S2);apply_state(Error, S0, S2)).
+apply_state(unless(Unless,Error), S0, S2) :- !, (apply_state(Unless, S0, S2)->true;apply_state(Error, S0, S2)).
 apply_state(ignore(Goal), S0, S2) :- !, apply_state(Goal, S0, S2)->true;S0=S2.
-apply_state(findall(_,Goal,_), S0, S2) :- !, apply_state(Goal, S0, S2).
+apply_state(findall(E,Goal,L), S0, S2) :- !, findall(E,apply_state(Goal, S0, _),L),S0=S2.
 apply_state(i_o(S0,S2), S0, S2) :- !.
 
 apply_state(Goal, S0, S2) :- is_state_getter(Goal),call(Goal,S0),!, S0=S2.
@@ -169,13 +187,13 @@ apply_state(Meta, S0, S2) :- is_state_meta(Meta,N), length(Left,N),Meta=..[F|Met
    append(Left,[apply_state(Goal, S0, S2)|MetaR],MetaC),
    apply(call(F),MetaC).
 apply_state(Goal, S0, S2) :- is_state_ignorer(Goal),call(Goal),!, S0=S2.
-apply_state({Goal}, S0, S0) :- !, call(Goal).
-apply_state([G1|G2], S0, S2) :- !,
- apply_state(G1, S0, S1),
- apply_state(G2, S1, S2).
 apply_state((('->'(G1,G2));G3), S0, S2) :- !,
- apply_state(G1, S0, _If) -> 
- apply_state(G2, S0, S2);
+ apply_state(G1, S0, If) -> 
+ apply_state(G2, If, S2);
+ apply_state(G3, S0, S2). 
+apply_state((G1*->G2;G3), S0, S2) :- !,
+ apply_state(G1, S0, If) *-> 
+ apply_state(G2, If, S2);
  apply_state(G3, S0, S2). 
 apply_state((G1,G2), S0, S2) :- !,
  apply_state(G1, S0, S1),
@@ -183,6 +201,7 @@ apply_state((G1,G2), S0, S2) :- !,
 apply_state((G1;G2), S0, S2) :- !,
  apply_state(G1, S0, S2);
  apply_state(G2, S0, S2).
+
 
 apply_state(sg(Goal), S0, S2) :- !,
  notrace((compound_name_arguments(Goal, F, GoalL),
