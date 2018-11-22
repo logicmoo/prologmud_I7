@@ -230,6 +230,9 @@ maybe_when(If,Then):- If -> Then ; true.
 unless_reason(_Agent, Then,_Msg):- Then,!.
 unless_reason(Agent,_Then,Msg):- player_format(Agent,'~N~p~n',Msg),!,fail.
 
+unless(_Agent, Required, Then) --> Required,!, Then.
+unless(Agent, Required, _Then) --> {simplify_reason(Required,CUZ), player_format(Agent,'~N~p~n',cant( cuz(\+ CUZ)))},!.
+
 required_reason(_Agent, Required):- Required,!.
 required_reason(Agent, Required):- simplify_reason(Required,CUZ), player_format(Agent,'~N~p~n',cant( cuz(CUZ))),!,fail.
 

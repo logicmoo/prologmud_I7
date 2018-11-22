@@ -108,6 +108,9 @@ type_functor(doing, destroy(inst)).
 type_functor(doing, switch(agnt, tfstate, tf, inst)).
 type_functor(doing, touch(agnt, inst)).
 
+type_functor(doing, touchable(agent, instance)).
+
+
 %type_functor(doing, say(Message)).   % undirected message
 type_functor(doing, emote(agnt, emotype, dest, statement)).
 type_functor(event, emoted(agnt, emotype, dest, statement)).
@@ -595,9 +598,15 @@ extra_decl(T,P):-
         ]),
   type_props(sink, [
    state(cleanliness,dirty),
+   inherit(unclosable,t),
    inherit(flask, t),   
    inherit(furnature,t),   
    volume_capacity(5)  
+  ]),
+  type_props(unclosable, [
+     can_be(close,f),
+     can_be(open,f),
+     state(opened,t)
   ]),
   type_props(cabinate, [
    inherit(container,t),

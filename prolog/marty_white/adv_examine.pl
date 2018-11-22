@@ -60,7 +60,7 @@ act_examine(Agent, Sense, PrepIn, Here, Depth, S0, S9) :- % next_depth(Depth2 is
 
 act_examine(Agent, Sense, PrepIn, Object, Depth, S0, S2):- Depth = depth(DepthN),
  object_props(Object, Sense, PropList, S0),
- (DepthN>1 -> queue_agent_percept(Agent, sense_props(Agent, Sense, Object, Depth, PropList), S0, S1) ; S0=S1),
+ (DepthN>2 -> queue_agent_percept(Agent, sense_props(Agent, Sense, Object, Depth, PropList), S0, S1) ; S0=S1), 
  (DepthN>0 -> add_child_precepts(Depth,Sense,Agent,PrepIn, Object,S1,S2) ; S1=S2),!.
 
 get_relation_list(Object, RelationSet, S1) :- 
@@ -78,7 +78,7 @@ add_child_precepts(Depth, Sense, Agent, PrepIn, Object, S1, S2):-
        child_precepts(Agent, Sense, Object, Relation, Depth, Children, S1))), PreceptS),
  queue_agent_percept(Agent,PreceptS, S1, S2).
 
-
+child_precepts(_Agent, see, Object, in, _Depth, '<unknown closed>', S1):- is_closed(Object,S1),!.
 child_precepts(Agent, Sense, Object, Relation, _Depth, Children, S1):- 
  findall_set(What,  
   (h(Relation, What, Object, S1), 

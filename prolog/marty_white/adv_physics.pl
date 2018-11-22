@@ -72,11 +72,12 @@ in_scope(Agent, Thing, _State):- bugout(pretending_in_scope(Agent, Thing)).
 :- defn_state_getter(h(domrel,source,target)).
 
 % -----------------------------------------------------------------------------
-                 
+
 subrelation(in, child).
 subrelation(on, child).
 subrelation(worn_by, child).
 subrelation(held_by, child).
+subrelation(Sub, child_not_in):- dif(Sub,in), subrelation(Sub, child).
 %subrelation(under, in).
 %subrelation(reverse(on), child).
 
@@ -85,14 +86,15 @@ has_rel(At, X, S0) :- default_rel(At, X, S0).
 default_rel(At, X, S0) :-
   getprop(X, default_rel(At), S0).
 default_rel(At, X, S0) :-
+  getprop(X, has_rel(At, TF), S0), TF \== f.
+default_rel(in, _, _S0) :- !.
+
+default_rel(At, X, S0) :-
   getprop(X, default_rel(Specific), S0),
   subrelation(Specific, At).
 default_rel(At, X, S0) :-
-  getprop(X, has_rel(At, TF), S0), TF \== f.
-default_rel(At, X, S0) :-
   getprop(X, has_rel(Specific, TF), S0), TF \== f,
   subrelation(Specific, At).
-default_rel(in, _, _S0) :- !.
 
 
 %h(At, X, Y, Z, S0):- break, throw(h(At, X, Y, Z, S0)).
@@ -108,12 +110,10 @@ h(descended, X, Z, S0) :-
   h(child, Y, Z, S0),
   h(descended, X, Y, S0).
 
-h(open_traverse, X, Z, S0) :-
-  h(child, X, Z, S0).
-h(open_traverse, X, Z, S0) :- 
-  h(child, Y, Z, S0),
-  \+ is_closed(Y, S0),
-  h(open_traverse, X, Y, S0).
+h(open_traverse, X, Z, S0):-
+  h(descended, X, Z, S0),
+  \+ (is_closed(Z, S0), h(inside, X, Z, S0)).
+
 
 h(inside, X, Z, S0) :- h(in, X, Z, S0).
 h(inside, X, Z, S0) :- h(in, Y, Z, S0),
@@ -138,11 +138,15 @@ in_out(in,out).
 on_off(on,off).
 escape_rel(escape).
 
+:- defn_state_getter(is_closed(inst)).
 
 is_closed(Object, S0) :-
-  getprop(Object, state(open,f), S0).
+  getprop(Object, state(opened,f), S0).
 %  getprop(Object, openable, S0),
 %  \+ getprop(Object, open, S0).
+
+  
+:- defn_state_getter(from_loc(inst, place)).
 
 from_loc(Thing, Here, S0):- 
    h(child, Thing, Here, S0), !.
@@ -150,6 +154,8 @@ from_loc(Thing, Here, S0):-
    h(open_traverse, Thing, Here, S0), !.
 from_loc(Thing, Here, S0):- 
    h(_, Thing, Here, S0), !.
+
+:- defn_state_getter(open_traverse(inst,here)).
 
 open_traverse(Thing, Here, S0):- 
    h(open_traverse, Thing, Here, S0).

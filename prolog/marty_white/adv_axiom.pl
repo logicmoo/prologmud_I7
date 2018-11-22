@@ -1,6 +1,10 @@
 
 :- discontiguous aXiom//2.
 
+will_touch(Agent,Thing, S0, S2):- 
+  touchable(Agent,Thing, S0),S0=S2.
+  
+
 aXiom(doing, wait(Agent)) -->
  queue_agent_percept(Agent, [time_passes(Agent)]).
 
@@ -37,11 +41,11 @@ aXiom(_, status_msg(_Begin,_End)) --> [].
 
 aXiom(doing, goto_dir(Agent, Walk, ExitName)) -->         % go n/s/e/w/u/d/in/out  
   must_act(status_msg(vBegin,goto_dir(Agent, Walk, ExitName))),
-  dmust(from_loc(Agent, Here)),
-  dmust(h(exit(ExitName), Here, _There)),
-  %unless(h(exit(ExitName), Here, There), failure_msg(['Can\'t go ',ExitName,' way from', Here])),
-  aXiom(doing, leaving(Agent, Here, Walk, ExitName)),
-  must_act(status_msg(vDone,goto_dir(Agent, Walk, ExitName))).
+  dmust(from_loc(Agent, Here)),  
+  %dmust(h(exit(ExitName), Here, _There)),
+  unless(Agent,h(exit(ExitName), Here, _There),
+  (aXiom(doing, leaving(Agent, Here, Walk, ExitName)),
+   must_act(status_msg(vDone,goto_dir(Agent, Walk, ExitName))))).
 
 aXiom(_, leaving(Agent, Here, Walk, ExitName)) -->
   %member(At, [*, to, at, through, thru]),
@@ -81,7 +85,7 @@ aXiom(doing, goto_obj(Agent, Walk, Object)) -->
 %  WALK ON TABLE
 % ==============
 aXiom(doing, goto_prep_obj(Agent, Walk, At, Object)) --> 
-  touchable(Agent, Object),
+  will_touch(Agent, Object),
   has_rel(At, Object),               
   from_loc(Agent, Here), 
   open_traverse(Object, Here),
@@ -142,11 +146,11 @@ aXiom(doing, does_put(Agent, Put, Thing1, At, Thing2)) -->
   
 aXiom(doing, take(Agent, Thing)) -->
   % [silent(subj(Agent)), person('Taken.', [cap(Doer), 'grabs the', Thing, '.'])]
-  required(touchable(Agent, Thing)),
+  will_touch(Agent, Thing),
   aXiom(doing, does_put(Agent, take, Thing, held_by, Agent)).
 
 aXiom(doing, drop(Agent, Thing)) -->
-  touchable(Agent, Thing), 
+  will_touch(Agent, Thing), 
   h(At, Agent, Here),
   % has_rel(At, Here),
   aXiom(doing, does_put(Agent, drop, Thing, At, Here)).
@@ -154,14 +158,14 @@ aXiom(doing, drop(Agent, Thing)) -->
 aXiom(doing, put(Agent, Thing1, Relation, Thing2)) -->
   has_rel(Relation, Thing2),
   (Relation \= in ; \+ is_closed(Thing2)),
-  touchable(Agent, Thing2), % what if "under" an "untouchable" thing?
+  will_touch(Agent, Thing2), % what if "under" an "untouchable" thing?
   % OK, put it
   must_act( does_put(Agent, put, Thing1, Relation, Thing2)).
 
 aXiom(doing, give(Agent, Thing, Recipient)) -->
   has_rel(held_by, Recipient),
-  touchable(Agent, Thing),
-  touchable(Recipient, Agent),
+  will_touch(Agent, Thing),
+  will_touch(Recipient, Agent),
   % OK, give it
   must_act( does_put(Agent, give, Thing, held_by, Recipient)).
 
@@ -185,7 +189,7 @@ aXiom(doing, throw_prep_obj(Agent, Thing, ONTO, Target)) -->
 
 % is throwing the ball...
 aXiom(doing, throwing(Agent, Thing, At, Target)) -->
-  touchable(Agent, Thing),
+  will_touch(Agent, Thing),
   can_sense(Agent, see, Target),
   aXiom(doing, thrown(Agent, Thing, At, Target)).
 
@@ -240,7 +244,7 @@ aXiom(doing, eat(Agent, Thing)) -->
 
 
 aXiom(doing, switch(Agent, OnOff, Thing)) -->
-  touchable(Agent, Thing),
+  will_touch(Agent, Thing),
   getprop(Thing, can_be(switched(OnOff), t)),
   getprop(Thing, effect(switch(OnOff), Term0)),
   {subst(equivalent, ($(self)), Thing, Term0, Term)},
@@ -248,7 +252,7 @@ aXiom(doing, switch(Agent, OnOff, Thing)) -->
   queue_agent_percept(Agent, [true, 'OK']).
 
 aXiom(doing, open(Agent, Thing)) -->
-  touchable(Agent, Thing),
+  will_touch(Agent, Thing),
   %getprop(Thing, openable),
   %\+ getprop(Thing, open),
   delprop(Thing, closed(true)),
@@ -257,7 +261,7 @@ aXiom(doing, open(Agent, Thing)) -->
   open_traverse(Agent, Here),
   queue_local_event([setprop(Thing, closed(fail)), 'Opened.'], [Here]).
 aXiom(doing, close(Agent, Thing)) -->
-  touchable(Agent, Thing),
+  will_touch(Agent, Thing),
   %getprop(Thing, openable),
   %getprop(Thing, open),
   delprop(Thing, closed(fail)),
@@ -336,9 +340,9 @@ aXiom(doing, OpenThing, S0, S9) :- fail,
 aXiom(doing, change_state(Agent, OpenThing, Open, Thing, Opened, TF)) --> 
   change_state(Agent, OpenThing, Open, Thing, Opened, TF).
 
-% used mainly to debug if things are touchable
+% used mainly to debug if things are will_touch
 aXiom(doing, touch(Agent, Thing)) -->
- unless_reason(Agent, touchable(Agent, Thing),
+ unless_reason(Agent, will_touch(Agent, Thing),
    cant( reach(Agent, Thing))),
  queue_agent_percept(Agent, [success(touch(Agent, Thing),'Ok.')]).
 
@@ -389,7 +393,7 @@ aXiom(doing, notices_objects_at(Agent, Sense, AtHere, Here), S0, S9) :-
 
 aXiom(doing, switch(Open, Thing)) -->
  act_prevented_by(Open, TF),
- touchable(Agent, Thing),
+ will_touch(Agent, Thing),
  %getprop(Thing, can_be(open),
  %\+ getprop(Thing, state(open, t)),
  Open = open, traverses(Sense, Open)
@@ -400,7 +404,7 @@ aXiom(doing, switch(Open, Thing)) -->
  queue_local_event([setprop(Thing, state(Open, TF)),[Open,is,TF]], [Here, Thing]).
 
 aXiom(doing, switch(OnOff, Thing)) -->
- touchable(Agent, Thing, Agent),
+ will_touch(Agent, Thing),
  getprop(Thing, can_be(switch, t)),
  getprop(Thing, effect(switch(OnOff), Term0)),
  subst(equivalent, $self, Thing, Term0, Term),
@@ -456,7 +460,7 @@ setloc_silent(Prep, Object, Dest) -->
 
 change_state(Agent, Open, Thing, Opened, TF, S0, S):- 
  maybe_when(psubsetof(Open, touch),
-   required_reason(Agent, touchable(Thing, Agent, S0))),
+   required_reason(Agent, will_touch(Thing, Agent, S0))),
 
  %getprop(Thing, can_be(open, S0),
  %\+ getprop(Thing, state(open, t), S0),

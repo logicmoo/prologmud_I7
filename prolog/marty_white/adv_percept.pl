@@ -301,7 +301,7 @@ process_percept_main(Agent, Percept, Stamp, Mem0, Mem0):-
  bugout('~q FAILED!~n', [bprocess_percept(Agent, Percept, Stamp)], perceptq), !.
 
 
-:- defn_state_setter(process_percept_list//3).
+:- defn_state_setter(process_percept_list(agent, list_of(event), tstamp)).
 % caller memorizes PerceptList
 process_percept_list(_Agent, _, _Stamp, Mem, Mem) :-
  declared(inherits(no_perceptq), Mem),

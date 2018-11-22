@@ -109,7 +109,7 @@ apply_forall(Forall,Apply,S0,S1):-
 
 findall(E,Goal,L, S0, S2):- apply_state(findall(E,Goal,L), S0, S2).
 
-unless(G,Else,S0,S2):- apply_state(unless(G,Else), S0, S2).
+%unless(G,Else,S0,S2):- apply_state(unless(G,Else), S0, S2).
 dmust(Goal,S0,S2):- apply_state(dmust(Goal), S0, S2).
 ignore(Goal,S0,S2):- apply_state(ignore(Goal), S0, S2).
 
@@ -169,8 +169,8 @@ apply_state(List, S0, S2) :- is_list(List),!,append(S0,List,S2),!.
 apply_state(G12, S0, S2) :- G12 = [_|_],!, 
  append(GL,G2,G12), (((is_list(GL),append(S0,GL,S1))-> apply_state(G2, S1, S2))).
 
-apply_state((unless(Unless,Error),More), S0, S2) :- !, (apply_state(Unless, S0, S1)->apply_state(More, S1, S2);apply_state(Error, S0, S2)).
-apply_state(unless(Unless,Error), S0, S2) :- !, (apply_state(Unless, S0, S2)->true;apply_state(Error, S0, S2)).
+%apply_state((unless(Unless,Error),More), S0, S2) :- !, (apply_state(Unless, S0, S1)->apply_state(More, S1, S2);apply_state(Error, S0, S2)).
+%apply_state(unless(Unless,Error), S0, S2) :- !, (apply_state(Unless, S0, S2)->true;apply_state(Error, S0, S2)).
 apply_state(ignore(Goal), S0, S2) :- !, apply_state(Goal, S0, S2)->true;S0=S2.
 apply_state(findall(E,Goal,L), S0, S2) :- !, findall(E,apply_state(Goal, S0, _),L),S0=S2.
 apply_state(i_o(S0,S2), S0, S2) :- !.

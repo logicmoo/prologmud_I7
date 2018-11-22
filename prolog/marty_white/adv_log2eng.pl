@@ -368,7 +368,7 @@ log2eng_( Obj, Prop, English):-
  \+ ground(Prop), copy_term(Prop,Prop2),!,
  numbervars(Prop2,55,_),
  log2eng( Obj, Prop2, English).
-log2eng_(Obj, Some, English):- dif(English,[]), logic2eng(Obj, Some, English),!.
+log2eng_(Obj, Some, English):- nop(dif(English,[])), logic2eng(Obj, Some, English),!.
 log2eng_( Obj, Prop, English):- Prop =..[N, Obj1, A| VRange],Obj1==Obj,Prop2 =..[N, A| VRange], log2eng( Obj, Prop2, English).
 log2eng_(Context, Inst, TheThing):- atom(Inst), inst_of(Inst, Type, N), !,
  (nth0(N, [(unknown), '', thee, old, some, a], Det) -> true; atom_concat('#',N,Det)),
@@ -433,7 +433,8 @@ logic2eng(Context, can_sense_from_here(Agent, At, Here, Sense, Nearby),
 logic2eng(Context, exits_are(_Agent, Relation, Here, Exits), ['Exits',Relation,Here,' are:', ExitText, '\n']):-
   list2eng(Context, Exits, ExitText).
 
-logic2eng(_Context, notice_children(_Agent, _Sense, _Here, _Prep, Depth, []),[]):- Depth \= depth(3).
+logic2eng(_Context, notice_children(_Agent, Sense, Object, Prep, Depth, '<unknown closed>'), verbose_only([Prep,Object,is,closed,from,ing(Sense)]) ):- Depth \= depth(3).
+logic2eng(_Context, notice_children(_Agent, _Sense, Object, Prep, Depth, []), verbose_only([nothing,Prep,Object]) ):- Depth \= depth(3).
 logic2eng(Context, notice_children(Agent, Sense, Here, Prep, _Depth, Nearby), 
     [cap(subj(Agent)), is, Prep, Here, and, es(Sense), ':'  | SeeText]):- 
  select(Agent, Nearby, OthersNearby),!,  list2eng(Context, OthersNearby, SeeText).
