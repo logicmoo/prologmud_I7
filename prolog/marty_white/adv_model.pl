@@ -62,20 +62,20 @@ update_relation( NewHow, Item, NewParent, Timestamp, M0, M2) :-
  append([holds_at(h(NewHow, Item, NewParent), Timestamp)], M1, M2).
 
 % Batch-update relations.
+update_relations(_NewHow, '<unknown closed>', _NewParent, _Timestamp, M, M).
 update_relations(_NewHow, [], _NewParent, _Timestamp, M, M).
 update_relations( NewHow, [Item|Tail], NewParent, Timestamp, M0, M2) :-
  update_relation( NewHow, Item, NewParent, Timestamp, M0, M1),
  update_relations( NewHow, Tail, NewParent, Timestamp, M1, M2).
+
 
 % If dynamic topology needs remembering, use
 %  h(exit(E), Here, [There1|ThereTail], Timestamp)
 update_model_exit(How, From, Timestamp, M0, M2) :-
  select(holds_at(h(How, From, To), _T), M0, M1),
  append([holds_at(h(How, From, To), Timestamp)], M1, M2).
-
 update_model_exit(How, From, Timestamp, M0, M1) :-
  append([holds_at(h(How, From, '<unexplored>'), Timestamp)], M0, M1).
-
 update_model_exit(How, From, To, Timestamp, M0, M2) :-
  select_always(holds_at(h(How, From, _To), _T), M0, M1),
  append([holds_at(h(How, From, To), Timestamp)], M1, M2).
@@ -86,6 +86,8 @@ update_model_exits([Exit|Tail], From, Timestamp, M0, M2) :-
  update_model_exit(Exit, From, Timestamp, M0, M1),
  update_model_exits(Tail, From, Timestamp, M1, M2).
 
+reverse_exit(reverse(ExitName), ExitName) :- nonvar(ExitName),!.
+reverse_exit(ExitNameReversed, ExitName):- bugout1(reverse_exit(ExitNameReversed, ExitName)),break.
 
 % Match only the most recent Figment in Memory.
 %last_thought(Figment, Memory) :- % or member1(F, M), or memberchk(Term, List)
@@ -93,25 +95,23 @@ update_model_exits([Exit|Tail], From, Timestamp, M0, M2) :-
 % append(RecentMemory, [Figment|_Tail], Memory),
 % \+ member(FreshFigment, RecentMemory).
 
-update_model(Knower, moved( Agent, There, How, Here), Timestamp, Mem, M0, M2) :-
- Knower = Agent,
- dmust((
- % According to model, where was I?
- in_agent_model(Knower,  h(_, Agent, There), M0),
- % TODO: Handle goto(Agent, on, table)
- % How did I get Here?
- append(RecentMem, [did( goto(_, _HowGo, A,B))|OlderMem], Mem), % find figment
- member(ExitName,[A,B]),atom(ExitName),
- \+ member(did( goto(_, _, _, _)), RecentMem),   % guarrantee recentness
- memberchk(timestamp(_T1,_WhenNow), OlderMem),   % get associated stamp
+update_model(Knower, arriving(Agent,Here,_,ExitNameReversed), Timestamp, Mem, M0, M2) :-  Knower = Agent,    
+ dmust(( reverse_exit(ExitNameReversed, ExitName),
+  At = in,
+  % According to model, where was I?
+  in_model(h(_, Agent, There), M0),
+  % TODO: Handle goto(Agent, walk, on, table)
+  % At did I get Here?
+  append(RecentMem, [did(goto_dir(Agent, _, ExitName))|OlderMem], Mem), % find figment
+  \+ member(did(goto_dir(Agent, _, _)), RecentMem),               % guarrantee recentness
+  memberchk(timestamp(_T1,_OldNow), OlderMem),               % get associated stamp
+  %player_format(Agent, '~p moved: goto(Agent, walk, ~p, ~p) from ~p leads to ~p~n',
+  %       [Agent, AtGo, Dest, There, Here]),
+  update_model_exit(exit(ExitName), There, Here, Timestamp, M0, M1), % Model the path.
+  update_relation(At, Agent, Here, Timestamp, M1, M2))). % And update location.
 
- %player_format('~p moved: goto(Agent, ~p, ~p) from ~p leads to ~p~n',
- %  [Agent, HowGo, Dest, There, Here]),
- update_model_exit(exit(ExitName), There, Here, Timestamp, M0, M1), % Model the path.
- update_relation(How, Agent, Here, Timestamp, M1, M2))). % And update location.
-
-update_model(_Agent, moved( Object, _From, How, To), Timestamp, _Mem, M0, M1) :-
- update_relation( How, Object, To, Timestamp, M0, M1).
+update_model(_Agent, moved(_Doer, _How, Object, _From, At, To), Timestamp, _Mem, M0, M1) :-
+  update_relation(At, Object, To, Timestamp, M0, M1).
 
 
 update_model(Agent, carrying(Agent, Objects), Timestamp, _Memory, M0, M1) :-
@@ -128,13 +128,19 @@ update_model(Agent, sense_props(Agent, _Sense, Object, _Depth, PropList), Stamp,
 
 %update_model(Agent, you_are(Agent, _How, _He\re), _Timestamp, _Mem, M0, M0):- !.
 
+update_model(_Agent, exits_are(_, _At, Here, Exits), Timestamp, _Mem, M0, M4) :-
+  % Don't update map here, it's better done in the moved() clause.
+  findall(exit(E), member(E, Exits), ExitRelations),
+  update_model_exits(ExitRelations, Here, Timestamp, M0, M4).% Model exits from Here.
+
+/*
 % Model exits from Here.
-update_model(Agent, exits_are(Agent2, Relation, Here, Exits), Timestamp, _Mem, M0, M4):- Agent==Agent2, !,
+update_model(Agent, exits_are(Agent2, Relation, Here, Exits), Timestamp, _Mem, M0, M4):- Agent=@=Agent2, !,
   findall(exit(E), member(E, Exits), ExitRelations),
     % Don't update map here? it's better done in the moved( ) clause?
     update_relations(Relation, [Agent], Here, Timestamp, M0, M3),
   update_model_exits( ExitRelations, Here, Timestamp, M3, M4).
-update_model(_Agent, exits_are(S,_,_,_), _Timestamp, _Mem, M0, M0):- S == '$fake',!.
+*/
 
 % Model objects seen Here
 update_model(Agent, notice_children(Agent, _Sense, Here, Prep, _Depth, Objects), Timestamp, _Mem, M0, M3):- !,

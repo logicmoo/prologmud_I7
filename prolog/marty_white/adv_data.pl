@@ -103,7 +103,7 @@ type_functor(doing, dig(agent, holetype, prep, dest, inst)).
 type_functor(doing, create(type)).
 
 type_functor(doing, eat(agent, inst)).
-type_functor(doing, hit(agent, inst)).
+type_functor(doing, hit(agent, inst, with)).
 type_functor(doing, destroy(inst)).
 
 type_functor(doing, switch(agent, tfstate, tf, inst)).
@@ -134,18 +134,20 @@ type_functor(doing, take(agent, inst)).
 type_functor(doing, drop(agent, inst)).
 
 type_functor(doing, goto_dir(agent, movetype, dir)).
-type_functor(doing, goto_loc(agent, movetype, dest)).
 type_functor(doing, goto_obj(agent, movetype, obj)).
 type_functor(doing, goto_prep_obj(agent, movetype, domrel, obj)).
+
+type_functor(doing, goto_loc(agent, movetype, dest)).
+
 type_functor(doing, throw(agent, inst, dest)).
 type_functor(doing, put(agent, inst, dest)).
-type_functor(event, moved(inst, dest1, verb, dest2)).
+type_functor(event, moved(agent, how, inst, dest1, verb, dest2)).
 
 
 
 type_functor(event, carrying(agent, list(inst))).
 type_functor(event, destroyed(inst)).
-type_functor(event, did(doing)).
+type_functor(event, did(action)).
 type_functor(event, exits_are(agent, in, dest, list(exit))).
 type_functor(event, notice_children(agent, sense, dest, domrel, depth, list(inst))).
 type_functor(event, failed(doing, msg)).

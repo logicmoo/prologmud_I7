@@ -93,7 +93,7 @@ aXiom(doing, goto_prep_obj(Agent, Walk, At, Object)) -->
   aXiom(doing, entering(Agent, Here, Walk, At, Object)).
 
 aXiom(doing, entering(Agent, Walk, Here, At, Object)) -->
-  moveto(Agent, At, Object, [Here],
+  moveto(Agent, Walk, Agent, At, Object, [Here],
     [subj(Agent), person(Walk, es(Walk)), At, the, Object, .]),
   add_look(Agent).
 
@@ -103,6 +103,9 @@ aXiom(doing, entering(Agent, Walk, Here, At, Object)) -->
 aXiom(doing, goto_loc(Agent, _Walk, There)) -->           % go some room
   has_rel(exit(_), There),
   aXiom(doing, make_true(Agent, h(in, Agent, There))).
+
+aXiom(doing, make_true(Agent, FACT)) --> 
+  add_agent_goal(Agent, FACT).    
 
 aXiom(doing, make_true(Doer, h(in, Agent, There))) -->  
   {Doer==Agent},
@@ -135,13 +138,13 @@ aXiom(doing, follow_step(Agent, Name, Step)) -->
 %      can_sense(Agent, Sense, Agent, Where),
 %      has_rel(Relation, Where),
 %      h(descended, Agent, Here)),
-%    moveto(Thing, Relation, Where, [Here],
+%    moveto(Agent, Put, Thing, Relation, Where, [Here],
 %      [cap(subj(Agent)), person('put the', 'puts a'),
 %        Thing, Relation, the, Where, '.'])).
 aXiom(doing, does_put(Agent, Put, Thing1, At, Thing2)) --> 
   from_loc(Agent, Here),
-  % moveto(Thing1, held_by, Recipient, [Here], [cap(subj(Agent)), person([give, Recipient, the], 'gives you a'), Thing, '.'],
-  moveto(Thing1, At, Thing2, [Here], 
+  % moveto(Agent, Put, Thing1, held_by, Recipient, [Here], [cap(subj(Agent)), person([give, Recipient, the], 'gives you a'), Thing, '.'],
+  moveto(Agent, Put, Thing1, At, Thing2, [Here], 
     [cap(subj(Agent)), person(Put, es(Put)), Thing1, At, Thing2, '.']).
   
 aXiom(doing, take(Agent, Thing)) -->
@@ -190,11 +193,11 @@ aXiom(doing, throwing(Agent, Thing, At, Target)) -->
   aXiom(doing, thrown(Agent, Thing, At, Target)).
 
 % has thrown the ball...
-aXiom(doing, thrown(_Agent, Thing, AtTarget, Target)) -->
+aXiom(doing, thrown(Agent, Thing, AtTarget, Target)) -->
   ignore((getprop(Thing, breaks_into(Broken)),
   bugout3('object ~p is breaks_into~n', [Thing], general),
   aXiom(doing, thing_transforms(Thing,Broken)))),
-  aXiom(doing, disgorge(Target, AtTarget, Target, [Target], 'Something falls out.')).
+  aXiom(doing, disgorge(Agent, throw, Target, AtTarget, Target, [Target], 'Something falls out.')).
 
 aXiom(doing, thing_transforms(Thing,Broken))  --> 
   undeclare(h(At, Thing, Here)),
@@ -202,19 +205,24 @@ aXiom(doing, thing_transforms(Thing,Broken))  -->
   queue_local_event([transformed(Thing, Broken)], Here).
   
 
-aXiom(doing, hit(Agent, Thing)) -->
-  h(_At, Agent, Here),
-  hit(Thing, Agent, [Here]),
+aXiom(doing, hit_with(Agent, Thing, With)) -->
+  from_loc(Agent, Here),
+  hit(Agent, Thing, With, [Here]),
   queue_agent_percept(Agent, [true, 'OK.']).
 
-hit(Target, _Thing, Vicinity) -->
+aXiom(doing, hit(Agent, Thing)) -->
+  from_loc(Agent, Here),
+  hit(Agent, Thing, Agent, [Here]),
+  queue_agent_percept(Agent, [true, 'OK.']).
+
+hit(Doer, Target, _With, Vicinity) -->
  ignore(( % Only brittle items use this
   getprop(Target, breaks_into(Broken)),
   bugout3('target ~p is breaks_into~n', [Target], general),
   undeclare(h(Prep, Target, Here)),
   queue_local_event([transformed(Target, Broken)], Vicinity),
   declare(h(Prep, Broken, Here)),
-  disgorge(Target, Prep, Here, Vicinity, 'Something falls out.'))).
+  disgorge(Doer, hit, Target, Prep, Here, Vicinity, 'Something falls out.'))).
 
 
 aXiom(doing, dig(Agent, Hole, Where, Tool)) -->
@@ -409,43 +417,33 @@ aXiom(doing, switch(OnOff, Thing)) -->
 % todo
 
 /*
-disgorge(Container, At, Here, Vicinity, Msg) :-
+disgorge(Doer, How, Container, At, Here, Vicinity, Msg) :-
   findall(Inner, h(child, Inner, Container), Contents),
   bugout3('~p contained ~p~n', [Container, Contents], general),
-  moveallto(Contents, At, Here, Vicinity, Msg).
-disgorge(_Container, _At, _Here, _Vicinity, _Msg).
+  moveto(Doer, How, Contents, At, Here, Vicinity, Msg).
+disgorge(Doer, How, _Container, _At, _Here, _Vicinity, _Msg).
 */
-disgorge(Container, Prep, Here, Vicinity, Msg) -->
+disgorge(Doer, How, Container, Prep, Here, Vicinity, Msg) -->
   findall(Inner, h(child, Inner, Container), Contents),
    {bugout3('~p contained ~p~n', [Container, Contents], general)},
-  apply_map_state(moveto(), Contents, rest(Prep, Here, Vicinity, Msg)).
+  moveto(Doer, How, Contents, Prep, Here, Vicinity, Msg).
 
-
-
-
-/*moveallto([], _R, _D, _V, _M, S, S).
-moveallto([Object|Tail], Relation, Destination, Vicinity, Msg) :-
- moveto(Object, Relation, Destination, Vicinity, Msg),
- moveallto(Tail, Relation, Destination, Vicinity, Msg).
-*/
-moveallto([], _R, _D, _V, _M, S, S).
-moveallto(List, Relation, Destination, Vicinity, Msg) -->
- apply_map_state(moveto(),List, rest(Relation, Destination, Vicinity, Msg)).
-
-:- defn_state_setter(moveto(inst,domrel,dest,list(dest),msg)).
-moveto(Object, At, Dest, Vicinity, Msg) -->
+:- defn_state_setter(moveto(agent,verb,listof(inst),domrel,dest,list(dest),msg)).
+moveto(Doer, Verb, List, At, Dest, Vicinity, Msg) --> {is_list(List)},!,
+ apply_map_state(moveto(Doer, Verb), List, rest(At, Dest, Vicinity, Msg)).
+moveto(Doer, Verb, Object, At, Dest, Vicinity, Msg) -->
   undeclare(related(_, Object, Here)),
   declare(related(At, Object, Dest)),
-  queue_local_event([moved(Object, Here, At, Dest), Msg], Vicinity).
+  queue_local_event([moved(Doer, Verb, Object, Here, At, Dest), Msg], Vicinity).
 
 
-event_props(thrown(_Agent,  Thing, _Target, Prep, Here, Vicinity),
- [getprop(Thing, breaks_into(Broken)),
+event_props(thrown(Agent,  Thing, _Target, Prep, Here, Vicinity),
+ [getprop(Thing, breaks_into(NewBrokenType)),
  bugout3('object ~p is breaks_into~n', [Thing], general),
  undeclare(h(_, Thing, _)),
- declare(h(Prep, Broken, Here)),
- queue_local_event([transformed(Thing, Broken)], Vicinity),
- disgorge(Thing, Prep, Here, Vicinity, 'Something falls out.')]).
+ declare(h(Prep, NewBrokenType, Here)),
+ queue_local_event([transformed(Thing, NewBrokenType)], Vicinity),
+ disgorge(Agent, throw, Thing, Prep, Here, Vicinity, 'Something falls out.')]).
 
                                       
 setloc_silent(Prep, Object, Dest) --> 

@@ -33,7 +33,7 @@ precond_matches_effects(exists(Object), StartEffects) :-
  ;
  in_model(h(_, _, Object), StartEffects).
 precond_matches_effects(Cond, Effects) :-
- member(E, Effects),
+ in_model(E, Effects),
  precond_matches_effect(Cond, E).
 
  
@@ -62,68 +62,81 @@ sequenced(_Self,
 
 % oper(_Self, Action, Preconds, Effects)
 oper(Self, Action, Preconds, Effects):- % Hooks to KR above
- sequenced(Self, Whole),
+ fail, sequenced(Self, Whole),
  append(Preconds,[did(Action)|Effects],Whole).
 
 
-oper(_Self, goto(Self, _Walk, Rel, Here),
-  [ Here \= Self, There \= Self,
-  h(WasRel, Self, Here),
-  h(Rel, Here, There)], % path(Here, There)
-  [ h(Rel, Self, There),
-  ~ h(WasRel, Self, Here)]).
+% Return an operator after substituting Agent for Agent.
+oper(Agent, goto_dir(Agent, walk, ExitName),
+     [ Here \= Agent, There \= Agent,
+       h(in, Agent, Here),
+       h(exit(ExitName), Here, There)], % path(Here, There)
+     [ h(in, Agent, There),
+       ~h(in, Agent, Here)]).
 
-oper(_Self, take(Self, Thing), % from same room
-  [ Thing \= Self, exists(Thing),
-  There \= Self,
+/*
+oper(Agent, goto_dir(Agent, _Walk, Rel),
+  [ Here \= Agent, There \= Agent,
+  h(WasRel, Agent, Here),
+  h(Rel, Here, There)], % path(Here, There)
+  [ h(Rel, Agent, There),
+  ~ h(WasRel, Agent, Here)]).
+*/
+
+oper(Agent, take(Agent, Thing), % from same room
+  [ Thing \= Agent, exists(Thing),
+  There \= Agent,
   h(At, Thing, There),
-  h(At, Self, There)],
-  [ h(held_by, Thing, Self),
+  h(At, Agent, There)],
+  [ h(held_by, Thing, Agent),
   ~ h(At, Thing, There)]).
-oper(_Self, take(Self, Thing), % from something else
-  [ Thing \= Self, exists(Thing),
+
+oper(Agent, take(Agent, Thing), % from something else
+  [ Thing \= Agent, exists(Thing),
   h(Prep, Thing, What),
   h(At, What, There),
-  h(At, Self, There) ],
-  [ h(held_by, Thing, Self),
-  ~ h(Prep, Thing, There)]):- extra.
-oper(_Self, drop(Self, Thing),
-  [ Thing \= Self, exists(Thing),
-  h(held_by, Thing, Self)],
-  [ ~ h(held_by, Thing, Self)] ).
+  h(At, Agent, There) ],
+  [ h(held_by, Thing, Agent),
+  ~ h(Prep, Thing, There)]):- fail, extra.
 
-oper(_Self, emote(Self, say, Player, [please, give, Self, the(Thing)]),
-  [ Thing \= Self, exists(Thing),
+oper(Agent, drop(Agent, Thing),
+  [ Thing \= Agent, exists(Thing),
+  h(held_by, Thing, Agent)],
+  [ ~ h(held_by, Thing, Agent)] ).
+
+oper(Agent, emote(Agent, say, Player, [please, give, Agent, the(Thing)]),
+  [ Thing \= Agent, exists(Thing),
   h(held_by, Thing, Player),
   h(Prep, Player, Where),
-  h(Prep, Self, Where) ],
-  [ h(held_by, Thing, Self),
-  ~ h(held_by, Thing, Player)] ):- extra.
+  h(Prep, Agent, Where) ],
+  [ h(held_by, Thing, Agent),
+  ~ h(held_by, Thing, Player)] ):- fail, extra.
 
-oper(_Self, give(Self, Thing, Recipient),
-  [ Thing \= Self, Recipient \= Self,
+oper(Agent, give(Agent, Thing, Recipient),
+  [ Thing \= Agent, Recipient \= Agent,
   exists(Thing), exists(Recipient),
-  Where \= Self,
-  h(held_by, Thing, Self),
+  Where \= Agent,
+  h(held_by, Thing, Agent),
   h(in, Recipient, Where), exists(Where),
-  h(in, Self, Where)],
+  h(in, Agent, Where)],
   [ h(held_by, Thing, Recipient),
-  ~ h(held_by, Thing, Self)
+  ~ h(held_by, Thing, Agent)
   ] ).
-oper(_Self, put(Self, Thing, Relation, What), % in something else
-  [ Thing \= Self, What \= Self, Where \= Self,
+
+oper(Agent, put(Agent, Thing, Relation, What), % in something else
+  [ Thing \= Agent, What \= Agent, Where \= Agent,
   Thing \= What, What \= Where, Thing \= Where,
-  h(held_by, Thing, Self), exists(Thing),
+  h(held_by, Thing, Agent), exists(Thing),
   h(in, What, Where), exists(What), exists(Where),
-  h(in, Self, Where)],
+  h(in, Agent, Where)],
   [ h(Relation, Thing, What),
-  ~ h(held_by, Thing, Self)] ).
-oper(_Self, put(Self, Thing, Relation, Where), % in room
-  [ Thing \= Self, exists(Thing),
-  h(held_by, Thing, Self),
-  h(Relation, Self, Where)],
+  ~ h(held_by, Thing, Agent)] ).
+oper(Agent, put(Agent, Thing, Relation, Where), % in room
+  [ Thing \= Agent, exists(Thing),
+  h(held_by, Thing, Agent),
+  h(Relation, Agent, Where)],
   [ h(Relation, Thing, Where),
-  ~ h(held_by, Thing, Self)] ) :- extra.
+  ~ h(held_by, Thing, Agent)] ) :- fail, extra.
 
 % Return an operator after substituting Agent for Self.
 operagent(Agent, Action, Conds, Effects) :- oper(Agent, Action, Conds, Effects).
@@ -581,7 +594,7 @@ generate_plan(Knower, Agent, FullPlan, Mem0) :-
 
 path2dir1(Here, There, goto_dir(_Self, _Walk, Dir), ModelData):- 
  in_model(h(exit(Dir), Here, There), ModelData).
-path2dir1(Here, There, goto_loc(_Self, _Walk, There), ModelData) :-
+path2dir1(Here, There, goto_obj(_Self, _Walk, There), ModelData) :-
  in_model(h(descended, Here, There), ModelData).
 
 path2directions([Here, There], [GOTO], ModelData):-

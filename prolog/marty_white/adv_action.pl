@@ -255,6 +255,11 @@ add_agent_todo(Agent, Action, S0, S9) :-
   add_todo(Action, Mem0, Mem1),
   declare(memories(Agent, Mem1), S1, S9).
 
+add_agent_goal(Agent, Action, S0, S9) :- 
+  undeclare(memories(Agent, Mem0), S0, S1),
+  add_goal(Action, Mem0, Mem1),
+  declare(memories(Agent, Mem1), S1, S9).
+
 add_look(Agent) -->
   h(inside, Agent, _Somewhere),
   add_agent_todo(Agent, look(Agent)).

@@ -451,7 +451,7 @@ logic2eng(Context, carrying(Agent, Items),
  list2eng(Context, Items, Text).
                                
 
-logic2eng(_Agent, moved( What, From, Prep, To),
+logic2eng(_Agent, moved(_Doer, _Verb, What, From, Prep, To),
    [cap(subj(What)), 'moves', ' from', From, Prep, 'to', To]).
 
 
