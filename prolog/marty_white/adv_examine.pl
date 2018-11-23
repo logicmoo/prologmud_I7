@@ -16,7 +16,6 @@
 % Main file.
 %
 */
-findall_set(E,G,S):- findall(E,G,L),list_to_set(L,S).
 
 nearby_objs(Agent, Here, Nearby, S0):- 
  ignore(h(Relation, Agent, Here, S0)),

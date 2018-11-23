@@ -159,6 +159,10 @@ compile_eng(Context, cap(Eng), Compiled) :-
  capitalize(Lowercase, Compiled).
 compile_eng(_Context, silent(_Eng), '').
 
+%compile_eng(_Context, verbose_only(_Eng), '...' ).
+compile_eng(Context, verbose_only(Eng), '...   verbose ... only  ... '(Compiled) ):- 
+ compile_eng_txt(Context, Eng, Compiled).
+
 compile_eng(Context, Inst, TheThing):- atom(Inst), inst_of(Inst, Type, N), N\==0, !,
  (nth0(N, [(unknown), '', the, thee, old, some, a], Det) -> true; atom_concat('#',N,Det)),
  compile_eng(Context, [Det, Type], TheThing).
@@ -276,7 +280,7 @@ compile_eng_txt_pt2(Context, EngIn, Text) :-
  findall(Atom2, (member(Atom2, AtomList), Atom2\=''), AtomList1),
  grammar_check(Context,AtomList1,AtomList2),
  % Add spaces.
- bugout('insert_spaces(~w)~n', [AtomList2], printer),
+ bugout3('insert_spaces(~w)~n', [AtomList2], printer),
  insert_spaces(AtomList2, SpacedList),
  % Return concatenated atoms.
  concat_atom(SpacedList, Text).
@@ -433,7 +437,7 @@ logic2eng(Context, can_sense_from_here(Agent, At, Here, Sense, Nearby),
 logic2eng(Context, exits_are(_Agent, Relation, Here, Exits), ['Exits',Relation,Here,' are:', ExitText, '\n']):-
   list2eng(Context, Exits, ExitText).
 
-logic2eng(_Context, notice_children(_Agent, Sense, Object, Prep, Depth, '<unknown closed>'), verbose_only([Prep,Object,is,closed,from,ing(Sense)]) ):- Depth \= depth(3).
+logic2eng(_Context, notice_children(_Agent, Sense, Object, Prep, Depth, '<unknown closed>'), verbose_only([Object, aux(be), closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
 logic2eng(_Context, notice_children(_Agent, _Sense, Object, Prep, Depth, []), verbose_only([nothing,Prep,Object]) ):- Depth \= depth(3).
 logic2eng(Context, notice_children(Agent, Sense, Here, Prep, _Depth, Nearby), 
     [cap(subj(Agent)), is, Prep, Here, and, es(Sense), ':'  | SeeText]):- 

@@ -24,7 +24,7 @@
 :- use_module(library(socket)).
 
 adv_server(Port) :-
- bugout(adv_server(Port)),
+ bugout1(adv_server(Port)),
  tcp_socket(ServerSocket), 
  tcp_setopt(ServerSocket, reuseaddr), 
  tcp_bind(ServerSocket, Port), 
@@ -110,17 +110,17 @@ adv_server_client(InStream, OutStream, _, _):-
  thread_detach(Id).
 */
 
-srv_catch(Goal):- catch(once(call(call,Goal)),E,((notrace(bugout(error_srv_catch(E,Goal))),!,fail))).
+srv_catch(Goal):- catch(once(call(call,Goal)),E,((notrace(bugout1(error_srv_catch(E,Goal))),!,fail))).
 ignore_srv_catch(Goal):- ignore(srv_catch(Goal)).
 
 adventure_client_cleanp(Id,Alias,InStream,OutStream):- 
  srv_catch((adv:console_info(Id,Alias,InStream,OutStream, Host, Peer, Agent) -> 
  ((assertz(adv:agent_discon(Agent)),
- bugout((adv:agent_discon(Agent))),
+ bugout1((adv:agent_discon(Agent))),
  stream_property(Err,file_no(2)),
  set_stream(Err,alias(Agent)),
- bugout(adventure_client_cleanp_agent(Id,Alias,InStream,OutStream, Host, Peer, Agent)))) ;
- bugout(failed_adventure_client_cleanp(Id,Alias,InStream,OutStream)))),
+ bugout1(adventure_client_cleanp_agent(Id,Alias,InStream,OutStream, Host, Peer, Agent)))) ;
+ bugout1(failed_adventure_client_cleanp(Id,Alias,InStream,OutStream)))),
  retractall(adv:console_info(Id,Alias,InStream,OutStream, Host, Peer, Agent)),
  ignore_srv_catch(close(InStream)), 
  ignore_srv_catch(close(OutStream)),
@@ -206,7 +206,7 @@ adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, end_of_file):-
 adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, Words0):-
  nop(adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, Words0)),
  (Words0==[]->Words=[wait];Words=Words0),
- nop((bugout('~NTelent: ~q~n', [adv:console_tokens(Agent, Words)]))), 
+ nop((bugout3('~NTelent: ~q~n', [adv:console_tokens(Agent, Words)]))), 
  assertz(adv:console_tokens(Agent, Words)),
  nop((format(OutStream, '~NYou: ~q~n', [adv:console_tokens(Agent, Words)]))), 
  !.

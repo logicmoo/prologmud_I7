@@ -80,8 +80,10 @@ system_default_debug(YN):-
 :- module_transparent(dmust_tracing/1).
 :- module_transparent(if_tracing/1).
 
+:- meta_predicate(dmust_tracing(*)).
 dmust_tracing(G):- notrace((tracing,cls)),!,dmust(G).
 dmust_tracing(G):- call(G).
+:- meta_predicate(if_tracing(*)).
 if_tracing(G):- tracing -> notrace(G) ; true.
 
 
@@ -123,14 +125,17 @@ clip_cons(Left,_,List):-maplist(simplify_dbug,Left,List).
 
 %:- never_trace(lists:member(_,_)).
 %:- never_trace(lists:append(_,_,_)).
+:- meta_predicate(dshow_call(*)).
 dshow_call((G1,G2)):- !,dshow_fail(G1),dshow_fail(G2).
-dshow_call(G):- simplify_dbug(G,GG), swi_soft_if_then(G,bugout(success_dshow_call(GG)),(bugout(failed_dshow_call(GG)),!,fail)).
+dshow_call(G):- simplify_dbug(G,GG), swi_soft_if_then(G,bugout1(success_dshow_call(GG)),(bugout1(failed_dshow_call(GG)),!,fail)).
 
+:- meta_predicate(dshow_fail(*)).
 dshow_fail('\\+'(G1)):- !, \+ dshow_true(G1).
-dshow_fail(G):- simplify_dbug(G,GG), swi_soft_if_then(G, true , (bugout(failed_dshow_call(GG)),!,fail)).
+dshow_fail(G):- simplify_dbug(G,GG), swi_soft_if_then(G, true , (bugout1(failed_dshow_call(GG)),!,fail)).
 
+:- meta_predicate(dshow_true(*)).
 dshow_true('\\+'(G1)):- !, \+ dshow_fail(G1).
-dshow_true(G):- simplify_dbug(G,GG),  swi_soft_if_then(G, bugout(success_dshow_call(GG)) , (!,fail)).
+dshow_true(G):- simplify_dbug(G,GG),  swi_soft_if_then(G, bugout1(success_dshow_call(GG)) , (!,fail)).
 
 found_bug(S0,open_list(Open)) :- \+is_list(S0),
   get_open_segement(S0,Open).

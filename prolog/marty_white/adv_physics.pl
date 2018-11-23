@@ -23,7 +23,7 @@
 :- nop(ensure_loaded('adv_relation')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-:- defn_state_0(never_equal).
+:- defn_state_none(never_equal(sense,inst,agent)).
 never_equal(Sense,Thing,Agent):- nop(never_equal(Sense,Thing,Agent)),!.
 never_equal(Sense,Thing,Agent):-
   never_equal(Sense,Thing),never_equal(Sense,Agent).
@@ -37,11 +37,12 @@ never_equal(Sense,Thing):-
 :- nop(ensure_loaded('adv_relation')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-:- defn_state_getter(related_with_prop).
+:- defn_state_getter(related_with_prop(domrel, inst, place, prop)).
 related_with_prop(At, Object, Place, Prop, S0) :-
   h(At, Object, Place, S0),
   getprop(Object, Prop, S0).
 
+:- defn_state_getter(in_state(domrel, inst)).
 in_state(~(Open), Object, State) :- ground(Open),!,
  getprop(Object, state(Open, f), State).
 in_state(Open, Object, State) :-
@@ -49,7 +50,7 @@ in_state(Open, Object, State) :-
 % getprop(Object, can_be(open, State),
 % \+ getprop(Object, state(open, t), State).
 
-:- defn_state_getter(in_scope(agent,domain,thing)).
+:- defn_state_getter(in_scope(agent,thing)).
 in_scope(_Agent, Star, _State) :- is_star(Star), !.
 in_scope(Agent, Thing, S0) :-
   from_loc(Agent, Here, S0),
@@ -58,7 +59,7 @@ in_scope(Agent, Thing, State) :-
  % get_open_traverse(_Open, _See, _Traverse, Sense),
  h(Sense, Agent, Here, State),
  (Thing=Here; h(Sense, Thing, Here, State)).
-in_scope(Agent, Thing, _State):- bugout(pretending_in_scope(Agent, Thing)).
+in_scope(Agent, Thing, _State):- bugout1(pretending_in_scope(Agent, Thing)).
 
 
 
@@ -67,9 +68,6 @@ in_scope(Agent, Thing, _State):- bugout(pretending_in_scope(Agent, Thing)).
 :- nop(ensure_loaded('adv_relation')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-:- defn_state_getter(has_rel(domrel,inst)).
-:- defn_state_getter(h(domrel,source,target)).
 
 % -----------------------------------------------------------------------------
 
@@ -81,8 +79,22 @@ subrelation(Sub, child_not_in):- dif(Sub,in), subrelation(Sub, child).
 %subrelation(under, in).
 %subrelation(reverse(on), child).
 
+same_rel(Rel,Prep):- Rel==Prep.
+same_rel(Rel,Prep):- \+ ground((Rel,Prep)),!, fail.
+same_rel(Rel,Prep):- compound(Prep),!,arg(_,Prep,E),same_rel(Rel,E).
+same_rel(Rel,Prep):- compound(Rel),!,arg(_,Rel,E),same_rel(E,Prep).
+same_rel(Rel,Prep):- subrelation(Rel,Prep).
+
+:- defn_state_getter(prep_to_rel(target,preprel,-domrel)).
+prep_to_rel(Target, Prep, Rel, S0):- has_rel(Rel, Target, S0), same_rel(Rel,Prep),!.
+prep_to_rel(Target, Prep, Rel, S0):- in_model(h(Rel, Target, _), S0), same_rel(Rel,Prep), !. 
+prep_to_rel(Target, Prep, Rel, S0):- atom(Prep), prep_to_rel(Target, exit(Prep), Rel, S0),!.
+prep_to_rel(Target, _Prep, Rel, S0):- default_rel(Rel, Target, S0).
+
+:- defn_state_getter(has_rel(domrel,inst)).
 has_rel(At, X, S0) :- default_rel(At, X, S0).
 
+:- defn_state_getter(default_rel(domrel,inst)).
 default_rel(At, X, S0) :-
   getprop(X, default_rel(At), S0).
 default_rel(At, X, S0) :-
@@ -97,8 +109,7 @@ default_rel(At, X, S0) :-
   subrelation(Specific, At).
 
 
-%h(At, X, Y, Z, S0):- break, throw(h(At, X, Y, Z, S0)).
-h(At, X, Y, S0, S2):- h(At, X, Y, S0),S2=S0.
+:- defn_state_getter(h(domrel,source,target)).
 
 h(At, X, Y, S0) :- in_model(h(At, X, Y), S0).
 
@@ -177,7 +188,7 @@ touchable(Agent, Thing, S0) :-
 :- nop(ensure_loaded('adv_action')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-:- defn_state_getter(applied_direction(agent,source,domrel,target)).
+:- defn_state_getter(applied_direction(start,source,prep,domrel,target)).
 applied_direction(Start, Here, Dir, Relation, End, S0):- 
  h(_Relation, Start, Here, S0),
  h(exit(Dir), Here, End, S0),
@@ -195,7 +206,7 @@ applied_direction(Start, Here, Dir, Relation, End, S0):-
 
 
 
-
+:- defn_state_none(action_doer(action,-agent)).
 action_doer(Action,Agent):- \+ compound(Action),!, dmust(current_player(Agent)),!.
 action_doer(Action,Agent):- functor(Action,Verb,_),verbatum_anon(Verb),current_player(Agent),!.
 action_doer(Action,Agent):- arg(1,Action,Agent), nonvar(Agent), \+ preposition(_,Agent),!.

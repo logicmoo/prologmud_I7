@@ -17,7 +17,7 @@
 %
 */
 
-:- module(mu, [srv_mu/0,run_mu/0]).
+:- module(mu, [srv_mu/0, run_mu/0]).
 
 % nohup websocket_redir.sh dbutterfly 2666 &
 

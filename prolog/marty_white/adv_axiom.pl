@@ -1,6 +1,6 @@
 
 :- discontiguous aXiom//2.
-
+ 
 will_touch(Agent,Thing, S0, S2):- 
   touchable(Agent,Thing, S0),S0=S2.
   
@@ -8,7 +8,7 @@ will_touch(Agent,Thing, S0, S2):-
 aXiom(doing, wait(Agent)) -->
  queue_agent_percept(Agent, [time_passes(Agent)]).
 
-aXiom(doing, Action, _State, _S_):- notrace(( \+ trival_act(Action),bugout(aXiom(doing, Action)))),fail.
+aXiom(doing, Action, _S0, _S9):- notrace(( \+ trival_act(Action),bugout1(aXiom(doing, Action)))),fail.
 
 aXiom(doing, talk(Agent, Object, Message)) -->  % directed message
   can_sense(Agent, audio, Object),
@@ -89,7 +89,7 @@ aXiom(doing, goto_prep_obj(Agent, Walk, At, Object)) -->
   has_rel(At, Object),               
   from_loc(Agent, Here), 
   open_traverse(Object, Here),
-  \+ is_status(Object, open, f), 
+  \+ is_closed(Object), 
   aXiom(doing, entering(Agent, Here, Walk, At, Object)).
 
 aXiom(doing, entering(Agent, Walk, Here, At, Object)) -->
@@ -104,13 +104,13 @@ aXiom(doing, goto_loc(Agent, _Walk, There)) -->           % go some room
   has_rel(exit(_), There),
   aXiom(doing, make_true(Agent, h(in, Agent, There))).
 
-aXiom(doing, make_true(Doer, h(in, Agent, There))) -->           % go in (adjacent) room
+aXiom(doing, make_true(Doer, h(in, Agent, There))) -->  
   {Doer==Agent},
   has_rel(exit(_), There),
   from_loc(Agent, Here),
   getprop(Agent, memories(Memory)), 
-  agent_thought_model(Agent, ModelData, Memory),
-  find_path(Here, There, Route, ModelData), !,
+  {agent_thought_model(Agent, ModelData, Memory)},
+  {find_path(Here, There, Route, ModelData)}, !,
   aXiom(doing, follow_plan(Agent, goto_loc(Agent, walk, There), Route)).
 
 aXiom(doing, follow_plan(Agent, Name, [Step|Route])) -->
@@ -118,7 +118,7 @@ aXiom(doing, follow_plan(Agent, Name, [Step|Route])) -->
   aXiom(doing, follow_plan(Agent, Name, Route)).
 
 aXiom(doing, follow_step(Agent, Name, Step)) -->
-  dbug(follow_step(Agent, Name, Step)),
+  {bugout1(follow_step(Agent, Name, Step))},
   must_act(Step).
 
 
@@ -171,21 +171,17 @@ aXiom(doing, give(Agent, Thing, Recipient)) -->
 
 % throw ball up
 aXiom(doing, throw_dir(Agent, Thing, ExitName)) --> 
-  h(AtHere, Agent, Here),
-  (h(exit(ExitName), Here, There) -> has_rel(AtThere, There) ; (AtHere = AtThere, Here = There)),
-  aXiom(doing, throwing(Agent, Thing, AtThere, There)).
+  from_loc(Agent, Here),
+  aXiom(doing, throw_prep_obj(Agent, Thing, ExitName, Here)).
 
 % throw ball at catcher
 aXiom(doing, throw_at(Agent, Thing, Target)) -->
-  % h(At, Agent, Here),
-  has_rel(AtTarget, Target),
-  aXiom(doing, throwing(Agent, Thing, AtTarget, Target)).
+  aXiom(doing, throw_prep_obj(Agent, Thing, at, Target)).
 
 % throw ball over homeplate
-aXiom(doing, throw_prep_obj(Agent, Thing, ONTO, Target)) -->
-  has_rel(ONTO, Target),
-  %h(At, Agent, Here),
-  aXiom(doing, throwing(Agent, Thing, ONTO, Target)).
+aXiom(doing, throw_prep_obj(Agent, Thing, Prep, Target)) -->
+  prep_to_rel(Target, Prep, Rel),
+  aXiom(doing, throwing(Agent, Thing, Rel, Target)).
 
 % is throwing the ball...
 aXiom(doing, throwing(Agent, Thing, At, Target)) -->
@@ -196,7 +192,7 @@ aXiom(doing, throwing(Agent, Thing, At, Target)) -->
 % has thrown the ball...
 aXiom(doing, thrown(_Agent, Thing, AtTarget, Target)) -->
   ignore((getprop(Thing, breaks_into(Broken)),
-  bugout('object ~p is breaks_into~n', [Thing], general),
+  bugout3('object ~p is breaks_into~n', [Thing], general),
   aXiom(doing, thing_transforms(Thing,Broken)))),
   aXiom(doing, disgorge(Target, AtTarget, Target, [Target], 'Something falls out.')).
 
@@ -214,7 +210,7 @@ aXiom(doing, hit(Agent, Thing)) -->
 hit(Target, _Thing, Vicinity) -->
  ignore(( % Only brittle items use this
   getprop(Target, breaks_into(Broken)),
-  bugout('target ~p is breaks_into~n', [Target], general),
+  bugout3('target ~p is breaks_into~n', [Target], general),
   undeclare(h(Prep, Target, Here)),
   queue_local_event([transformed(Target, Broken)], Vicinity),
   declare(h(Prep, Broken, Here)),
@@ -250,7 +246,7 @@ aXiom(doing, switch(Agent, OnOff, Thing)) -->
   {subst(equivalent, ($(self)), Thing, Term0, Term)},
   call(Term),
   queue_agent_percept(Agent, [true, 'OK']).
-
+/*
 aXiom(doing, open(Agent, Thing)) -->
   will_touch(Agent, Thing),
   %getprop(Thing, openable),
@@ -269,7 +265,7 @@ aXiom(doing, close(Agent, Thing)) -->
   setprop(Thing, closed(true)),
   open_traverse(Agent, Here),
   queue_local_event([setprop(Thing, closed(true)), 'Closed.'], [Here]).
-
+*/
 
 aXiom(doing, inventory(Agent)) -->
   can_sense(Agent, see, Agent),
@@ -331,16 +327,15 @@ aXiom(doing, does_examine(Agent, Sense, Object)) --> {trace},
 
 
 
+aXiom(doing, change_state(Agent, Action, Open, Thing, Opened, TF)) --> !, 
+  change_state(Agent, Action, Open, Thing, Opened, TF).
 
-aXiom(doing, OpenThing, S0, S9) :- fail, 
- act_to_cmd_thing(Agent, OpenThing, Open, Thing), 
- act_change_state(Open, Opened, TF),
+aXiom(doing, Action, S0, S9) :-  
+ act_to_cmd_thing(Agent, Action, Open, Thing), 
+ act_change_state(Open, Opened, TF),!,
  dshow_fail(aXiom(doing, change_state(Agent, Open, Thing, Opened, TF), S0, S9)),!.
 
-aXiom(doing, change_state(Agent, OpenThing, Open, Thing, Opened, TF)) --> 
-  change_state(Agent, OpenThing, Open, Thing, Opened, TF).
-
-% used mainly to debug if things are will_touch
+% used mainly to debug if things are locally accessable
 aXiom(doing, touch(Agent, Thing)) -->
  unless_reason(Agent, will_touch(Agent, Thing),
    cant( reach(Agent, Thing))),
@@ -416,14 +411,14 @@ aXiom(doing, switch(OnOff, Thing)) -->
 /*
 disgorge(Container, At, Here, Vicinity, Msg) :-
   findall(Inner, h(child, Inner, Container), Contents),
-  bugout('~p contained ~p~n', [Container, Contents], general),
+  bugout3('~p contained ~p~n', [Container, Contents], general),
   moveallto(Contents, At, Here, Vicinity, Msg).
 disgorge(_Container, _At, _Here, _Vicinity, _Msg).
 */
 disgorge(Container, Prep, Here, Vicinity, Msg) -->
-  (findall(Inner, h(child, Inner, Container), Contents),
-   bugout('~p contained ~p~n', [Container, Contents], general),
-   map_each_state(moveto(), Contents, Prep, Here, Vicinity, Msg)).
+  findall(Inner, h(child, Inner, Container), Contents),
+   {bugout3('~p contained ~p~n', [Container, Contents], general)},
+  apply_map_state(moveto(), Contents, rest(Prep, Here, Vicinity, Msg)).
 
 
 
@@ -434,11 +429,11 @@ moveallto([Object|Tail], Relation, Destination, Vicinity, Msg) :-
  moveallto(Tail, Relation, Destination, Vicinity, Msg).
 */
 moveallto([], _R, _D, _V, _M, S, S).
-moveallto(List, Relation, Destination, Vicinity, Msg) :-
- apply_map_state(moveto(),List,rest(Relation, Destination, Vicinity, Msg)).
+moveallto(List, Relation, Destination, Vicinity, Msg) -->
+ apply_map_state(moveto(),List, rest(Relation, Destination, Vicinity, Msg)).
 
-:- defn_state_setter(moveto(inst,domrel,dest,list_of(places),msg)).
-moveto(Object, At, Dest, Vicinity, Msg) :-
+:- defn_state_setter(moveto(inst,domrel,dest,list(dest),msg)).
+moveto(Object, At, Dest, Vicinity, Msg) -->
   undeclare(related(_, Object, Here)),
   declare(related(At, Object, Dest)),
   queue_local_event([moved(Object, Here, At, Dest), Msg], Vicinity).
@@ -446,7 +441,7 @@ moveto(Object, At, Dest, Vicinity, Msg) :-
 
 event_props(thrown(_Agent,  Thing, _Target, Prep, Here, Vicinity),
  [getprop(Thing, breaks_into(Broken)),
- bugout('object ~p is breaks_into~n', [Thing], general),
+ bugout3('object ~p is breaks_into~n', [Thing], general),
  undeclare(h(_, Thing, _)),
  declare(h(Prep, Broken, Here)),
  queue_local_event([transformed(Thing, Broken)], Vicinity),
@@ -458,9 +453,11 @@ setloc_silent(Prep, Object, Dest) -->
  declare(h(Prep, Object, Dest)).
 
 
-change_state(Agent, Open, Thing, Opened, TF, S0, S):- 
+change_state(Agent, _Action, Open, Thing, Opened, TF,  S0, S):- 
+ dmust((
+ trace,
  maybe_when(psubsetof(Open, touch),
-   required_reason(Agent, will_touch(Thing, Agent, S0))),
+   required_reason(Agent, will_touch(Thing, Agent, S0, _))),
 
  %getprop(Thing, can_be(open, S0),
  %\+ getprop(Thing, state(open, t), S0),
@@ -484,7 +481,7 @@ change_state(Agent, Open, Thing, Opened, TF, S0, S):-
   subst(equivalent,$here, Here, Term2, Term)),
   call(Term),S0,S1),
 
- setprop(Thing, state(Opened, TF), S1, S2),
+ setprop(Thing, state(Opened, TF), S1, S2))),
 
  queue_local_event([setprop(Thing, state(Opened, TF)),msg([Thing,is,TF,Opened])], [Here, Thing], S2, S),!.
 

@@ -59,8 +59,9 @@
 % check preconditions for acting on a candidate object
 
 
-%:- op(900, xfx, props).
-:- op(900, fy, '~').
+:- op(1199, xfx, props).
+:- op(1199, xfx, type).
+% :- op(900, fy, '~').
 
 
 dest_target(spatially(in,Dest),Target):- nonvar(Dest), !, dest_target(Dest,Target).
@@ -78,86 +79,86 @@ type_functor(dest, of(west,$here)).
 type_functor(nv_of_any, structure_label(term)).
 
 
-type_functor(memory, goals(list_of(goals))).
-type_functor(memory, todo(list_of(doing))).
-type_functor(memory, model(list_of(state_with_stamps))).
+type_functor(memory, goals(list(goals))).
+type_functor(memory, todo(list(doing))).
+type_functor(memory, model(list(state_with_stamps))).
 type_functor(event, timestamp(ordinal, timept)).
 
 type_functor(state_with_stamps, holds_at(h(domrel, inst, inst), timept)).
 
-type_functor(state, type_props(type, list_of(nv))).
-type_functor(state, props(inst, list_of(nv))).
-type_functor(state, memories(inst, list_of(event))).
-type_functor(state, preceptq(inst, list_of(event))).
+type_functor(state, type_props(type, list(nv))).
+type_functor(state, props(inst, list(nv))).
+type_functor(state, memories(inst, list(event))).
+type_functor(state, preceptq(inst, list(event))).
 type_functor(state, h(domrel, inst, inst)).
 
 
-type_functor(doing, inventory(agnt)). 
-type_functor(doing, look(agnt)).
-type_functor(doing, examine(agnt, optional(sense, see), optional(inst, here), optional(depth, 1))).
-type_functor(event, sense_props(agnt, sense, inst, depth, list_of(nv))).
+type_functor(doing, inventory(agent)). 
+type_functor(doing, look(agent)).
+type_functor(doing, examine(agent, optional(sense, see), optional(inst, here), optional(depth, 1))).
+type_functor(event, sense_props(agent, sense, inst, depth, list(nv))).
 
 
-type_functor(doing, dig(agnt, holetype, prep, dest, inst)).
+type_functor(doing, dig(agent, holetype, prep, dest, inst)).
 type_functor(doing, create(type)).
 
-type_functor(doing, eat(agnt, inst)).
-type_functor(doing, hit(agnt, inst)).
+type_functor(doing, eat(agent, inst)).
+type_functor(doing, hit(agent, inst)).
 type_functor(doing, destroy(inst)).
 
-type_functor(doing, switch(agnt, tfstate, tf, inst)).
-type_functor(doing, touch(agnt, inst)).
+type_functor(doing, switch(agent, tfstate, tf, inst)).
+type_functor(doing, touch(agent, inst)).
 
 type_functor(doing, touchable(agent, instance)).
 
 
 %type_functor(doing, say(Message)).   % undirected message
-type_functor(doing, emote(agnt, emotype, dest, statement)).
-type_functor(event, emoted(agnt, emotype, dest, statement)).
+type_functor(doing, emote(agent, emotype, dest, statement)).
+type_functor(event, emoted(agent, emotype, dest, statement)).
 
 
-type_functor(doing, wait(agnt)).
-type_functor(event, time_passes(agnt)).
+type_functor(doing, wait(agent)).
+type_functor(event, time_passes(agent)).
 
 
-type_functor(doing, recall(agnt, prop, inst2)).
+type_functor(doing, recall(agent, prop, inst2)).
 type_functor(doing, properties(inst)).
-type_functor(doing, inspect(agnt, getprop(inst, propname))).
+type_functor(doing, inspect(agent, getprop(inst, propname))).
 type_functor(doing, setprop(inst, nv)).
-type_functor(doing, print_(agnt, msg)).
+type_functor(doing, print_(agent, msg)).
 
 
 
-type_functor(doing, give(agnt, inst, agnt2)).
-type_functor(doing, take(agnt, inst)).
-type_functor(doing, drop(agnt, inst)).
+type_functor(doing, give(agent, inst, agnt2)).
+type_functor(doing, take(agent, inst)).
+type_functor(doing, drop(agent, inst)).
 
-type_functor(doing, goto_dir(agnt, movetype, dir)).
-type_functor(doing, goto_loc(agnt, movetype, dest)).
-type_functor(doing, goto_obj(agnt, movetype, obj)).
-type_functor(doing, goto_prep_obj(agnt, movetype, domrel, obj)).
-type_functor(doing, throw(agnt, inst, dest)).
-type_functor(doing, put(agnt, inst, dest)).
+type_functor(doing, goto_dir(agent, movetype, dir)).
+type_functor(doing, goto_loc(agent, movetype, dest)).
+type_functor(doing, goto_obj(agent, movetype, obj)).
+type_functor(doing, goto_prep_obj(agent, movetype, domrel, obj)).
+type_functor(doing, throw(agent, inst, dest)).
+type_functor(doing, put(agent, inst, dest)).
 type_functor(event, moved(inst, dest1, verb, dest2)).
 
 
 
-type_functor(event, carrying(agnt, list_of(inst))).
+type_functor(event, carrying(agent, list(inst))).
 type_functor(event, destroyed(inst)).
 type_functor(event, did(doing)).
-type_functor(event, exits_are(agnt, in, dest, list_of(exit))).
-type_functor(event, notice_children(agnt, sense, dest, domrel, depth, list_of(inst))).
+type_functor(event, exits_are(agent, in, dest, list(exit))).
+type_functor(event, notice_children(agent, sense, dest, domrel, depth, list(inst))).
 type_functor(event, failed(doing, msg)).
 type_functor(event, transformed(inst, inst2)).
 
 
 
-type_functor(nv, adjs(list_of(text))).
+type_functor(nv, adjs(list(text))).
 type_functor(nv, can_be(actverb, tf)).
 type_functor(nv, knows_verbs(actverb, tf)).
 type_functor(nv, cant_go(inst, dir, text)).
-type_functor(nv, class_desc(list_of(text))).
-type_functor(nv, co(list_of(nv))).
+type_functor(nv, class_desc(list(text))).
+type_functor(nv, co(list(nv))).
 type_functor(nv, desc(sv(text))).
 type_functor(nv, door_to(inst)).
 type_functor(nv, effect(verb_targeted, script)).
@@ -170,23 +171,57 @@ type_functor(nv, inheriting(type)).
 type_functor(nv, inst(sv(term))).
 type_functor(nv, isnt(type)).
 type_functor(nv, name(sv(text))).
-type_functor(nv, nominals(list_of(text))).
-type_functor(nv, nouns(list_of(text))).
+type_functor(nv, nominals(list(text))).
+type_functor(nv, nouns(list(text))).
 type_functor(nv, oper(doing, preconds, postconds)).
 type_functor(nv, state(tfstate, tf)).
+
+
+
+is_state_info(StateInfo):- \+ compound(StateInfo),!,fail.
+is_state_info(StateInfo):- functor(StateInfo,F,A),
+  (functor_arity_state(F,A)->true; (A>2, functor_arity_state(F,2))). 
+   
+functor_arity_state(F,A):- functor(TypeFunctor,F,A), type_functor(state, TypeFunctor).
+functor_arity_state(type,2).
+
+push_to_state(StateInfo):- \+ compound(StateInfo),!.
+push_to_state(StateInfo):- is_list(StateInfo),!,maplist(push_to_state,StateInfo).
+push_to_state(type(Type, Conj)):-  !, push_to_state(props(type(Type), Conj)).
+push_to_state(props(type(Type), Conj)):- !, props_to_list(Conj,List), push_to_state(type_props(Type, List)).
+push_to_state(props(Obj, Conj)):-  props_to_list(Conj,List) -> Conj\== List,!, push_to_state(props(Obj, List)).
+push_to_state(StateInfo):- StateInfo=..[F,Obj,E1,E2|More],functor_arity_state(F,2),!,StateInfoNew=..[F,Obj,[E1,E2|More]],!,push_to_state(StateInfoNew).
+push_to_state(StateInfo):- is_state_info(StateInfo),!, declare(StateInfo,istate,_).
+push_to_state(StateInfo):- forall(arg(_,StateInfo,Sub),push_to_state(Sub)).
+
+props_to_list(Nil,[]):- assertion(\+ var(Nil)), Nil==[],!.
+props_to_list(Atom,[inherit(Atom,t)]):- atom(Atom).
+props_to_list(~(Atom),[inherit(Atom,f)]):- atom(Atom).
+props_to_list(@(Atom),[inherit(Atom,t)]):- atom(Atom).
+props_to_list(~(can_be(Atom)),[can_be(Atom,f)]):- atom(Atom).
+props_to_list( (can_be(Atom)),[can_be(Atom,t)]):- atom(Atom).
+props_to_list([A|B],ABL):- !,
+  props_to_list(A,AL),
+  props_to_list(B,BL),
+  append(AL,BL,ABL).
+props_to_list((A,B),ABL):- !,
+  props_to_list(A,AL),
+  props_to_list(B,BL),
+  append(AL,BL,ABL).
+props_to_list(Other,[Other]).
 
 
 :- dynamic(istate/1).
 
 istate([ structure_label(istate),
-h(in, 'floyd~1', pantry),
-h(in, 'player~1', kitchen),
-h(worn_by, 'watch~1', 'player~1'),
-h(held_by, 'bag~1', 'player~1'),
-
-h(in, 'coins~1', 'bag~1'),
-h(held_by, 'wrench~1', 'floyd~1'),
-props('coins~1', [inherit(coins, t)]), 
+   h(in, 'floyd~1', pantry),
+   h(in, 'player~1', kitchen),
+   h(worn_by, 'watch~1', 'player~1'),
+   h(held_by, 'bag~1', 'player~1'),
+   
+   h(in, 'coins~1', 'bag~1'),
+   h(held_by, 'wrench~1', 'floyd~1'),
+   props('coins~1', [inherit(coins, t)]), 
 
  % Relationships
 
@@ -217,15 +252,9 @@ props('coins~1', [inherit(coins, t)]),
  h(in, brklamp, garden)
  ]).
 
-is_state_info(StateInfo):- \+ compound(StateInfo),!,fail.
-is_state_info(StateInfo):- functor(StateInfo,F,A), functor(TypeFunctor,F,A), type_functor(state, TypeFunctor).
 
 term_expansion(StateInfo,( :- push_to_state(StateInfo))):- is_state_info(StateInfo).
 
-push_to_state(StateInfo):- \+ compound(StateInfo),!.
-push_to_state(StateInfo):- is_state_info(StateInfo),!, declare(StateInfo,istate,_).
-push_to_state(StateInfo):- forall(arg(_,StateInfo,Sub),push_to_state(Sub)).
-  
 
 props('floyd~1', [name('Floyd the robot'), inherit(autonomous,t), 
    inherit(robot,t)]).
@@ -247,13 +276,12 @@ memories('player~1',
 	
 
 
-props(basement, [
- inherit(place,t),
+basement props place,
  desc('This is a very dark basement.'),
- state(dark, t)
- ]).
+ state(dark, t).
 
-props(dining_room, [inherit(place,t)]).
+dining_room props place.
+
 
 :- push_to_state([
  props(garden, [
@@ -284,53 +312,52 @@ props(dining_room, [inherit(place,t)]).
 
 props(living_room, [inherit(place,t)]).
 
-  
- props(pantry, [
+props(pantry, [
  inherit(place,t),
  nouns(closet),
  nominals(kitchen),
  desc('You\'re in a dark pantry.'),
  state(dark, t)
- ]).
+]).
 
-:- push_to_state([
- % Things
- props('bag~1', [inherit(bag,t)]),
+% Things
+props('bag~1', [inherit(bag,t)]).
 
- props(brklamp, [
+props(brklamp, 
   inherit(broken,t), 
   name('possibly broken lamp'),
   effect(switch(on), print_(_Agent,"Switch is flipped")),
   effect(hit, ['print_'("Hit brklamp"), setprop($self, inherit(broken,t))]),
-  inherit(lamp,t)
- ]),
+  inherit(lamp,t)).
 
+                  
 props(screendoor, [
   % see DM4
   door_to(kitchen),
   door_to(garden),
   state(opened, f),
   inherit(door,t)
- ])
-
 ]).
 
 
-  type_props(door, [
-   can_be(move, f),
-   can_be(open, t),
-   can_be(close, t),
+door type
+   ~can_be(move),
+   can_be(open),
+   can_be(close),
    state(opened, t),
    nouns(door),
-   inherit(corporial,t)
-  ]).
+   corporial.
 
-
+food type
+  can_be(eat),
+  object,
+  measurable.
 
 %:- op(0, xfx, props).
 
 :- multifile(extra_decl/2).
 :- dynamic(extra_decl/2).
+
 extra_decl(T,P):-
  member(type_props(T,P), 
  [
@@ -353,7 +380,7 @@ extra_decl(T,P):-
   initial('A speckled mushroom grows out of the sodden earth, on a long stalk.'),
   % description(examination description)
   desc('The mushroom is capped with blotches, and you aren\'t at all sure it\'s not a toadstool.'),
-  can_be(eat, t),
+  can_be(eat),
   % before(VERB, CODE) -- Call CODE before default code for VERB.
   %      If CODE succeeds, don't call VERB.
   before(eat, (random(100) =< 30, die('It was poisoned!'); 'yuck!')),
@@ -628,7 +655,7 @@ extra_decl(T,P):-
  type_props(shiny, [adjs($class), inherit(object, t), inherit(corporial, t)]), 
 
  type_props(coins, [inherit(shiny,t),inherit(measurable,t)]),
-  type_props(food,[can_be(eat, t),inherit(object,t),inherit(measurable,t)]),
+  
   type_props(flour,[inherit(food,t),inherit(measurable,t)]),
  type_props(lamp, [
  name('shiny brass lamp'),
@@ -673,4 +700,6 @@ extra_decl(T,P):-
    ]),
    type_props(broken_videocam, [can_be(switch, f),state(powered, f), inherit(videocamera,t)])
  ]).
+
+:- op(0, xfx, props).
 

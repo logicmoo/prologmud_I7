@@ -19,28 +19,67 @@
 
 % Miscellaneous generic utility predicates.
 
+:- meta_predicate findall_set(?,0,*).
+findall_set(E,G,S):- findall(E,G,L),list_to_set(L,S).
+
 % was_dcg(M,Kept,S0,S2):- !, M:apply_state(Kept,S0,S2).
 was_dcg(M,Kept,S0,S2):- call(M:phrase(Kept,S0,S2)).
 %:- trace.
 term_expansion_was_dcg('-->'(DCG , Keeper), '-->'(DCG , was_dcg(M,Keeper))):- Keeper \= was_dcg(_,_), prolog_load_context(module,M).
 
-
-sg(G,S0,S9):- call(G,S0),S0=S9.
+:- meta_predicate(sg(1,?,?)).
+sg(G,S0,S9) :- call(G,S0),S0=S9.
 
 %mu:term_expansion(I,P,O,PO):- notrace((compound(I),nonvar(P))),term_expansion_was_dcg(I,O),P=PO.
 %foo --> bar ,!.
 %foo --> bar,baz.
 %:- break.
 
+clock_time(T):- statistics(walltime,[X,_]),T is ('//'(X , 100))/10.
+
+
 :- dynamic(is_state_pred/2).
-is_state_pred(h,1).
-defn_state_pred(F,N):- is_state_pred(F,N) -> true ; asserta(is_state_pred(F,N)).
+is_state_pred(F,N):- atom(F),!,is_state_pred(P,N),functor(P,F,_).
 
-defn_state_0(F):- defn_state_pred(F,0).
-defn_state_getter(F):- defn_state_pred(F,1).
-defn_state_setter(F):- defn_state_pred(F,2).
+defn_state_pred(P,N):- is_state_pred(P,N),!.
+defn_state_pred(P,N):- asserta(is_state_pred(P,N)),
+  strip_module(P,M,PP),
+  assertion(compound(PP)),functor(PP,F,A),            
+  ignore(defn_state_pred_wrapper(M,F,A,PP,N)).
 
-clock_time(T):- statistics(walltime,[X,_]),T is (X // 100)/10.
+defn_state_pred_wrapper(M,F,A,_,0):- 
+  assertion(F\==('/')),assertion(F\==('//')),
+  functor(PP,F,A),PP=..[F|Args],
+  append(Args,[S0,S9],NewArgs),
+  PPS09=..[F|NewArgs],
+  M:asserta((PPS09:- M:PP, S0 = S9)).
+
+defn_state_pred_wrapper(M,F,A,_,1):- 
+  assertion(F\==('/')),assertion(F\==('//')),
+  functor(PP,F,A),PP=..[F|Args],
+  append(Args,[S0],NewArgs0),
+  PPS0 =..[F|NewArgs0],
+  append(Args,[S0,S9],NewArgs09),
+  PPS09 =..[F|NewArgs09],
+  
+  M:asserta((PPS09:- M:PPS0, S0 = S9)).
+ 
+
+
+defn_state_none(P):- defn_state_pred(P,0).
+defn_state_getter(P):- defn_state_pred(P,1).
+defn_state_setter(P):- defn_state_pred(P,2).
+
+:- defn_state_none(user:bugout1(term)).
+:- defn_state_none(adv_io:bugout3(string,list(term),term)).
+:- defn_state_none(adv_io:bugout3(string,term)).
+:- defn_state_none(==(term,term)).
+:- defn_state_none(\==(term,term)).
+:- defn_state_none(=(term,term)).
+:- defn_state_none(\=(term,term)).
+:- defn_state_none(dif(term,term)).
+:- defn_state_none(nop(term)).
+
 
 mk_complex(R, I, '@'(R, I)).
 get_complex('@'(R, I), R, I).
@@ -102,7 +141,7 @@ apply_forall_frames([Frame|Frames],Forall,Apply,S0,S2):-
  apply_forall_frames(Frames,Forall,Apply,S1,S2).
 
 :- module_transparent(apply_forall//2).
-%:- meta_predicate(apply_forall(+,2,+,-)).
+:- meta_predicate(apply_forall(0,2,+,-)).
 apply_forall(Forall,Apply,S0,S1):-
  findall(Forall,Forall,Frames),
   apply_forall_frames(Frames,Forall,Apply,S0,S1).
@@ -118,11 +157,9 @@ with_state(S,Goal,S0,S2):- S0=S,call(Goal),S0=S2.
 
 is_state_getter(P):- compound(P),functor(P,F,Am1),A is Am1+1, current_predicate(F/A),!.
 is_state_getter(P):- \+ atom(P),!,compound(P),functor(P,F,_),!,is_state_getter(F).
-is_state_getter(getprops).
 is_state_getter(F):- is_state_pred(F,1).
 
 is_state_setter(P):- \+ atom(P),!,compound(P),functor(P,F,_),!,is_state_setter(F).
-is_state_setter(define).
 is_state_setter(F):- is_state_pred(F,2).
 
 is_state_meta(P,N):- \+ atom(P),!,compound(P),functor(P,F,_),!,is_state_meta(F,N).
@@ -130,13 +167,8 @@ is_state_meta(rtrace,0).
 is_state_meta(findall,1).
 
 is_state_ignorer(P):- \+ atom(P),!,compound(P),functor(P,F,_),!,is_state_ignorer(F).
-is_state_ignorer(bugout).
-is_state_ignorer(==).
-is_state_ignorer(\==).
-is_state_ignorer(=).
-is_state_ignorer(dif).
-is_state_ignorer(nop).
-is_state_ignorer({}).
+is_state_ignorer(F):- is_state_pred(F,1).
+%is_state_ignorer('{}'(term)).
 
 must_input_state(S0):- quietly(dmust((is_list(S0);must_state(S0)))).
 must_output_state(S0):- quietly(dmust((must_state(S0);is_list(S0)))),quietly(check4bugs(S0)).

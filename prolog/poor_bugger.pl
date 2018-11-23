@@ -28,19 +28,16 @@ update_deps :-
    !.
 
 
-:- module_transparent(dmust/1).
-:- module_transparent(no_repeats_must/1).
-:- module_transparent(failed_dmust/1).
-:- module_transparent(swi_soft_if_then/3).
 
+:- module_transparent(swi_soft_if_then/3).
+:- meta_predicate(swi_soft_if_then(0,0,0)).
 swi_soft_if_then(C,T,F):-  C *-> T ; F.
 
-:- meta_predicate dmust(0).
-:- meta_predicate failed_dmust(0).
-:- meta_predicate no_repeats_must(0).
 
-bugout(P):- notrace(ansi_format([fg(cyan)],'~N% ~p.~n',[P])).
+bugout1(P):- notrace(ansi_format([fg(cyan)],'~N% ~p.~n',[P])).
+
 :- module_transparent(dmust/1).
+:- meta_predicate dmust(0).
 dmust((A,!,B)):-!,dmust(A),!,dmust(B).
 dmust((A,B)):-!,dmust(A),dmust(B).
 dmust((A;B)):-!,call(A),dmust(B).
@@ -51,14 +48,17 @@ dmust(A):- swi_soft_if_then(call(A), true , failed_dmust(A)).
 
 
 :- module_transparent(failed_dmust/1).
+:- meta_predicate failed_dmust(*).
 failed_dmust(once(A)):-!, failed_dmust(A),!.
-failed_dmust((A,B)):- !,bugout(dmust_start(A)),ignore(rtrace(A)),bugout(dmust_mid(A)), failed_dmust(B).
-failed_dmust(A):- simplify_dbug(A,AA), bugout(failed_dmust_start(AA)),ignore(rtrace(A)),bugout(failed_dmust_end(AA)),
+failed_dmust((A,B)):- !,bugout1(dmust_start(A)),ignore(rtrace(A)),bugout1(dmust_mid(A)), failed_dmust(B).
+failed_dmust(A):- simplify_dbug(A,AA), bugout1(failed_dmust_start(AA)),ignore(rtrace(A)),bugout1(failed_dmust_end(AA)),
   break,nortrace,notrace,trace.
 
+:- module_transparent(no_repeats_must/1).
+:- meta_predicate(no_repeats_must(0)).
 no_repeats_must(Call):-
  gripe_time(0.5,no_repeats(Call)) *-> true;
-  (fail,(bugout(warn(show_failure(Call))),!,fail)).
+  (fail,(bugout1(warn(show_failure(Call))),!,fail)).
 
 :- ensure_loaded(library(no_repeats)).
 :- ensure_loaded(library(loop_check)).
@@ -144,8 +144,8 @@ gripe_time(_TooLong,Goal):- current_prolog_flag(runtime_debug,1),!,Goal.
 % gripe_time(_TooLong,Goal):- \+ current_prolog_flag(runtime_debug,3),\+ current_prolog_flag(runtime_debug,2),!,Goal.
 gripe_time(TooLong,Goal):-
  call_for_time(Goal,ElapseCPU,ElapseWALL,Success),
- (ElapseCPU>TooLong -> bugout(gripe_CPUTIME(Success,warn(ElapseCPU>TooLong),Goal)) ;
-   (ElapseWALL>TooLong -> bugout(gripe_WALLTIME(Success,warn(ElapseWALL>TooLong),Goal,cputime=ElapseCPU)) ;
+ (ElapseCPU>TooLong -> bugout1(gripe_CPUTIME(Success,warn(ElapseCPU>TooLong),Goal)) ;
+   (ElapseWALL>TooLong -> bugout1(gripe_WALLTIME(Success,warn(ElapseWALL>TooLong),Goal,cputime=ElapseCPU)) ;
      true)),
   Success.
 
@@ -196,7 +196,7 @@ on_f_rtrace(Goal):-  Goal *-> true; (rtrace(Goal),debugCallWhy(on_f_rtrace(Goal)
 
 
 
-debugCallWhy(Why, C):- bugout(Why),catch(failed_dmust(C),E,bugout(cont_X_debugCallWhy(E,Why, C))).
+debugCallWhy(Why, C):- bugout1(Why),catch(failed_dmust(C),E,bugout1(cont_X_debugCallWhy(E,Why, C))).
 
 %! on_x_debug( :Goal) is det.
 %
@@ -351,7 +351,7 @@ quietly3(Goal):- \+ tracing -> Goal ;
 
 deterministically_must(G):- call(call,G),deterministic(YN),true,
   (YN==true -> true; 
-     ((bugout(failed_deterministically_must(G)),(!)))),!.
+     ((bugout1(failed_deterministically_must(G)),(!)))),!.
 
 
 %:- totally_hide(quietly/1).

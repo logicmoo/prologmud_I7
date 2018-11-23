@@ -30,6 +30,7 @@
 advstate([]).
 
 
+
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
 :- nop(ensure_loaded('adv_state')).
@@ -60,7 +61,7 @@ select_always(Item, List, ListWithoutItem) :- select(Item, List, ListWithoutItem
 % Manipulate simulation state
 %declare(Fact, State):- player_local(Fact, Player), !, declare(wishes(Player, Fact), State).
 :- export(declare/3).
-
+:- defn_state_setter(declare(fact)).
 declare(Fact, State, NewState) :- notrace((assertion(var(NewState)),is_list(State))),!,notrace(declare_list(Fact,State,NewState)).
 declare(Fact, type(Object), type(Object)):- !,
    nb_current(advstate,State), 
@@ -114,6 +115,7 @@ undeclare_always(Fact, State, NewState) :- select_always(Fact, State, NewState).
 %declared(Fact, State) :- player_local(Fact, Player), !, declared(wishes(Player, Fact), State).
 
 :- export(declared/2).
+:- defn_state_getter(declared(fact)).
 declared(Fact, State) :-
   quietly(( is_list(State)->declared_list(Fact, State);declared_link(declared,Fact, State))).
 
@@ -121,6 +123,7 @@ declared_list(Fact, State) :- member(Fact, State).
 declared_list(Fact, State) :- member(link(VarName), State), declared_link(declared, Fact, VarName).
 declared_list(Fact, State) :- member(inst(Object), State), declared_link(declared, Fact, Object).
 
+:- meta_predicate(declared_link(2,?,*)).
 declared_link(Pred2, Fact, VarName):- atom(VarName), nb_current(VarName,PropList), call(Pred2, Fact, PropList).
 declared_link(Pred2, Fact, Object):- nonvar(Object), extra_decl(Object, PropList), call(Pred2, Fact, PropList).
 declared_link(Pred2, Fact, Object):- nb_current(advstate,State), direct_props(Object,PropList,State),!, call(Pred2, Fact, PropList).
@@ -163,6 +166,7 @@ stores_props(props(Object, PropList), Object, PropList).
 
 
 % get_all_props(Object, AllProps, S0):- findall(Prop,getprop(Object, Prop, S0),AllProps).
+:- defn_state_getter(getprop(thing, nv)).
 
 getprop(Object, Prop, S0):- 
  quietly(( compound(Prop), 

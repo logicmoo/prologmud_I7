@@ -114,7 +114,7 @@ do_command(Agent, Action) -->
   {set_last_action(Agent,Action)},
  do_action(Agent, Action), !.
 do_command(Agent, Action) :-
- {player_format(Agent, 'Failed or No Such Command: ~w~n', Action)}.
+ player_format(Agent, 'Failed or No Such Command: ~w~n', Action).
 
 % --------
 
@@ -172,8 +172,8 @@ trival_act(wait(_)).
 trival_act(goto(_,_,_,_)).
 
 apply_act( Action) --> 
- {action_doer(Action, Agent)}, 
- sg(do_introspect(Agent,Action, Answer)),
+ action_doer(Action, Agent), 
+ do_introspect(Agent,Action, Answer),
  queue_agent_percept(Agent, [answer(Answer), Answer]), !.
  %player_format('~w~n', [Answer]).
 
@@ -190,12 +190,12 @@ apply_act( Action) --> fail,
 */
 
 apply_act( Act, S0, S9) :- ((cmd_workarround(Act, NewAct) -> Act\==NewAct)), !, apply_act( NewAct, S0, S9).
-apply_act( Action, S0, S0):- notrace((bugout(failed_act( Action), general))),!, \+ tracing.
+apply_act( Action, S0, S0):- notrace((bugout3(failed_act( Action), general))),!, \+ tracing.
 
 must_act( Action , S0, S9) :- dmust_tracing(apply_act( Action, S0, S9)) *-> ! ; fail.
 % must_act( Action) --> rtrace(apply_act( Action, S0, S1)), !.
 must_act( Action) --> 
- {action_doer(Action,Agent)}, 
+ action_doer(Action,Agent), 
  queue_agent_percept(Agent, [failure(Action, unknown_to(Agent,Action))]).
 
 
@@ -224,15 +224,17 @@ act_to_cmd_thing(Agent, SwitchOnThing, SwitchOn, Thing) :-
  SwitchOn=.. [Switch,On].
 
 :- meta_predicate maybe_when(0,0).
-:- meta_predicate required_reason(*,0).
-:- meta_predicate unless_reason(*,0,*).
 maybe_when(If,Then):- If -> Then ; true.
-unless_reason(_Agent, Then,_Msg):- Then,!.
-unless_reason(Agent,_Then,Msg):- player_format(Agent,'~N~p~n',Msg),!,fail.
 
+:- meta_predicate unless_reason(*,'//',*,?,?).
+unless_reason(_Agent, Then,_Msg) --> Then,!.
+unless_reason(Agent,_Then,Msg) --> {player_format(Agent,'~N~p~n',[Msg])},!,{fail}.
+
+:- meta_predicate unless(*,'//','//',?,?). 
 unless(_Agent, Required, Then) --> Required,!, Then.
 unless(Agent, Required, _Then) --> {simplify_reason(Required,CUZ), player_format(Agent,'~N~p~n',cant( cuz(\+ CUZ)))},!.
 
+:- meta_predicate required_reason(*,0).
 required_reason(_Agent, Required):- Required,!.
 required_reason(Agent, Required):- simplify_reason(Required,CUZ), player_format(Agent,'~N~p~n',cant( cuz(CUZ))),!,fail.
 
@@ -258,11 +260,11 @@ add_look(Agent) -->
   add_agent_todo(Agent, look(Agent)).
 
 action_verb_agent_thing(Action, Verb, Agent, Thing):-
-  Action=..[Verb,Agent|Args], \+ verbatum_anon_anon(Verb), !,
+  Action=..[Verb,Agent|Args], \+ verbatum_anon(Verb), !,
   (Args=[Thing]->true;Thing=_),!.
 
 action_agent_verb_subject_prep_object(Action, Agent, Verb, Thing, At, Thing2):-
-  Action=..[Verb,Agent, Thing|Args], \+ verbatum_anon_anon(Verb), !,
+  Action=..[Verb,Agent, Thing|Args], \+ verbatum_anon(Verb), !,
   preposition(_,At),
   append(_,[Thing2],Args).
 

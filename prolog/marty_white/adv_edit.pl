@@ -37,7 +37,7 @@ meta_pprint(_Doer, D,K):- pprint(D,K).
 % do_metacmd(Doer, Action, S0, S1)
 :- add_help(quit,"Quits the game.").
 
-:- defn_state_setter(do_metacmd).
+:- defn_state_setter(do_metacmd(agent,action)).
 
 do_metacmd(_Doer, quit(Agent)) -->
  declare(wishes(Agent, quit)),
@@ -115,8 +115,8 @@ do_metacmd(Doer, prolog, S0, S0) :-
 
 do_metacmd(Doer, CLS, S0, S0) :- security_of(Doer,wizard), 
  current_predicate(_, CLS), 
- (is_main_console -> catch(CLS,E,(bugout(CLS:- throw(E)),fail)) ;
- (redirect_error_to_string(catch(CLS,E,(bugout(CLS:- throw(E)),fail)),Str),!, write(Str))),!,
+ (is_main_console -> catch(CLS,E,(bugout1(CLS:- throw(E)),fail)) ;
+ (redirect_error_to_string(catch(CLS,E,(bugout1(CLS:- throw(E)),fail)),Str),!, write(Str))),!,
  ensure_has_prompt(Doer).
 
 do_metacmd(Doer, inspect(Self, NamedProperty, Target), S0, S1) :-

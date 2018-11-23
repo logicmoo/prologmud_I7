@@ -24,10 +24,9 @@
  overwrote_prompt/1,ensure_has_prompt/1,
  player_format/2,
  player_format/3,
- bugout/2,
-
- %bugout/1,
- bugout/3,
+ bugout3/2,
+ %bugout1/1,
+ bugout3/3,
  with_tty/2,
  pprint/2,
  init_logging/0,
@@ -121,22 +120,22 @@ bug(_) :- debugging(adv(all)).
 bug(B) :- debugging(adv(B),YN),!,YN.
 bug(_) :- debugging(adv(unknown),YN),!,YN.
 
-% bugout(L) :- bugout('~q', [L], always).
+% bugout1(L) :- bugout3('~q', [L], always).
 
-bugout(A, B) :-
+bugout3(A, B) :-
  bug(B),
  !,
- bugout(B:A).
-bugout(_, _).
+ bugout1(B:A).
+bugout3(_, _).
 
-bugout(A, L, B) :-
+bugout3(A, L, B) :-
  bug(B),
  !,
  dmust(maplist(simplify_dbug, L, LA)),
  ansi_format([fg(cyan)], '~N% ', []), ansi_format([fg(cyan)], A, LA),
  dmust((console_player(Player),overwrote_prompt(Player))),!,
  overwrote_prompt(player).
-bugout(_, _, _).
+bugout3(_, _, _).
 
       
 %:- set_stream(user_input,buffer_size(1)).
@@ -366,12 +365,12 @@ user:ci:- ci('telnet~1').
 user:ci(Agent):- 
  agent_to_input(Agent,In),
  agent_to_output(Agent,Out),
- forall(stream_property(In,P),bugout(ins(P))),
+ forall(stream_property(In,P),bugout1(ins(P))),
  listing(overwritten_chars),
  %line_position(In,LIn),
- %bugout(ins(line_position(In,LIn))),
- forall(stream_property(Out,P),bugout(outs(P))),
- line_position(Out,LInOut),!,bugout(outs(line_position(Out,LInOut))),!.
+ %bugout1(ins(line_position(In,LIn))),
+ forall(stream_property(Out,P),bugout1(outs(P))),
+ line_position(Out,LInOut),!,bugout1(outs(line_position(Out,LInOut))),!.
 
 get_overwritten_chars(Agent,Chars):- agent_to_input(Agent,In),overwritten_chars(In,Chars).
 get_overwritten_chars(_Agent,[]).

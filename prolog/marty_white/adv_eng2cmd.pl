@@ -110,7 +110,7 @@ parse2logical(Self, [request, Object | Msg], emote(Self, say, Object, Msg), _M):
 parse2logical(Self, [tell, Object | Msg], emote(Self, say, Object, Msg), _M):- !.
 parse2logical(Self, [talk, Object | Msg], emote(Self, say, Object, Msg), _M):- !.
 parse2logical(Self, [Object, ',' | Msg], emote(Self, say, Object, Msg), Mem):- 
- in_model(Self, h(_, Object, _), Mem).
+ in_agent_model(Self, h(_, Object, _), Mem).
 
 parse2logical(Self, Words, Action, Mem) :- 
  fail, 
@@ -141,7 +141,7 @@ parse2logical(Self, [Prep], Logic, Mem) :- preposition(spatial, Prep), !, dmust(
 parse2logical(Self, [go|Info], Logic, Mem):- !, dmust(txt2goto(Self, walk, Info, Logic, Mem)).
 % outside
 parse2logical(Self, [ExitName], Logic, Mem) :- 
- in_model(Self, h(exit(ExitName), _, _), Mem),
+ in_agent_model(Self, h(exit(ExitName), _, _), Mem),
  !, dmust(txt2goto(Self, walk, [ExitName], Logic, Mem)).
 
 parse2logical(Self, [get, Prep| More], Logic, Mem) :- preposition(spatial, Prep), !, dmust(txt2goto(Self, walk, [Prep| More], Logic, Mem)).
@@ -161,7 +161,7 @@ txt2goto(Self, Walk,[ Prep, Dest], goto_prep_obj(Self, Walk, Prep, Where), Mem) 
 
 % go north
 txt2goto(Self, Walk,[ ExitName], goto_dir(Self, Walk, ExitName), Mem) :-
- in_model(Self, h(exit(ExitName), _, _), Mem).
+ in_agent_model(Self, h(exit(ExitName), _, _), Mem).
 % go escape
 txt2goto(Self, Walk,[ Dir], goto_dir(Self, Walk, Dir), _Mem) :- (compass_direction(Dir);Dir==escape),!.
 txt2goto(Self, Walk,[ Dir], goto_dir(Self, Walk, Dir), _Mem) :- (Dir=down;Dir==up),!.
@@ -173,7 +173,7 @@ txt2goto(Self, Walk, Dest, goto_loc(Self, Walk, Where), Mem) :-
 
 
 txt2place(List, Place, Mem):- is_list(List), parse2object(List,Object,Mem), txt2place(Object, Place, Mem),!.
-txt2place(Dest, Place, Mem):- in_model(advstate, h(_, _, Dest), Mem), Dest = Place.
+txt2place(Dest, Place, Mem):- in_agent_model(advstate, h(_, _, Dest), Mem), Dest = Place.
 txt2place(Dest, Place, Mem):- parse2object(Dest, Place, Mem).
 
 % %%%%%%%%%%%%%%
@@ -205,8 +205,8 @@ parse2logical(Self, [switch, OnOff| TheThing], switch(Self, OnOff, Thing), Mem) 
 % Dig
 % %%%%%%%%%%%%%%
 parse2logical(Agent, [dig, Hole], dig(Agent, Hole, Where, Tool), Mem) :-
- in_model(Agent, inst(Agent), Mem),
- in_model(Agent, h(_, Agent, Where), Mem),
+ in_agent_model(Agent, inst(Agent), Mem),
+ in_agent_model(Agent, h(_, Agent, Where), Mem),
  Tool=shovel.
 
 parse2logical(Self, [CmdAlias|Tail], Action, Mem) :-

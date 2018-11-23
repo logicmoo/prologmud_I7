@@ -37,12 +37,14 @@ forget_always(Figment, M0, M1) :- select_always(Figment, M0, M1).
 thought(Figment, M) :- member(Figment, M).
 
 
-in_model(_Knower, E, L):- in_model(E, L).
+in_agent_model(_Knower, E, L):- in_model(E, L).
+% in_agent_model(Knower, E, L):- in_model(E, Knower).
 
-in_model(E, L):- member(model(M), L), in_model(E,M).
 in_model(E, L):- member(E, L).
 in_model(E, L):- member(holds_at(E,_), L).
+in_model(E, L):- member(model(M), L), is_list(M), in_model(E,M).
 
+:- defn_state_getter(agent_thought_model(agent,fact)).
 agent_thought_model(_Agent,E, L):- in_model(model(E), L), nonvar(E).
 % agent_thought_model(Agent,Model,List):- dmust((nop(memberchk(agent(Agent),List)), member(model(Model),List))).
 
@@ -95,7 +97,7 @@ update_model(Knower, moved( Agent, There, How, Here), Timestamp, Mem, M0, M2) :-
  Knower = Agent,
  dmust((
  % According to model, where was I?
- in_model(Knower,  h(_, Agent, There), M0),
+ in_agent_model(Knower,  h(_, Agent, There), M0),
  % TODO: Handle goto(Agent, on, table)
  % How did I get Here?
  append(RecentMem, [did( goto(_, _HowGo, A,B))|OlderMem], Mem), % find figment
@@ -150,12 +152,12 @@ update_model(_Agent, emote(_,_,_,_), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Agent, msg(_), _Timestamp, _Mem, M0, M0) :- !.
 
 update_model(Agent, time_passes(Target), Timestamp, _Memory, M, M):-
- nop(bugout(unused_update_model(Agent, time_passes(Target), Timestamp, M))).
+ nop(bugout1(unused_update_model(Agent, time_passes(Target), Timestamp, M))).
 
 
 
 update_model(Agent, Percept, Timestamp, _Memory, M, M):-
- nop(bugout(failed_update_model(Agent, Percept, Timestamp), model)).
+ nop(bugout1(failed_update_model(Agent, Percept, Timestamp), model)).
 
 % update_model_all(Agent, PerceptsList, Stamp, ROMemory, OldModel, NewModel)
 update_model_all(_Agent, [], _Timestamp, _Memory, M, M).

@@ -24,18 +24,18 @@
 %:- user:listing(adventure).
 
 
-:- defn_state_getter(get_sensing_objects//1).
-get_sensing_objects(Objects, S0):-
+:- defn_state_getter(get_perceptq_objects(-list(inst))).
+get_perceptq_objects(Objects, S0):-
  setof(O,member(perceptq(O,_),S0),Objects).
 
 get_sensing_objects(Sense, Agents, S0):-
  get_objects((has_sense(Sense);inherits(memorize)), Agents, S0).
 
-:- defn_state_getter(get_live_agents(-listof(agnt))).
+:- defn_state_getter(get_live_agents(-list(agent))).
 get_live_agents(LiveAgents, S0):-
  get_some_agents( \+ state(powered, f), LiveAgents, S0).
 
-:- defn_state_getter(get_some_agents(conds,-listof(agnt))).
+:- defn_state_getter(get_some_agents(conds,-list(agent))).
 get_some_agents(Precond, LiveAgents, S0):-
  dmust((
   get_objects(  
@@ -116,7 +116,7 @@ can_sense(Agent, Sense, Thing, S0) :-
  (Thing=Here; h(Sense, Thing, Here, S0)).
 */
 can_sense(Agent, Sense, Thing, _State):- 
- bugout(pretending_can_sense(Agent, Sense, Thing, Agent)),!.
+ bugout1(pretending_can_sense(Agent, Sense, Thing, Agent)),!.
 
 
 
@@ -126,7 +126,7 @@ can_sense(Agent, Sense, Thing, _State):-
 :- nop(ensure_loaded('adv_events')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-:- defn_state_setter(queue_agent_percept//2).
+:- defn_state_setter(queue_agent_percept(agent,listok(event))).
 % Manipulate one agents percepts
 queue_agent_percept(Agent, Event, S0, S2) :- 
  \+ is_list(Event),!, 
@@ -137,7 +137,7 @@ queue_agent_percept(Agent, Events, S0, S2) :-
  append([perceptq(Agent, NewQueue)], S1, S2))).
 
 
-:- defn_state_setter(queue_event//1).
+:- defn_state_setter(queue_event(listok(event))).
 queue_event(Event, S0, S2) :-
  each_sensing_agent(_All, queue_agent_percept(Event), S0, S2).
 
@@ -256,7 +256,7 @@ process_percept_auto(Agent, sense_props(Agent, Sense, Object, Depth, PropList), 
  DepthN > 1, 
  (member(inherits(shiny), PropList)),
  Object \== Agent,
- bugout('~w: ~p~n', [Agent, sense_props(Agent, Sense, Object, Depth, PropList)], autonomous),
+ bugout3('~w: ~p~n', [Agent, sense_props(Agent, Sense, Object, Depth, PropList)], autonomous),
  agent_thought_model(Agent,ModelData, Mem0),
  \+ h(descended, Object, Agent, ModelData), % Not holding it? 
  add_todo_all([take(Agent, Object), print_(Agent, 'My shiny precious!')], Mem0, Mem2).
@@ -298,10 +298,10 @@ process_percept_main(Agent, Percept, Stamp, Mem0, Mem2) :-
  quietly(process_percept_player(Agent, Percept, Stamp, Mem0, Mem1)),
  process_percept_auto(Agent, Percept, Stamp, Mem1, Mem2).
 process_percept_main(Agent, Percept, Stamp, Mem0, Mem0):- 
- bugout('~q FAILED!~n', [bprocess_percept(Agent, Percept, Stamp)], perceptq), !.
+ bugout3('~q FAILED!~n', [bprocess_percept(Agent, Percept, Stamp)], perceptq), !.
 
 
-:- defn_state_setter(process_percept_list(agent, list_of(event), tstamp)).
+:- defn_state_setter(process_percept_list(agent, list(event), tstamp)).
 % caller memorizes PerceptList
 process_percept_list(_Agent, _, _Stamp, Mem, Mem) :-
  declared(inherits(no_perceptq), Mem),
@@ -313,7 +313,7 @@ process_percept_list(Agent, Percept, Stamp, Mem0, Mem3) :-
  memorize(model(Model1), Mem1, Mem2),
  process_percept_main(Agent, Percept, Stamp, Mem2, Mem3))),!.
 process_percept_list(_Agent, Percept, _Stamp, Mem0, Mem0) :-
- bugout('process_percept_list(~w) FAILED!~n', [Percept], todo), !.
+ bugout3('process_percept_list(~w) FAILED!~n', [Percept], todo), !.
 
 
 
