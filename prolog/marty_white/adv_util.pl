@@ -172,7 +172,7 @@ is_state_ignorer(F):- is_state_pred(F,1).
 
 must_input_state(S0):- quietly(dmust((is_list(S0);must_state(S0)))).
 must_output_state(S0):- quietly(dmust((must_state(S0);is_list(S0)))),quietly(check4bugs(S0)).
-must_state(S0):- is_list(S0), dmust(nb_setval(advstate,S0)),!.
+must_state(S0):- is_list(S0),dmust(set_advstate(S0)),!.
 must_state(S0):- pprint(must_state(S0),always),trace, check4bugs(S0).
 
 :- module_transparent(apply_state//3).

@@ -26,10 +26,15 @@
 :- dynamic(extra_decl/2).
 :- dynamic(undo/2).
 %undo([u, u, u, u, u, u, u, u]).
-:- dynamic(advstate/1).
-advstate([]).
+:- dynamic(advstate_db/1).
+advstate_db([]).
 
 
+get_advstate_varname(Varname):- nb_current(advstate_var,Varname),Varname\==[],!.
+get_advstate_varname(advstate).
+get_advstate(State):- get_advstate_varname(Var),nb_current(Var,State).
+set_advstate(State):- get_advstate_varname(Var),nb_setval(Var,State).
+declared_advstate(Fact):- get_advstate(State),declared(Fact,State).
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
@@ -63,21 +68,21 @@ select_always(Item, List, ListWithoutItem) :- select(Item, List, ListWithoutItem
 :- export(declare/3).
 :- defn_state_setter(declare(fact)).
 declare(Fact, State, NewState) :- notrace((assertion(var(NewState)),is_list(State))),!,notrace(declare_list(Fact,State,NewState)).
-declare(Fact, type(Object), type(Object)):- !,
-   nb_current(advstate,State), 
-   (declared(type_props(Object, PropList),State);PropList=[]),!, 
-   declare_list(Fact,PropList,NewPropList),
-   select_always(type_props(Object,_),State,MidState),
-   append([type_props(Object,NewPropList)], MidState, NewState),
-   b_setval(advstate,NewState).
 declare(Fact, inst(Object), inst(Object)):- !,
-   nb_current(advstate,State), 
+   get_advstate(State), 
    (declared(props(Object, PropList),State);PropList=[]),!, 
    declare_list(Fact,PropList,NewPropList),
    select_always(props(Object,_),State,MidState),
    append([props(Object,NewPropList)], MidState, NewState),
-   b_setval(advstate,NewState).
-declare(Fact, istate, istate):- retract(istate(State)), declare_list(Fact, State, NewState), asserta(istate(NewState)).
+   set_advstate(NewState).
+declare(Fact, type(Type), type(Type)):- !,
+   get_advstate(State), 
+   (declared(type_props(Type, PropList),State);PropList=[]),!, 
+   declare_list(Fact,PropList,NewPropList),
+   select_always(type_props(Type,_),State,MidState),
+   append([type_props(Type,NewPropList)], MidState, NewState),
+   set_advstate(NewState).
+declare(Fact, Pred1Name, Pred1Name):- is_pred1_state(Pred1Name),DBPred=..[Pred1Name,State], (retract(DBPred);State=[]),!, declare_list(Fact, State, NewState),DBPredNewState=..[Pred1Name,NewState], asserta(DBPredNewState).
 declare(Fact, VarName, VarName):- atom(VarName),nb_current(VarName,PropList), declare_list(Fact,PropList,NewPropList),b_setval(VarName,NewPropList).
 declare(Fact, Object, Object):- callable(Fact),!, Fact=..[F|List], 
   Call=..[F, NewArg|List], 
@@ -86,6 +91,9 @@ declare(Fact, Object, Object):- callable(Fact),!, Fact=..[F|List],
   NewArg=Object,
   asserta(Call).
 
+is_pred1_state(istate).
+is_pred1_state(statest).
+is_pred1_state(advstate_db).
 
 declare_list(Fact, State, NewState) :- assertion(compound(Fact)),assertion(var(NewState)), Fact==[], !, NewState = State.
 declare_list((Fact1,Fact2), State, NewState) :- !,declare_list(Fact1, State, MidState),declare_list(Fact2, MidState, NewState).
@@ -126,15 +134,17 @@ declared_list(Fact, State) :- member(inst(Object), State), declared_link(declare
 :- meta_predicate(declared_link(2,?,*)).
 declared_link(Pred2, Fact, VarName):- strip_module(Pred2,_,Var), var(Var), !, declared_link(declared, Fact, VarName).
 declared_link(Pred2, Fact, VarName):- atom(VarName), nb_current(VarName,PropList), call(Pred2, Fact, PropList).
+declared_link(Pred2, Fact, inst(Type)):- declared_advstate(props(Type,PropList)), call(Pred2, Fact, PropList).
+declared_link(Pred2, Fact, type(Type)):- declared_advstate(type_props(Type,PropList)), call(Pred2, Fact, PropList).
 declared_link(Pred2, Fact, Object):- nonvar(Object), extra_decl(Object, PropList), call(Pred2, Fact, PropList).
-declared_link(Pred2, Fact, Object):- nb_current(advstate,State), direct_props(Object,PropList,State), call(Pred2, Fact, PropList).
+declared_link(Pred2, Fact, Object):- get_advstate(State), direct_props(Object,PropList,State), call(Pred2, Fact, PropList).
 declared_link(declared, Fact, Object):- callable(Fact), Fact=..[F|List], Call=..[F, Object|List], current_predicate(_,Call),!,call(Call).
-declared_link(Pred2, Fact, Object):- var(Object), nb_current(advstate, State),member(Prop, State),arg(1, Prop, Object), arg(2,Prop,PropList),
+declared_link(Pred2, Fact, Object):- var(Object), get_advstate(State),member(Prop, State),arg(1, Prop, Object), arg(2,Prop,PropList),
   call(Pred2, Fact, PropList).
   
 
 
-% extra_decl(Object, PropList):- nb_current(advstate,State), direct_props(Object,PropList,State).
+% extra_decl(Object, PropList):- get_advstate(State), direct_props(Object,PropList,State).
 
 % Entire state of simulation & agents is held in one list, so it can be easy
 % to roll back. The state of the simulation consists of:
@@ -205,11 +215,11 @@ inherited_prop1(_Orig, AlreadyUsed, _Object, Prop, PropList, _S0):-
 
 
 
-direct_props(Object, PropList, S0):- 
- (var(S0)->nb_current(advstate,S0); true),
- (declared(props(Object, PropList), S0) 
+direct_props(Object, PropList, State):- 
+ (var(State)->get_advstate(State); true),
+ (declared(props(Object, PropList), State) 
  *-> true 
- ; ( declared(type_props(Object, PropList), S0) 
+ ; ( declared(type_props(Object, PropList), State) 
  *-> true 
   ; extra_decl(Object, PropList))).
 

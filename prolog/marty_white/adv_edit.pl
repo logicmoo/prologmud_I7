@@ -94,14 +94,23 @@ do_metacmd(Doer, props, S0, S0) :-
  reverse(SP,SPR),
  meta_pprint(Doer, SPR, always),
  maybe_pause(Doer).
-do_metacmd(Doer, mem, S0, S0) :-
+do_metacmd(Doer, mems, S0, S0) :-
  security_of(Doer,wizard),
  printable_state(S0,S),
  include(@>=(props(_,_)),S,SP),
  reverse(SP,SPR),
  meta_pprint(Doer, SPR, always),
  maybe_pause(Doer).
-
+do_metacmd(Doer, model, S0, S0) :-
+ security_of(Doer,admin),
+ agent_thought_model(Doer,ModelData, S0),
+ meta_pprint(Doer, ModelData, always),
+ maybe_pause(Doer).
+do_metacmd(Doer, mem, S0, S0) :-
+ security_of(Doer,admin),
+ declared(memories(Doer, Memory), S0),
+ meta_pprint(Doer, Memory, always),
+ maybe_pause(Doer).
 do_metacmd(Doer, make, S0, S0) :-
  security_of(Doer,wizard),
  thread_signal(main,make),

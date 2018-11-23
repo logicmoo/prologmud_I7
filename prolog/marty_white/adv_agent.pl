@@ -244,7 +244,7 @@ run_agent_pass_1_0(Agent, S0, S) :-
  %dmust((
  undeclare(memories(Agent, Mem0), S0, S1),
  undeclare(perceptq(Agent, PerceptQ0), S1, S2),
- nb_setval(advstate,S2), % backtrackable leaks :(
+ set_advstate(S2), % backtrackable leaks :(
  % b_setval(advstate,S2),
  thought(timestamp(T0,_OldNow), Mem0), 
  refilter_preceptQ(PerceptQ0,PerceptQ),

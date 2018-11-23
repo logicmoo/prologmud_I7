@@ -71,7 +71,7 @@ autonomous_decide_goal_action(Agent, Mem0, Mem3) :-
 % If actions are queued, no further thinking required. 
 autonomous_decide_action(Agent, Mem0, Mem0) :- 
  thought(todo([Action|_]), Mem0),
- (declared(h(in, Agent, Here), advstate)->true;Here=somewhere),
+ (declared_advstate(h(in, Agent, Here))->true;Here=somewhere),
  (trival_act(Action)->true;bugout3('~w @ ~w: already about todo: ~w~n', [Agent, Here, Action], autonomous)).
 
 % notices bugs
@@ -122,10 +122,11 @@ autonomous_decide_action(Agent, Mem0, Mem1) :-
  random_noise(Agent, Msg),
  add_todo(emote(Agent, act, *, Msg), Mem0, Mem1).
 autonomous_decide_action(Agent, Mem0, Mem0) :-
- (declared(h(in, Agent, Here), advstate)->true;Here=somewhere),
+ (declared_advstate(h(in, Agent, Here))->true;Here=somewhere),
  nop(bugout3('~w: Can\'t think of anything to do.~n', [Agent-Here], autonomous+verbose)).% trace.
 
 
+always_action(goto_dir(_,_,_)).
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
@@ -133,8 +134,8 @@ autonomous_decide_action(Agent, Mem0, Mem0) :-
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 consider_text(Speaker, _EmoteType, Agent, Words, Mem0, Mem1):-
- parse_command(Agent, Words, Action, Mem0),
- trace, consider_request(Speaker, Agent, Action, Mem0, Mem1).
+ parse_command(Agent, Words, Action, Mem0) -> 
+ consider_request(Speaker, Agent, Action, Mem0, Mem1).
 
 % For now, agents will attempt to satisfy all commands.
 consider_request(Requester, Agent, Action, _M0, _M1) :-
@@ -159,10 +160,11 @@ consider_request(_Speaker, Agent, take(Agent, Thing), M0, M) :-
  add_goal(h(held_by, Thing, Agent), M0, M).
 consider_request(_Speaker, Agent, drop(Agent, Object), M0, M1) :-
  add_goal(~(h(held_by, Object, Agent)), M0, M1).
-consider_request(_Speaker, Agent, goto(Agent, How, Prep, OfWhat), M0, M1) :-  
- Action = goto(Agent, How, Prep, OfWhat), 
- bugout3('Queueing action ~w~n', Action, autonomous),
- add_todo(Action, M0, M1).
+
+consider_request(_Speaker, _Agent, AlwaysAction, M0, M1) :-  
+ always_action(AlwaysAction),
+ bugout3('Queueing action ~w~n', AlwaysAction, autonomous),
+ add_todo(AlwaysAction, M0, M1).
 
 consider_request(_Speaker, Agent, Action, M0, M1) :-
  bugout3('Finding goals for action: ~w~n', [Action], autonomous),

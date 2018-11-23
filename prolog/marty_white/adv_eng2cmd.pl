@@ -87,7 +87,8 @@ parse2logical(Self, [wait], wait(Self), _Mem) :- !.
 % %%%%%%%%%%%%%%
 % Introspection
 % %%%%%%%%%%%%%%
-parse2logical(Self, [model|Tail], inspect(Self,getprop(Target,model)), Mem) :- parse2agent(Tail, Target, Mem).
+
+parse2logical(Self, [model,T|Tail], inspect(Self,getprop(Target,model)), Mem) :- parse2agent([T|Tail], Target, Mem).
 parse2logical(Self, [memory|Tail], inspect(Self,getprop(Target,memory)), Mem) :- parse2agent(Tail, Target, Mem).
 
 parse2logical(Self, [whom|Tail], recall(Self,who,Target), Mem) :- parse2agent(Tail, Target, Mem).
@@ -266,7 +267,7 @@ as1object(TheThing, Thing, _Mem):- atom(TheThing), atom_number(TheThing,Thing),!
 as1object(TheThing, Thing, Mem):- obj_props(Mem,Thing,Props),(same_word(TheThing,Thing)->true;(sub_term(Sub,Props),(atom(Sub);string(Sub)),same_word(TheThing,Sub))).
 as1object(TheThing, Thing, _Mem):- \+ atom(TheThing),!, TheThing=Thing.
 as1object(TheThing, Thing, Mem):- atom_of(inst, TheThing, Thing, Mem),!.
-as1object(TheThing, Thing, Mem):- b_getval(advstate,Mem2),Mem2\=Mem,as1object(TheThing, Thing, Mem2).
+as1object(TheThing, Thing, Mem):- get_advstate(Mem2),Mem2\=Mem,as1object(TheThing, Thing, Mem2).
 % as1object(Thing, Thing, _Mem).
 
 to_string_lc(S,L):- atomic(S), S\=[], string_lower(S,L).
@@ -279,7 +280,7 @@ each_prop(Props,Prop):- is_list(Props),!,member(PropsZ,Props),each_prop(PropsZ,P
 each_prop(PropC,Prop):- compound(PropC),PropC=Prop.
 
 
-obj_props(Mem,Obj,Props):- var(Mem),!,b_getval(advstate,Mem2),obj_props(Mem2,Obj,Props).
+obj_props(Mem,Obj,Props):- var(Mem),!,get_advstate(Mem2),obj_props(Mem2,Obj,Props).
 obj_props(Mem,Obj,Props):- nonvar(Obj),!,obj_props(Mem,Obj2,Props),Obj=@=Obj2.
 obj_props(Mem,Obj,Props):- nonvar(Props),!,obj_props_v(Mem,Obj,Props2),same_props(Props,Props2).
 obj_props(Mem,Obj,Props):- obj_props_v(Mem,Obj,Props).
@@ -297,9 +298,9 @@ args2logical(TheArgs, TheArgs, _M).
  
 quietly_talk_db(L):- notrace(talk_db(L)).
 
-is_kind(Thing,inst):- b_getval(advstate,Mem), member(props(Thing,_),Mem).
-is_kind(Thing,type):- b_getval(advstate,Mem), member(type_props(Thing,_),Mem).
-%is_kind(Thing,inst):- b_getval(advstate,Mem), \+ member(type_props(Thing,_),Mem).
+is_kind(Thing,inst):- get_advstate(Mem), member(props(Thing,_),Mem).
+is_kind(Thing,type):- get_advstate(Mem), member(type_props(Thing,_),Mem).
+%is_kind(Thing,inst):- get_advstate(Mem), \+ member(type_props(Thing,_),Mem).
 
 atom_of(Kind,TheThing,Thing,Mem):- sub_term_atom(Thing,Mem),is_kind(Thing,Kind),TheThing==Thing,!.
 atom_of(Kind,TheThing,Thing,Mem):- sub_term_atom(Thing,Mem),is_kind(Thing,Kind),atom_concat(TheThing,_,Thing),!.

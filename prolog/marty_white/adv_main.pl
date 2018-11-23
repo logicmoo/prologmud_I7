@@ -73,10 +73,10 @@ adventure_init :-
  dmust((
  test_ordering,
  init_logging,
- (retractall(advstate(_));true),
+ (retractall(advstate_db(_));true),
  istate(S0),
  init_objects(S0, S1),
- asserta(advstate(S1)))), !,
+ asserta(advstate_db(S1)))), !,
  player_format('=============================================~n', []),
  player_format('INIT STATE~n', []),
  player_format('=============================================~n', []),
@@ -101,16 +101,16 @@ adventure :-
 
 
 main(S0, S9) :-
- notrace((nb_setval(advstate,S0))),
+ notrace((set_advstate(S0))),
  dmust(update_telnet_clients(S0,S1)),
- ((nb_setval(advstate,S1),
+ ((set_advstate(S1),
  % pprint(S1,general),
  get_live_agents(LiveAgents, S1),
  ttyflush)),
  %bugout1(liveAgents = LiveAgents),
  apply_all(LiveAgents, run_agent_pass_1(), S1, S2),
  apply_all(LiveAgents, run_agent_pass_2(), S2, S9),
- notrace((nb_setval(advstate,S9))),
+ notrace((set_advstate(S9))),
  !. % Don't allow future failure to redo main.
 main(S0, S0) :-
  bugout3('main FAILED~n', general).
@@ -129,7 +129,7 @@ update_telnet_clients(S0,S0).
 telnet_decide_action(Agent, Mem0, Mem0):-
  % If actions are queued, no further thinking required.
  thought(todo([Action|_]), Mem0),
- (declared(h(in, Agent, Here), advstate)->true;Here=somewhere),
+ (declared_advstate(h(in, Agent, Here))->true;Here=somewhere),
  bugout3('~w @ ~w telnet: Already about to: ~w~n', [Agent, Here, Action], telnet).
 
 telnet_decide_action(Agent, Mem0, Mem1) :-
@@ -148,16 +148,16 @@ telnet_decide_action(Agent, Mem, Mem) :-
 
 main_once:- 
  dmust((
-   retract(advstate(S0)),
+   retract(advstate_db(S0)),
    main(S0, S1),
-   asserta(advstate(S1)),
+   asserta(advstate_db(S1)),
    must_output_state(S1))
  ),!.
 
 mainloop :-
  repeat,
  once(main_once),
- (advstate(S1)->declared(quit, S1)),
+ (advstate_db(S1)->declared(quit, S1)),
  !. % Don't allow future failure to redo mainloop.
 
 % TODO: try converting this to a true "repeat" loop.
