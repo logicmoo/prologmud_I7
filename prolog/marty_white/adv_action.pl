@@ -242,6 +242,7 @@ simplify_reason(_:Required, CUZ):- !, simplify_dbug(Required, CUZ).
 simplify_reason(Required, CUZ):- simplify_dbug(Required, CUZ).
 
 
+reverse_dir(reverse(ExitName), ExitName,_) :- nonvar(ExitName),!.
 reverse_dir(Dir,RDir,S0):-
  h(exit(Dir), Here, There, S0),
  h(exit(RDir), There, Here, S0),!.

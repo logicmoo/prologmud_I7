@@ -53,7 +53,8 @@ aXiom(_, leaving(Agent, Here, Walk, ExitName)) -->
   aXiom(_, terminates(h(_, Agent, Here))),
   queue_local_event( leaving(Agent, Here, Walk, ExitName), [Here]),
    % queue_local_event( msg([cap(subj(Agent)), leaves, Here, ing(Walk), to, the, ExitName]), [Here]).
-  dmust(aXiom(doing, arriving(Agent, There, Walk, reverse(ExitName)))).
+  reverse_dir(ExitName,ExitNameR),
+  dmust(aXiom(doing, arriving(Agent, There, Walk, ExitNameR))).
 
 aXiom(_, terminates(h(Prep, Object, Here))) -->
  %ignore(sg(declared(h(Prep, Object, Here)))),

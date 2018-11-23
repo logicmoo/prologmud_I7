@@ -86,9 +86,6 @@ update_model_exits([Exit|Tail], From, Timestamp, M0, M2) :-
  update_model_exit(Exit, From, Timestamp, M0, M1),
  update_model_exits(Tail, From, Timestamp, M1, M2).
 
-reverse_exit(reverse(ExitName), ExitName) :- nonvar(ExitName),!.
-reverse_exit(ExitNameReversed, ExitName):- bugout1(reverse_exit(ExitNameReversed, ExitName)),break.
-
 % Match only the most recent Figment in Memory.
 %last_thought(Figment, Memory) :- % or member1(F, M), or memberchk(Term, List)
 % copy_term(Figment, FreshFigment),
@@ -128,7 +125,7 @@ update_model(Agent, sense_props(Agent, _Sense, Object, _Depth, PropList), Stamp,
 
 %update_model(Agent, you_are(Agent, _How, _He\re), _Timestamp, _Mem, M0, M0):- !.
 
-update_model(_Agent, exits_are(_, _At, Here, Exits), Timestamp, _Mem, M0, M4) :-
+update_model(_Agent, exits_are(_Whom, in, Here, Exits), Timestamp, _Mem, M0, M4) :-
   % Don't update map here, it's better done in the moved() clause.
   findall(exit(E), member(E, Exits), ExitRelations),
   update_model_exits(ExitRelations, Here, Timestamp, M0, M4).% Model exits from Here.

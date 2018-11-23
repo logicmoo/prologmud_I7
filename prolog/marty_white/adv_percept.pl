@@ -206,9 +206,9 @@ problem_solution(stinky, smell, purity).
 problem_solution(noisy, hear, quiet).
 
 
-%percept_todo(Actions, Mem0, Mem2):- apply_all(Actions,add_goal(),Mem0, Mem2).
-:- defn_state_setter(percept_todo//1).
+:- defn_state_setter(percept_todo(list(action))).
 percept_todo(Actions, Mem0, Mem2):- add_todo_all(Actions, Mem0, Mem2),!.
+%percept_todo(Actions, Mem0, Mem2):- apply_all(Actions,add_goal(),Mem0, Mem2).
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION

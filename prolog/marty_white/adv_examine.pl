@@ -29,13 +29,13 @@ sub_objs(Relation, Here, What, S0):-
  \+ ((h(inside, What, Container, S0), 
    Container\==Here, h(descended, Container, Here, S0))).
 
-exits_of(in, Object, Exits, S0) :- 
+prep_object_exitnames(in, Object, Exits, S0) :- 
   findall(Direction, h(exit(Direction), Object, _, S0), Exits), Exits\==[], !.
-exits_of(in, _Object, [escape], _S0) :- !.
-exits_of(on, _Object, [escape], _S0) :- !.
-exits_of(under, _Object, [escape], _S0) :- !.
-exits_of(at, _Object, [escape], _S0) :- !.
-exits_of(Other, _Object, [reverse(Other)], _S0).
+prep_object_exitnames(in, _Object, [escape], _S0) :- !.
+prep_object_exitnames(on, _Object, [escape], _S0) :- !.
+prep_object_exitnames(under, _Object, [escape], _S0) :- !.
+prep_object_exitnames(at, _Object, [escape], _S0) :- !.
+prep_object_exitnames(Other, _Object, [reverse(Other)], _S0).
 
 object_props(Object, Sense, PropList, S0):- 
  findall(P, (getprop(Object, P, S0), is_prop_public(Sense,P)), PropListL),
@@ -49,7 +49,7 @@ act_examine(Agent, Sense, PrepIn, Here, Depth, S0, S9) :- % next_depth(Depth2 is
 
  nearby_objs(Agent, Here, Nearby, S0),
  object_props(Here, Sense, PropList, S0),
- exits_of(PrepIn, Here, Exits, S0),
+ prep_object_exitnames(PrepIn, Here, Exits, S0),
  queue_agent_percept(Agent,
     [       %you_are(Agent, Relation, Here),
              notice_children(Agent, Sense, Here, PrepIn, Depth, Nearby), 
