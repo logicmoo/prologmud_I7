@@ -37,8 +37,7 @@ forget_always(Figment, M0, M1) :- select_always(Figment, M0, M1).
 thought(Figment, M) :- member(Figment, M).
 
 
-in_agent_model(_Knower, E, L):- in_model(E, L).
-% in_agent_model(Knower, E, L):- in_model(E, Knower).
+in_agent_model(Agent, Fact, State):- agent_thought_model(Agent, ModelData, State), in_model(Fact, ModelData).
 
 in_model(E, L):- quietly(in_model0(E, L)).
 in_model0(E, L):- \+ is_list(L),declared_link(declared, E, L).
@@ -52,7 +51,7 @@ same_element(holds_at(E,_), E).
 
 %:- defn_state_getter(agent_thought_model(agent,model,or([memory,state]))).
 :- defn_state_getter(agent_thought_model(agent,model)).
-agent_thought_model(Agent, ModelData, State):- var(State), !, declared_link(agent_thought_model(Agent), ModelData, advstate).
+agent_thought_model(Agent, ModelData, Memory):- var(Memory), !, get_advstate(State), member(memories(Agent,Memory),State), agent_thought_model(Agent, ModelData, Memory).
 agent_thought_model(Agent, ModelData, Memory):- \+ is_list(Memory), !, declared_link(agent_thought_model(Agent), ModelData, Memory).
 agent_thought_model(_Agent, ModelData, Memory):- memberchk(holds_in(_,_),Memory),!,Memory = ModelData.
 agent_thought_model(_Agent, ModelData, Memory):- memberchk(model(ModelData), Memory),!.
