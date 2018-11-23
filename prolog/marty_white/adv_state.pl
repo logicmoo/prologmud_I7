@@ -124,11 +124,14 @@ declared_list(Fact, State) :- member(link(VarName), State), declared_link(declar
 declared_list(Fact, State) :- member(inst(Object), State), declared_link(declared, Fact, Object).
 
 :- meta_predicate(declared_link(2,?,*)).
+declared_link(Pred2, Fact, VarName):- strip_module(Pred2,_,Var), var(Var), !, declared_link(declared, Fact, VarName).
 declared_link(Pred2, Fact, VarName):- atom(VarName), nb_current(VarName,PropList), call(Pred2, Fact, PropList).
 declared_link(Pred2, Fact, Object):- nonvar(Object), extra_decl(Object, PropList), call(Pred2, Fact, PropList).
-declared_link(Pred2, Fact, Object):- nb_current(advstate,State), direct_props(Object,PropList,State),!, call(Pred2, Fact, PropList).
+declared_link(Pred2, Fact, Object):- nb_current(advstate,State), direct_props(Object,PropList,State), call(Pred2, Fact, PropList).
 declared_link(declared, Fact, Object):- callable(Fact), Fact=..[F|List], Call=..[F, Object|List], current_predicate(_,Call),!,call(Call).
-
+declared_link(Pred2, Fact, Object):- var(Object), nb_current(advstate, State),member(Prop, State),arg(1, Prop, Object), arg(2,Prop,PropList),
+  call(Pred2, Fact, PropList).
+  
 
 
 % extra_decl(Object, PropList):- nb_current(advstate,State), direct_props(Object,PropList,State).
@@ -205,9 +208,9 @@ inherited_prop1(_Orig, AlreadyUsed, _Object, Prop, PropList, _S0):-
 direct_props(Object, PropList, S0):- 
  (var(S0)->nb_current(advstate,S0); true),
  (declared(props(Object, PropList), S0) 
- -> true 
+ *-> true 
  ; ( declared(type_props(Object, PropList), S0) 
- -> true 
+ *-> true 
   ; extra_decl(Object, PropList))).
 
 direct_props_or(Object,PropList, Default, S0) :-

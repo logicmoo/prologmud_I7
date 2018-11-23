@@ -176,8 +176,9 @@ open_traverse(Thing, Here, S0):-
 
 
 :- defn_state_getter(touchable(agent,thing)).
-touchable(_Agent, Star, _State) :- is_star(Star), !.
-touchable(Agent, Thing, S0) :-
+touchable(Agent, Thing, S0):- notrace(touchable0(Agent, Thing, S0)).
+touchable0(_Agent, Star, _State) :- is_star(Star), !.
+touchable0(Agent, Thing, S0) :-
   h(child, Agent, Here, S0), % can't reach out of boxes, etc.
   (Thing=Here;  open_traverse(Thing, Here, S0)).
 
@@ -196,55 +197,3 @@ applied_direction(Start, Here, Dir, Relation, End, S0):-
 
 
 
-
-
-
-
-
-
-
-
-
-
-:- defn_state_none(action_doer(action,-agent)).
-action_doer(Action,Agent):- \+ compound(Action),!, dmust(current_player(Agent)),!.
-action_doer(Action,Agent):- functor(Action,Verb,_),verbatum_anon(Verb),current_player(Agent),!.
-action_doer(Action,Agent):- arg(1,Action,Agent), nonvar(Agent), \+ preposition(_,Agent),!.
-action_doer(Action,Agent):- throw(missing(action_doer(Action,Agent))).
-  %dmust(agent_act_verb_thing_sense(Agent, Action, _Verb, _Thing, _Sense)).
-/*
-agent_act_verb_thing_sense(Agent, Action, Verb, Thing, Sense):- 
- never_equal(Sense,Thing, Agent),
- notrace(agent_act_verb_thing_sense0(Agent, Action, Verb, Thing, Sense)), !.
-
-agent_act_verb_thing_sense0(_Agent, Atom, Atom, _Target, Sense):- \+ compound(Atom), !, is_sense(Sense),!.
-%agent_act_verb_thing_sense0(_Agent, Action, _Look, _Star, _See):- assertion(ground(Action)),fail.
-
-agent_act_verb_thing_sense0(Agent, goto(Agent, _Walk, _TO, Thing), goto, Thing, see):-!.
-agent_act_verb_thing_sense0(Agent, look(Agent), look, *, see):-!.
-agent_act_verb_thing_sense0(Agent, examine(Agent,Sense), examine, *, Sense).
-agent_act_verb_thing_sense0(Agent, examine(Agent,Sense, Object), examine, Object, Sense).
-agent_act_verb_thing_sense0(Agent, touch(Agent,Target), touch, Target, Sense):- is_sense(Sense), !.
-
-agent_act_verb_thing_sense0(Agent, Action, Verb, Thing, Sense):-
-  Action=..[Verb,Agent, Sense|Rest],
-  is_sense(Sense), !,
-  Action2=..[Verb,Agent|Rest],
-  agent_act_verb_thing_sense0(Agent, Action2, Verb, Thing, _Sense).
-agent_act_verb_thing_sense0(Agent, Action, Verb, Thing, Sense):-
-  Action=..[Verb,Agent, W1|Rest],
-  atom(W1), atom_concat(W2, 'ly', W1), !,
-  Action2=..[Verb,Agent, W2|Rest],
-  agent_act_verb_thing_sense0(Agent, Action2, Verb, Thing, Sense).
-agent_act_verb_thing_sense0(Agent, Action, Verb, Thing, Sense):-
-  Action=..[Verb,Agent, Prep|Rest],
-  preposition(Prep), !,
-  Action2=..[Verb,Agent|Rest],
-  agent_act_verb_thing_sense0(Agent, Action2, Verb, Thing, Sense).
-agent_act_verb_thing_sense0(Agent, Action, Verb, Thing, Sense):-
-  Action=..[Verb,Agent, Thing|_], !,
-  agent_act_verb_thing_sense0(Agent, Verb, _UVerb, _UThing, Sense).
-agent_act_verb_thing_sense0(Agent, Action, Verb, '*', Sense):-
- Action=..[Verb,Agent], dmust((action_sensory(Verb, Sense))), !.
-
-*/

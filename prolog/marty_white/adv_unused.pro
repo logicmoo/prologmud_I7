@@ -1,5 +1,49 @@
 /* -*- Mode:Prolog; coding:iso-8859-1; indent-tabs-mode:nil; prolog-indent-width:8; prolog-paren-indent:4; tab-width:8; -*- */
 
+action_agent_verb_subject_prep_object(Action, Agent, Verb, Thing, At, Thing2):-
+  Action=..[Verb,Agent, Thing|Args], \+ verbatum_anon(Verb), !,
+  preposition(_,At),
+  append(_,[Thing2],Args).
+
+
+
+  %dmust(agent_act_verb_thing_sense(Agent, Action, _Verb, _Thing, _Sense)).
+/*
+agent_act_verb_thing_sense(Agent, Action, Verb, Thing, Sense):- 
+ never_equal(Sense,Thing, Agent),
+ notrace(agent_act_verb_thing_sense0(Agent, Action, Verb, Thing, Sense)), !.
+
+agent_act_verb_thing_sense0(_Agent, Atom, Atom, _Target, Sense):- \+ compound(Atom), !, is_sense(Sense),!.
+%agent_act_verb_thing_sense0(_Agent, Action, _Look, _Star, _See):- assertion(ground(Action)),fail.
+
+agent_act_verb_thing_sense0(Agent, goto(Agent, _Walk, _TO, Thing), goto, Thing, see):-!.
+agent_act_verb_thing_sense0(Agent, look(Agent), look, *, see):-!.
+agent_act_verb_thing_sense0(Agent, examine(Agent,Sense), examine, *, Sense).
+agent_act_verb_thing_sense0(Agent, examine(Agent,Sense, Object), examine, Object, Sense).
+agent_act_verb_thing_sense0(Agent, touch(Agent,Target), touch, Target, Sense):- is_sense(Sense), !.
+
+agent_act_verb_thing_sense0(Agent, Action, Verb, Thing, Sense):-
+  Action=..[Verb,Agent, Sense|Rest],
+  is_sense(Sense), !,
+  Action2=..[Verb,Agent|Rest],
+  agent_act_verb_thing_sense0(Agent, Action2, Verb, Thing, _Sense).
+agent_act_verb_thing_sense0(Agent, Action, Verb, Thing, Sense):-
+  Action=..[Verb,Agent, W1|Rest],
+  atom(W1), atom_concat(W2, 'ly', W1), !,
+  Action2=..[Verb,Agent, W2|Rest],
+  agent_act_verb_thing_sense0(Agent, Action2, Verb, Thing, Sense).
+agent_act_verb_thing_sense0(Agent, Action, Verb, Thing, Sense):-
+  Action=..[Verb,Agent, Prep|Rest],
+  preposition(Prep), !,
+  Action2=..[Verb,Agent|Rest],
+  agent_act_verb_thing_sense0(Agent, Action2, Verb, Thing, Sense).
+agent_act_verb_thing_sense0(Agent, Action, Verb, Thing, Sense):-
+  Action=..[Verb,Agent, Thing|_], !,
+  agent_act_verb_thing_sense0(Agent, Verb, _UVerb, _UThing, Sense).
+agent_act_verb_thing_sense0(Agent, Action, Verb, '*', Sense):-
+ Action=..[Verb,Agent], dmust((action_sensory(Verb, Sense))), !.
+
+*/
 
 
 % Marty's Prolog Adventure Prototype

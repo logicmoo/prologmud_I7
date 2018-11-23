@@ -112,8 +112,7 @@ do_introspect(Agent, path(Here, There), Answer, S0) :- !,
  do_introspect(Agent, path(Here, There), Answer, S0).
 
 do_introspect(Agent, path(Here, There), Answer, S0) :- 
- getprop(Agent, memories(Memory), S0), 
- agent_thought_model(Agent, ModelData, Memory),
+ agent_thought_model(Agent, ModelData, S0),
  find_path(Here, There, Route, ModelData), !, 
  Answer = msg(['Model is:',Agent,'Shortest path is:\n', Route]).
 
@@ -121,9 +120,8 @@ do_introspect(_Agent, path(Here, There), Answer, ModelData) :-
  find_path(Here, There, Route, ModelData), !, 
  Answer = msg(['Model is:','State','Shortest path is\n:', Route]).
 
-do_introspect(Agent1, recall(Agent, WHQ, Target), Answer, S0) :-
- getprop(Agent, memories(Memory), S0), 
- agent_thought_model(Agent, ModelData, Memory),
+do_introspect(Agent1, recall(Agent, WHQ, Target), Answer, S0) :- 
+ agent_thought_model(Agent, ModelData, S0),
  recall_whereis(S0, Agent1, WHQ, Target, Answer, ModelData).
 
 do_introspect(Agent1, recall(Agent, Target), Answer, S0) :- !,
@@ -270,12 +268,14 @@ refilter_memory(PerceptQ,MemoList):- reverse(PerceptQ,MemoListSP),exclude(dontRe
 match_functor_or_arg(Q,P):- compound(P),functor(P,F,_),(call(Q,F)->true;(arg(1,P,E),call(Q,E))),!.
 
 preProcessedQ(P):- \+ atom(P),!,match_functor_or_arg(preProcessedQ,P).
-preProcessedQ(examine).
+% preProcessedQ(examine).
 preProcessedQ(msg).
+preProcessedQ(trys_examine).
 
 dontRemember(P):- \+ atom(P),!,match_functor_or_arg(dontRemember,P).
 %dontRemember(notice_children).
 dontRemember(msg).
+dontRemember(trys_examine).
 dontRemember(sense_props).
 
 

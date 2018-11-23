@@ -119,7 +119,8 @@ do_command(Agent, Action) :-
 % --------
 
 do_todo(Agent) -->
-  sg(declared(memories(Agent, Mem0))),{member(todo([]),Mem0)},!.
+ sg(declared(memories(Agent, Mem0))),
+ {member(todo([]),Mem0)},!.
 do_todo(Agent, S0, S9) :- 
  undeclare(memories(Agent, Mem0), S0, S1),
  forget(todo(OldToDo), Mem0, Mem1),
@@ -157,15 +158,21 @@ do_todo(_Agent, S0, S0).
 do_action(Agent, Action, S0, S3) :-
  quietly_must((
  undeclare(memories(Agent, Mem0), S0, S1),
- copy_term(Action,ActionG),
- numbervars(ActionG,999,_),
- memorize(did(ActionG), Mem0, Mem1),
+ memorize_doing(Action, Mem0, Mem1),
  declare(memories(Agent, Mem1), S1, S2))),
  dmust_tracing(must_act( Action, S2, S3)), !.
- 
+
+memorize_doing(Action, Mem0, Mem0):- has_depth(Action),!.
+memorize_doing(Action, Mem0, Mem1):- 
+  copy_term(Action,ActionG),
+  numbervars(ActionG,999,_),
+  memorize(did(ActionG), Mem0, Mem1).
+
+has_depth(Action):- compound(Action), functor(Action,_,A),arg(A,Action,E),compound(E),E=depth(_),!.
+
 trival_act(V):- \+ callable(V), !, fail.
+trival_act(Action):- has_depth(Action).
 trival_act(V):- \+ compound(V), !, fail.
-trival_act(Action):- functor(Action,_,A),arg(A,Action,E),compound(E),E=depth(_),!.
 trival_act(_):- !, fail.
 trival_act(look(_)).
 trival_act(wait(_)).
@@ -217,11 +224,6 @@ act_change_state(switch(Open),Opened,TF):- nonvar(Open), act_change_state(Open,O
 act_prevented_by('open','locked',t).
 act_prevented_by('close','locked',t).
 
-act_to_cmd_thing(Agent, OpenThing, Open, Thing) :- 
- OpenThing =.. [Open, Agent, Thing],!.
-act_to_cmd_thing(Agent, SwitchOnThing, SwitchOn, Thing) :- 
- SwitchOnThing =.. [Switch, Agent, On, Thing],!,
- SwitchOn=.. [Switch,On].
 
 :- meta_predicate maybe_when(0,0).
 maybe_when(If,Then):- If -> Then ; true.
@@ -265,12 +267,15 @@ add_look(Agent) -->
   h(inside, Agent, _Somewhere),
   add_agent_todo(Agent, look(Agent)).
 
+
+:- defn_state_none(action_doer(action,-agent)).
+action_doer(Action,Agent):- \+ compound(Action),!, dmust(current_player(Agent)),!.
+action_doer(Action,Agent):- functor(Action,Verb,_),verbatum_anon(Verb),current_player(Agent),!.
+action_doer(Action,Agent):- arg(1,Action,Agent), nonvar(Agent), \+ preposition(_,Agent),!.
+action_doer(Action,Agent):- throw(missing(action_doer(Action,Agent))).
+
 action_verb_agent_thing(Action, Verb, Agent, Thing):-
-  Action=..[Verb,Agent|Args], \+ verbatum_anon(Verb), !,
+  notrace((compound(Action),Action=..[Verb,Agent|Args], \+ verbatum_anon(Verb))), !,
   (Args=[Thing]->true;Thing=_),!.
 
-action_agent_verb_subject_prep_object(Action, Agent, Verb, Thing, At, Thing2):-
-  Action=..[Verb,Agent, Thing|Args], \+ verbatum_anon(Verb), !,
-  preposition(_,At),
-  append(_,[Thing2],Args).
 

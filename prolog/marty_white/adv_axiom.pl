@@ -8,7 +8,7 @@ will_touch(Agent,Thing, S0, S2):-
 aXiom(doing, wait(Agent)) -->
  queue_agent_percept(Agent, [time_passes(Agent)]).
 
-aXiom(doing, Action, _S0, _S9):- notrace(( \+ trival_act(Action),bugout1(aXiom(doing, Action)))),fail.
+aXiom(doing, Action, _S0, _S9):- notrace(( \+ trival_act(Action),bugout1(aXiom(doing, Action)))),notrace(fail).
 
 aXiom(doing, talk(Agent, Object, Message)) -->  % directed message
   can_sense(Agent, audio, Object),
@@ -53,7 +53,7 @@ aXiom(_, leaving(Agent, Here, Walk, ExitName)) -->
   aXiom(_, terminates(h(_, Agent, Here))),
   queue_local_event( leaving(Agent, Here, Walk, ExitName), [Here]),
    % queue_local_event( msg([cap(subj(Agent)), leaves, Here, ing(Walk), to, the, ExitName]), [Here]).
-  reverse_dir(ExitName,ExitNameR),
+  sg(reverse_dir(ExitName,ExitNameR)),
   dmust(aXiom(doing, arriving(Agent, There, Walk, ExitNameR))).
 
 aXiom(_, terminates(h(Prep, Object, Here))) -->
@@ -112,8 +112,7 @@ aXiom(doing, make_true(Doer, h(in, Agent, There))) -->
   {Doer==Agent},
   has_rel(exit(_), There),
   from_loc(Agent, Here),
-  getprop(Agent, memories(Memory)), 
-  {agent_thought_model(Agent, ModelData, Memory)},
+  agent_thought_model(Agent, ModelData),
   {find_path(Here, There, Route, ModelData)}, !,
   aXiom(doing, follow_plan(Agent, goto_loc(Agent, walk, There), Route)).
 
@@ -148,12 +147,12 @@ aXiom(doing, does_put(Agent, Put, Thing1, At, Thing2)) -->
   moveto(Agent, Put, Thing1, At, Thing2, [Here], 
     [cap(subj(Agent)), person(Put, es(Put)), Thing1, At, Thing2, '.']).
   
-aXiom(doing, take(Agent, Thing)) -->
+aXiom(doing, take(Agent, Thing)) --> !,
   % [silent(subj(Agent)), person('Taken.', [cap(Doer), 'grabs the', Thing, '.'])]
   will_touch(Agent, Thing),
   aXiom(doing, does_put(Agent, take, Thing, held_by, Agent)).
 
-aXiom(doing, drop(Agent, Thing)) -->
+aXiom(doing, drop(Agent, Thing)) --> !,
   will_touch(Agent, Thing), 
   h(At, Agent, Here),
   % has_rel(At, Here),
@@ -304,8 +303,8 @@ aXiom(doing, examine(Agent, Sense, Prep, Object)) --> aXiom(doing, trys_examine(
 
 % listen, smell ...
 aXiom(doing, Action) -->
- {Action=..[Verb,Agent|Args], 
- sensory_verb(Sense, Verb)}, !,
+ {notrace((Action=..[Verb,Agent|Args], 
+ sensory_verb(Sense, Verb)))}, !,
  {NewAction=..[examine,Agent,Sense|Args]},
  aXiom(doing, NewAction).
 
@@ -320,7 +319,7 @@ aXiom(doing, trys_examine(Agent, Sense, Prep, Object, Depth)) --> aXiom(doing, d
 
 
 aXiom(doing, does_examine(Agent, Sense, Prep, Object, Depth)) -->  dmust(act_examine(Agent, Sense, Prep, Object, Depth)),!.
-aXiom(doing, does_examine(Agent, Sense, Object)) --> {trace},
+aXiom(doing, does_examine(Agent, Sense, Object)) --> % {trace},
   %declared(props(Object, PropList)),
   findall(P, (getprop(Object, P), is_prop_public(Sense, P)), PropList),
   queue_agent_percept(Agent, [sense_props(Agent, Sense, Object, depth(2), PropList)]),
@@ -333,22 +332,20 @@ aXiom(doing, does_examine(Agent, Sense, Object)) --> {trace},
 
 
 
-
-
-
-aXiom(doing, change_state(Agent, Action, Open, Thing, Opened, TF)) --> !, 
-  change_state(Agent, Action, Open, Thing, Opened, TF).
-
-aXiom(doing, Action, S0, S9) :-  
- act_to_cmd_thing(Agent, Action, Open, Thing), 
- act_change_state(Open, Opened, TF),!,
- dshow_fail(aXiom(doing, change_state(Agent, Open, Thing, Opened, TF), S0, S9)),!.
-
 % used mainly to debug if things are locally accessable
-aXiom(doing, touch(Agent, Thing)) -->
+aXiom(doing, touch(Agent, Thing)) --> !,
  unless_reason(Agent, will_touch(Agent, Thing),
    cant( reach(Agent, Thing))),
  queue_agent_percept(Agent, [success(touch(Agent, Thing),'Ok.')]).
+
+
+aXiom(_, change_state(Agent, Open, Thing, Opened, TF)) --> !, 
+  change_state(Agent, Open, Thing, Opened, TF).
+
+aXiom(doing, Action, S0, S9) :-  
+ action_verb_agent_thing(Action, Open, Agent, Thing), 
+ act_change_state(Open, Opened, TF),!,
+ aXiom(doing, change_state(Agent, Open, Thing, Opened, TF), S0, S9),!.
 
 
 aXiom(doing, true) --> [].
@@ -452,11 +449,11 @@ setloc_silent(Prep, Object, Dest) -->
  declare(h(Prep, Object, Dest)).
 
 
-change_state(Agent, _Action, Open, Thing, Opened, TF,  S0, S):- 
- dmust((
- trace,
+change_state(Agent, Open, Thing, Opened, TF,  S0, S):- 
+ % dmust
+ ((
  maybe_when(psubsetof(Open, touch),
-   required_reason(Agent, will_touch(Thing, Agent, S0, _))),
+   required_reason(Agent, will_touch(Agent, Thing, S0, _))),
 
  %getprop(Thing, can_be(open, S0),
  %\+ getprop(Thing, state(open, t), S0),

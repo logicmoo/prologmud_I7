@@ -28,6 +28,7 @@ cmdalias(l, look).
 cmdalias(n, north).
 cmdalias(s, south).
 cmdalias(u, up).
+cmdalias(goto, go).
 cmdalias(w, west).
 cmdalias(x, examine).
 cmdalias(z, wait).

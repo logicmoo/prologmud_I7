@@ -640,7 +640,6 @@ is_closed(Object, State) :-
 %  getprop(Object, openable, State),
 %  \+ getprop(Object, open, State).
 
-open_traverse(Thing, Here, State):- open_traverse(Thing, Here, State).
 
 can_sense(visually, Agent, State) :-
   open_traverse(Agent, Here, State),

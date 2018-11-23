@@ -40,12 +40,25 @@ thought(Figment, M) :- member(Figment, M).
 in_agent_model(_Knower, E, L):- in_model(E, L).
 % in_agent_model(Knower, E, L):- in_model(E, Knower).
 
-in_model(E, L):- member(E, L).
-in_model(E, L):- member(holds_at(E,_), L).
-in_model(E, L):- member(model(M), L), is_list(M), in_model(E,M).
+in_model(E, L):- quietly(in_model0(E, L)).
+in_model0(E, L):- \+ is_list(L),declared_link(declared, E, L).
+in_model0(E, L):- compound(E),E = holds_at(_,_),!, member(E, L).
+in_model0(E, L):- member(EE, L), same_element(EE,E).
+same_element(E, E) :- !.
+same_element(holds_at(E,_), E).
 
-:- defn_state_getter(agent_thought_model(agent,fact)).
-agent_thought_model(_Agent,E, L):- in_model(model(E), L), nonvar(E).
+
+
+
+%:- defn_state_getter(agent_thought_model(agent,model,or([memory,state]))).
+:- defn_state_getter(agent_thought_model(agent,model)).
+agent_thought_model(Agent, ModelData, State):- var(State), !, declared_link(agent_thought_model(Agent), ModelData, advstate).
+agent_thought_model(Agent, ModelData, Memory):- \+ is_list(Memory), !, declared_link(agent_thought_model(Agent), ModelData, Memory).
+agent_thought_model(_Agent, ModelData, Memory):- memberchk(holds_in(_,_),Memory),!,Memory = ModelData.
+agent_thought_model(_Agent, ModelData, Memory):- memberchk(model(ModelData), Memory),!.
+agent_thought_model(Agent, ModelData, State):- declared(memories(Agent,Memory),State),!,
+  agent_thought_model(Agent, ModelData, Memory).
+% agent_thought_model(_Agent,E, L):- in_model(model(E), L), nonvar(E).
 % agent_thought_model(Agent,Model,List):- dmust((nop(memberchk(agent(Agent),List)), member(model(Model),List))).
 
 
@@ -62,6 +75,11 @@ update_relation( NewHow, Item, NewParent, Timestamp, M0, M2) :-
  append([holds_at(h(NewHow, Item, NewParent), Timestamp)], M1, M2).
 
 % Batch-update relations.
+
+update_relations(Prep, '<unknown closed>', Object, Timestamp, M0, M1):-
+  \+ in_model(holds_at(h(Prep, _Child, Object), _), M0),
+  update_relation( Prep, '<unexplored>', Object, Timestamp, M0, M1).
+
 update_relations(_NewHow, '<unknown closed>', _NewParent, _Timestamp, M, M).
 update_relations(_NewHow, [], _NewParent, _Timestamp, M, M).
 update_relations( NewHow, [Item|Tail], NewParent, Timestamp, M0, M2) :-
@@ -93,7 +111,7 @@ update_model_exits([Exit|Tail], From, Timestamp, M0, M2) :-
 % \+ member(FreshFigment, RecentMemory).
 
 update_model(Knower, arriving(Agent,Here,_,ExitNameReversed), Timestamp, Mem, M0, M2) :-  Knower = Agent,    
- dmust(( reverse_exit(ExitNameReversed, ExitName),
+ dmust((  reverse_dir(ExitNameReversed, ExitName, advstate),
   At = in,
   % According to model, where was I?
   in_model(h(_, Agent, There), M0),
@@ -115,6 +133,7 @@ update_model(Agent, carrying(Agent, Objects), Timestamp, _Memory, M0, M1) :-
  update_relations( held_by, Objects, Agent, Timestamp, M0, M1).
 update_model(Agent, wearing(Agent, Objects), Timestamp, _Memory, M0, M1) :-
  update_relations( worn_by, Objects, Agent, Timestamp, M0, M1).
+
 update_model(Agent, notice_children(Agent, _Sense, Object, How, _Depth, Children), Timestamp, _Mem, M0, M1) :-
  update_relations( How, Children, Object, Timestamp, M0, M1).
 update_model(Agent, sense_props(Agent, _Sense, Object, _Depth, PropList), Stamp, _Mem, M0, M2) :-
