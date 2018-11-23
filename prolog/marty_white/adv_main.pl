@@ -202,5 +202,5 @@ save_term(Filename, _) :-
  access_file(Filename, exist),
  player_format('Save FAILED! Does file "~w" already exist?~n', [Filename]).
 save_term(Filename, _) :-
- player_format('Failed to state(open, t) file "~w" for saving.~n', [Filename]).
+ player_format('Failed to open file "~w" for saving.~n', [Filename]).
 

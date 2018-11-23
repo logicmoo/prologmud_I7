@@ -49,7 +49,7 @@ do_autonomous_cycle(Agent):-
 
 % Is powered down
 maybe_autonomous_decide_goal_action(Agent, Mem0, Mem0) :- 
- get_advstate(State),getprop(Agent, state(powered, f), State),!.
+ get_advstate(State),getprop(Agent, (powered = f), State),!.
 
 maybe_autonomous_decide_goal_action(Agent, Mem0, Mem1) :- fail, notrace((do_autonomous_cycle(Agent),
  set_last_action(Agent,[auto(Agent)]))),

@@ -46,7 +46,6 @@ act_examine(Agent, Sense, PrepIn, Here, Depth, S0, S9) :- % next_depth(Depth2 is
  \+ \+ h(exit(_), Here, _, S0),
  Depth = depth(3), 
  % h(PrepIn, Agent, Here, S0), !,
-
  nearby_objs(Agent, Here, Nearby, S0),
  object_props(Here, Sense, PropList, S0),
  prep_object_exitnames(PrepIn, Here, Exits, S0),
@@ -77,7 +76,7 @@ add_child_precepts(Depth, Sense, Agent, PrepIn, Object, S1, S2):-
        child_precepts(Agent, Sense, Object, Relation, Depth, Children, S1))), PreceptS),
  queue_agent_percept(Agent,PreceptS, S1, S2).
 
-child_precepts(_Agent, see, Object, in, _Depth, '<unknown closed>', S1):- is_closed(Object,S1),!.
+child_precepts(_Agent, see, Object, At, _Depth, '<unknown closed>', S1):- is_closed(At, Object,S1),!.
 child_precepts(Agent, Sense, Object, Relation, _Depth, Children, S1):- 
  findall_set(What,  
   (h(Relation, What, Object, S1), 

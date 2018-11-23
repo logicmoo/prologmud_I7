@@ -46,7 +46,7 @@ each_agent(Precond, NewGoal, S0, S2) :-
 % Simulation: respond(Action_Id, LogicalResponse/Percept, EnglishResponse)
 % Action(Verb, ...)
 % failure(Reason)
-% moved( obj, from, how, to)
+% moved(agent, how, obj, from, prep)
 
 % -----------------------------------------------------------------------------
 % The state of an Agent is stored in its memory.

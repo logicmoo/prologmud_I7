@@ -184,7 +184,7 @@ apply_act( Action) -->
  queue_agent_percept(Agent, [answer(Answer), Answer]), !.
  %player_format('~w~n', [Answer]).
 
-apply_act( Action) --> dmust(aXiom(_, Action)), !.
+apply_act( Action) --> aXiom(_, Action), !.
 
 /*
 apply_act( Action) --> fail, 

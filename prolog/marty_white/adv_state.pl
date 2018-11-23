@@ -272,6 +272,8 @@ merge_value(F,N,B,A,RO):- text_prop(F), \+ is_list(B),!,merge_value(F,N,[B],A,RO
 merge_value(F,N,B,A,RO):- text_prop(F), \+ is_list(A),!,merge_value(F,N,B,[A],RO).
 merge_value(F,_,_,A,R):- single_valued_prop(F),!,A=R.
 
+merge_value(=,2,_,V,R):- !, R = V.
+
 merge_value(_,_,_,t,R):- !, R = t.
 merge_value(_,_,_,f,R):- !, R = f.
 merge_value(_,_,_,[],R):- !, R = [].
@@ -290,6 +292,7 @@ text_prop(adjs).
 text_prop(desc).
 single_valued_prop(name).
 single_valued_prop(desc).
+
 
 % Replace or create Prop.
 updateprop(Object, Prop, S00, S2) :- notrace((updateprop_(Object, Prop, S00, S2))).

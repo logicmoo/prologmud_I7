@@ -44,11 +44,11 @@ related_with_prop(At, Object, Place, Prop, S0) :-
 
 :- defn_state_getter(in_state(domrel, inst)).
 in_state(~(Open), Object, State) :- ground(Open),!,
- getprop(Object, state(Open, f), State).
+ getprop(Object, Open=f, State).
 in_state(Open, Object, State) :-
- getprop(Object, state(Open, t), State).
+ getprop(Object, Open=t, State).
 % getprop(Object, can_be(open, State),
-% \+ getprop(Object, state(open, t), State).
+% \+ getprop(Object, =(open, t), State).
 
 :- defn_state_getter(in_scope(agent,thing)).
 in_scope(_Agent, Star, _State) :- is_star(Star), !.
@@ -96,13 +96,13 @@ has_rel(At, X, S0) :- default_rel(At, X, S0).
 
 :- defn_state_getter(default_rel(domrel,inst)).
 default_rel(At, X, S0) :-
-  getprop(X, default_rel(At), S0).
+  getprop(X, default_rel = (At), S0).
 default_rel(At, X, S0) :-
   getprop(X, has_rel(At, TF), S0), TF \== f.
 default_rel(in, _, _S0) :- !.
 
 default_rel(At, X, S0) :-
-  getprop(X, default_rel(Specific), S0),
+  getprop(X, default_rel = (Specific), S0),
   subrelation(Specific, At).
 default_rel(At, X, S0) :-
   getprop(X, has_rel(Specific, TF), S0), TF \== f,
@@ -123,7 +123,7 @@ h(descended, X, Z, S0) :-
 
 h(open_traverse, X, Z, S0):-
   h(descended, X, Z, S0),
-  \+ (is_closed(Z, S0), h(inside, X, Z, S0)).
+  \+ (is_closed(in, Z, S0), h(inside, X, Z, S0)).
 
 
 h(inside, X, Z, S0) :- h(in, X, Z, S0).
@@ -134,25 +134,25 @@ h(exit(Out), Inner, Outer, S0) :- in_out(In,Out),
   h(child, Inner, Outer, S0),
   has_rel(In, Inner, S0),
   has_rel(child, Outer, S0),
-  \+ is_closed(Inner, S0).
+  \+ is_closed(In, Inner, S0),!.
 h(exit(Off), Inner, Outer, S0) :- on_off(On,Off),
   h(child, Inner, Outer, S0),
   has_rel(On, Inner, S0),
-  has_rel(child, Outer, S0).
+  has_rel(child, Outer, S0),!.
 h(exit(Escape), Inner, Outer, S0) :- escape_rel(Escape),
   h(child, Inner, Outer, S0),
   has_rel(child, Inner, S0),
-  has_rel(child, Outer, S0).
+  has_rel(child, Outer, S0),!.
 
 
 in_out(in,out).
 on_off(on,off).
 escape_rel(escape).
 
-:- defn_state_getter(is_closed(inst)).
+:- defn_state_getter(is_closed(prep,inst)).
 
-is_closed(Object, S0) :-
-  getprop(Object, state(opened,f), S0).
+is_closed(At,Object, S0) :-  
+  getprop(Object, opened=f, S0) -> default_rel(At, Object, S0).
 %  getprop(Object, openable, S0),
 %  \+ getprop(Object, open, S0).
 

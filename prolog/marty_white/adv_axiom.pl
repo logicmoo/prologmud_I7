@@ -87,13 +87,12 @@ aXiom(doing, goto_obj(Agent, Walk, Object)) -->
 % ==============
 aXiom(doing, goto_prep_obj(Agent, Walk, At, Object)) --> 
   will_touch(Agent, Object),
-  has_rel(At, Object),               
-  from_loc(Agent, Here), 
-  open_traverse(Object, Here),
-  \+ is_closed(Object), 
-  aXiom(doing, entering(Agent, Here, Walk, At, Object)).
+  has_rel(At, Object),  
+  \+ is_closed(At, Object), 
+  aXiom(doing, entering(Agent, Walk, Object, At)).
 
-aXiom(doing, entering(Agent, Walk, Here, At, Object)) -->
+aXiom(doing, entering(Agent, Walk, Object, At)) -->
+  from_loc(Object, Here),
   moveto(Agent, Walk, Agent, At, Object, [Here],
     [subj(Agent), person(Walk, es(Walk)), At, the, Object, .]),
   add_look(Agent).
@@ -158,12 +157,13 @@ aXiom(doing, drop(Agent, Thing)) --> !,
   % has_rel(At, Here),
   aXiom(doing, does_put(Agent, drop, Thing, At, Here)).
 
-aXiom(doing, put(Agent, Thing1, Relation, Thing2)) -->
-  has_rel(Relation, Thing2),
-  (Relation \= in ; \+ is_closed(Thing2)),
+aXiom(doing, put(Agent, Thing1, Prep, Thing2)) -->
+  has_rel(At, Thing2),
+  prep_to_rel(Thing2, Prep, At),
+  (At \= in ; \+ is_closed(At, Thing2)),
   will_touch(Agent, Thing2), % what if "under" an "untouchable" thing?
   % OK, put it
-  must_act( does_put(Agent, put, Thing1, Relation, Thing2)).
+  must_act( does_put(Agent, put, Thing1, At, Thing2)).
 
 aXiom(doing, give(Agent, Thing, Recipient)) -->
   has_rel(held_by, Recipient),
@@ -343,7 +343,8 @@ aXiom(_, change_state(Agent, Open, Thing, Opened, TF)) --> !,
   change_state(Agent, Open, Thing, Opened, TF).
 
 aXiom(doing, Action, S0, S9) :-  
- action_verb_agent_thing(Action, Open, Agent, Thing), 
+ notrace((action_verb_agent_thing(Action, Open, Agent, Thing),
+ nonvar(Open), nonvar(Thing), nonvar(Agent))),
  act_change_state(Open, Opened, TF),!,
  aXiom(doing, change_state(Agent, Open, Thing, Opened, TF), S0, S9),!.
 
@@ -396,13 +397,13 @@ aXiom(doing, switch(Open, Thing)) -->
  act_prevented_by(Open, TF),
  will_touch(Agent, Thing),
  %getprop(Thing, can_be(open),
- %\+ getprop(Thing, state(open, t)),
+ %\+ getprop(Thing, =(open, t)),
  Open = open, traverses(Sense, Open)
- %delprop(Thing, state(Open, f)),
- %setprop(Thing, state(open, t)),
- setprop(Thing, state(Open, TF)),
+ %delprop(Thing, =(Open, f)),
+ %setprop(Thing, =(open, t)),
+ setprop(Thing, =(Open, TF)),
  h(Sense, Agent, Here),
- queue_local_event([setprop(Thing, state(Open, TF)),[Open,is,TF]], [Here, Thing]).
+ queue_local_event([setprop(Thing, =(Open, TF)),[Open,is,TF]], [Here, Thing]).
 
 aXiom(doing, switch(OnOff, Thing)) -->
  will_touch(Agent, Thing),
@@ -430,9 +431,9 @@ disgorge(Doer, How, Container, Prep, Here, Vicinity, Msg) -->
 moveto(Doer, Verb, List, At, Dest, Vicinity, Msg) --> {is_list(List)},!,
  apply_map_state(moveto(Doer, Verb), List, rest(At, Dest, Vicinity, Msg)).
 moveto(Doer, Verb, Object, At, Dest, Vicinity, Msg) -->
-  undeclare(related(_, Object, Here)),
-  declare(related(At, Object, Dest)),
-  queue_local_event([moved(Doer, Verb, Object, Here, At, Dest), Msg], Vicinity).
+  undeclare(h(_, Object, From)),
+  declare(h(At, Object, Dest)),
+  queue_local_event([moved(Doer, Verb, Object, From, At, Dest), Msg], Vicinity).
 
 
 event_props(thrown(Agent,  Thing, _Target, Prep, Here, Vicinity),
@@ -456,17 +457,17 @@ change_state(Agent, Open, Thing, Opened, TF,  S0, S):-
    required_reason(Agent, will_touch(Agent, Thing, S0, _))),
 
  %getprop(Thing, can_be(open, S0),
- %\+ getprop(Thing, state(open, t), S0),
+ %\+ getprop(Thing, =(open, t), S0),
 
  required_reason(Agent, \+ getprop(Thing, can_be(Open, f), S0)),
 
  ignore(dshow_fail(getprop(Thing, can_be(Open, t), S0))),
 
  forall(act_prevented_by(Open,Locked,Prevented),
-   required_reason(Agent, \+ getprop(Thing, state(Locked, Prevented), S0))),
+   required_reason(Agent, \+ getprop(Thing, =(Locked, Prevented), S0))),
 
- %delprop(Thing, state(Open, f), S0, S1),
- %setprop(Thing, state(Open, t), S0, S1),
+ %delprop(Thing, =(Open, f), S0, S1),
+ %setprop(Thing, =(Open, t), S0, S1),
 
   open_traverse(Agent, Here, S0),
 
@@ -477,7 +478,7 @@ change_state(Agent, Open, Thing, Opened, TF,  S0, S):-
   subst(equivalent,$here, Here, Term2, Term)),
   call(Term),S0,S1),
 
- setprop(Thing, state(Opened, TF), S1, S2))),
+ setprop(Thing, =(Opened, TF), S1, S2))),
 
- queue_local_event([setprop(Thing, state(Opened, TF)),msg([Thing,is,TF,Opened])], [Here, Thing], S2, S),!.
+ queue_local_event([setprop(Thing, =(Opened, TF)),msg([Thing,is,TF,Opened])], [Here, Thing], S2, S),!.
 

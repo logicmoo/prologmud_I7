@@ -33,7 +33,7 @@ get_sensing_objects(Sense, Agents, S0):-
 
 :- defn_state_getter(get_live_agents(-list(agent))).
 get_live_agents(LiveAgents, S0):-
- get_some_agents( \+ state(powered, f), LiveAgents, S0).
+ get_some_agents( \+ powered=f, LiveAgents, S0).
 
 :- defn_state_getter(get_some_agents(conds,-list(agent))).
 get_some_agents(Precond, LiveAgents, S0):-
@@ -60,8 +60,8 @@ is_prop_public(_,P) :-
     
     can_be(eat, _), 
     can_be(move, _), 
-    can_be(open, _), state(open, _), 
-    can_be(lock, t), state(locked, _),
+    can_be(open, _), =(open, _), 
+    can_be(lock, t), =(locked, _),
     inherit(shiny,t)]).            
 
 is_prop_public(_,_):-!.
@@ -198,7 +198,7 @@ verb_sensory(Verb, Sense):- verb_alias(Verb, Verb2), Verb\=Verb2,
 
 
 % sensory_model(Visual, TooDark, EmittingLight))
-sensory_problem_solution(Sense, state(Dark, t), emitting(Sense, Light)):-
+sensory_problem_solution(Sense, Dark = t, emitting(Sense, Light)):-
  problem_solution(Dark, Sense, Light).
 
 problem_solution(dark, see, light).

@@ -124,7 +124,7 @@ update_model(Knower, arriving(Agent,Here,_,ExitNameReversed), Timestamp, Mem, M0
   update_model_exit(exit(ExitName), There, Here, Timestamp, M0, M1), % Model the path.
   update_relation(At, Agent, Here, Timestamp, M1, M2))). % And update location.
 
-update_model(_Agent, moved(_Doer, _How, Object, _From, At, To), Timestamp, _Mem, M0, M1) :-
+update_model(_Agent, moved(_Doer, _How, Object,_From, At, To), Timestamp, _Mem, M0, M1) :-
   update_relation(At, Object, To, Timestamp, M0, M1).
 
 

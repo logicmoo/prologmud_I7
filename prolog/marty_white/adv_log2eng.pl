@@ -159,8 +159,8 @@ compile_eng(Context, cap(Eng), Compiled) :-
  capitalize(Lowercase, Compiled).
 compile_eng(_Context, silent(_Eng), '').
 
-%compile_eng(_Context, verbose_only(_Eng), '...' ).
-compile_eng(Context, verbose_only(Eng), '...   verbose ... only  ... '(Compiled) ):- 
+%compile_eng(_Context, extra_verbose(_Eng), '...' ).
+compile_eng(Context, extra_verbose(Eng), '...verbose...'(Compiled) ):- 
  compile_eng_txt(Context, Eng, Compiled).
 
 compile_eng(Context, Inst, TheThing):- atom(Inst), inst_of(Inst, Type, N), N\==0, !,
@@ -437,8 +437,8 @@ logic2eng(Context, can_sense_from_here(Agent, At, Here, Sense, Nearby),
 logic2eng(Context, exits_are(_Agent, Relation, Here, Exits), ['Exits',Relation,Here,' are:', ExitText, '\n']):-
   list2eng(Context, Exits, ExitText).
 
-logic2eng(_Context, notice_children(_Agent, Sense, Object, Prep, Depth, '<unknown closed>'), verbose_only([Object, aux(be), closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
-logic2eng(_Context, notice_children(_Agent, _Sense, Object, Prep, Depth, []), verbose_only([nothing,Prep,Object]) ):- Depth \= depth(3).
+logic2eng(_Context, notice_children(_Agent, Sense, Object, Prep, Depth, '<unknown closed>'), extra_verbose([Object, aux(be), closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
+logic2eng(_Context, notice_children(_Agent, _Sense, Object, Prep, Depth, []), extra_verbose([nothing,Prep,Object]) ):- Depth \= depth(3).
 logic2eng(Context, notice_children(Agent, Sense, Here, Prep, _Depth, Nearby), 
     [cap(subj(Agent)), is, Prep, Here, and, es(Sense), ':'  | SeeText]):- 
  select(Agent, Nearby, OthersNearby),!,  list2eng(Context, OthersNearby, SeeText).
@@ -540,7 +540,7 @@ logic2eng(_Aobj, alreadyhave(It), ['already have', the(It)]).
 logic2eng(_Aobj, mustgetout(It), ['must get out/off ',It,' first.']).
 logic2eng(_Aobj, self_relation(It), ['can\'t put ',It,' inside itself!']).
 logic2eng(_Aobj, moibeus_relation( _, _), ['Topological error!']).
-logic2eng(_Aobj, state(Dark, t),  ['It''s too ', Dark, ' to ', Sense, in, '!']):- problem_solution(Dark, Sense, _Light).
+logic2eng(_Aobj, =(Dark, t),  ['It''s too ', Dark, ' to ', Sense, in, '!']):- problem_solution(Dark, Sense, _Light).
 logic2eng(_Aobj, mustdrop(It), [ 'will have to drop', It, ' first.']).
 logic2eng(_Aobj, cant( move(_Agent, It)), [It,aux(be),'immobile']).
 logic2eng(_Aobj, cantdothat(EatCmd), [ 'can\'t do: ', EatCmd]).
@@ -557,10 +557,11 @@ logic2eng(_Obj, can_be(Verb), ['Can', aux(be), tense(Verb, past)]).
 logic2eng(_Obj, can_be(Verb, f), ['Can\'t', aux(be), tense(Verb, past)]).
 logic2eng(_Obj, knows_verbs(Verb), ['Able to', Verb ]).
 logic2eng(_Obj, knows_verbs(Verb, f), ['Unable to', Verb ]).
-logic2eng(_Obj, state(cleanliness, clean), []).
-logic2eng(_Obj, state(cleanliness, clean), [clean]).
-logic2eng(_Obj, state(Statused), [aux(be), Statused ]).
-logic2eng(_Obj, state(Statused, f), [aux(be), 'not', Statused ]).
+logic2eng(_Obj, =(cleanliness, clean), []).
+logic2eng(_Obj, =(cleanliness, clean), [clean]).
+logic2eng(_Obj, =(Name, Value), [Name,aux(be),Value]).
+logic2eng(_Obj, =(Statused), [aux(be), Statused ]).
+logic2eng(_Obj, =(Statused, f), [aux(be), 'not', Statused ]).
 logic2eng( Obj, inherit(Type), ['is',Out]):- log2eng(Obj, [Type], Out), !.
 logic2eng( Obj, inherit(Type, f), ['isnt '|Out]):- log2eng(Obj, [Type], Out), !.
 logic2eng( Obj, inherits(Type), ['inherit',Out]):- log2eng(Obj, [Type], Out), !.
