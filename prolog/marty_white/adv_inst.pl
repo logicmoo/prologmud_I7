@@ -111,6 +111,13 @@ create_objprop(Self, inherit(memorize,t), S0, S2):- !, clock_time(Now),
  inst(Self)]), S0, S2).
 
 
+create_objprop(Object, inherit(Other,f), S0, S0):- getprop(Object, isnt(Other), S0),!. 
+create_objprop(Object, inherit(Other,f)) -->
+   updateprop(Object, isnt(Other)), 
+   delprop_always(Object, inherited(Other)),
+   delprop_always(Object, inherit(Other,t)),
+   updateprop(Object, inherit(Other,f)).
+    
 create_objprop(Object, inherit(Other,t), S0, S2):- getprop(Object,inherit(Other,f),S0),!,updateprop(Object, inherit(Other,t), S0, S1),create_objprop(Object, inherit(Other,t), S1, S2).
 create_objprop(Object, inherit(Other,t), S0, S0):- getprop(Object,inherited(Other),S0),!.
 create_objprop(Object, inherit(Other,t), S0, S0):- getprop(Object,isnt(Other),S0),!.

@@ -78,6 +78,12 @@ remove_old_info( _NewHow, Item, _NewParent, _Timestamp, M0, M2) :-
  select_always(h(_OldHow2, Item, _OldWhere2), M1, M2).
 
 
+remove_children(_At, '<unknown>'(_, _, _), _Object, _Timestamp, M0, M0):- !.
+remove_children( At, _, Object, Timestamp, M0, M2):- 
+  select(holds_at(h(At, _, Object), _T), M0, M1), !,
+  remove_children( At, _, Object, Timestamp, M1, M2).
+remove_children( _At, _, _Object, _Timestamp, M0, M0).
+
 % Batch-update relations.
 
 update_relations(Prep, '<unknown>'(How,What,Object2), Object, Timestamp, M0, M1):-
@@ -139,8 +145,9 @@ update_model(Agent, carrying(Agent, Objects), Timestamp, _Memory, M0, M1) :-
 update_model(Agent, wearing(Agent, Objects), Timestamp, _Memory, M0, M1) :-
  update_relations( worn_by, Objects, Agent, Timestamp, M0, M1).
 
-update_model(Agent, notice_children(Agent, _Sense, Object, At, _Depth, Children), Timestamp, _Mem, M0, M1) :-
- update_relations( At, Children, Object, Timestamp, M0, M1).
+update_model(Agent, notice_children(Agent, _Sense, Object, At, _Depth, Children), Timestamp, _Mem, M0, M2) :-
+ dmust_det((remove_children( At, Children, Object, Timestamp, M0, M1),
+   update_relations( At, Children, Object, Timestamp, M1, M2))).
 update_model(Agent, sense_props(Agent, _Sense, Object, _Depth, PropList), Stamp, _Mem, M0, M2) :-
  select_always(holds_at(props(Object, _), _), M0, M1),
  append([holds_at(props(Object, PropList), Stamp)], M1, M2).

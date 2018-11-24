@@ -41,7 +41,7 @@ object_props(Object, Sense, PropList, S0):-
  findall(P, (getprop(Object, P, S0), is_prop_public(Sense,P)), PropListL),
  list_to_set(PropListL,PropList).
 
-                                       
+/*
 act_examine(Agent, Sense, PrepIn, Here, Depth, S0, S9) :- 
  \+ \+ h(exit(_), Here, _, S0),
  Depth = depth(3), 
@@ -55,11 +55,13 @@ act_examine(Agent, Sense, PrepIn, Here, Depth, S0, S9) :-
              sense_props(Agent, Sense, Here, depth(2), PropList),
              exits_are(Agent, PrepIn, Here, Exits) ],
     S0, S9).
+*/
 
-act_examine(Agent, Sense, PrepIn, Object, Depth, S0, S2):- Depth = depth(DepthN),
- object_props(Object, Sense, PropList, S0),
- (DepthN>2 -> queue_agent_percept(Agent, sense_props(Agent, Sense, Object, Depth, PropList), S0, S1) ; S0=S1), 
- (DepthN>0 -> add_child_precepts(Depth,Sense,Agent,PrepIn, Object,S1,S2) ; S1=S2),!.
+act_examine(Agent, Sense, PrepIn, Object, Depth, S0, S3):- Depth = depth(DepthN),
+ (DepthN>2 -> (object_props(Object, Sense, PropList, S0), queue_agent_percept(Agent, sense_props(Agent, Sense, Object, Depth, PropList), S0, S1)) ; S0 = S1), 
+ (DepthN>0 -> (add_child_precepts(Depth,Sense,Agent,PrepIn, Object, S1, S2)) ; S1 = S2),
+ (DepthN>2 -> (prep_object_exitnames(PrepIn, Object, Exits, S0), queue_agent_percept(Agent, exits_are(Agent, PrepIn, Object, Exits), S2, S3)) ; S2 = S3),!.
+
 
 get_relation_list(Object, RelationSet, S1) :- 
   findall_set(At, 
@@ -76,7 +78,14 @@ add_child_precepts(Depth, Sense, Agent, PrepIn, Object, S1, S2):-
        child_precepts(Agent, Sense, Object, At, Depth, Children, S1))), PreceptS),
  queue_agent_percept(Agent,PreceptS, S1, S2).
 
+child_precepts(Agent, Sense, Object, At, Depth, Children, S0):-  At == at,
+ getprop(Object, default_rel = Default, S0), Default\==At, !,
+ child_precepts(Agent, Sense, Object, Default, Depth, Children, S0).
 child_precepts(_Agent, _All, Object, At, _Depth, '<unknown>'(closed,At,Object), S1):- is_closed(At, Object, S1),!.
+/*act_examine(Agent, Sense, At, Here, Depth, S0, S9):-  At == at,
+ getprop(Object, default_rel = Default, S0), Default\==At, !,
+ act_examine(Agent, Sense, Default, Here, Depth, S0, S9).
+*/
 child_precepts(Agent, Sense, Object, At, _Depth, Children, S1):- 
  findall_set(What,  
   (h(At, What, Object, S1), 

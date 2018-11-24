@@ -255,6 +255,7 @@ istate([ structure_label(istate),
  h(in, a(fireplace), living_room),
  h(in, screendoor, kitchen),
  h(in, a(crate), kitchen),
+ h(in, a(apple), a(crate)),
  h(in, screendoor, garden),
  h(in, brklamp, garden)
  ]).
@@ -353,7 +354,7 @@ door type
    can_be(close),
    (opened = t),
    nouns(door),
-   corporial.
+   fully_corporial.
 
 food type
   can_be(eat),
@@ -402,7 +403,7 @@ extra_decl0(T,P):-
          can_be(close, t),
          (opened = t),
          nouns(door),
-         inherit(corporial,t)
+         inherit(fully_corporial,t)
         ]),
 
    type_props(unthinkable, [
@@ -421,7 +422,7 @@ extra_decl0(T,P):-
     can_be(touch, f),
     inherit(thinkable,t),
     adjs($class), 
-    inherit(corporial,f),
+    inherit(fully_corporial,f),
     class_desc(['direct inheriters are completely noncorporial'])]), 
 
   type_props(only_conceptual, [ 
@@ -432,12 +433,12 @@ extra_decl0(T,P):-
 
 
    type_props(partly_noncorporial, [
-    inherit(corporial,t),
+    inherit(fully_corporial,t),
    adjs($class), 
     inherit(noncorporial,t),
     class_desc(['kind is both partly corporial and non-corporial'])]),
 
-   type_props(corporial, [
+   type_props(fully_corporial, [
     can_be(touch, t),
     can_be(examine, t), 
     inherit(thinkable,t),
@@ -449,7 +450,7 @@ extra_decl0(T,P):-
          can_be(examine, t), 
          adjs(physical),
          can_be(move, t),
-         inherit(corporial, t), 
+         inherit(fully_corporial, t), 
          inherit(thinkable,t),
          class_desc(['kind is an Movable Object'])]), 
 
@@ -462,7 +463,7 @@ extra_decl0(T,P):-
    type_props(furnature, [
     can_be(examine, t), 
     inherit(untakeable, t),
-    inherit(corporial, t), 
+    inherit(fully_corporial, t), 
     inherit(surface, t), 
     inherit(thinkable,t),
     adjs(physical),
@@ -571,7 +572,7 @@ extra_decl0(T,P):-
     adjs(physical),
     oper( put($agent, Thing, in, $self), 
      % precond(Test, FailureMessage)
-     precond(getprop(Thing, inherit(corporial,t)), ['non-physical would spill out']),
+     precond(getprop(Thing, inherit(fully_corporial,t)), ['non-physical would spill out']),
     % body(clause)
      body(take($agent, Thing, in, $self))),
     inherit(container, t), 
@@ -660,11 +661,11 @@ extra_decl0(T,P):-
    inherit(sink, t)
   ]),
 
- type_props(measurable, [adjs($class), has_rel(ammount, t)]), 
+ type_props(measurable, [adjs($class), ammount = some]), 
 
  
- % shiny things are corporial
- type_props(shiny, [adjs($class), inherit(object, t), inherit(corporial, t)]), 
+ % shiny things are fully_corporial
+ type_props(shiny, [adjs($class), inherit(object, t), inherit(fully_corporial, t)]), 
 
  type_props(coins, [inherit(shiny,t),inherit(measurable,t)]),
   
