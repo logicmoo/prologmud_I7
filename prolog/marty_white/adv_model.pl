@@ -200,4 +200,9 @@ update_model_all( Agent, [Percept|Tail], Timestamp, Memory, M0, M2) :-
  update_model(Agent, Percept, Timestamp, Memory, M0, M1),
  update_model_all( Agent, Tail, Timestamp, Memory, M1, M2).
 
+update_model_each(_Agent, [], _Timestamp, _Memory, M, M).
+update_model_each( Agent, [Percept|Tail], Timestamp, Memory, M0, M3) :-
+ append([Percept], M0, M1),
+ update_model(Agent, Percept, Timestamp, Memory, M1, M2), 
+ update_model_each( Agent, Tail, Timestamp, Memory, M2, M3).
 
