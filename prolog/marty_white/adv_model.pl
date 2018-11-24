@@ -48,14 +48,12 @@ thought(Figment, M) :- member(Figment, M).
 
 in_agent_model(Agent, Fact, State):- in_model(Fact, State)*-> true ; (agent_thought_model(Agent, ModelData, State), in_model(Fact, ModelData)).
 
-%in_model(E, L):- !, quietly((assertion(declared(inst(_),L)),declared(E, L))).
-%in_model(E, L):- quietly((assertion(memberchk(inst(_),L)),member(E, L))).
-in_model(E, L):- quietly(member(E, L)).
-%in_model0(E, L):- \+ is_list(L),declared_link(declared, E, L).
-%in_model0(E, L):- compound(E),E = (_,_),!, member(E, L).
-%in_model0(E, L):- member(E, L), same_element(EE,E).
-%same_element(E, E) :- !.
-%same_element((E,_), E).
+in_model(E, L):- quietly(in_model0(E, L)).
+in_model0(E, L):- \+ is_list(L),declared_link(declared, E, L).
+in_model0(E, L):- compound(E),E = holds_at(_,_),!, member(E, L).
+in_model0(E, L):- member(EE, L), same_element(EE,E).
+same_element(E, E) :- !.
+same_element(holds_at(E,_), E).
 
 
 
@@ -86,7 +84,7 @@ remove_old_info( _NewHow, Item, _NewParent, _Timestamp, M0, M2) :-
 
 remove_children(_At, '<mystery>'(_, _, _), _Object, _Timestamp, M0, M0):- !.
 remove_children( At, _, Object, Timestamp, M0, M2):- 
-  forget((h(At, _, Object)), M0, M1), !,
+  select((h(At, _, Object)), M0, M1), !,
   remove_children( At, _, Object, Timestamp, M1, M2).
 remove_children( _At, _, _Object, _Timestamp, M0, M0).
 
