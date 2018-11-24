@@ -269,7 +269,7 @@ props('floyd~1', [name = ('Floyd the robot'), powered = f,  inherit(autonomous,t
 
 props('player~1', [name = ($self),inherit(console,t), inherit(humanoid,t)]).
 
-memories('player~1',
+/*memories('player~1',
    [ structure_label(mem('player~1')),
     timestamp(0,$now),
     model([]),
@@ -277,7 +277,7 @@ memories('player~1',
     todo([look('player~1')]),
     inst('player~1'),
     name = ('player~1')
-]).
+]).*/
 
   % props(telnet, [inherit(telnet,t),isnt(console),inherit('player~1')]),
 	

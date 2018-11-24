@@ -86,7 +86,7 @@ add_goals(Goals, Mem0, Mem2) :-
 
 add_todo(Auto, Mem0, Mem3) :- Auto = auto(Agent),
  %dmust_det(member(inst(Agent), Mem0)),
- autonomous_decide_goal_action(Agent, Mem0, Mem3),!.
+ autonomous_decide_action(Agent, Mem0, Mem3),!.
 add_todo(Action, Mem0, Mem2) :- 
  forget(todo(OldToDo), Mem0, Mem1),
  append(OldToDo, [Action], NewToDo),
@@ -179,6 +179,11 @@ makep:-
 % CODE FILE SECTION
 :- bugout1(ensure_loaded('adv_agents')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+decide_action(Agent, Mem0, Mem2):- 
+  has_satisfied_goals(Agent, Mem0, Mem1), !,
+  decide_action(Agent, Mem1, Mem2).
 
 decide_action(Agent, Mem0, Mem0) :- 
  thought(todo([Action|_]), Mem0),

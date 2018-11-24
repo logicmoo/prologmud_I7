@@ -438,7 +438,7 @@ logic2eng(Context, can_sense_from_here(Agent, At, Here, Sense, Nearby),
 logic2eng(Context, exits_are(_Agent, Relation, Here, Exits), ['Exits',Relation,Here,' are:', ExitText, '\n']):-
   list2eng(Context, Exits, ExitText).
 
-logic2eng(_Context, notice_children(_Agent, Sense, Object, Prep, Depth, '<unknown>'(Closed,_,_)), extra_verbose([Object, aux(be), Closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
+logic2eng(_Context, notice_children(_Agent, Sense, Object, Prep, Depth, '<mystery>'(Closed,_,_)), extra_verbose([Object, aux(be), Closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
 logic2eng(_Context, notice_children(_Agent, _Sense, Object, Prep, Depth, []), extra_verbose([nothing,Prep,Object]) ):- Depth \= depth(3).
 logic2eng(Context, notice_children(Agent, Sense, Here, Prep, _Depth, Nearby), 
     [cap(subj(Agent)), is, Prep, Here, and, es(Sense), ':'  | SeeText]):- 

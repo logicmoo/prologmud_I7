@@ -81,7 +81,7 @@ add_child_precepts(Depth, Sense, Agent, PrepIn, Object, S1, S2):-
 child_precepts(Agent, Sense, Object, At, Depth, Children, S0):-  At == at,
  getprop(Object, default_rel = Default, S0), Default\==At, !,
  child_precepts(Agent, Sense, Object, Default, Depth, Children, S0).
-child_precepts(_Agent, _All, Object, At, _Depth, '<unknown>'(closed,At,Object), S1):- is_closed(At, Object, S1),!.
+child_precepts(_Agent, _All, Object, At, _Depth, '<mystery>'(closed,At,Object), S1):- is_closed(At, Object, S1),!.
 /*act_examine(Agent, Sense, At, Here, Depth, S0, S9):-  At == at,
  getprop(Object, default_rel = Default, S0), Default\==At, !,
  act_examine(Agent, Sense, Default, Here, Depth, S0, S9).

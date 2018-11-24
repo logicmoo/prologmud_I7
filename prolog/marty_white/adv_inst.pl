@@ -106,6 +106,8 @@ create_objprop(Self, inherit(memorize,t), S0, S2):- !, clock_time(Now),
  structure_label(mem(Self)),
  timestamp(0,Now), 
  goals([]),
+ goals_skipped([]),
+ goals_satisfied([]),
  model([]),
  todo([look(Self)]),
  inst(Self)]), S0, S2).

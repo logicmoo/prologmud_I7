@@ -34,9 +34,21 @@ action_handle_goals(Agent, Mem0, Mem1):-
 action_handle_goals(Agent, Mem0, Mem9) :-
  forget(goals([G0|GS]), Mem0, Mem1),
  memorize(goals([]), Mem1, Mem2),
- memorize(old_goals([G0|GS]), Mem2, Mem9),
- bugout3('~w: Can\'t solve goals ~p. Forgetting them.~n', [Agent,[G0|GS]], autonomous).
+ bugout3('~w: Can\'t solve goals ~p. Forgetting them.~n', [Agent,[G0|GS]], autonomous),
+ memorize_appending(skipped_goals([G0|GS]),Mem2,Mem9),!.
 
+
+
+has_satisfied_goals(Agent, Mem0, Mem3):-  
+ forget(goals([G0|GS]), Mem0, Mem1),
+ Goals = [G0|GS],
+ agent_thought_model(Agent, ModelData, Mem0),
+ select_unsatisfied_conditions(Goals, Unsatisfied, ModelData) ->
+ subtract(Goals,Unsatisfied,Satisfied), !,
+ Satisfied \== [],
+ memorize(goals(Unsatisfied), Mem1, Mem2),
+ bugout3('~w Goals some Satisfied: ~p.  Unsatisfied: ~p.~n', [Agent, Satisfied, Unsatisfied], autonomous),
+ memorize_appending(goals_satisfied(Satisfied), Mem2, Mem3), !.
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
@@ -175,6 +187,13 @@ initial_operators(Agent, Operators) :-
 precondition_matches_effect(Cond, Effect) :-
  % player_format('  Comparing cond ~w with effect ~w: ', [Cond, Effect]),
  Cond = Effect. %, player_format('match~n', []).
+precondition_matches_effect(Cond, Effect) :- ( \+ compound(Cond) ; \+ compound(Effect)),!, fail.
+%precondition_matches_effect(holds_at(Cond, _), Effect) :- !, precondition_matches_effect(Effect ,Cond).
+% precondition_matches_effect(Effect, holds_at(Cond, _)) :- !, precondition_matches_effect(Cond, Effect).
+precondition_matches_effect(holds_at(CondEffect, _), holds_at(CondEffect, _)) :- !.
+precondition_matches_effect(Cond, holds_at(Cond, _)) :- !.
+precondition_matches_effect(holds_at(Effect, _), Effect) :- !.
+
 %precondition_matches_effect(~ ~ Cond, Effect) :-
 % precondition_matches_effect(Cond, Effect).
 %precondition_matches_effect(Cond, ~ ~ Effect) :-

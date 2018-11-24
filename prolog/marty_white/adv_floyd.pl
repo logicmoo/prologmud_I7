@@ -47,6 +47,10 @@ do_autonomous_cycle(Agent):-
  nop(bugout1(time_since_last_action_for(Other,When,Agent))).
 
 
+% If actions are queued, no further thinking required. 
+maybe_autonomous_decide_goal_action(Agent, Mem0, Mem2):- 
+  has_satisfied_goals(Agent, Mem0, Mem1), !,
+  maybe_autonomous_decide_goal_action(Agent, Mem1, Mem2).
 % Is powered down
 maybe_autonomous_decide_goal_action(Agent, Mem0, Mem0) :- 
  get_advstate(State),getprop(Agent, (powered = f), State),!.
@@ -59,22 +63,10 @@ maybe_autonomous_decide_goal_action(Agent, Mem0, Mem1) :-
 
 
 
-check_unsatisfied_goals(Agent, Mem0, Mem2):-  
- dmust_det((
-    forget(goals(Goals), Mem0, Mem1),
-    agent_thought_model(Agent,ModelData, Mem1),
-    select_unsatisfied_conditions(Goals, Unsatisfied, ModelData),
-    subtract(Goals,Unsatisfied,Satisfied),
-    memorize(goals(Unsatisfied), Mem1, Mem1a),
-    (Satisfied==[] -> Mem1a=Mem2 ; memorize(satisfied(Satisfied), Mem1a, Mem2)))).
-
-
-% ......
-autonomous_decide_goal_action(Agent, Mem0, Mem3) :-
- dmust_det((
-  check_unsatisfied_goals(Agent, Mem0, Mem2),
-  autonomous_decide_action(Agent, Mem2, Mem3))).
-
+% If actions are queued, no further thinking required. 
+autonomous_decide_action(Agent, Mem0, Mem2):- 
+  has_satisfied_goals(Agent, Mem0, Mem1), !,
+  autonomous_decide_action(Agent, Mem1, Mem2).
 
 % If actions are queued, no further thinking required. 
 autonomous_decide_action(Agent, Mem0, Mem0) :- 
@@ -106,12 +98,12 @@ autonomous_decide_action(Agent, Mem0, Mem0) :-
  nop(bugout3('~w: Can\'t think of anything to do.~n', [Agent-Here], autonomous+verbose)).% trace.
 
 
-autonomous_create_new_goal(Agent, Mem0, Mem1) :- fail.
+autonomous_create_new_goal(_Agent, _Mem0, _Mem1) :- fail.
 
 % An unexplored exit here, go that way.
 autonomous_decide_unexplored_exit(Agent, Mem0, Mem2) :-
  agent_thought_model(Agent,ModelData, Mem0),
- in_agent_model(Agent,h(exit(Prev), There, '<unknown>'(_,exit(_), _)), ModelData),
+ in_agent_model(Agent,h(exit(Prev), There, '<mystery>'(_,exit(_), _)), ModelData),
  in_agent_model(Agent,h(exit(Dir), Here, There), ModelData),
  in_agent_model(Agent,h(in, Agent, Here), ModelData),
  add_todo( goto_dir(Agent, walk, Dir), Mem0, Mem1),
@@ -119,13 +111,13 @@ autonomous_decide_unexplored_exit(Agent, Mem0, Mem2) :-
 autonomous_decide_unexplored_exit(Agent, Mem0, Mem1) :-
  agent_thought_model(Agent,ModelData, Mem0),
  in_agent_model(Agent,h(in, Agent, Here), ModelData),
- in_agent_model(Agent,h(exit(Dir), Here, '<unknown>'(_,exit(_), _)), ModelData),
+ in_agent_model(Agent,h(exit(Dir), Here, '<mystery>'(_,exit(_), _)), ModelData),
  add_todo( goto_dir(Agent, walk, Dir), Mem0, Mem1).
 
 % An unexplored object!
 autonomous_decide_unexplored_object(Agent, Mem0, Mem2) :-
  agent_thought_model(Agent,ModelData, Mem0),
- in_agent_model(Agent,h(_, '<unknown>'(closed,_, _), Object), ModelData),
+ in_agent_model(Agent,h(_, '<mystery>'(closed,_, _), Object), ModelData),
  in_agent_model(Agent,h(in, Object, Here), ModelData),
  in_agent_model(Agent,h(in, Agent, Here), ModelData),
  add_todo( open(Agent, Object), Mem0, Mem1),
@@ -133,8 +125,8 @@ autonomous_decide_unexplored_object(Agent, Mem0, Mem2) :-
 
 autonomous_decide_unexplored_object(Agent, Mem0, Mem1) :- fail,
  agent_thought_model(Agent,ModelData, Mem0),
- in_agent_model(Agent,h(_, '<unknown>'(closed,_, _), Object), ModelData),
- add_todo( make_true(Agent, ~(h(_, Object, '<unknown>'(closed,_, _)))), Mem0, Mem1).
+ in_agent_model(Agent,h(_, '<mystery>'(closed,_, _), Object), ModelData),
+ add_todo( make_true(Agent, ~(h(_, Object, '<mystery>'(closed,_, _)))), Mem0, Mem1).
 
 
 % Follow Player to adjacent rooms.

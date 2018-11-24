@@ -19,6 +19,15 @@
 
 %:- ensure_loaded(adv_main).
 
+memorize_edit(Pred3, Figment, M0, M2) :- assertion(\+ is_list(Figment)),
+   Figment =.. [Name,Value], OldFigment =.. [Name,OldValue],
+   (forget(OldFigment, M0, M1) 
+     -> ( call(Pred3, OldValue,Value,NewValue), NewFigment =.. [Name,NewValue])
+     ; (NewFigment=Figment, M0=M1)),
+   memorize(NewFigment, M1, M2).
+
+memorize_appending(Figment, M0, M2) :-  memorize_edit(append,Figment, M0, M2).
+
 % Manipulate memories (M stands for Memories)
 memorize(Figment, M0, M1) :- assertion(\+ is_list(Figment)), notrace(append([Figment], M0, M1)).
 % memorize(Figment, M0, M1) :- notrace(append([Figment], M0, M1)).
@@ -72,13 +81,13 @@ update_relation( NewHow, Item, NewParent, Timestamp, M0, M2) :-
  remove_old_info( NewHow, Item, NewParent, Timestamp, M0, M1),
  append([holds_at(h(NewHow, Item, NewParent), Timestamp)], M1, M2).
 
-remove_old_info( _NewHow, '<unknown>'(_, _, _), _NewParent, _Timestamp, M0, M0) :- !.
+remove_old_info( _NewHow, '<mystery>'(_, _, _), _NewParent, _Timestamp, M0, M0) :- !.
 remove_old_info( _NewHow, Item, _NewParent, _Timestamp, M0, M2) :- 
  select_always(holds_at(h(_OldHow, Item, _OldWhere), _T), M0, M1),
  select_always(h(_OldHow2, Item, _OldWhere2), M1, M2).
 
 
-remove_children(_At, '<unknown>'(_, _, _), _Object, _Timestamp, M0, M0):- !.
+remove_children(_At, '<mystery>'(_, _, _), _Object, _Timestamp, M0, M0):- !.
 remove_children( At, _, Object, Timestamp, M0, M2):- 
   select(holds_at(h(At, _, Object), _T), M0, M1), !,
   remove_children( At, _, Object, Timestamp, M1, M2).
@@ -86,12 +95,12 @@ remove_children( _At, _, _Object, _Timestamp, M0, M0).
 
 % Batch-update relations.
 
-update_relations(Prep, '<unknown>'(How,What,Object2), Object, Timestamp, M0, M1):-
+update_relations(Prep, '<mystery>'(How,What,Object2), Object, Timestamp, M0, M1):-
   \+ in_model(holds_at(h(What, _Child, Object2), _), M0), 
   % \+ in_model(holds_at(h(What, Object2, _Parent), _), M0),
-  update_relation( Prep, '<unknown>'(How,What,Object2), Object, Timestamp, M0, M1).
+  update_relation( Prep, '<mystery>'(How,What,Object2), Object, Timestamp, M0, M1).
 
-update_relations(_NewHow, '<unknown>'(_,_,_), _NewParent, _Timestamp, M, M).
+update_relations(_NewHow, '<mystery>'(_,_,_), _NewParent, _Timestamp, M, M).
 update_relations(_NewHow, [], _NewParent, _Timestamp, M, M).
 update_relations( NewHow, [Item|Tail], NewParent, Timestamp, M0, M2) :-
  update_relation( NewHow, Item, NewParent, Timestamp, M0, M1),
@@ -104,7 +113,7 @@ update_model_exit(At, From, Timestamp, M0, M2) :-
  select(holds_at(h(At, From, To), _T), M0, M1),
  append([holds_at(h(At, From, To), Timestamp)], M1, M2).
 update_model_exit(At, From, Timestamp, M0, M1) :-
- append([holds_at(h(At, From, '<unknown>'(exit, At, From)), Timestamp)], M0, M1).
+ append([holds_at(h(At, From, '<mystery>'(exit, At, From)), Timestamp)], M0, M1).
 update_model_exit(At, From, To, Timestamp, M0, M2) :-
  select_always(holds_at(h(At, From, _To), _T), M0, M1),
  append([holds_at(h(At, From, To), Timestamp)], M1, M2).
