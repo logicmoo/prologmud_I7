@@ -106,7 +106,7 @@ simplify_dbug(List,O):-
  ( List = [_|_], append(LeftSide,Open,List),
   Open \= [_|_], !, assertion(is_list(LeftSide)),
  clip_cons(LeftSide,'...'(Open),O))).
-simplify_dbug(G,GG):- compound_name_arguments(G,F,GL), F\==sense_props, !,
+simplify_dbug(G,GG):- compound_name_arguments(G,F,GL), F\==percept_props, !,
  maplist(simplify_dbug,GL,GGL),!,compound_name_arguments(GG,F,GGL).
 simplify_dbug(G,G).              
 

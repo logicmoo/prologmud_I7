@@ -435,16 +435,16 @@ logic2eng(Context, can_sense_from_here(Agent, At, Here, Sense, Nearby),
   findall(X, (member(X, Nearby), X\=Agent), OtherNearby),
   list2eng(Context, OtherNearby, SeeText).
 
-logic2eng(Context, exits_are(_Agent, Relation, Here, Exits), ['Exits',Relation,Here,' are:', ExitText, '\n']):-
+logic2eng(Context, percept_exits(_Agent, Relation, Here, Exits), ['Exits',Relation,Here,' are:', ExitText, '\n']):-
   list2eng(Context, Exits, ExitText).
 
-logic2eng(_Context, notice_children(_Agent, Sense, Object, Prep, Depth, '<mystery>'(Closed,_,_)), extra_verbose([Object, aux(be), Closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
-logic2eng(_Context, notice_children(_Agent, _Sense, Object, Prep, Depth, []), extra_verbose([nothing,Prep,Object]) ):- Depth \= depth(3).
-logic2eng(Context, notice_children(Agent, Sense, Here, Prep, _Depth, Nearby), 
+logic2eng(_Context, percept_children(_Agent, Sense, Object, Prep, Depth, '<mystery>'(Closed,_,_)), extra_verbose([Object, aux(be), Closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
+logic2eng(_Context, percept_children(_Agent, _Sense, Object, Prep, Depth, []), extra_verbose([nothing,Prep,Object]) ):- Depth \= depth(3).
+logic2eng(Context, percept_children(Agent, Sense, Here, Prep, _Depth, Nearby), 
     [cap(subj(Agent)), is, Prep, Here, and, es(Sense), ':'  | SeeText]):- 
  select(Agent, Nearby, OthersNearby),!,  list2eng(Context, OthersNearby, SeeText).
 
-logic2eng(Context, notice_children(Agent, Sense, Here, Prep, _Depth, Nearby), 
+logic2eng(Context, percept_children(Agent, Sense, Here, Prep, _Depth, Nearby), 
  [cap(subj(Agent)), person(Sense, es(Sense)),Prep,Here, ':', SeeText]):-  list2eng(Context, Nearby, SeeText).
 
 logic2eng(Context, carrying(Agent, Items),
@@ -460,12 +460,12 @@ logic2eng(_Agent, transformed(Before, After), [Before, 'turns into', After, .]).
 
 logic2eng(_Agent, destroyed(Thing), [Thing, aux(be), 'destroyed.']).
 
-logic2eng(_Context, sense_props(_Agent, _Sense, _Object, _Depth, []),  [] ) :- !.
+logic2eng(_Context, percept_props(_Agent, _Sense, _Object, _Depth, []),  [] ) :- !.
 
-logic2eng(Context, sense_props(Agent, see, Object, _Depth, PropList), [cap(subj(Agent)), notices | English ] ) :-
+logic2eng(Context, percept_props(Agent, see, Object, _Depth, PropList), [cap(subj(Agent)), notices | English ] ) :-
  log2eng(Context, props(Object, PropList), English).
 
-logic2eng(Context, sense_props(Agent, Sense, Object, _Depth, PropList), 
+logic2eng(Context, percept_props(Agent, Sense, Object, _Depth, PropList), 
    [cap(subj(Agent)),
     person(Sense, es(Sense))| English] ) :-
  log2eng(Context, props(Object, PropList),English).

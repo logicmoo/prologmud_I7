@@ -323,7 +323,7 @@ aXiom(doing, does_examine(Agent, Sense, Prep, Object, Depth)) -->  dmust_det(act
 aXiom(doing, does_examine(Agent, Sense, Object)) --> % {trace},
   %declared(props(Object, PropList)),
   findall(P, (getprop(Object, P), is_prop_public(Sense, P)), PropList),
-  queue_agent_percept(Agent, [sense_props(Agent, Sense, Object, depth(2), PropList)]),
+  queue_agent_percept(Agent, [percept_props(Agent, Sense, Object, depth(2), PropList)]),
   (has_rel(At, Object); At='<unrelatable>'),
   % Remember that Agent might be on the inside or outside of Object.
   findall(What,
@@ -376,10 +376,10 @@ aXiom(doing, does_look(Agent, At, Here)) --> !,
 
 aXiom(doing, notices_exits_at(Agent, AtHere, Here), S0, S9) :- !,
    findall(Direction, h(exit(Direction), Here, _, S0), Exits),
-   queue_agent_percept(Agent, exits_are(Agent, AtHere, Here, Exits), S0, S9).
+   queue_agent_percept(Agent, percept_exits(Agent, AtHere, Here, Exits), S0, S9).
 aXiom(doing, notices_exits_at(Agent, AtHere, Here)) -->
    findall(Direction, h(exit(Direction), Here, _), Exits),
-   queue_agent_percept(Agent, exits_are(Agent, AtHere, Here, Exits)).
+   queue_agent_percept(Agent, percept_exits(Agent, AtHere, Here, Exits)).
 
 aXiom(doing, notices_objects_at(Agent, Sense, AtHere, Here), S0, S9) :- 
   findall(What,
@@ -391,7 +391,7 @@ aXiom(doing, notices_objects_at(Agent, Sense, AtHere, Here), S0, S9) :-
           % ( h(descended, What, Here), \+ (h(inside, What, Container), h(descended, Container, Here))),
           Nearby),
   
-  queue_agent_percept(Agent, notice_children(Agent, Sense, Here, AtHere, depth(3), Nearby), S0, S9).
+  queue_agent_percept(Agent, percept_children(Agent, Sense, Here, AtHere, depth(3), Nearby), S0, S9).
 
 
 aXiom(doing, switch(Open, Thing)) -->

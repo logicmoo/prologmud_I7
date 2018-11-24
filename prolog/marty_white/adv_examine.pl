@@ -51,16 +51,16 @@ act_examine(Agent, Sense, PrepIn, Here, Depth, S0, S9) :-
  prep_object_exitnames(PrepIn, Here, Exits, S0),
  queue_agent_percept(Agent,
     [       %you_are(Agent, At, Here),
-             notice_children(Agent, Sense, Here, PrepIn, Depth, Nearby), 
-             sense_props(Agent, Sense, Here, depth(2), PropList),
-             exits_are(Agent, PrepIn, Here, Exits) ],
+             percept_children(Agent, Sense, Here, PrepIn, Depth, Nearby), 
+             percept_props(Agent, Sense, Here, depth(2), PropList),
+             percept_exits(Agent, PrepIn, Here, Exits) ],
     S0, S9).
 */
 
 act_examine(Agent, Sense, PrepIn, Object, Depth, S0, S3):- Depth = depth(DepthN),
- (DepthN>2 -> (object_props(Object, Sense, PropList, S0), queue_agent_percept(Agent, sense_props(Agent, Sense, Object, Depth, PropList), S0, S1)) ; S0 = S1), 
+ (DepthN>2 -> (object_props(Object, Sense, PropList, S0), queue_agent_percept(Agent, percept_props(Agent, Sense, Object, Depth, PropList), S0, S1)) ; S0 = S1), 
  (DepthN>0 -> (add_child_precepts(Depth,Sense,Agent,PrepIn, Object, S1, S2)) ; S1 = S2),
- (DepthN>2 -> (prep_object_exitnames(PrepIn, Object, Exits, S0), queue_agent_percept(Agent, exits_are(Agent, PrepIn, Object, Exits), S2, S3)) ; S2 = S3),!.
+ (DepthN>2 -> (prep_object_exitnames(PrepIn, Object, Exits, S0), queue_agent_percept(Agent, percept_exits(Agent, PrepIn, Object, Exits), S2, S3)) ; S2 = S3),!.
 
 
 get_relation_list(Object, RelationSet, S1) :- 
@@ -73,7 +73,7 @@ add_child_precepts(Depth, Sense, Agent, PrepIn, Object, S1, S2):-
  get_relation_list(Object, RelationSet, S1),
  (member(PrepIn,RelationSet) -> UseRelationSet = [PrepIn] ; UseRelationSet= RelationSet),
  % dmsg(get_relation_list(Object, RelationSet)),
- findall(notice_children(Agent, Sense, Object, At, Depth, Children),
+ findall(percept_children(Agent, Sense, Object, At, Depth, Children),
      ((member(At,UseRelationSet),
        child_precepts(Agent, Sense, Object, At, Depth, Children, S1))), PreceptS),
  queue_agent_percept(Agent,PreceptS, S1, S2).

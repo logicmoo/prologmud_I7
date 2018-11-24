@@ -291,7 +291,7 @@ obj_props(Mem,Obj,Props):- obj_props_v(Mem,Obj,Props).
 obj_props_v(Mem,_,_):- \+ compound(Mem),!,fail.
 obj_props_v(Mem,Obj,Props):- is_list(Mem),!,member(E,Mem),obj_props_v(E,Obj,Props).
 obj_props_v(props(Obj,Props),Obj,Props):- !.
-obj_props_v(sense_props(_,_,Obj,_,Props),Obj,Props):- !.
+obj_props_v(percept_props(_,_,Obj,_,Props),Obj,Props):- !.
 obj_props_v(Term,Obj,Props):- arg(_,Term,Mem),obj_props_v(Mem,Obj,Props).
 
 same_prop(X,Y):- X=@=Y,X=Y.

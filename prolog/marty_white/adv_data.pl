@@ -96,7 +96,7 @@ type_functor(state, h(domrel, inst, inst)).
 type_functor(doing, inventory(agent)). 
 type_functor(doing, look(agent)).
 type_functor(doing, examine(agent, optional(sense, see), optional(inst, here), optional(depth, 1))).
-type_functor(event, sense_props(agent, sense, inst, depth, list(nv))).
+type_functor(event, percept_props(agent, sense, inst, depth, list(nv))).
 
 
 type_functor(doing, dig(agent, holetype, prep, dest, inst)).
@@ -148,8 +148,8 @@ type_functor(event, moved(agent, how, inst, from, prop, to)).
 type_functor(event, carrying(agent, list(inst))).
 type_functor(event, destroyed(inst)).
 type_functor(event, did(action)).
-type_functor(event, exits_are(agent, in, dest, list(exit))).
-type_functor(event, notice_children(agent, sense, dest, domrel, depth, list(inst))).
+type_functor(event, percept_exits(agent, in, dest, list(exit))).
+type_functor(event, percept_children(agent, sense, dest, domrel, depth, list(inst))).
 type_functor(event, failed(doing, msg)).
 type_functor(event, transformed(inst, inst2)).
 

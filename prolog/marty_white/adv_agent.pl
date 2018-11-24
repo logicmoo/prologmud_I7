@@ -280,10 +280,10 @@ preProcessedQ(trys_examine).
 
 dontRemember(_):- !,fail.
 dontRemember(P):- \+ atom(P),!,match_functor_or_arg(dontRemember,P).
-%dontRemember(notice_children).
+%dontRemember(percept_children).
 dontRemember(msg).
 dontRemember(trys_examine).
-dontRemember(sense_props).
+dontRemember(percept_props).
 
 
 %run_agent_pass_2_0(_Agent, S0, S0):-!.
