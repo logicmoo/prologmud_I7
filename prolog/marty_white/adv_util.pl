@@ -149,7 +149,7 @@ apply_forall(Forall,Apply,S0,S1):-
 findall(E,Goal,L, S0, S2):- apply_state(findall(E,Goal,L), S0, S2).
 
 %unless(G,Else,S0,S2):- apply_state(unless(G,Else), S0, S2).
-dmust(Goal,S0,S2):- apply_state(dmust(Goal), S0, S2).
+dmust_det(Goal,S0,S2):- apply_state(dmust_det(Goal), S0, S2).
 ignore(Goal,S0,S2):- apply_state(ignore(Goal), S0, S2).
 
 :- meta_predicate with_state(*,0,*,*).
@@ -170,9 +170,9 @@ is_state_ignorer(P):- \+ atom(P),!,compound(P),functor(P,F,_),!,is_state_ignorer
 is_state_ignorer(F):- is_state_pred(F,1).
 %is_state_ignorer('{}'(term)).
 
-must_input_state(S0):- quietly(dmust((is_list(S0);must_state(S0)))).
-must_output_state(S0):- quietly(dmust((must_state(S0);is_list(S0)))),quietly(check4bugs(S0)).
-must_state(S0):- is_list(S0),dmust(set_advstate(S0)),!.
+must_input_state(S0):- quietly(dmust_det((is_list(S0);must_state(S0)))).
+must_output_state(S0):- quietly(dmust_det((must_state(S0);is_list(S0)))),quietly(check4bugs(S0)).
+must_state(S0):- is_list(S0),dmust_det(set_advstate(S0)),!.
 must_state(S0):- pprint(must_state(S0),always),trace, check4bugs(S0).
 
 :- module_transparent(apply_state//3).
@@ -210,10 +210,10 @@ apply_state(i_o(S0,S2), S0, S2) :- !.
 apply_state(Goal, S0, S2) :- is_state_getter(Goal),call(Goal,S0),!, S0=S2.
 apply_state(rtrace(Goal), S0, S2) :- !, rtrace(apply_state(Goal, S0, S2)). 
 apply_state(current_state(S0), S0, S2) :- !, S0=S2.
-apply_state(dmust((G1,G2)), S0, S2) :- !, apply_state(dmust(G1), S0, S1),apply_state(dmust(G2), S1, S2).
-apply_state(must(Goal), S0, S2) :- !, dmust(apply_state(Goal, S0, S2)). 
+apply_state(dmust_det((G1,G2)), S0, S2) :- !, apply_state(dmust_det(G1), S0, S1),apply_state(dmust_det(G2), S1, S2).
+apply_state(must(Goal), S0, S2) :- !, dmust_det(apply_state(Goal, S0, S2)). 
 apply_state(nop(_), S0, S2) :- !, S0=S2.
-apply_state(dmust(Goal), S0, S2) :- !, dmust(apply_state(Goal, S0, S2)).
+apply_state(dmust_det(Goal), S0, S2) :- !, dmust_det(apply_state(Goal, S0, S2)).
 apply_state(Meta, S0, S2) :- is_state_meta(Meta,N), length(Left,N),Meta=..[F|MetaL],
    append(Left,[Goal|MetaR],MetaL),
    append(Left,[apply_state(Goal, S0, S2)|MetaR],MetaC),
@@ -240,7 +240,7 @@ apply_state(sg(Goal), S0, S2) :- !,
  append(GoalL, [S0], NewGoalL),
  must_input_state(S0),
  Call=..[F|NewGoalL])),
- dmust(Call),
+ dmust_det(Call),
  S0 = S2,
  must_output_state(S2).
 
@@ -250,7 +250,7 @@ apply_state(Goal, S0, S2) :-
  append(GoalL, [S0, S2], NewGoalL),
  must_input_state(S0),
  Call=..[F|NewGoalL])),
- dmust(Call),
+ dmust_det(Call),
  must_output_state(S2).
 
 apply_state(Goal, S0, S2) :-
@@ -258,7 +258,7 @@ apply_state(Goal, S0, S2) :-
  append(GoalL, [S0, S2], NewGoalL),
  must_input_state(S0),
  Call=..[F|NewGoalL])), !,
- dmust(Call),
+ dmust_det(Call),
  notrace(must_output_state(S2)).
 
  %apply_state(Goal, S0, S2):- phrase(Goal,S0,S2).
@@ -271,7 +271,7 @@ apply_first_arg_state(Arg, Goal, S0, S2) :-
  append(GoalL, [S0, S2], NewGoalL),
  must_input_state(S0),
  Call=..[F, Arg|NewGoalL])),
- dmust(Call),
+ dmust_det(Call),
  notrace(must_output_state(S2)).
 
 %:- meta_predicate(apply_first(+,3,+,-)).

@@ -17,14 +17,35 @@
 %
 */
 
+action_handle_goals(Agent, Mem0, Mem0):- 
+  \+ thought(goals([_|_]), Mem0), !,
+ bugout3('~w: no goals exist~n', [Agent], autonomous).
+
+action_handle_goals(Agent, Mem0, Mem1):- 
+ bugout3('~w: goals exist: generating a plan...~n', [Agent], autonomous),
+ Knower = Agent,
+ generate_plan(Knower, Agent, NewPlan, Mem0), !,
+ serialize_plan(Knower, Agent, NewPlan, Actions), !,
+ bugout3('Planned actions are ~w~n', [Actions], autonomous),
+ Actions = [Action|_],
+ add_todo(Action, Mem0, Mem1).
+
+% If goals exist, forget them (since ite above failed)
+action_handle_goals(Agent, Mem0, Mem9) :-
+ forget(goals([G0|GS]), Mem0, Mem1),
+ memorize(goals([]), Mem1, Mem2),
+ memorize(old_goals([G0|GS]), Mem2, Mem9),
+ bugout3('~w: Can\'t solve goals ~p. Forgetting them.~n', [Agent,[G0|GS]], autonomous).
+
+
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
 :- nop(ensure_loaded('adv_plan_opers')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 :- op(900, fy, '~').
 
+/*
 precond_matches_effect(Cond, Cond).
-
 
 precond_matches_effects(path(Here, There), StartEffects) :- 
  find_path(Here, There, _Route, StartEffects).
@@ -35,7 +56,7 @@ precond_matches_effects(exists(Object), StartEffects) :-
 precond_matches_effects(Cond, Effects) :-
  in_model(E, Effects),
  precond_matches_effect(Cond, E).
-
+*/
  
 % oper(_Self, Action, Desc, Preconds, Effects)
 
@@ -60,6 +81,8 @@ sequenced(_Self,
   h(Rel, Self, There),
   notice(There,enters(Self,There,RDir))]).
 
+only_goto:- true.
+
 % oper(_Self, Action, Preconds, Effects)
 oper(Self, Action, Preconds, Effects):- % Hooks to KR above
  fail, sequenced(Self, Whole),
@@ -68,9 +91,10 @@ oper(Self, Action, Preconds, Effects):- % Hooks to KR above
 
 % Return an operator after substituting Agent for Agent.
 oper(Agent, goto_dir(Agent, walk, ExitName),
-     [ Here \= Agent, There \= Agent,
-       h(in, Agent, Here),
-       h(exit(ExitName), Here, There)], % path(Here, There)
+     [ h(in, Agent, Here),
+       h(exit(ExitName), Here, There),
+       Here \= Agent, There \= Agent
+       ], % path(Here, There)
      [ h(in, Agent, There),
        ~h(in, Agent, Here)]).
 
@@ -89,7 +113,7 @@ oper(Agent, take(Agent, Thing), % from same room
   h(At, Thing, There),
   h(At, Agent, There)],
   [ h(held_by, Thing, Agent),
-  ~ h(At, Thing, There)]).
+  ~ h(At, Thing, There)]) :- \+ only_goto .
 
 oper(Agent, take(Agent, Thing), % from something else
   [ Thing \= Agent, exists(Thing),
@@ -102,7 +126,7 @@ oper(Agent, take(Agent, Thing), % from something else
 oper(Agent, drop(Agent, Thing),
   [ Thing \= Agent, exists(Thing),
   h(held_by, Thing, Agent)],
-  [ ~ h(held_by, Thing, Agent)] ).
+  [ ~ h(held_by, Thing, Agent)] ) :- \+ only_goto .
 
 oper(Agent, emote(Agent, say, Player, [please, give, Agent, the(Thing)]),
   [ Thing \= Agent, exists(Thing),
@@ -121,7 +145,7 @@ oper(Agent, give(Agent, Thing, Recipient),
   h(in, Agent, Where)],
   [ h(held_by, Thing, Recipient),
   ~ h(held_by, Thing, Agent)
-  ] ).
+  ] ) :- \+ only_goto .
 
 oper(Agent, put(Agent, Thing, Relation, What), % in something else
   [ Thing \= Agent, What \= Agent, Where \= Agent,
@@ -130,7 +154,7 @@ oper(Agent, put(Agent, Thing, Relation, What), % in something else
   h(in, What, Where), exists(What), exists(Where),
   h(in, Agent, Where)],
   [ h(Relation, Thing, What),
-  ~ h(held_by, Thing, Agent)] ).
+  ~ h(held_by, Thing, Agent)] ) :- \+ only_goto .
 oper(Agent, put(Agent, Thing, Relation, Where), % in room
   [ Thing \= Agent, exists(Thing),
   h(held_by, Thing, Agent),
@@ -147,6 +171,7 @@ initial_operators(Agent, Operators) :-
    operagent(Agent, Action, Conds, Effects),
    Operators).
 
+
 precondition_matches_effect(Cond, Effect) :-
  % player_format('  Comparing cond ~w with effect ~w: ', [Cond, Effect]),
  Cond = Effect. %, player_format('match~n', []).
@@ -154,6 +179,7 @@ precondition_matches_effect(Cond, Effect) :-
 % precondition_matches_effect(Cond, Effect).
 %precondition_matches_effect(Cond, ~ ~ Effect) :-
 % precondition_matches_effect(Cond, Effect).
+
 precondition_matches_effects(Cond, Effects) :-
  member(E, Effects),
  precondition_matches_effect(Cond, E).
@@ -556,6 +582,7 @@ select_unsatisfied_conditions([Cond|Tail], [Cond|Unsatisfied], ModelData) :-
  !,
  select_unsatisfied_conditions(Tail, Unsatisfied, ModelData).
 
+
 depth_planning_loop(PlannerGoals, Operators, SeedPlan, FullPlan,
      Depth, Timeout) :-
  bugout3('PLANNING DEPTH is ~w~n', [Depth], autonomous),
@@ -568,13 +595,23 @@ depth_planning_loop(PlannerGoals, Operators, SeedPlan, FullPlan,
  depth_planning_loop(PlannerGoals, Operators, SeedPlan, FullPlan,
       Depth, Timeout).
 
+model_to_state(M, S) :- \+ compound(M), !, S = M.
+model_to_state([M|ModelData], [S|ModelStateData]):- !,
+  model_to_state(M, S),
+  model_to_state(ModelData, ModelStateData).
+model_to_state(holds_at(ModelData,_), ModelStateData):- !, model_to_state(ModelData, ModelStateData).
+model_to_state(ModelData, ModelData).
+
 generate_plan(Knower, Agent, FullPlan, Mem0) :-
  initial_operators(Knower, Operators),
  bugout3('OPERATORS are:~n', planner), pprint(Operators, planner),
- agent_thought_model(Agent,ModelData, Mem0),
+
+ agent_thought_model(Agent, ModelData, Mem0),
+ model_to_state(ModelData, ModelStateData),
+
  %bugout3('CURRENT STATE is ~w~n', [Model0], planner),
  thought(goals(Goals), Mem0),
- new_plan(Agent, ModelData, Goals, SeedPlan),
+ new_plan(Agent, ModelStateData, Goals, SeedPlan),
  bugout3('SEED PLAN is:~n', planner), pprint(SeedPlan, planner),
  !,
  %planning_loop(Operators, SeedPlan, FullPlan),

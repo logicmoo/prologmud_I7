@@ -171,7 +171,7 @@ compile_eng(Context, Inst, TheThing):- atom(Inst), inst_of(Inst, Type, N), N\==0
  (nth0(N, [(unknown), '', the, thee, old, some, a], Det) -> true; atom_concat('#',N,Det)),
  compile_eng(Context, [Det, Type], TheThing).
 
-compile_eng(Context, Atom, Text):- fail, atom(Atom), dmust(atomic_list_concat(ABC,' ',Atom)),
+compile_eng(Context, Atom, Text):- fail, atom(Atom), dmust_det(atomic_list_concat(ABC,' ',Atom)),
  ABC=[A,B|C],!,
  compile_eng_txt(Context, [A,B|C], Text).
 
@@ -406,9 +406,9 @@ logic2eng(_Obj, [English|Rest], [English|Rest]):- english_directve(English),!.
 logic2eng(_Obj, [], []).
 
 logic2eng(Obj, [Prop|Tail], Text) :- !,
- dmust((log2eng(Obj, Tail, UText2) ->
+ dmust_det((log2eng(Obj, Tail, UText2) ->
  flatten([UText2], Text2),
- dmust(log2eng(Obj, Prop, UText1)) -> 
+ dmust_det(log2eng(Obj, Prop, UText1)) -> 
  flatten([UText1], Text1),
  append_if_new(Text1, Text2, Text))), !.
 
@@ -422,7 +422,7 @@ logic2eng(Obj, HWestFromTo_At, [ Ago | Info]):-
   logic2eng(Obj, HWestFromTo, Info).
 
 logic2eng(_Obj, Prop, [String]):- compound(Prop), no_english, !, format(atom(String), '~q', [Prop]), !.
-logic2eng( Obj, ~(Type), ['(','logically','not','(',Out, '))']):- dmust(log2eng(Obj, Type, Out)), !.
+logic2eng( Obj, ~(Type), ['(','logically','not','(',Out, '))']):- dmust_det(log2eng(Obj, Type, Out)), !.
 
 
 %logic2eng(_Agent, time_passes, []).
@@ -438,7 +438,7 @@ logic2eng(Context, can_sense_from_here(Agent, At, Here, Sense, Nearby),
 logic2eng(Context, exits_are(_Agent, Relation, Here, Exits), ['Exits',Relation,Here,' are:', ExitText, '\n']):-
   list2eng(Context, Exits, ExitText).
 
-logic2eng(_Context, notice_children(_Agent, Sense, Object, Prep, Depth, '<unknown>'(_)), extra_verbose([Object, aux(be), closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
+logic2eng(_Context, notice_children(_Agent, Sense, Object, Prep, Depth, '<unknown>'(Closed,_,_)), extra_verbose([Object, aux(be), Closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
 logic2eng(_Context, notice_children(_Agent, _Sense, Object, Prep, Depth, []), extra_verbose([nothing,Prep,Object]) ):- Depth \= depth(3).
 logic2eng(Context, notice_children(Agent, Sense, Here, Prep, _Depth, Nearby), 
     [cap(subj(Agent)), is, Prep, Here, and, es(Sense), ':'  | SeeText]):- 

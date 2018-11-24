@@ -28,8 +28,8 @@ memorize_list([E|List],M0,M2):-!,
   memorize_list(E,M1,M2).
 memorize_list(Figment, M0, M1):-
   notrace(append([Figment], M0, M1)).
-%memorize_list(FigmentList, M0, M1) :- notrace((must_be(list,FigmentList),dmust(append(FigmentList, M0, M1)))).
-%memorize_list(FigmentList, M0, M1) :- notrace((must_be(list,FigmentList),dmust(append(FigmentList, M0, M1)))).
+%memorize_list(FigmentList, M0, M1) :- notrace((must_be(list,FigmentList),dmust_det(append(FigmentList, M0, M1)))).
+%memorize_list(FigmentList, M0, M1) :- notrace((must_be(list,FigmentList),dmust_det(append(FigmentList, M0, M1)))).
 forget(Figment, M0, M1) :- select(Figment, M0, M1).
 forget_always(Figment, M0, M1) :- select_always(Figment, M0, M1).
 %forget_default(Figment, Default, M0, M1) :-
@@ -37,7 +37,7 @@ forget_always(Figment, M0, M1) :- select_always(Figment, M0, M1).
 thought(Figment, M) :- member(Figment, M).
 
 
-in_agent_model(Agent, Fact, State):- agent_thought_model(Agent, ModelData, State), in_model(Fact, ModelData).
+in_agent_model(Agent, Fact, State):- in_model(Fact, State)*-> true ; (agent_thought_model(Agent, ModelData, State), in_model(Fact, ModelData)).
 
 in_model(E, L):- quietly(in_model0(E, L)).
 in_model0(E, L):- \+ is_list(L),declared_link(declared, E, L).
@@ -53,12 +53,12 @@ same_element(holds_at(E,_), E).
 :- defn_state_getter(agent_thought_model(agent,model)).
 agent_thought_model(Agent, ModelData, Memory):- var(Memory), get_advstate(State),!, member(memories(Agent,Memory),State), agent_thought_model(Agent, ModelData, Memory).
 agent_thought_model(Agent, ModelData, Memory):- \+ is_list(Memory), !, declared_link(agent_thought_model(Agent), ModelData, Memory).
-agent_thought_model(_Agent, ModelData, Memory):- memberchk(holds_in(_,_),Memory),!,Memory = ModelData.
+agent_thought_model(_Agent, ModelData, Memory):- memberchk(holds_at(_,_),Memory),!,Memory = ModelData.
 agent_thought_model(_Agent, ModelData, Memory):- memberchk(model(ModelData), Memory),!.
 agent_thought_model(Agent, ModelData, State):- declared(memories(Agent,Memory),State),!,
   agent_thought_model(Agent, ModelData, Memory).
 % agent_thought_model(_Agent,E, L):- in_model(model(E), L), nonvar(E).
-% agent_thought_model(Agent,Model,List):- dmust((nop(memberchk(agent(Agent),List)), member(model(Model),List))).
+% agent_thought_model(Agent,Model,List):- dmust_det((nop(memberchk(agent(Agent),List)), member(model(Model),List))).
 
 
 
@@ -69,17 +69,23 @@ agent_thought_model(Agent, ModelData, State):- declared(memories(Agent,Memory),S
 
 % Fundamental predicate that actually modifies the list:
 update_relation( NewHow, Item, NewParent, Timestamp, M0, M2) :-
- select_always(holds_at(h(_OldHow, Item, _OldWhere), _T), M0, M1a),
- select_always(h(_OldHow2, Item, _OldWhere2), M1a, M1),
+ remove_old_info( NewHow, Item, NewParent, Timestamp, M0, M1),
  append([holds_at(h(NewHow, Item, NewParent), Timestamp)], M1, M2).
+
+remove_old_info( _NewHow, '<unknown>'(_, _, _), _NewParent, _Timestamp, M0, M0) :- !.
+remove_old_info( _NewHow, Item, _NewParent, _Timestamp, M0, M2) :- 
+ select_always(holds_at(h(_OldHow, Item, _OldWhere), _T), M0, M1),
+ select_always(h(_OldHow2, Item, _OldWhere2), M1, M2).
+
 
 % Batch-update relations.
 
-update_relations(Prep, '<unknown>'(What), Object, Timestamp, M0, M1):-
-  \+ in_model(holds_at(h(Prep, _Child, Object), _), M0),
-  update_relation( Prep, '<unknown>'(What), Object, Timestamp, M0, M1).
+update_relations(Prep, '<unknown>'(How,What,Object2), Object, Timestamp, M0, M1):-
+  \+ in_model(holds_at(h(What, _Child, Object2), _), M0), 
+  % \+ in_model(holds_at(h(What, Object2, _Parent), _), M0),
+  update_relation( Prep, '<unknown>'(How,What,Object2), Object, Timestamp, M0, M1).
 
-update_relations(_NewHow, '<unknown>'(_), _NewParent, _Timestamp, M, M).
+update_relations(_NewHow, '<unknown>'(_,_,_), _NewParent, _Timestamp, M, M).
 update_relations(_NewHow, [], _NewParent, _Timestamp, M, M).
 update_relations( NewHow, [Item|Tail], NewParent, Timestamp, M0, M2) :-
  update_relation( NewHow, Item, NewParent, Timestamp, M0, M1),
@@ -92,7 +98,7 @@ update_model_exit(At, From, Timestamp, M0, M2) :-
  select(holds_at(h(At, From, To), _T), M0, M1),
  append([holds_at(h(At, From, To), Timestamp)], M1, M2).
 update_model_exit(At, From, Timestamp, M0, M1) :-
- append([holds_at(h(At, From, '<unknown>'(At)), Timestamp)], M0, M1).
+ append([holds_at(h(At, From, '<unknown>'(exit, At, From)), Timestamp)], M0, M1).
 update_model_exit(At, From, To, Timestamp, M0, M2) :-
  select_always(holds_at(h(At, From, _To), _T), M0, M1),
  append([holds_at(h(At, From, To), Timestamp)], M1, M2).
@@ -110,7 +116,7 @@ update_model_exits([Exit|Tail], From, Timestamp, M0, M2) :-
 % \+ member(FreshFigment, RecentMemory).
 
 update_model(Knower, arriving(Agent,Here,_,ExitNameReversed), Timestamp, Mem, M0, M2) :-  Knower = Agent,    
- dmust((  reverse_dir(ExitNameReversed, ExitName, advstate),
+ dmust_det((  reverse_dir(ExitNameReversed, ExitName, advstate),
   At = in,
   % According to model, where was I?
   in_model(h(_, Agent, There), M0),

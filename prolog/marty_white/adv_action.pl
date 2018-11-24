@@ -269,7 +269,7 @@ add_look(Agent) -->
 
 
 :- defn_state_none(action_doer(action,-agent)).
-action_doer(Action,Agent):- \+ compound(Action),!, dmust(current_player(Agent)),!.
+action_doer(Action,Agent):- \+ compound(Action),!, dmust_det(current_player(Agent)),!.
 action_doer(Action,Agent):- functor(Action,Verb,_),verbatum_anon(Verb),current_player(Agent),!.
 action_doer(Action,Agent):- arg(1,Action,Agent), nonvar(Agent), \+ preposition(_,Agent),!.
 action_doer(Action,Agent):- throw(missing(action_doer(Action,Agent))).

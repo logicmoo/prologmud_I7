@@ -29,7 +29,7 @@ printable_state(S,S).
 
 
 print_english(Doer, Logic):- is_list(Logic),!, maplist(print_english(Doer), Logic).
-print_english(Doer, Logic):- log2eng(Doer, Logic, Eng),dmust((eng2txt(Doer, Doer, Eng, Text))), pprint(Text,always).
+print_english(Doer, Logic):- log2eng(Doer, Logic, Eng),dmust_det((eng2txt(Doer, Doer, Eng, Text))), pprint(Text,always).
 
 meta_pprint(Doer, Logic, always):- xtreme_english,!, print_english(Doer, Logic).
 meta_pprint(_Doer, D,K):- pprint(D,K).
@@ -141,7 +141,7 @@ do_metacmd(Doer, inspect(Self, getprop(Target,NamedProperty)), S0, S0) :-
 
 do_metacmd(Doer, create(Type), S0, S9) :-
  security_of(Doer,wizard),
- dmust((current_player(Agent),
+ dmust_det((current_player(Agent),
  h(Prep, Agent, Here, S0),
  create_new_unlocated(Type, Object, S0, S1),
  declare(h(Prep, Object, Here), S1, S9),

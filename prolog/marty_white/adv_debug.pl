@@ -81,7 +81,7 @@ system_default_debug(YN):-
 :- module_transparent(if_tracing/1).
 
 :- meta_predicate(dmust_tracing(*)).
-dmust_tracing(G):- notrace((tracing,cls)),!,dmust(G).
+dmust_tracing(G):- notrace((tracing,cls)),!,dmust_det(G).
 dmust_tracing(G):- call(G).
 :- meta_predicate(if_tracing(*)).
 if_tracing(G):- tracing -> notrace(G) ; true.

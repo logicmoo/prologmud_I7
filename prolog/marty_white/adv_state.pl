@@ -241,7 +241,7 @@ each_prop(Pred, Prop, S0, S1):- assertion(compound(Prop)), call(Pred, Prop, S0, 
 
 % Remove Prop.
 :- defn_state_setter(delprop(thing, nv)).
-delprop(Object, Prop, S0, S2) :- notrace(dmust((correct_props(Object,Prop,PropList), each_prop(delprop_(Object), PropList, S0, S2)))).
+delprop(Object, Prop, S0, S2) :- notrace(dmust_det((correct_props(Object,Prop,PropList), each_prop(delprop_(Object), PropList, S0, S2)))).
 delprop_(Object, Prop, S0, S2) :- 
  undeclare(props(Object, PropList), S0, S1),
  select(Prop, PropList, NewPropList),
@@ -249,7 +249,7 @@ delprop_(Object, Prop, S0, S2) :-
 
 % Remove Prop Always.
 :- defn_state_setter(delprop_always(thing, nv)).
-delprop_always(Object, Prop, S0, S2) :- notrace(dmust((correct_props(Object,Prop,PropList), each_prop(delprop_always_(Object), PropList, S0, S2)))).
+delprop_always(Object, Prop, S0, S2) :- notrace(dmust_det((correct_props(Object,Prop,PropList), each_prop(delprop_always_(Object), PropList, S0, S2)))).
 delprop_always_(Object, Prop, S0, S2) :-  delprop_(Object, Prop, S0, S2), !.
 delprop_always_(_Object, _Prop, S0, S0).
 
@@ -298,7 +298,7 @@ updateprop_1(Object, Prop, PropList, S0, S2) :-
 /*
 
 setprop(Object, Prop, S0, S2) :-
- %dmust((
+ %dmust_det((
  %assertion(\+ atom(Prop)),
  undeclare(props(Object, PropList), S0, S1),
  select_always(Prop, PropList, PropList2),

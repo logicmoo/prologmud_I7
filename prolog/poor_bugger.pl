@@ -58,9 +58,11 @@ dmust_det_m(M,A):- call(M:A)*->true; (failed_dmust(M:A),!,fail).
 :- module_transparent(failed_dmust/1).
 :- meta_predicate failed_dmust(*).
 failed_dmust(once(A)):-!, failed_dmust(A),!.
-failed_dmust((A,B)):- !,bugout1(dmust_start(A)),ignore(rtrace(A)),bugout1(dmust_mid(A)), failed_dmust(B).
-failed_dmust(A):- simplify_dbug(A,AA), bugout1(failed_dmust_start(AA)),ignore(rtrace(A)),bugout1(failed_dmust_end(AA)),
-  break,nortrace,notrace,trace.
+failed_dmust((A,B)):- !,bugout1(dmust_start_mid(A)),confirm_rtrace,ignore(rtrace(A)),bugout1(dmust_mid(A)), failed_dmust(B).
+failed_dmust(A):- simplify_dbug(A,AA), bugout1(failed_dmust_start(AA)),confirm_rtrace,ignore(rtrace(A)),bugout1(failed_dmust_end(AA)),
+  nortrace,notrace.
+
+confirm_rtrace:- nortrace,notrace, trace.
 
 :- module_transparent(no_repeats_must/1).
 :- meta_predicate(no_repeats_must(0)).

@@ -28,7 +28,7 @@ never_equal(Sense,Thing,Agent):- nop(never_equal(Sense,Thing,Agent)),!.
 never_equal(Sense,Thing,Agent):-
   never_equal(Sense,Thing),never_equal(Sense,Agent).
 never_equal(Sense,Thing):-
- notrace((freeze(Thing, (dmust(Thing\==Sense))), freeze(Sense, (dmust(Thing\==Sense))))).
+ notrace((freeze(Thing, (dmust_det(Thing\==Sense))), freeze(Sense, (dmust_det(Thing\==Sense))))).
 
 
 
@@ -152,7 +152,7 @@ escape_rel(escape).
 :- defn_state_getter(is_closed(prep,inst)).
 
 is_closed(At,Object, S0) :-  
-  getprop(Object, opened=f, S0) -> default_rel(At, Object, S0).
+  getprop(Object, opened=f, S0) -> getprop(Object, default_rel = At, S0).
 %  getprop(Object, openable, S0),
 %  \+ getprop(Object, open, S0).
 

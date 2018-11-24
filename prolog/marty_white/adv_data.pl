@@ -263,7 +263,7 @@ istate([ structure_label(istate),
 term_expansion(StateInfo,( :- push_to_state(StateInfo))):- is_state_info(StateInfo).
 
 
-props('floyd~1', [name = ('Floyd the robot'), inherit(autonomous,t), 
+props('floyd~1', [name = ('Floyd the robot'), powered = f,  inherit(autonomous,t), 
    inherit(robot,t)]).
 
 props('player~1', [name = ($self),inherit(console,t), inherit(humanoid,t)]).

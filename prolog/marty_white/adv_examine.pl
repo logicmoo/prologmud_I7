@@ -76,7 +76,7 @@ add_child_precepts(Depth, Sense, Agent, PrepIn, Object, S1, S2):-
        child_precepts(Agent, Sense, Object, At, Depth, Children, S1))), PreceptS),
  queue_agent_percept(Agent,PreceptS, S1, S2).
 
-child_precepts(_Agent, _All, Object, At, _Depth, '<unknown>'(At), S1):- is_closed(At, Object, S1),!.
+child_precepts(_Agent, _All, Object, At, _Depth, '<unknown>'(closed,At,Object), S1):- is_closed(At, Object, S1),!.
 child_precepts(Agent, Sense, Object, At, _Depth, Children, S1):- 
  findall_set(What,  
   (h(At, What, Object, S1), 

@@ -24,7 +24,7 @@ each_live_agent(NewGoal, S0, S2) :-
  apply_mapl_state(NewGoal, List, S0, S2).
 
 each_sensing_agent(Sense, NewGoal, S0, S2) :-
- dmust((get_sensing_objects(Sense, List, S0),
+ dmust_det((get_sensing_objects(Sense, List, S0),
   List\==[],
   %bugout1(each_sensing_agent(Sense)=(List=NewGoal)),
  apply_mapl_state(NewGoal, List, S0, S2))).
@@ -85,7 +85,7 @@ add_goals(Goals, Mem0, Mem2) :-
 
 
 add_todo(Auto, Mem0, Mem3) :- Auto = auto(Agent),
- %dmust(member(inst(Agent), Mem0)),
+ %dmust_det(member(inst(Agent), Mem0)),
  autonomous_decide_goal_action(Agent, Mem0, Mem3),!.
 add_todo(Action, Mem0, Mem2) :- 
  forget(todo(OldToDo), Mem0, Mem1),
@@ -144,7 +144,7 @@ console_decide_action(Agent, Mem0, Mem1):-
  notrace((
  ttyflush,
  agent_to_input(Agent,In),
- dmust(is_stream(In)),
+ dmust_det(is_stream(In)),
  setup_console,
  ensure_has_prompt(Agent),
  read_line_to_tokens(Agent, In,[], Words0), 
@@ -188,7 +188,7 @@ decide_action(Agent, Mem0, Mem0) :-
 % Telnet client
 decide_action(Agent, Mem0, Mem1) :-
  notrace(declared(inherited(telnet), Mem0)),!,
- dmust(telnet_decide_action(Agent, Mem0, Mem1)).
+ dmust_det(telnet_decide_action(Agent, Mem0, Mem1)).
 
 % Stdin Client
 decide_action(Agent, Mem0, Mem1) :-
@@ -241,7 +241,7 @@ run_agent_pass_2(Agent, S0, S0) :-
 run_agent_pass_1_0(Agent, S0, S) :-
  clock_time(Now),
  must_input_state(S0),
- %dmust((
+ %dmust_det((
  undeclare(memories(Agent, Mem0), S0, S1),
  undeclare(perceptq(Agent, PerceptQ0), S1, S2),
  set_advstate(S2), % backtrackable leaks :(

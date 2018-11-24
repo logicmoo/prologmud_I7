@@ -59,7 +59,7 @@ create_agent_conn(Agent,Named,Info,S0,S9):-
 init_objects(S0, S2) :-
  dmust_det((must_input_state(S0), 
  create_missing_instances(S0,S1), !,
- dmust(call((get_objects(true,ObjectList, S1), ObjectList\==[]))),
+ dmust_det(call((get_objects(true,ObjectList, S1), ObjectList\==[]))),
  bugout1(iObjectList = ObjectList), 
  apply_mapl_state(create_object(), ObjectList, S1, S2),
  must_output_state(S2))).
@@ -82,10 +82,10 @@ visit_existing(Object, [Prop|List], S0, S2):- !,
  visit_existing(Object, List, S0, S1),
  visit_existing(Object, Prop, S1, S2).
 
-%visit_existing(Object, Prop, S1, S2):- dmust(create_objprop(Object, Prop, S1, S2)).
+%visit_existing(Object, Prop, S1, S2):- dmust_det(create_objprop(Object, Prop, S1, S2)).
 
-visit_existing(Object, Prop, S1, S2):- Prop=inherit(_,t),!,dmust(create_objprop(Object, Prop, S1, S2)).
-visit_existing(Object, Prop, S0, S2):- dmust(updateprop(Object,Prop,S0, S2)).
+visit_existing(Object, Prop, S1, S2):- Prop=inherit(_,t),!,dmust_det(create_objprop(Object, Prop, S1, S2)).
+visit_existing(Object, Prop, S0, S2):- dmust_det(updateprop(Object,Prop,S0, S2)).
 */ 
 
 create_objprop(_Object, [], S0, S0):- !.
@@ -121,12 +121,12 @@ create_objprop(Object, inherit(Other,t), S0, S9):-
  subst(PropList0,$class,Other,PropList1),
  (member(adjs(_),PropList1)-> PropList1=PropList;  [nouns([Other])|PropList1]=PropList),
  copy_term(PropList,PropListC),!,
- % dmust(updateprop(Object, inherit(Other,t), S5, S9)), !,
- %dmust(updateprop(Object, visited(Other), S0, S1)),
- dmust(updateprop(Object, inherited(Other), S0, S2)),
+ % dmust_det(updateprop(Object, inherit(Other,t), S5, S9)), !,
+ %dmust_det(updateprop(Object, visited(Other), S0, S1)),
+ dmust_det(updateprop(Object, inherited(Other), S0, S2)),
  
- dmust(create_objprop(Object, PropListC, S2, S9)),
- %dmust(setprop(Object, inherited(Other), S3, S9)),
+ dmust_det(create_objprop(Object, PropListC, S2, S9)),
+ %dmust_det(setprop(Object, inherited(Other), S3, S9)),
  !.
 
 %create_objprop(Object, inherit(Other,t), S0, S0):- getprop(Object,inherited(Other),S0),!.
@@ -134,7 +134,7 @@ create_objprop(Object, inherit(Other,t), S0, S9):-
 create_objprop(Object, Prop, S0, S2):- 
  subst(equivalent,$self,Object,Prop,NewProp),Prop\==NewProp,!,
  create_objprop(Object, NewProp, S0, S2).
-create_objprop(Object, Prop, S0, S2):- dmust(updateprop(Object,Prop,S0, S2)).
+create_objprop(Object, Prop, S0, S2):- dmust_det(updateprop(Object,Prop,S0, S2)).
 
 
 
@@ -148,8 +148,8 @@ may_contain_insts(holds_at).
 create_instances(Suffix,Info,[Prop|TODO],S0,S3):-
  Prop =.. [F, Pred | Objs], 
  may_contain_insts(F),member(Obj,Objs),compound(Obj),!,
- dmust((select(Prop,S0,S1))),
- dmust((create_objs(Objs,NewObjs,Suffix,Info,S1,S2),
+ dmust_det((select(Prop,S0,S1))),
+ dmust_det((create_objs(Objs,NewObjs,Suffix,Info,S1,S2),
  NewProp =.. [F, Pred | NewObjs],
  create_instances(Suffix,Info,TODO,[NewProp|S2],S3))).
  
@@ -159,13 +159,13 @@ create_instances(_Suffix,_Info,[],S0,S0).
 
 
 create_objs([Obj|Objs],[NewObj|NewObjs],Suffix,Info,S0,S2):-
- dmust(create_1obj(Suffix,Info,Obj,NewObj,S0,S1)),
+ dmust_det(create_1obj(Suffix,Info,Obj,NewObj,S0,S1)),
  create_objs(Objs,NewObjs,Suffix,Info,S1,S2).
 create_objs([],[],_Suffix,_Info,S0,S0).
 
 
 create_1obj(Suffix,_Info,a(Type),Inst,S0,S2):- !, 
- dmust(create_new_suffixed_unlocated(Suffix,Type,Inst,S0,S2)).
+ dmust_det(create_new_suffixed_unlocated(Suffix,Type,Inst,S0,S2)).
 
 create_1obj(Suffix,Info,the(Type),Inst,S0,S2):- find_recent(Suffix,Type,Inst,S0,S2)->true;create_1obj(Suffix,Info,Type,Inst,S0,S2).
 create_1obj(_Suffix,_Info,I,I, S0,S0):- atom_contains(I,'~').

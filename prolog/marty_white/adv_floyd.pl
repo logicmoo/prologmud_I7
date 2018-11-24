@@ -50,23 +50,31 @@ do_autonomous_cycle(Agent):-
 % Is powered down
 maybe_autonomous_decide_goal_action(Agent, Mem0, Mem0) :- 
  get_advstate(State),getprop(Agent, (powered = f), State),!.
+% is not yet time to do something
+maybe_autonomous_decide_goal_action(Agent, Mem0, Mem0) :- 
+ notrace( \+ do_autonomous_cycle(Agent)), !.
+% try to run the auto(Agent) command
+maybe_autonomous_decide_goal_action(Agent, Mem0, Mem1) :- 
+ add_todo(auto(Agent), Mem0, Mem1).
 
-maybe_autonomous_decide_goal_action(Agent, Mem0, Mem1) :- fail, notrace((do_autonomous_cycle(Agent),
- set_last_action(Agent,[auto(Agent)]))),
- autonomous_decide_goal_action(Agent, Mem0, Mem1),!.
-maybe_autonomous_decide_goal_action(_Agent, Mem0, Mem0).
 
 
-% ......
-autonomous_decide_goal_action(Agent, Mem0, Mem3) :-
- dmust((
+check_unsatisfied_goals(Agent, Mem0, Mem2):-  
+ dmust_det((
     forget(goals(Goals), Mem0, Mem1),
     agent_thought_model(Agent,ModelData, Mem1),
     select_unsatisfied_conditions(Goals, Unsatisfied, ModelData),
     subtract(Goals,Unsatisfied,Satisfied),
     memorize(goals(Unsatisfied), Mem1, Mem1a),
-    (Satisfied==[] -> Mem1a=Mem2 ; memorize(satisfied(Satisfied), Mem1a, Mem2)),
-    autonomous_decide_action(Agent, Mem2, Mem3))).
+    (Satisfied==[] -> Mem1a=Mem2 ; memorize(satisfied(Satisfied), Mem1a, Mem2)))).
+
+
+% ......
+autonomous_decide_goal_action(Agent, Mem0, Mem3) :-
+ dmust_det((
+  check_unsatisfied_goals(Agent, Mem0, Mem2),
+  autonomous_decide_action(Agent, Mem2, Mem3))).
+
 
 % If actions are queued, no further thinking required. 
 autonomous_decide_action(Agent, Mem0, Mem0) :- 
@@ -78,38 +86,60 @@ autonomous_decide_action(Agent, Mem0, Mem0) :-
 autonomous_decide_action(Agent, Mem0, _) :-
  once((agent_thought_model(Agent,ModelData, Mem0),
  (\+ in_agent_model(Agent, h(_, Agent, _), ModelData) -> (pprint(Mem0, always),pprint(ModelData, always)) ; true),
- dmust(in_agent_model(Agent,h(_Prep, Agent, Here), ModelData)),
+ dmust_det(in_agent_model(Agent,h(_Prep, Agent, Here), ModelData)),
  nonvar(Here))), 
  fail.
 
-
 % If goals exist, try to solve them.
 autonomous_decide_action(Agent, Mem0, Mem1) :-
- Knower = Agent,
  thought(goals([_|_]), Mem0),
- bugout3('~w: goals exist: generating a plan...~n', [Agent], autonomous),
- generate_plan(Knower, Agent, NewPlan, Mem0), !,
- serialize_plan(Knower, Agent, NewPlan, Actions), !,
- bugout3('Planned actions are ~w~n', [Actions], autonomous),
- Actions = [Action|_],
- add_todo(Action, Mem0, Mem1).
-% If goals exist, forget them
-autonomous_decide_action(Agent, Mem0, Mem9) :-
- forget(goals([G0|GS]), Mem0, Mem1),
- memorize(goals([]), Mem1, Mem2),
- memorize(old_goals([G0|GS]), Mem2, Mem9),
- bugout3('~w: Can\'t solve goals ~p. Forgetting them.~n', [Agent,[G0|GS]], autonomous).
-
+ action_handle_goals(Agent, Mem0, Mem1),!.
+autonomous_decide_action(Agent, Mem0, Mem1) :- 
+ once(autonomous_create_new_goal(Agent, Mem0, Mem1);
 % If no actions or goals, but there's an unexplored exit here, go that way.
-autonomous_decide_action(Agent, Mem0, Mem1) :-
+ autonomous_decide_unexplored_exit(Agent, Mem0, Mem1);
+ autonomous_decide_unexplored_object(Agent, Mem0, Mem1);
+ autonomous_decide_follow_player(Agent, Mem0, Mem1);
+ autonomous_decide_silly_emoter_action(Agent, Mem0, Mem1)).
+autonomous_decide_action(Agent, Mem0, Mem0) :-
+ (declared_advstate(h(in, Agent, Here))->true;Here=somewhere),
+ nop(bugout3('~w: Can\'t think of anything to do.~n', [Agent-Here], autonomous+verbose)).% trace.
+
+
+autonomous_create_new_goal(Agent, Mem0, Mem1) :- fail.
+
+% An unexplored exit here, go that way.
+autonomous_decide_unexplored_exit(Agent, Mem0, Mem2) :-
  agent_thought_model(Agent,ModelData, Mem0),
- in_agent_model(Agent,h(_Prep, Agent, Here), ModelData),
- in_agent_model(Agent,h(exit(Dir), Here, '<unknown>'(exit(Dir))), ModelData),
+ in_agent_model(Agent,h(exit(Prev), There, '<unknown>'(_,exit(_), _)), ModelData),
+ in_agent_model(Agent,h(exit(Dir), Here, There), ModelData),
+ in_agent_model(Agent,h(in, Agent, Here), ModelData),
+ add_todo( goto_dir(Agent, walk, Dir), Mem0, Mem1),
+ add_todo( goto_dir(Agent, walk, Prev), Mem1, Mem2).
+autonomous_decide_unexplored_exit(Agent, Mem0, Mem1) :-
+ agent_thought_model(Agent,ModelData, Mem0),
+ in_agent_model(Agent,h(in, Agent, Here), ModelData),
+ in_agent_model(Agent,h(exit(Dir), Here, '<unknown>'(_,exit(_), _)), ModelData),
  add_todo( goto_dir(Agent, walk, Dir), Mem0, Mem1).
 
+% An unexplored object!
+autonomous_decide_unexplored_object(Agent, Mem0, Mem2) :-
+ agent_thought_model(Agent,ModelData, Mem0),
+ in_agent_model(Agent,h(_, '<unknown>'(closed,_, _), Object), ModelData),
+ in_agent_model(Agent,h(in, Object, Here), ModelData),
+ in_agent_model(Agent,h(in, Agent, Here), ModelData),
+ add_todo( open(Agent, Object), Mem0, Mem1),
+ add_todo( examine(Agent, see, Object), Mem1, Mem2).
+
+autonomous_decide_unexplored_object(Agent, Mem0, Mem1) :- fail,
+ agent_thought_model(Agent,ModelData, Mem0),
+ in_agent_model(Agent,h(_, '<unknown>'(closed,_, _), Object), ModelData),
+ add_todo( make_true(Agent, ~(h(_, Object, '<unknown>'(closed,_, _)))), Mem0, Mem1).
+
+
 % Follow Player to adjacent rooms.
-autonomous_decide_action(Agent, Mem0, Mem1) :- % 1 is random(2),
- dmust((
+autonomous_decide_follow_player(Agent, Mem0, Mem1) :- % 1 is random(2),
+ dmust_det((
  agent_thought_model(Agent,ModelData, Mem0),
  in_agent_model(Agent,h(_, Agent, Here), ModelData))),
  dif(Agent, Player), current_player(Player),
@@ -117,13 +147,10 @@ autonomous_decide_action(Agent, Mem0, Mem1) :- % 1 is random(2),
  in_agent_model(Agent,h(exit(Dir), Here, There), ModelData),
  add_todo(goto_dir(Agent, walk, Dir), Mem0, Mem1).
 
-autonomous_decide_action(Agent, Mem0, Mem1) :-
+autonomous_decide_silly_emoter_action(Agent, Mem0, Mem1) :-
  0 is random(5),
  random_noise(Agent, Msg),
  add_todo(emote(Agent, act, *, Msg), Mem0, Mem1).
-autonomous_decide_action(Agent, Mem0, Mem0) :-
- (declared_advstate(h(in, Agent, Here))->true;Here=somewhere),
- nop(bugout3('~w: Can\'t think of anything to do.~n', [Agent-Here], autonomous+verbose)).% trace.
 
 
 always_action(goto_dir(_,_,_)).

@@ -190,7 +190,7 @@ adv_tlnet_readloop(Id, InStream, Alias):-
  tflush(OutStream),
  read_line_to_tokens(Agent,InStream,[],Words),
  tflush(OutStream),
- dmust(adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, Words)).
+ dmust_det(adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, Words)).
 
 
 adv_tlnet_words(_Id,_Alias,_InStream,_OutStream, _Host, _Peer, _Agent, [prolog]):- !, prolog.

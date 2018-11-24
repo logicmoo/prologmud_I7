@@ -134,19 +134,21 @@ flee_run_escape(escape).
 % get [out,in,..] Object
 parse2logical(Self, [get, Prep, Object], goto_prep_obj(Self, walk, Prep, Object), _Mem) :- preposition(spatial, Prep).
 % n/s/e/w/u/d
-parse2logical(Self, [Dir], Logic, Mem):- maybe_compass_direction(Dir,Actual), !, dmust(txt2goto(Self, walk, [Actual], Logic, Mem)).
+parse2logical(Self, [Dir], Logic, Mem):- maybe_compass_direction(Dir,Actual), !, dmust_det(txt2goto(Self, walk, [Actual], Logic, Mem)).
 % escape/flee/run .. 
-parse2logical(Self, [Escape|Info], Logic, Mem):- flee_run_escape(Escape), !, dmust(txt2goto(Self, run, Info, Logic, Mem)).
+parse2logical(Self, [Escape|Info], Logic, Mem):- flee_run_escape(Escape), !, dmust_det(txt2goto(Self, run, Info, Logic, Mem)).
 % out/into
-parse2logical(Self, [Prep], Logic, Mem) :- preposition(spatial, Prep), !, dmust(txt2goto(Self, walk, [Prep], Logic, Mem)).
+parse2logical(Self, [Prep], Logic, Mem) :- preposition(spatial, Prep), !, dmust_det(txt2goto(Self, walk, [Prep], Logic, Mem)).
 % go .. 
-parse2logical(Self, [go|Info], Logic, Mem):- !, dmust(txt2goto(Self, walk, Info, Logic, Mem)).
+parse2logical(Self, [go|Info], Logic, Mem):- !, dmust_det(txt2goto(Self, walk, Info, Logic, Mem)).
 % outside
 parse2logical(Self, [ExitName], Logic, Mem) :- 
- in_agent_model(Self, h(exit(ExitName), _, _), Mem),
- !, dmust(txt2goto(Self, walk, [ExitName], Logic, Mem)).
+ in_agent_model(Self, h(exit(ExitName), _, _), Mem), txt2goto(Self, walk, [ExitName], Logic, Mem),!.
+parse2logical(Self, [ExitName], goto_dir(Self, walk, ExitName), Mem) :- 
+  in_agent_model(Self, h(exit(ExitName), _Place, _), Mem).
 
-parse2logical(Self, [get, Prep| More], Logic, Mem) :- preposition(spatial, Prep), !, dmust(txt2goto(Self, walk, [Prep| More], Logic, Mem)).
+
+parse2logical(Self, [get, Prep| More], Logic, Mem) :- preposition(spatial, Prep), !, dmust_det(txt2goto(Self, walk, [Prep| More], Logic, Mem)).
 
 % x shelf~1
 % go on shelf~1
@@ -159,7 +161,7 @@ txt2goto(Self, Walk,[Alias| More], Logic, Mem) :- cmdalias(Alias,Dir), !, txt2go
 % go in car
 txt2goto(Self, Walk,[ Prep, Dest], goto_prep_obj(Self, Walk, Prep, Where), Mem) :- 
  preposition(spatial, Prep),!,
- dmust(txt2place(Dest, Where, Mem)).
+ dmust_det(txt2place(Dest, Where, Mem)).
 
 % go north
 txt2goto(Self, Walk,[ ExitName], goto_dir(Self, Walk, ExitName), Mem) :-
@@ -176,6 +178,7 @@ txt2goto(Self, Walk, Dest, goto_loc(Self, Walk, Where), Mem) :-
 
 txt2place(List, Place, Mem):- is_list(List), parse2object(List,Object,Mem), txt2place(Object, Place, Mem),!.
 txt2place(Dest, Place, Mem):- in_agent_model(advstate, h(_, _, Dest), Mem), Dest = Place.
+txt2place(Dest, Place, Mem):- in_agent_model(advstate, h(_, Dest, _), Mem), Dest = Place.
 txt2place(Dest, Place, Mem):- parse2object(Dest, Place, Mem).
 
 % %%%%%%%%%%%%%%

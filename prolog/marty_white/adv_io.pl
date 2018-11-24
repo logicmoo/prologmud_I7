@@ -131,9 +131,9 @@ bugout3(_, _).
 bugout3(A, L, B) :-
  bug(B),
  !,
- dmust(maplist(simplify_dbug, L, LA)),
+ dmust_det(maplist(simplify_dbug, L, LA)),
  ansi_format([fg(cyan)], '~N% ', []), ansi_format([fg(cyan)], A, LA),
- dmust((console_player(Player),overwrote_prompt(Player))),!,
+ dmust_det((console_player(Player),overwrote_prompt(Player))),!,
  overwrote_prompt(player).
 bugout3(_, _, _).
 
@@ -190,9 +190,9 @@ player_format(Fmt,List):-
 
 player_format(Agent,Fmt,List):-
  agent_to_output(Agent,OutStream),
- dmust(format(OutStream,Fmt,List)),!,
+ dmust_det(format(OutStream,Fmt,List)),!,
  overwrote_prompt(Agent).
-player_format(Agent,Fmt,List):- dmust(format(Fmt,List)),
+player_format(Agent,Fmt,List):- dmust_det(format(Fmt,List)),
  overwrote_prompt(Agent).
 
 
@@ -288,8 +288,8 @@ read_line_to_tokens(_Agent,In,Prev,Tokens):-
             (read_line_to_codes(In,LineCodesR),read_pending_input(In,_,[]))), 
  append(Prev,LineCodesR,LineCodes),
  NegOne is -1,  
- dmust(line_to_tokens(LineCodes,NegOne,Tokens0)),!,
- dmust(Tokens0=Tokens).
+ dmust_det(line_to_tokens(LineCodes,NegOne,Tokens0)),!,
+ dmust_det(Tokens0=Tokens).
 
 line_to_tokens([],_,[]):-!.
 line_to_tokens(NegOne,NegOne,end_of_file):-!.

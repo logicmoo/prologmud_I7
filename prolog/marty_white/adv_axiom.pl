@@ -21,7 +21,7 @@ aXiom(doing, say(Agent, Message)) -->          % undirected message
 
 /*
 aXiom(doing, emote(Agent, EmoteType, Object, Message)) --> !, % directed message
- dmust((
+ dmust_det((
  action_sensory(EmoteType, Sense),
  can_sense(Agent, Sense, Object),
  % get_open_traverse(EmoteType, Sense), h(Sense, Agent, Here), 
@@ -41,8 +41,8 @@ aXiom(_, status_msg(_Begin,_End)) --> [].
 
 aXiom(doing, goto_dir(Agent, Walk, ExitName)) -->         % go n/s/e/w/u/d/in/out  
   must_act(status_msg(vBegin,goto_dir(Agent, Walk, ExitName))),
-  dmust(from_loc(Agent, Here)),  
-  %dmust(h(exit(ExitName), Here, _There)),
+  dmust_det(from_loc(Agent, Here)),  
+  %dmust_det(h(exit(ExitName), Here, _There)),
   unless(Agent,h(exit(ExitName), Here, _There),
   (aXiom(doing, leaving(Agent, Here, Walk, ExitName)),
    must_act(status_msg(vDone,goto_dir(Agent, Walk, ExitName))))).
@@ -54,7 +54,7 @@ aXiom(_, leaving(Agent, Here, Walk, ExitName)) -->
   queue_local_event( leaving(Agent, Here, Walk, ExitName), [Here]),
    % queue_local_event( msg([cap(subj(Agent)), leaves, Here, ing(Walk), to, the, ExitName]), [Here]).
   sg(reverse_dir(ExitName,ExitNameR)),
-  dmust(aXiom(doing, arriving(Agent, There, Walk, ExitNameR))).
+  dmust_det(aXiom(doing, arriving(Agent, There, Walk, ExitNameR))).
 
 aXiom(_, terminates(h(Prep, Object, Here))) -->
  %ignore(sg(declared(h(Prep, Object, Here)))),
@@ -65,8 +65,8 @@ aXiom(_, arriving(Agent, Here, Walk, ReverseDir)) -->
   %sg(default_rel(PrepIn, Here)), {atom(PrepIn)},
   {PrepIn = in},
   % [cap(subj(Agent)), arrives, PrepIn, Here, ing(Walk), from, the, ReverseDir] 
-  dmust(aXiom(_, initiates(h(PrepIn, Agent, Here)))),
-  dmust(add_look(Agent)).
+  dmust_det(aXiom(_, initiates(h(PrepIn, Agent, Here)))),
+  dmust_det(add_look(Agent)).
 
 aXiom(_, initiates(h(Prep, Object, Dest))) -->
  declare(h(Prep, Object, Dest)).
@@ -295,7 +295,7 @@ aXiom(doing, look(Agent)) -->
   aXiom(doing, trys_examine(Agent, see, At, Here, depth(3))).
 
 aXiom(doing, examine(Agent, Sense)) --> {is_sense(Sense)}, !, 
-   dmust(from_loc(Agent, Place)),
+   dmust_det(from_loc(Agent, Place)),
    aXiom(doing, trys_examine(Agent, see, in, Place, depth(3))).
 
 aXiom(doing, examine(Agent, Object)) --> aXiom(doing, trys_examine(Agent, see, at, Object, depth(3))). 
@@ -319,7 +319,7 @@ aXiom(doing, trys_examine(Agent, Sense, Prep, Object, Depth)) -->
 aXiom(doing, trys_examine(Agent, Sense, Prep, Object, Depth)) --> aXiom(doing, does_examine(Agent, Sense, Prep, Object, Depth)).
 
 
-aXiom(doing, does_examine(Agent, Sense, Prep, Object, Depth)) -->  dmust(act_examine(Agent, Sense, Prep, Object, Depth)),!.
+aXiom(doing, does_examine(Agent, Sense, Prep, Object, Depth)) -->  dmust_det(act_examine(Agent, Sense, Prep, Object, Depth)),!.
 aXiom(doing, does_examine(Agent, Sense, Object)) --> % {trace},
   %declared(props(Object, PropList)),
   findall(P, (getprop(Object, P), is_prop_public(Sense, P)), PropList),
@@ -452,7 +452,7 @@ setloc_silent(Prep, Object, Dest) -->
 
 
 change_state(Agent, Open, Thing, Opened, TF,  S0, S):- 
- % dmust
+ % dmust_det
  ((
  maybe_when(psubsetof(Open, touch),
    required_reason(Agent, will_touch(Agent, Thing, S0, _))),

@@ -37,7 +37,7 @@ get_live_agents(LiveAgents, S0):-
 
 :- defn_state_getter(get_some_agents(conds,-list(agent))).
 get_some_agents(Precond, LiveAgents, S0):-
- dmust((
+ dmust_det((
   get_objects(  
   (inherited(character),Precond), LiveAgents, S0),
   LiveAgents \== [])).                
@@ -132,7 +132,7 @@ queue_agent_percept(Agent, Event, S0, S2) :-
  \+ is_list(Event),!, 
  queue_agent_percept(Agent, [Event], S0, S2).
 queue_agent_percept(Agent, Events, S0, S2) :-
- dmust((select(perceptq(Agent, Queue), S0, S1),
+ dmust_det((select(perceptq(Agent, Queue), S0, S1),
  append(Queue, Events, NewQueue),
  append([perceptq(Agent, NewQueue)], S1, S2))).
 
@@ -307,7 +307,7 @@ process_percept_list(_Agent, _, _Stamp, Mem, Mem) :-
  declared(inherited(no_perceptq), Mem),
  !.
 process_percept_list(Agent, Percept, Stamp, Mem0, Mem3) :-
- dmust((
+ dmust_det((
  forget(model(Model0), Mem0, Mem1),
  update_model(Agent, Percept, Stamp, Mem1, Model0, Model1),
  memorize(model(Model1), Mem1, Mem2),
