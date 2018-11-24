@@ -108,7 +108,7 @@ create_objprop(Self, inherit(memorize,t), S0, S2):- !, clock_time(Now),
  goals([]),
  goals_skipped([]),
  goals_satisfied([]),
- model([]),
+ % model([]),
  todo([look(Self)]),
  inst(Self)]), S0, S2).
 
@@ -152,7 +152,7 @@ create_missing_instances(S0,S2):-
  create_instances(Sym,S0,S0,S0,S2).
 
 may_contain_insts(h).
-may_contain_insts(holds_at).
+% may_contain_insts(holds_at).
 
 create_instances(Suffix,Info,[Prop|TODO],S0,S3):-
  Prop =.. [F, Pred | Objs], 

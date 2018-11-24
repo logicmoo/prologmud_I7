@@ -162,7 +162,7 @@ do_action(Agent, Action, S0, S3) :-
  declare(memories(Agent, Mem1), S1, S2))),
  dmust_tracing(must_act( Action, S2, S3)), !.
 
-memorize_doing(Action, Mem0, Mem0):- has_depth(Action),!.
+% memorize_doing(Action, Mem0, Mem0):- has_depth(Action),!.
 memorize_doing(Action, Mem0, Mem1):- 
   copy_term(Action,ActionG),
   numbervars(ActionG,999,_),

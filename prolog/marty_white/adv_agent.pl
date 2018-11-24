@@ -272,11 +272,13 @@ refilter_memory(PerceptQ,MemoList):- reverse(PerceptQ,MemoListSP),exclude(dontRe
 :- meta_predicate match_functor_or_arg(1,*).
 match_functor_or_arg(Q,P):- compound(P),functor(P,F,_),(call(Q,F)->true;(arg(1,P,E),call(Q,E))),!.
 
+preProcessedQ(_):- !,fail.
 preProcessedQ(P):- \+ atom(P),!,match_functor_or_arg(preProcessedQ,P).
 % preProcessedQ(examine).
 preProcessedQ(msg).
 preProcessedQ(trys_examine).
 
+dontRemember(_):- !,fail.
 dontRemember(P):- \+ atom(P),!,match_functor_or_arg(dontRemember,P).
 %dontRemember(notice_children).
 dontRemember(msg).

@@ -48,26 +48,23 @@ thought(Figment, M) :- member(Figment, M).
 
 in_agent_model(Agent, Fact, State):- in_model(Fact, State)*-> true ; (agent_thought_model(Agent, ModelData, State), in_model(Fact, ModelData)).
 
-in_model(E, L):- quietly(in_model0(E, L)).
-in_model0(E, L):- \+ is_list(L),declared_link(declared, E, L).
-in_model0(E, L):- compound(E),E = holds_at(_,_),!, member(E, L).
-in_model0(E, L):- member(EE, L), same_element(EE,E).
-same_element(E, E) :- !.
-same_element(holds_at(E,_), E).
+%in_model(E, L):- !, quietly((assertion(declared(inst(_),L)),declared(E, L))).
+%in_model(E, L):- quietly((assertion(memberchk(inst(_),L)),member(E, L))).
+in_model(E, L):- quietly(member(E, L)).
+%in_model0(E, L):- \+ is_list(L),declared_link(declared, E, L).
+%in_model0(E, L):- compound(E),E = (_,_),!, member(E, L).
+%in_model0(E, L):- member(E, L), same_element(EE,E).
+%same_element(E, E) :- !.
+%same_element((E,_), E).
 
 
 
-
-%:- defn_state_getter(agent_thought_model(agent,model,or([memory,state]))).
 :- defn_state_getter(agent_thought_model(agent,model)).
-agent_thought_model(Agent, ModelData, Memory):- var(Memory), get_advstate(State),!, member(memories(Agent,Memory),State), agent_thought_model(Agent, ModelData, Memory).
-agent_thought_model(Agent, ModelData, Memory):- \+ is_list(Memory), !, declared_link(agent_thought_model(Agent), ModelData, Memory).
-agent_thought_model(_Agent, ModelData, Memory):- memberchk(holds_at(_,_),Memory),!,Memory = ModelData.
-agent_thought_model(_Agent, ModelData, Memory):- memberchk(model(ModelData), Memory),!.
-agent_thought_model(Agent, ModelData, State):- declared(memories(Agent,Memory),State),!,
-  agent_thought_model(Agent, ModelData, Memory).
-% agent_thought_model(_Agent,E, L):- in_model(model(E), L), nonvar(E).
-% agent_thought_model(Agent,Model,List):- dmust_det((nop(memberchk(agent(Agent),List)), member(model(Model),List))).
+agent_thought_model(Agent, ModelData, M0):- var(M0), get_advstate(State),!, member(memories(Agent,M0),State), agent_thought_model(Agent, ModelData, M0).
+agent_thought_model(Agent, ModelData, M0):- \+ is_list(M0), !, declared_link(agent_thought_model(Agent), ModelData, M0).
+agent_thought_model(Agent, ModelData, M0) :- memberchk(inst(Agent),M0), ModelData = M0, !.
+agent_thought_model(Agent, ModelData, M0):- declared(memories(Agent,M1),M0),!,
+  agent_thought_model(Agent, ModelData, M1).
 
 
 
@@ -79,25 +76,25 @@ agent_thought_model(Agent, ModelData, State):- declared(memories(Agent,Memory),S
 % Fundamental predicate that actually modifies the list:
 update_relation( NewHow, Item, NewParent, Timestamp, M0, M2) :-
  remove_old_info( NewHow, Item, NewParent, Timestamp, M0, M1),
- append([holds_at(h(NewHow, Item, NewParent), Timestamp)], M1, M2).
+ append([(h(NewHow, Item, NewParent))], M1, M2).
 
 remove_old_info( _NewHow, '<mystery>'(_, _, _), _NewParent, _Timestamp, M0, M0) :- !.
 remove_old_info( _NewHow, Item, _NewParent, _Timestamp, M0, M2) :- 
- select_always(holds_at(h(_OldHow, Item, _OldWhere), _T), M0, M1),
+ select_always((h(_OldHow, Item, _OldWhere)), M0, M1),
  select_always(h(_OldHow2, Item, _OldWhere2), M1, M2).
 
 
 remove_children(_At, '<mystery>'(_, _, _), _Object, _Timestamp, M0, M0):- !.
 remove_children( At, _, Object, Timestamp, M0, M2):- 
-  select(holds_at(h(At, _, Object), _T), M0, M1), !,
+  forget((h(At, _, Object)), M0, M1), !,
   remove_children( At, _, Object, Timestamp, M1, M2).
 remove_children( _At, _, _Object, _Timestamp, M0, M0).
 
 % Batch-update relations.
 
 update_relations(Prep, '<mystery>'(How,What,Object2), Object, Timestamp, M0, M1):-
-  \+ in_model(holds_at(h(What, _Child, Object2), _), M0), 
-  % \+ in_model(holds_at(h(What, Object2, _Parent), _), M0),
+  \+ in_model((h(What, _Child, Object2)), M0), 
+  % \+ in_model((h(What, Object2, _Parent), _), M0),
   update_relation( Prep, '<mystery>'(How,What,Object2), Object, Timestamp, M0, M1).
 
 update_relations(_NewHow, '<mystery>'(_,_,_), _NewParent, _Timestamp, M, M).
@@ -109,14 +106,14 @@ update_relations( NewHow, [Item|Tail], NewParent, Timestamp, M0, M2) :-
 
 % If dynamic topology needs remembering, use
 %  h(exit(E), Here, [There1|ThereTail], Timestamp)
-update_model_exit(At, From, Timestamp, M0, M2) :-
- select(holds_at(h(At, From, To), _T), M0, M1),
- append([holds_at(h(At, From, To), Timestamp)], M1, M2).
-update_model_exit(At, From, Timestamp, M0, M1) :-
- append([holds_at(h(At, From, '<mystery>'(exit, At, From)), Timestamp)], M0, M1).
-update_model_exit(At, From, To, Timestamp, M0, M2) :-
- select_always(holds_at(h(At, From, _To), _T), M0, M1),
- append([holds_at(h(At, From, To), Timestamp)], M1, M2).
+update_model_exit(At, From, _Timestamp, M0, M2) :-
+ forget((h(At, From, To)), M0, M1),
+ append([(h(At, From, To))], M1, M2).
+update_model_exit(At, From, _Timestamp, M0, M1) :-
+ append([(h(At, From, '<mystery>'(exit, At, From)))], M0, M1).
+update_model_exit(At, From, To, _Timestamp, M0, M2) :-
+ select_always((h(At, From, _To)), M0, M1),
+ append([(h(At, From, To))], M1, M2).
 
 
 update_model_exits([], _From, _T, M, M).
@@ -157,9 +154,9 @@ update_model(Agent, wearing(Agent, Objects), Timestamp, _Memory, M0, M1) :-
 update_model(Agent, notice_children(Agent, _Sense, Object, At, _Depth, Children), Timestamp, _Mem, M0, M2) :-
  dmust_det((remove_children( At, Children, Object, Timestamp, M0, M1),
    update_relations( At, Children, Object, Timestamp, M1, M2))).
-update_model(Agent, sense_props(Agent, _Sense, Object, _Depth, PropList), Stamp, _Mem, M0, M2) :-
- select_always(holds_at(props(Object, _), _), M0, M1),
- append([holds_at(props(Object, PropList), Stamp)], M1, M2).
+update_model(Agent, sense_props(Agent, _Sense, Object, _Depth, PropList), _Stamp, _Mem, M0, M2) :-
+ select_always((props(Object, _)), M0, M1),
+ append([(props(Object, PropList))], M1, M2).
 
 
 update_model(_Agent, exits_are(_Whom, in, Here, Exits), Timestamp, _Mem, M0, M4) :-

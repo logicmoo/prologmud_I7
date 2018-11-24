@@ -236,7 +236,7 @@ process_percept_auto(Agent, notice_children(Agent, Sense, _Here, _Prep, Depth, O
  DepthN > 1, DepthLess is DepthN - 1,
  findall( trys_examine(Agent, Sense, child, Obj, depth(DepthLess)),
    ( member(Obj, Objects),    
-   Obj \== Agent, \+ member(holds_at(props(Obj, _), _), ModelData)),
+   Obj \== Agent, \+ member(props(Obj, _), ModelData)),
    Actions),
  percept_todo(Actions, Mem0, Mem2).
 
@@ -308,9 +308,7 @@ process_percept_list(_Agent, _, _Stamp, Mem, Mem) :-
  !.
 process_percept_list(Agent, Percept, Stamp, Mem0, Mem3) :-
  dmust_det((
- forget(model(Model0), Mem0, Mem1),
- update_model(Agent, Percept, Stamp, Mem1, Model0, Model1),
- memorize(model(Model1), Mem1, Mem2),
+ update_model(Agent, Percept, Stamp, Mem0, Mem0, Mem2),
  process_percept_main(Agent, Percept, Stamp, Mem2, Mem3))),!.
 process_percept_list(_Agent, Percept, _Stamp, Mem0, Mem0) :-
  bugout3('process_percept_list(~w) FAILED!~n', [Percept], todo), !.

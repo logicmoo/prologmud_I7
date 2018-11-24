@@ -81,10 +81,10 @@ type_functor(nv_of_any, structure_label(term)).
 
 type_functor(memory, goals(list(goals))).
 type_functor(memory, todo(list(doing))).
-type_functor(memory, model(list(state_with_stamps))).
+%type_functor(memory, model(list(state_with_stamps))).
 type_functor(event, timestamp(ordinal, timept)).
 
-type_functor(state_with_stamps, holds_at(h(domrel, inst, inst), timept)).
+%type_functor(state_with_stamps, holds_at(h(domrel, inst, inst), timept)).
 
 type_functor(state, type_props(type, list(nv))).
 type_functor(state, props(inst, list(nv))).
@@ -269,19 +269,6 @@ props('floyd~1', [name = ('Floyd the robot'), powered = f,  inherit(autonomous,t
 
 props('player~1', [name = ($self),inherit(console,t), inherit(humanoid,t)]).
 
-/*memories('player~1',
-   [ structure_label(mem('player~1')),
-    timestamp(0,$now),
-    model([]),
-    goals([]),
-    todo([look('player~1')]),
-    inst('player~1'),
-    name = ('player~1')
-]).*/
-
-  % props(telnet, [inherit(telnet,t),isnt(console),inherit('player~1')]),
-	
-	
 
 
 basement props place,

@@ -187,12 +187,6 @@ initial_operators(Agent, Operators) :-
 precondition_matches_effect(Cond, Effect) :-
  % player_format('  Comparing cond ~w with effect ~w: ', [Cond, Effect]),
  Cond = Effect. %, player_format('match~n', []).
-precondition_matches_effect(Cond, Effect) :- ( \+ compound(Cond) ; \+ compound(Effect)),!, fail.
-%precondition_matches_effect(holds_at(Cond, _), Effect) :- !, precondition_matches_effect(Effect ,Cond).
-% precondition_matches_effect(Effect, holds_at(Cond, _)) :- !, precondition_matches_effect(Cond, Effect).
-precondition_matches_effect(holds_at(CondEffect, _), holds_at(CondEffect, _)) :- !.
-precondition_matches_effect(Cond, holds_at(Cond, _)) :- !.
-precondition_matches_effect(holds_at(Effect, _), Effect) :- !.
 
 %precondition_matches_effect(~ ~ Cond, Effect) :-
 % precondition_matches_effect(Cond, Effect).
@@ -614,23 +608,15 @@ depth_planning_loop(PlannerGoals, Operators, SeedPlan, FullPlan,
  depth_planning_loop(PlannerGoals, Operators, SeedPlan, FullPlan,
       Depth, Timeout).
 
-model_to_state(M, S) :- \+ compound(M), !, S = M.
-model_to_state([M|ModelData], [S|ModelStateData]):- !,
-  model_to_state(M, S),
-  model_to_state(ModelData, ModelStateData).
-model_to_state(holds_at(ModelData,_), ModelStateData):- !, model_to_state(ModelData, ModelStateData).
-model_to_state(ModelData, ModelData).
-
 generate_plan(Knower, Agent, FullPlan, Mem0) :-
  initial_operators(Knower, Operators),
  bugout3('OPERATORS are:~n', planner), pprint(Operators, planner),
 
  agent_thought_model(Agent, ModelData, Mem0),
- model_to_state(ModelData, ModelStateData),
 
  %bugout3('CURRENT STATE is ~w~n', [Model0], planner),
  thought(goals(Goals), Mem0),
- new_plan(Agent, ModelStateData, Goals, SeedPlan),
+ new_plan(Agent, ModelData, Goals, SeedPlan),
  bugout3('SEED PLAN is:~n', planner), pprint(SeedPlan, planner),
  !,
  %planning_loop(Operators, SeedPlan, FullPlan),
