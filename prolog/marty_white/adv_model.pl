@@ -178,7 +178,7 @@ update_model(Agent, percept_children(Agent, _Sense, Here, Prep, _Depth, Objects)
 update_model(_Agent, [], _Timestamp, _Memory, M, M).
 update_model(Agent, [Percept|Tail], Timestamp, Memory, M0, M2) :-
  update_model(Agent, Percept, Timestamp, Memory, M0, M1),
- update_model_all( Agent, Tail, Timestamp, Memory, M1, M2),!.
+ update_model( Agent, Tail, Timestamp, Memory, M1, M2),!.
 update_model(_Agent, failure(_,_), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Agent, success(_,_), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Agent, failure(_), _Timestamp, _Mem, M0, M0) :- !.
@@ -189,20 +189,19 @@ update_model(_Agent, msg(_), _Timestamp, _Mem, M0, M0) :- !.
 update_model(Agent, time_passes(Target), Timestamp, _Memory, M, M):-
  nop(bugout1(unused_update_model(Agent, time_passes(Target), Timestamp, M))).
 
-
-
 update_model(Agent, Percept, Timestamp, _Memory, M, M):-
  nop(bugout1(failed_update_model(Agent, Percept, Timestamp), model)).
 
-% update_model_all(Agent, PerceptsList, Stamp, ROMemory, OldModel, NewModel)
-update_model_all(_Agent, [], _Timestamp, _Memory, M, M).
-update_model_all( Agent, [Percept|Tail], Timestamp, Memory, M0, M2) :-
- update_model(Agent, Percept, Timestamp, Memory, M0, M1),
- update_model_all( Agent, Tail, Timestamp, Memory, M1, M2).
 
-update_model_each(_Agent, [], _Timestamp, _Memory, M, M).
-update_model_each( Agent, [Percept|Tail], Timestamp, Memory, M0, M3) :-
- append([Percept], M0, M1),
+well_remembered(none).
+
+maybe_remember(Percept, M0, M0):- functor(Percept,F,_),well_remembered(F),!.
+maybe_remember(percept_props(Whom,see,What,depth(3),_List),M0,M1):- maybe_remember(percept_props(Whom,see,What,depth(3)),M0,M1),!.
+maybe_remember(Percept, M0, M1):- append([Percept], M0, M1).
+
+each_update_model(_Agent, [], _Timestamp, _Memory, M, M).
+each_update_model( Agent, [Percept|Tail], Timestamp, Memory, M0, M3) :-
+ maybe_remember(Percept, M0, M1),
  update_model(Agent, Percept, Timestamp, Memory, M1, M2), 
- update_model_each( Agent, Tail, Timestamp, Memory, M2, M3).
+ each_update_model( Agent, Tail, Timestamp, Memory, M2, M3).
 

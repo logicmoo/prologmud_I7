@@ -292,15 +292,15 @@ aXiom(doing, look(Agent)) -->
   % Agent is At Here
   h(At, Agent, Here),
   % Agent looks At Here
-  aXiom(doing, sub_examine(Agent, see, At, Here, depth(3))).
+  aXiom(doing, sub__examine(Agent, see, At, Here, depth(3))).
 
 aXiom(doing, examine(Agent, Sense)) --> {is_sense(Sense)}, !, 
    dmust_det(from_loc(Agent, Place)),
-   aXiom(doing, sub_examine(Agent, see, in, Place, depth(3))).
+   aXiom(doing, sub__examine(Agent, see, in, Place, depth(3))).
 
-aXiom(doing, examine(Agent, Object)) --> aXiom(doing, sub_examine(Agent, see, at, Object, depth(3))). 
-aXiom(doing, examine(Agent, Sense, Object)) --> aXiom(doing, sub_examine(Agent, Sense, at, Object, depth(3))), !.
-aXiom(doing, examine(Agent, Sense, Prep, Object)) --> aXiom(doing, sub_examine(Agent, Sense, Prep, Object, depth(3))), !.
+aXiom(doing, examine(Agent, Object)) --> aXiom(doing, sub__examine(Agent, see, at, Object, depth(3))). 
+aXiom(doing, examine(Agent, Sense, Object)) --> aXiom(doing, sub__examine(Agent, Sense, at, Object, depth(3))), !.
+aXiom(doing, examine(Agent, Sense, Prep, Object)) --> aXiom(doing, sub__examine(Agent, Sense, Prep, Object, depth(3))), !.
 
 % listen, smell ...
 aXiom(doing, Action) -->
@@ -310,13 +310,13 @@ aXiom(doing, Action) -->
  aXiom(doing, NewAction).
 
 % Here does not allow Sense?
-aXiom(doing, sub_examine(Agent, Sense, Prep, Object, Depth)) -->
+aXiom(doing, sub__examine(Agent, Sense, Prep, Object, Depth)) -->
   \+ sg(can_sense_here(Agent, Sense)), !,
   must_act( failed(examine(Agent, Sense, Prep, Object, Depth), \+ can_sense_here(Agent, Sense))).
-aXiom(doing, sub_examine(Agent, Sense, Prep, Object, Depth)) -->
+aXiom(doing, sub__examine(Agent, Sense, Prep, Object, Depth)) -->
   \+ can_sense(Agent, Sense, Object), !,
   must_act( failed(examine(Agent, Sense, Prep, Object, Depth), \+ can_sense(Agent, Sense, Object))).
-aXiom(doing, sub_examine(Agent, Sense, Prep, Object, Depth)) --> aXiom(doing, does_examine(Agent, Sense, Prep, Object, Depth)).
+aXiom(doing, sub__examine(Agent, Sense, Prep, Object, Depth)) --> aXiom(doing, does_examine(Agent, Sense, Prep, Object, Depth)).
 
 
 aXiom(doing, does_examine(Agent, Sense, Prep, Object, Depth)) -->  dmust_det(act_examine(Agent, Sense, Prep, Object, Depth)),!.
