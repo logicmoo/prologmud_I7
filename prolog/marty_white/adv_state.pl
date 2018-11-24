@@ -159,7 +159,10 @@ declared_link(Pred2, Fact, Object):- var(Object), get_advstate(State),member(Pro
 % store initial state as clauses which are collected up and put into a list,
 % like the operators are, to provide proper prolog variable management.
 
-get_objects(Spec, Set, State):- quietly((must_input_state(State), get_objects_(Spec, List, State, im(State)), !, list_to_set(List,Set))).
+get_objects(Spec, Set, State):- 
+ quietly((must_input_state(State), 
+  get_objects_(Spec, List, State, im(State)), !, 
+  list_to_set(List,Set))).
 %get_objects(_Spec, [player1, floyd], _State):-!.
 
 get_objects_(_Spec, [], [], im(_)) :- !.
@@ -180,7 +183,6 @@ stores_props(props(Object, PropList), Object, PropList).
 
 % get_all_props(Object, AllProps, S0):- findall(Prop,getprop(Object, Prop, S0),AllProps).
 :- defn_state_getter(getprop(thing, nv)).
-
 getprop(Object, Prop, S0):- 
  quietly(( compound(Prop), 
    getprop0(Object, Prop, S0))) 
@@ -202,7 +204,7 @@ inherited_prop1(Orig, AlreadyUsed, _Object, Prop, PropList, S0):-
  \+ member(inherit(Delegate,t), AlreadyUsed),
  \+ member(inherits(Delegate), PropList),
  \+ member(isnt(Delegate), PropList),
- \+ member(inherits(Delegate), AlreadyUsed),
+ \+ member(inherited(Delegate), AlreadyUsed),
  \+ member(isnt(Delegate), AlreadyUsed),
  append(AlreadyUsed,PropList,AllPropList),
  getprop1(Orig, AllPropList, Delegate, Prop, S0).
@@ -229,20 +231,38 @@ direct_props_or(Object,PropList, Default, S0) :-
 object_props_or(Object,PropList, Default, S0) :-
  declared(props(Object,PropList),S0)*->true; PropList=Default.
 
+ :- meta_predicate each_prop(3,?,?,?).
+each_prop(_, [], S0, S0) :-!.
+each_prop(Pred, [Prop|List], S0, S2) :- !,
+  each_prop(Pred, Prop, S0, S1),
+  each_prop(Pred, List, S1, S2).
+each_prop(Pred, Prop, S0, S1):- assertion(compound(Prop)), call(Pred, Prop, S0, S1),!.
+
+
+% Remove Prop.
+:- defn_state_setter(delprop(thing, nv)).
+delprop(Object, Prop, S0, S2) :- notrace(dmust((correct_props(Object,Prop,PropList), each_prop(delprop_(Object), PropList, S0, S2)))).
+delprop_(Object, Prop, S0, S2) :- 
+ undeclare(props(Object, PropList), S0, S1),
+ select(Prop, PropList, NewPropList),
+ declare(props(Object, NewPropList), S1, S2).
+
+% Remove Prop Always.
+:- defn_state_setter(delprop_always(thing, nv)).
+delprop_always(Object, Prop, S0, S2) :- notrace(dmust((correct_props(Object,Prop,PropList), each_prop(delprop_always_(Object), PropList, S0, S2)))).
+delprop_always_(Object, Prop, S0, S2) :-  delprop_(Object, Prop, S0, S2), !.
+delprop_always_(_Object, _Prop, S0, S0).
+
 % Replace or create Prop.
-setprop(Object, Prop, S0, S2) :- notrace((setprop_(Object, Prop, S0, S2))).
+:- defn_state_setter(setprop(thing, nv)).
+setprop(Object, Prop, S0, S2) :- notrace((correct_props(Object,Prop,PropList), each_prop(setprop_(Object), PropList, S0, S2))).
 
-
-setprop_(Object, Prop, S0, S2) :- 
- assertion(compound(Prop)),
-
+setprop_(Object, Prop, S0, S2) :-  
  direct_props_or(Object, PropList, [], S0),
  undeclare_always(props(Object, _), S0, S1),
-
  functor(Prop,F,A),
  duplicate_term(Prop,Old),
  nb_setarg(A,Old,_),
-
  (select(Old, PropList, PropList2) ->
  (upmerge_prop(F,A,Old,Prop,Merged) ->
   ((Old==Merged,fail) -> S2=S0 ; 
@@ -250,10 +270,34 @@ setprop_(Object, Prop, S0, S2) :-
  append([Prop], PropList, PropList3),declare(props(Object, PropList3), S1, S2));
  (append([Prop], PropList, PropList3),declare(props(Object, PropList3), S1, S2))).
 
+% Update or create Prop.
+:- defn_state_setter(updateprop(thing, nv)).
+updateprop(Object, Prop, S0, S2) :- notrace((correct_props(Object,Prop,PropList), each_prop(updateprop_(Object), PropList, S0, S2))).
 
-% delprop_always(Object, Prop, S0U, S0a),
+updateprop_(Object, Prop, S0, S2) :- 
+ assertion(compound(Prop)),
+ direct_props_or(Object, PropList, [], S0),
+ (member(Prop,PropList)
+ -> S0=S2;
+ (undeclare_always(props(Object, _), S0, S1),
+ updateprop_1(Object, Prop, PropList, S1, S2))).
 
-/*setprop(Object, Prop, S0, S2) :-
+updateprop_1(Object, Prop, PropList, S0, S2) :-
+ functor(Prop,F,A),
+ duplicate_term(Prop,Old),
+ nb_setarg(A,Old,_),
+
+ (select(Old, PropList, PropList2) ->
+ (upmerge_prop(F,A,Old,Prop,Merged) ->
+  ((Old==Merged,fail) -> declare(props(Object, PropList), S0, S2) ; % no update
+  (append([Merged], PropList2, PropList3),declare(props(Object, PropList3), S0, S2)));
+ append([Prop], PropList, PropList3),declare(props(Object, PropList3), S0, S2));
+ (append([Prop], PropList, PropList3),declare(props(Object, PropList3), S0, S2))).
+
+      
+/*
+
+setprop(Object, Prop, S0, S2) :-
  %dmust((
  %assertion(\+ atom(Prop)),
  undeclare(props(Object, PropList), S0, S1),
@@ -292,45 +336,8 @@ text_prop(adjs).
 text_prop(desc).
 single_valued_prop(name).
 single_valued_prop(desc).
+single_valued_prop(mass).
+single_valued_prop(volume).
 
 
-% Replace or create Prop.
-updateprop(Object, Prop, S00, S2) :- notrace((updateprop_(Object, Prop, S00, S2))).
-
-updateprop_(Object, Prop, S0, S2) :- 
- assertion(compound(Prop)),
- direct_props_or(Object, PropList, [], S0),
- (member(Prop,PropList)
- -> S0=S2;
- (undeclare_always(props(Object, _), S0, S1),
- updateprop_1(Object, Prop, PropList, S1, S2))).
-
-updateprop_1(Object, Prop, PropList, S0, S2) :-
- functor(Prop,F,A),
- duplicate_term(Prop,Old),
- nb_setarg(A,Old,_),
-
- (select(Old, PropList, PropList2) ->
- (upmerge_prop(F,A,Old,Prop,Merged) ->
-  ((Old==Merged,fail) -> declare(props(Object, PropList), S0, S2) ; % no update
-  (append([Merged], PropList2, PropList3),declare(props(Object, PropList3), S0, S2)));
- append([Prop], PropList, PropList3),declare(props(Object, PropList3), S0, S2));
- (append([Prop], PropList, PropList3),declare(props(Object, PropList3), S0, S2))).
-
-
-% Remove Prop.
-delprop(Object, Prop, S0, S2) :-
- dmust((
- assertion(\+ atom(Prop)),
- undeclare(props(Object, PropList), S0, S1),
- select(Prop, PropList, NewPropList),
- declare(props(Object, NewPropList), S1, S2))).
-
-
-delprop_always(Object, Prop, S0, S2) :-
- assertion(\+ atom(Prop)),
- undeclare(props(Object, PropList), S0, S1),
- select(Prop, PropList, NewPropList),
- declare(props(Object, NewPropList), S1, S2).
-delprop_always(_Object, _Prop, S0, S0).
 

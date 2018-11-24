@@ -22,10 +22,14 @@
 % :- ensure_loaded('adv_log2eng').
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
 xtreme_english :- flag_level(english,>(2)).
 any_english :- \+ no_english.
 no_english :- flag_level(english,=(0)).
 :- ignore(flag(english,0,1)).
+
+pretty :- \+ flag_level(pretty,=(0)).
+:- ignore(flag(pretty,0,1)).
 
 flag_level(Flag,Prop):-flag(Flag,Was,Was),Prop=..[F|Args],apply(F,[Was|Args]).
 
@@ -370,10 +374,9 @@ log2eng( Obj, Some, English):-
 
 log2eng_( Obj, Prop, English):- 
  \+ ground(Prop), copy_term(Prop,Prop2),!,
- numbervars(Prop2,55,_),
- log2eng( Obj, Prop2, English).
-log2eng_(Obj, Some, English):- nop(dif(English,[])), logic2eng(Obj, Some, English),!.
-log2eng_( Obj, Prop, English):- Prop =..[N, Obj1, A| VRange],Obj1==Obj,Prop2 =..[N, A| VRange], log2eng( Obj, Prop2, English).
+ numbervars(Prop2,55,_), log2eng(Obj, Prop2, English).
+log2eng_(Obj, Some, English):- (pretty -> true ; dif(English,[])), logic2eng(Obj, Some, English),!.
+log2eng_(Obj, Prop, English):- Prop =..[N, Obj1, A| VRange],Obj1==Obj,Prop2 =..[N, A| VRange], log2eng( Obj, Prop2, English).
 log2eng_(Context, Inst, TheThing):- atom(Inst), inst_of(Inst, Type, N), !,
  (nth0(N, [(unknown), '', thee, old, some, a], Det) -> true; atom_concat('#',N,Det)),
  compile_eng_txt(Context, [Det, Type], TheThing).
@@ -390,8 +393,6 @@ log2eng_(_Obj, Prop, [String]):- format(atom(String), '~w', [Prop]), !.
 
 
 timestamped_pred(holds_at).
-
-pretty.
 
 
 %logic2eng(Obj, Var, [Text]):- var(Var),!, format(atom(Text),'{{~q}}',[log2eng(Obj, Var)]).
@@ -437,7 +438,7 @@ logic2eng(Context, can_sense_from_here(Agent, At, Here, Sense, Nearby),
 logic2eng(Context, exits_are(_Agent, Relation, Here, Exits), ['Exits',Relation,Here,' are:', ExitText, '\n']):-
   list2eng(Context, Exits, ExitText).
 
-logic2eng(_Context, notice_children(_Agent, Sense, Object, Prep, Depth, '<unknown closed>'), extra_verbose([Object, aux(be), closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
+logic2eng(_Context, notice_children(_Agent, Sense, Object, Prep, Depth, '<unknown>'(_)), extra_verbose([Object, aux(be), closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
 logic2eng(_Context, notice_children(_Agent, _Sense, Object, Prep, Depth, []), extra_verbose([nothing,Prep,Object]) ):- Depth \= depth(3).
 logic2eng(Context, notice_children(Agent, Sense, Here, Prep, _Depth, Nearby), 
     [cap(subj(Agent)), is, Prep, Here, and, es(Sense), ':'  | SeeText]):- 
@@ -543,6 +544,7 @@ logic2eng(_Aobj, moibeus_relation( _, _), ['Topological error!']).
 logic2eng(_Aobj, =(Dark, t),  ['It''s too ', Dark, ' to ', Sense, in, '!']):- problem_solution(Dark, Sense, _Light).
 logic2eng(_Aobj, mustdrop(It), [ 'will have to drop', It, ' first.']).
 logic2eng(_Aobj, cant( move(_Agent, It)), [It,aux(be),'immobile']).
+logic2eng(_Aobj, cant( take(_Agent, It)), [It,aux(be),'untakeable']).
 logic2eng(_Aobj, cantdothat(EatCmd), [ 'can\'t do: ', EatCmd]).
 
 %log2eng(_Obj, oper(OProp, [cap(N), aux(be), V]):- Prop =..[N, V].
@@ -553,18 +555,20 @@ logic2eng(_Obj, has_rel(on), ['has a surface']).
 logic2eng(_Obj, has_rel(in), ['has an interior']).
 logic2eng(_Obj, has_rel(exit(_)), ['has exits']).
 logic2eng(_Obj, can_be(eat), ['looks tasty ', '!']).
+logic2eng(_Obj, can_be(take), ['can be taken!']).
+logic2eng(_Obj, can_be(take,f), ['cannot be taken!']).
 logic2eng(_Obj, can_be(Verb), ['Can', aux(be), tense(Verb, past)]).
 logic2eng(_Obj, can_be(Verb, f), ['Can\'t', aux(be), tense(Verb, past)]).
 logic2eng(_Obj, knows_verbs(Verb), ['Able to', Verb ]).
 logic2eng(_Obj, knows_verbs(Verb, f), ['Unable to', Verb ]).
-logic2eng(_Obj, =(cleanliness, clean), []).
+logic2eng(_Obj, =(cleanliness, clean), []) :- pretty.
 logic2eng(_Obj, =(cleanliness, clean), [clean]).
 logic2eng(_Obj, =(Name, Value), [Name,aux(be),Value]).
 logic2eng(_Obj, =(Statused), [aux(be), Statused ]).
 logic2eng(_Obj, =(Statused, f), [aux(be), 'not', Statused ]).
 logic2eng( Obj, inherit(Type), ['is',Out]):- log2eng(Obj, [Type], Out), !.
 logic2eng( Obj, inherit(Type, f), ['isnt '|Out]):- log2eng(Obj, [Type], Out), !.
-logic2eng( Obj, inherits(Type), ['inherit',Out]):- log2eng(Obj, [Type], Out), !.
+logic2eng( Obj, inherited(Type), ['inherit',Out]):- log2eng(Obj, [Type], Out), !.
 logic2eng( _Obj,msg(Msg), Msg):- !.
 logic2eng(_Obj, class_desc(_), []).
 

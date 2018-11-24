@@ -97,7 +97,7 @@ nonvar_subterm(Bound, Data):- sub_term(E, Data),nonvar(E),'=@='(E,Bound).
 % CODE FILE SECTION
 % :- nop(ensure_loaded('adv_util_subst')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+apply_mapl_state(Goal, List, S0, S2):- apply_all(List, Goal, S0, S2).
 
 apply_all([], _Goal, S0, S0) :- !.
 apply_all([Arg], Goal, S0, S2) :- !, apply_first_arg_state(Arg, Goal, S0, S2).
@@ -113,11 +113,11 @@ apply_all([Arg|ArgTail], Goal, S0, S2) :-
  apply_all(ArgTail, Goal, S1, S2).
 
 
-apply_map_state(_Front, [], _Rest, S, S).
-apply_map_state(Front, [E|List], Rest, S0, S2) :-
+apply_mapl_rest_state(_Front, [], _Rest, S, S).
+apply_mapl_rest_state(Front, [E|List], Rest, S0, S2) :-
  copy_term(Front+Rest,FrontC+RestC),
  apply_state_rest(Front, E, Rest, S0, S1),
- apply_map_state(FrontC, List, RestC, S1, S2).
+ apply_mapl_rest_state(FrontC, List, RestC, S1, S2).
 
 as_rest_list(Rest,RestL):- is_list(Rest)->Rest=RestL;Rest=..[_|RestL].
 

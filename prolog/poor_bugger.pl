@@ -37,14 +37,22 @@ swi_soft_if_then(C,T,F):-  C *-> T ; F.
 bugout1(P):- notrace(ansi_format([fg(cyan)],'~N% ~p.~n',[P])).
 
 :- module_transparent(dmust/1).
-:- meta_predicate dmust(0).
-dmust((A,!,B)):-!,dmust(A),!,dmust(B).
-dmust((A,B)):-!,dmust(A),dmust(B).
-dmust((A;B)):-!,call(A),dmust(B).
-dmust((A->B;C)):-!,call(A)->dmust(B);dmust(C).
-dmust((A*->B;C)):-!,call(A)*->dmust(B);dmust(C).
-% dmust(A):- !, (call(A)*-> true ; failed_dmust(A)).
-dmust(A):- swi_soft_if_then(call(A), true , failed_dmust(A)).
+:- meta_predicate dmust(:).
+dmust(M:G):- dmust_m(M,G).
+dmust_m(M,(A,!,B)):-!,dmust_m(M,A),!,dmust_m(M,B).
+dmust_m(M,(A,B)):-!,dmust_m(M,A),dmust_m(M,B).
+dmust_m(M,(A;B)):-!,(call(M:A);dmust_m(M,B)).
+dmust_m(M,(A->B;C)):-!,(call(M:A)->dmust_m(M,B);dmust_m(M,C)).
+dmust_m(M,(A*->B;C)):-!,(call(M:A)*->dmust_m(M,B);dmust_m(M,C)).
+dmust_m(M,A):- call(M:A)*->true; (failed_dmust(M:A),!,fail).
+
+:- meta_predicate dmust_det(:).
+dmust_det(M:G):- dmust_det_m(M,G).
+dmust_det_m(M,(A,B)):-!,dmust_det_m(M,A),!,dmust_det_m(M,B),!.
+dmust_det_m(M,(A;B)):-!,(call(M:A)->true;dmust_det_m(M,B)),!.
+dmust_det_m(M,(A->B;C)):-!,(call(M:A)->dmust_det_m(M,B);dmust_det_m(M,C)),!.
+dmust_det_m(M,(A*->B;C)):-!,(call(M:A)*->dmust_det_m(M,B);dmust_det_m(M,C)),!.
+dmust_det_m(M,A):- call(M:A)*->true; (failed_dmust(M:A),!,fail).
 
 
 :- module_transparent(failed_dmust/1).

@@ -18,14 +18,14 @@
 */
 
 nearby_objs(Agent, Here, Nearby, S0):- 
- ignore(h(Relation, Agent, Here, S0)),
+ ignore(h(At, Agent, Here, S0)),
  findall_set(What,  
-   (h(Relation, What, Here, S0),
+   (h(At, What, Here, S0),
     sub_objs(descended, Here, What, S0)),
    Nearby).
 
-sub_objs(Relation, Here, What, S0):- 
-  h(Relation, What, Here, S0),
+sub_objs(At, Here, What, S0):- 
+  h(At, What, Here, S0),
  \+ ((h(inside, What, Container, S0), 
    Container\==Here, h(descended, Container, Here, S0))).
 
@@ -42,7 +42,7 @@ object_props(Object, Sense, PropList, S0):-
  list_to_set(PropListL,PropList).
 
                                        
-act_examine(Agent, Sense, PrepIn, Here, Depth, S0, S9) :- % next_depth(Depth2 is Depth -1),
+act_examine(Agent, Sense, PrepIn, Here, Depth, S0, S9) :- 
  \+ \+ h(exit(_), Here, _, S0),
  Depth = depth(3), 
  % h(PrepIn, Agent, Here, S0), !,
@@ -50,7 +50,7 @@ act_examine(Agent, Sense, PrepIn, Here, Depth, S0, S9) :- % next_depth(Depth2 is
  object_props(Here, Sense, PropList, S0),
  prep_object_exitnames(PrepIn, Here, Exits, S0),
  queue_agent_percept(Agent,
-    [       %you_are(Agent, Relation, Here),
+    [       %you_are(Agent, At, Here),
              notice_children(Agent, Sense, Here, PrepIn, Depth, Nearby), 
              sense_props(Agent, Sense, Here, depth(2), PropList),
              exits_are(Agent, PrepIn, Here, Exits) ],
@@ -62,24 +62,24 @@ act_examine(Agent, Sense, PrepIn, Object, Depth, S0, S2):- Depth = depth(DepthN)
  (DepthN>0 -> add_child_precepts(Depth,Sense,Agent,PrepIn, Object,S1,S2) ; S1=S2),!.
 
 get_relation_list(Object, RelationSet, S1) :- 
-  findall_set(Relation, 
-     ((getprop(Object,has_rel(Relation,t),S1);      
-      (declared(h(Relation, _, Object),S1))),
-     Relation\=exit(_)), RelationSet).
+  findall_set(At, 
+     ((getprop(Object,has_rel(At,t),S1);      
+      (declared(h(At, _, Object),S1))),
+     At\=exit(_)), RelationSet).
 
 add_child_precepts(Depth, Sense, Agent, PrepIn, Object, S1, S2):- 
  get_relation_list(Object, RelationSet, S1),
  (member(PrepIn,RelationSet) -> UseRelationSet = [PrepIn] ; UseRelationSet= RelationSet),
  % dmsg(get_relation_list(Object, RelationSet)),
- findall(notice_children(Agent, Sense, Object, Relation, Depth, Children),
-     ((member(Relation,UseRelationSet),
-       child_precepts(Agent, Sense, Object, Relation, Depth, Children, S1))), PreceptS),
+ findall(notice_children(Agent, Sense, Object, At, Depth, Children),
+     ((member(At,UseRelationSet),
+       child_precepts(Agent, Sense, Object, At, Depth, Children, S1))), PreceptS),
  queue_agent_percept(Agent,PreceptS, S1, S2).
 
-child_precepts(_Agent, see, Object, At, _Depth, '<unknown closed>', S1):- is_closed(At, Object,S1),!.
-child_precepts(Agent, Sense, Object, Relation, _Depth, Children, S1):- 
+child_precepts(_Agent, _All, Object, At, _Depth, '<unknown>'(At), S1):- is_closed(At, Object, S1),!.
+child_precepts(Agent, Sense, Object, At, _Depth, Children, S1):- 
  findall_set(What,  
-  (h(Relation, What, Object, S1), 
+  (h(At, What, Object, S1), 
    nop(once(can_sense(Agent, Sense, What, S1)))), 
    Children). 
 

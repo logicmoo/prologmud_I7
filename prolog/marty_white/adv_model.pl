@@ -51,7 +51,7 @@ same_element(holds_at(E,_), E).
 
 %:- defn_state_getter(agent_thought_model(agent,model,or([memory,state]))).
 :- defn_state_getter(agent_thought_model(agent,model)).
-agent_thought_model(Agent, ModelData, Memory):- var(Memory), !, get_advstate(State), member(memories(Agent,Memory),State), agent_thought_model(Agent, ModelData, Memory).
+agent_thought_model(Agent, ModelData, Memory):- var(Memory), get_advstate(State),!, member(memories(Agent,Memory),State), agent_thought_model(Agent, ModelData, Memory).
 agent_thought_model(Agent, ModelData, Memory):- \+ is_list(Memory), !, declared_link(agent_thought_model(Agent), ModelData, Memory).
 agent_thought_model(_Agent, ModelData, Memory):- memberchk(holds_in(_,_),Memory),!,Memory = ModelData.
 agent_thought_model(_Agent, ModelData, Memory):- memberchk(model(ModelData), Memory),!.
@@ -75,11 +75,11 @@ update_relation( NewHow, Item, NewParent, Timestamp, M0, M2) :-
 
 % Batch-update relations.
 
-update_relations(Prep, '<unknown closed>', Object, Timestamp, M0, M1):-
+update_relations(Prep, '<unknown>'(What), Object, Timestamp, M0, M1):-
   \+ in_model(holds_at(h(Prep, _Child, Object), _), M0),
-  update_relation( Prep, '<unexplored>', Object, Timestamp, M0, M1).
+  update_relation( Prep, '<unknown>'(What), Object, Timestamp, M0, M1).
 
-update_relations(_NewHow, '<unknown closed>', _NewParent, _Timestamp, M, M).
+update_relations(_NewHow, '<unknown>'(_), _NewParent, _Timestamp, M, M).
 update_relations(_NewHow, [], _NewParent, _Timestamp, M, M).
 update_relations( NewHow, [Item|Tail], NewParent, Timestamp, M0, M2) :-
  update_relation( NewHow, Item, NewParent, Timestamp, M0, M1),
@@ -88,14 +88,14 @@ update_relations( NewHow, [Item|Tail], NewParent, Timestamp, M0, M2) :-
 
 % If dynamic topology needs remembering, use
 %  h(exit(E), Here, [There1|ThereTail], Timestamp)
-update_model_exit(How, From, Timestamp, M0, M2) :-
- select(holds_at(h(How, From, To), _T), M0, M1),
- append([holds_at(h(How, From, To), Timestamp)], M1, M2).
-update_model_exit(How, From, Timestamp, M0, M1) :-
- append([holds_at(h(How, From, '<unexplored>'), Timestamp)], M0, M1).
-update_model_exit(How, From, To, Timestamp, M0, M2) :-
- select_always(holds_at(h(How, From, _To), _T), M0, M1),
- append([holds_at(h(How, From, To), Timestamp)], M1, M2).
+update_model_exit(At, From, Timestamp, M0, M2) :-
+ select(holds_at(h(At, From, To), _T), M0, M1),
+ append([holds_at(h(At, From, To), Timestamp)], M1, M2).
+update_model_exit(At, From, Timestamp, M0, M1) :-
+ append([holds_at(h(At, From, '<unknown>'(At)), Timestamp)], M0, M1).
+update_model_exit(At, From, To, Timestamp, M0, M2) :-
+ select_always(holds_at(h(At, From, _To), _T), M0, M1),
+ append([holds_at(h(At, From, To), Timestamp)], M1, M2).
 
 
 update_model_exits([], _From, _T, M, M).
@@ -133,15 +133,12 @@ update_model(Agent, carrying(Agent, Objects), Timestamp, _Memory, M0, M1) :-
 update_model(Agent, wearing(Agent, Objects), Timestamp, _Memory, M0, M1) :-
  update_relations( worn_by, Objects, Agent, Timestamp, M0, M1).
 
-update_model(Agent, notice_children(Agent, _Sense, Object, How, _Depth, Children), Timestamp, _Mem, M0, M1) :-
- update_relations( How, Children, Object, Timestamp, M0, M1).
+update_model(Agent, notice_children(Agent, _Sense, Object, At, _Depth, Children), Timestamp, _Mem, M0, M1) :-
+ update_relations( At, Children, Object, Timestamp, M0, M1).
 update_model(Agent, sense_props(Agent, _Sense, Object, _Depth, PropList), Stamp, _Mem, M0, M2) :-
  select_always(holds_at(props(Object, _), _), M0, M1),
  append([holds_at(props(Object, PropList), Stamp)], M1, M2).
 
-
-
-%update_model(Agent, you_are(Agent, _How, _He\re), _Timestamp, _Mem, M0, M0):- !.
 
 update_model(_Agent, exits_are(_Whom, in, Here, Exits), Timestamp, _Mem, M0, M4) :-
   % Don't update map here, it's better done in the moved() clause.

@@ -128,7 +128,7 @@ do_todo(Agent, S0, S9) :-
  memorize(todo(NewToDo), Mem1, Mem2),
  declare(memories(Agent, Mem2), S1, S2),
  set_last_action(Agent,Action),
- apply_first_arg_state(Agent, do_command(Action), S2, S9).
+ do_command(Agent, Action, S2, S9).
 do_todo(_Agent, S0, S0).
 
 %do_todo_while(Agent, S0, S9) :-

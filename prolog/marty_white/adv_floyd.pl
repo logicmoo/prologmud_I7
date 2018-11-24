@@ -104,7 +104,7 @@ autonomous_decide_action(Agent, Mem0, Mem9) :-
 autonomous_decide_action(Agent, Mem0, Mem1) :-
  agent_thought_model(Agent,ModelData, Mem0),
  in_agent_model(Agent,h(_Prep, Agent, Here), ModelData),
- in_agent_model(Agent,h(exit(Dir), Here, '<unexplored>'), ModelData),
+ in_agent_model(Agent,h(exit(Dir), Here, '<unknown>'(exit(Dir))), ModelData),
  add_todo( goto_dir(Agent, walk, Dir), Mem0, Mem1).
 
 % Follow Player to adjacent rooms.

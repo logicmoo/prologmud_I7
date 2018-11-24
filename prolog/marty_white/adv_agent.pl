@@ -21,17 +21,17 @@
 
 each_live_agent(NewGoal, S0, S2) :-
  get_live_agents(List, S0),
- apply_all(List, NewGoal, S0, S2).
+ apply_mapl_state(NewGoal, List, S0, S2).
 
 each_sensing_agent(Sense, NewGoal, S0, S2) :-
  dmust((get_sensing_objects(Sense, List, S0),
   List\==[],
   %bugout1(each_sensing_agent(Sense)=(List=NewGoal)),
- apply_all(List, NewGoal, S0, S2))).
+ apply_mapl_state(NewGoal, List, S0, S2))).
 
 each_agent(Precond, NewGoal, S0, S2) :-
  get_some_agents(Precond, List, S0),
- apply_all(List, NewGoal, S0, S2).
+ apply_mapl_state(NewGoal, List, S0, S2).
 
 
 
@@ -71,7 +71,7 @@ each_agent(Precond, NewGoal, S0, S2) :-
 :- nop(ensure_loaded('adv_agent_goal')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-add_goal(Goal, Mem0, Mem2) :- is_list(Goal),!,apply_all(Goal,add_goal(),Mem0, Mem2).
+add_goal(Goal, Mem0, Mem2) :- is_list(Goal), !, apply_mapl_state(add_goal(), Goal, Mem0, Mem2).
 add_goal(Goal, Mem0, Mem2) :-
  bugout3('adding goal ~w~n', [Goal], planner),
  forget(goals(OldGoals), Mem0, Mem1),
@@ -187,12 +187,12 @@ decide_action(Agent, Mem0, Mem0) :-
 
 % Telnet client
 decide_action(Agent, Mem0, Mem1) :-
- notrace(declared(inherits(telnet), Mem0)),!,
+ notrace(declared(inherited(telnet), Mem0)),!,
  dmust(telnet_decide_action(Agent, Mem0, Mem1)).
 
 % Stdin Client
 decide_action(Agent, Mem0, Mem1) :-
- notrace((declared(inherits(console), Mem0),current_input(In))),!, 
+ notrace((declared(inherited(console), Mem0),current_input(In))),!, 
  agent_to_input(Agent,In),
  ensure_has_prompt(Agent),
  ttyflush,
@@ -200,11 +200,11 @@ decide_action(Agent, Mem0, Mem1) :-
  (Found==[] -> (Mem0=Mem1) ;  quietly(((console_decide_action(Agent, Mem0, Mem1))))).
 
 decide_action(Agent, Mem0, Mem3) :-
- declared(inherits(autonomous), Mem0),
+ declared(inherited(autonomous), Mem0),
  maybe_autonomous_decide_goal_action(Agent, Mem0, Mem3).
 
 decide_action(_Agent, Mem, Mem) :-
- declared(inherits(memorize), Mem), !. % recorders don't decide much.
+ declared(inherited(memorize), Mem), !. % recorders don't decide much.
 decide_action(Agent, Mem0, Mem0) :-
  set_last_action(Agent,[auto(Agent)]),
  nop(bugout3('decide_action(~w) FAILED!~n', [Agent], general)).
@@ -256,7 +256,7 @@ run_agent_pass_1_0(Agent, S0, S) :-
  declare(memories(Agent, Mem4), S2, S3),
  declare(perceptq(Agent, []), S3, S),
  % bugout1(timestamp(Agent, T1)),
- %apply_first_arg_state(Agent, do_todo(), S4, S),
+ % do_todo(Agent, S4, S),
  % pprint(S, general),
  
  notrace(must_output_state(S)),!.
@@ -282,7 +282,7 @@ dontRemember(sense_props).
 %run_agent_pass_2_0(_Agent, S0, S0):-!.
 run_agent_pass_2_0(Agent, S0, S) :-
  must_input_state(S0),
- apply_first_arg_state(Agent, do_todo(), S0, S),
+ do_todo(Agent, S0, S),
  notrace(must_output_state(S)),!.
  
 % --------

@@ -70,18 +70,18 @@ extra :- true. % Fuller, but questionable if needed yet.
 
 adventure_init :-
  %guitracer,
- dmust((
+ dmust_det((
  test_ordering,
  init_logging,
- (retractall(advstate_db(_));true),
- istate(S0),
- init_objects(S0, S1),
- asserta(advstate_db(S1)))), !,
+ (retractall(advstate_db(_));true),!,
+ istate(S0),!,
+ init_objects(S0, S1),!,
+ asserta(advstate_db(S1)))),
  player_format('=============================================~n', []),
  player_format('INIT STATE~n', []),
  player_format('=============================================~n', []),
  printable_state(S1,SP), 
- pprint(SP, general),!.
+ pprint(SP, general).
 
 
 adventure:- 
@@ -108,8 +108,8 @@ main(S0, S9) :-
  get_live_agents(LiveAgents, S1),
  ttyflush)),
  %bugout1(liveAgents = LiveAgents),
- apply_all(LiveAgents, run_agent_pass_1(), S1, S2),
- apply_all(LiveAgents, run_agent_pass_2(), S2, S9),
+ apply_mapl_state(run_agent_pass_1(), LiveAgents, S1, S2),
+ apply_mapl_state(run_agent_pass_2(), LiveAgents, S2, S9),
  notrace((set_advstate(S9))),
  !. % Don't allow future failure to redo main.
 main(S0, S0) :-

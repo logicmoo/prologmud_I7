@@ -168,7 +168,7 @@ type_functor(nv, breaks_into = (type)).
 type_functor(nv, has_rel(domrel, tf)).
 type_functor(nv, has_sense(sense)).
 type_functor(nv, inherit(type, tf)).
-type_functor(nv, inherits(type)).
+type_functor(nv, inherited(type)).
 type_functor(nv, inheriting(type)).
 type_functor(nv, inst(sv(term))).
 type_functor(nv, isnt(type)).
@@ -196,11 +196,14 @@ push_to_state(StateInfo):- StateInfo=..[F,Obj,E1,E2|More],functor_arity_state(F,
 push_to_state(StateInfo):- is_state_info(StateInfo),!, declare(StateInfo,istate,_).
 push_to_state(StateInfo):- forall(arg(_,StateInfo,Sub),push_to_state(Sub)).
 
+correct_props(_Obj,PropsIn,PropsOut):- props_to_list(PropsIn,PropsOut), !.
+
 props_to_list(Nil,[]):- assertion(\+ var(Nil)), Nil==[],!.
 props_to_list(Atom,[inherit(Atom,t)]):- atom(Atom).
-props_to_list(~(Atom),[inherit(Atom,f)]):- atom(Atom).
-props_to_list((X=Y),[(X=Y)]):- !.
+props_to_list(NC,[nc(NC)]):- \+ compound(NC),!.
 props_to_list(@(Atom),[inherit(Atom,t)]):- atom(Atom).
+props_to_list(~(Atom),[inherit(Atom,f)]):- atom(Atom).
+props_to_list(oper(_,_,_),[]):-!.
 props_to_list(~(can_be(Atom)),[can_be(Atom,f)]):- atom(Atom).
 props_to_list( (can_be(Atom)),[can_be(Atom,t)]):- atom(Atom).
 props_to_list([A|B],ABL):- !,
@@ -211,6 +214,7 @@ props_to_list((A,B),ABL):- !,
   props_to_list(A,AL),
   props_to_list(B,BL),
   append(AL,BL,ABL).
+props_to_list(SV,[N=V]):- SV=..[N,V], single_valued_prop(N),!.
 props_to_list(Other,[Other]).
 
 
@@ -295,7 +299,7 @@ dining_room props place.
    % precond(Test, FailureMessage)   
    precond(getprop(screendoor, (opened = t)), ['you must open the door first']),
    % body(clause)
-   body(inherits)
+   body(inherited)
  ),
  % cant_go provides last-ditch special handling for Go.
  cant_go($agent, _Dir, 'The fence surrounding the garden is too tall and solid to pass.')
@@ -344,7 +348,7 @@ props(screendoor, [
 
 
 door type
-   ~can_be(move),
+   ~can_be(take),
    can_be(open),
    can_be(close),
    (opened = t),
@@ -361,7 +365,8 @@ food type
 :- multifile(extra_decl/2).
 :- dynamic(extra_decl/2).
 
-extra_decl(T,P):-
+extra_decl(T,PP):- extra_decl0(T,P), correct_props(T,P,PP).
+extra_decl0(T,P):-
  member(type_props(T,P), 
  [
    type_props(broken, [
@@ -392,7 +397,7 @@ extra_decl(T,P):-
   ]),
 
         type_props(door, [
-         can_be(move, f),
+         can_be(take, f),
          can_be(open, t),
          can_be(close, t),
          (opened = t),
@@ -443,20 +448,20 @@ extra_decl(T,P):-
         type_props(object, [
          can_be(examine, t), 
          adjs(physical),
-         can_be(move, t), 
+         can_be(move, t),
          inherit(corporial, t), 
          inherit(thinkable,t),
          class_desc(['kind is an Movable Object'])]), 
 
-        type_props(immobile, [
+        type_props(untakeable, [
          adjs($class), 
-         can_be(move, f), 
+         can_be(take, f), 
          class_desc(['kind is an Immobile Object'])]), 
 
 
    type_props(furnature, [
     can_be(examine, t), 
-    inherit(immobile, t),
+    inherit(untakeable, t),
     inherit(corporial, t), 
     inherit(surface, t), 
     inherit(thinkable,t),
@@ -533,9 +538,10 @@ extra_decl(T,P):-
      nouns([here,$self]),
      adjs([locally]),
      can_be(move, f),
+     can_be(take, f),
        oper( discard($agent, Thing), 
            precond(h(child,$agent,Thing),['dont have']), % precond(Test, FailureMessage)
-           body(move($agent, Thing, in, $self))),     % body(clause)
+           body(take($agent, Thing, in, $self))),     % body(clause)
      % inherit(container,t),
      has_rel(exit(_), t)
   ]),
@@ -546,7 +552,7 @@ extra_decl(T,P):-
     opened = f,
       oper( put($agent, Thing, in, $self), 
           precond(( ~(getprop(Thing, inherit(liquid,t)))), ['liquids would spill out']), % precond(Test, FailureMessage)
-          body(move($agent, Thing, in, $self)))     % body(clause)
+          body(take($agent, Thing, in, $self)))     % body(clause)
       % inherit(flask, f), 
     % adjs(flask, f)
    ]),
@@ -567,17 +573,17 @@ extra_decl(T,P):-
      % precond(Test, FailureMessage)
      precond(getprop(Thing, inherit(corporial,t)), ['non-physical would spill out']),
     % body(clause)
-     body(move($agent, Thing, in, $self))),
+     body(take($agent, Thing, in, $self))),
     inherit(container, t), 
     inherit(object, t)
    ]),
 
   type_props(bowl, [  
-   inherit(uncloseable, t), 
+   inherit(uncloseable,t), 
    inherit(flask, t), 
    volume_capacity = (2),
    breaks_into = (shards),
-   scleanliness = dirty,
+   cleanliness = dirty,
    name = ('porcelain bowl'),
    desc('This is a modest glass cooking bowl with a yellow flower motif glazed into the outside surface.')
   ]),
@@ -590,7 +596,9 @@ extra_decl(T,P):-
    name = ('plate')
   ]),
   type_props(fireplace, [
-   inherit(container,t),
+   has_rel(on,f),
+   has_rel(over,t),
+   inherit(uncloseable,t),
    volume_capacity = (20), 
    inherit(furnature,t)
   ]),
@@ -638,7 +646,8 @@ extra_decl(T,P):-
   type_props(uncloseable, [
      can_be(close,f),
      can_be(open,f),
-     (opened =t)
+     (opened =t),
+     inherit(container,t)
   ]),
   type_props(cabinate, [
    inherit(container,t),
@@ -684,7 +693,7 @@ extra_decl(T,P):-
  effect(switch(off), true) % calls true(S0, S1) !
  ]),
 
-   type_props(surface, [has_rel(on, t),default_rel = in,adjs(physical), cleanliness=clean]), 
+   type_props(surface, [has_rel(on, t),default_rel = on, adjs(physical), cleanliness=clean]), 
 
    type_props(shelf, [inherit(surface, t),adjs(physical),inherit(furnature, t)]), 
 

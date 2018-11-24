@@ -236,6 +236,7 @@ aXiom(doing, dig(Agent, Hole, Where, Tool)) -->
   declare(h(in, Hole, Where)),
   setprop(Hole, default_rel(in)),
   setprop(Hole, can_be(move, f)),
+  setprop(Hole, can_be(take, f)),
   declare(h(in, dirt, Where)),
   queue_event(
     [ created(Hole, Where),
@@ -429,7 +430,7 @@ disgorge(Doer, How, Container, Prep, Here, Vicinity, Msg) -->
 
 :- defn_state_setter(moveto(agent,verb,listof(inst),domrel,dest,list(dest),msg)).
 moveto(Doer, Verb, List, At, Dest, Vicinity, Msg) --> {is_list(List)},!,
- apply_map_state(moveto(Doer, Verb), List, rest(At, Dest, Vicinity, Msg)).
+ apply_mapl_rest_state(moveto(Doer, Verb), List, rest(At, Dest, Vicinity, Msg)).
 moveto(Doer, Verb, Object, At, Dest, Vicinity, Msg) -->
   undeclare(h(_, Object, From)),
   declare(h(At, Object, Dest)),

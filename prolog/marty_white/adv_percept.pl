@@ -29,7 +29,7 @@ get_perceptq_objects(Objects, S0):-
  setof(O,member(perceptq(O,_),S0),Objects).
 
 get_sensing_objects(Sense, Agents, S0):-
- get_objects((has_sense(Sense);inherits(memorize)), Agents, S0).
+ get_objects((has_sense(Sense);inherited(memorize)), Agents, S0).
 
 :- defn_state_getter(get_live_agents(-list(agent))).
 get_live_agents(LiveAgents, S0):-
@@ -39,15 +39,15 @@ get_live_agents(LiveAgents, S0):-
 get_some_agents(Precond, LiveAgents, S0):-
  dmust((
   get_objects(  
-  (inherits(character),Precond), LiveAgents, S0),
+  (inherited(character),Precond), LiveAgents, S0),
   LiveAgents \== [])).                
 
 
 
 is_prop_public(_,P) :-
-  member(P, [has_rel(_),
+  \+ \+ member(P, [has_rel(_),
      emits_light, can_be(eat,t), name(_), desc(_), breaks_into(_),
-             can_be(move, f), openable, open, closed(_), lockable, locked, locked(_),
+             can_be(take, f), openable, open, closed(_), lockable, locked, locked(_),
              shiny]).
 is_prop_public(_,Prop):- is_prop_nonpublic(Prop),!,fail.
 is_prop_public(_,P) :-
@@ -75,7 +75,7 @@ is_prop_nonpublic(effect).
 is_prop_nonpublic(oper).
 is_prop_nonpublic(co).
 is_prop_nonpublic(class_desc).
-is_prop_nonpublic(inherits).
+is_prop_nonpublic(inherited).
 is_prop_nonpublic(knows_verbs).
 is_prop_nonpublic(can_be).
 is_prop_nonpublic(breaks_into).
@@ -208,7 +208,7 @@ problem_solution(noisy, hear, quiet).
 
 :- defn_state_setter(percept_todo(list(action))).
 percept_todo(Actions, Mem0, Mem2):- add_todo_all(Actions, Mem0, Mem2),!.
-%percept_todo(Actions, Mem0, Mem2):- apply_all(Actions,add_goal(),Mem0, Mem2).
+%percept_todo(Actions, Mem0, Mem2):- apply_mapl_state(add_goal(), Actions, Mem0, Mem2).
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
@@ -236,11 +236,11 @@ process_percept_auto(Agent, notice_children(Agent, Sense, _Here, _Prep, Depth, O
  DepthN > 1, DepthLess is DepthN - 1,
  findall( trys_examine(Agent, Sense, child, Obj, depth(DepthLess)),
    ( member(Obj, Objects),    
-   \+ member(holds_at(props(Obj, _), _), ModelData)),
+   Obj \== Agent, \+ member(holds_at(props(Obj, _), _), ModelData)),
    Actions),
  percept_todo(Actions, Mem0, Mem2).
 
-process_percept_auto(_Agent, _Percept, _Timestamp, M0, M0):-  \+ declared(inherits(autonomous), M0),!.
+process_percept_auto(_Agent, _Percept, _Timestamp, M0, M0):-  \+ declared(inherited(autonomous), M0),!.
 
 % Auto Answer
 process_percept_auto(Agent, emoted(Speaker,  EmoteType, Agent, Words), _Stamp, Mem0, Mem1) :-
@@ -254,7 +254,7 @@ process_percept_auto(Agent, emoted(Speaker,  EmoteType, Star, WordsIn), _Stamp, 
 process_percept_auto(Agent, sense_props(Agent, Sense, Object, Depth, PropList), _Stamp, Mem0, Mem2) :-
  Depth = depth(DepthN),
  DepthN > 1, 
- (member(inherits(shiny), PropList)),
+ (member(inherited(shiny), PropList)),
  Object \== Agent,
  bugout3('~w: ~p~n', [Agent, sense_props(Agent, Sense, Object, Depth, PropList)], autonomous),
  agent_thought_model(Agent,ModelData, Mem0),
@@ -304,7 +304,7 @@ process_percept_main(Agent, Percept, Stamp, Mem0, Mem0):-
 :- defn_state_setter(process_percept_list(agent, list(event), tstamp)).
 % caller memorizes PerceptList
 process_percept_list(_Agent, _, _Stamp, Mem, Mem) :-
- declared(inherits(no_perceptq), Mem),
+ declared(inherited(no_perceptq), Mem),
  !.
 process_percept_list(Agent, Percept, Stamp, Mem0, Mem3) :-
  dmust((
