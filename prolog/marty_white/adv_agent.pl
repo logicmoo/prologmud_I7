@@ -244,7 +244,7 @@ run_agent_pass_2(Agent, S0, S0) :-
 
 
 run_agent_pass_1_0(Agent, S0, S) :-
- clock_time(Now),
+ % clock_time(Now),
  must_input_state(S0),
  %dmust_det((
  undeclare(memories(Agent, Mem0), S0, S1),
@@ -253,7 +253,7 @@ run_agent_pass_1_0(Agent, S0, S) :-
  % b_setval(advstate,S2),
  thought(timestamp(T0,_OldNow), Mem0), 
  refilter_preceptQ(PerceptQ0,PerceptQ),
- (PerceptQ==[] -> (T1 is T0 + 0, Mem0 = Mem1) ; (T1 is T0 + 1, memorize(timestamp(T1,Now), Mem0, Mem1))), 
+ Mem0 = Mem1, % (PerceptQ==[] -> (T1 is T0 + 0, Mem0 = Mem1) ; (T1 is T0 + 1, memorize(timestamp(T1,Now), Mem0, Mem1))), 
  process_percept_list(Agent, PerceptQ, T1, Mem1, Mem2),
  refilter_memory(PerceptQ,MemoList),
  notrace(memorize_list(MemoList, Mem2, Mem3)),
