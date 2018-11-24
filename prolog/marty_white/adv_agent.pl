@@ -244,46 +244,22 @@ run_agent_pass_2(Agent, S0, S0) :-
 
 
 run_agent_pass_1_0(Agent, S0, S) :-
- % clock_time(Now),
- must_input_state(S0),
- %dmust_det((
+ must_input_state(S0), 
  undeclare(memories(Agent, Mem0), S0, S1),
- undeclare(perceptq(Agent, PerceptQ0), S1, S2),
- set_advstate(S2), % backtrackable leaks :(
- % b_setval(advstate,S2),
- thought(timestamp(T0,_OldNow), Mem0), 
- refilter_preceptQ(PerceptQ0,PerceptQ),
- Mem0 = Mem1, % (PerceptQ==[] -> (T1 is T0 + 0, Mem0 = Mem1) ; (T1 is T0 + 1, memorize(timestamp(T1,Now), Mem0, Mem1))), 
- process_percept_list(Agent, PerceptQ, T1, Mem1, Mem2),
- refilter_memory(PerceptQ,MemoList),
- notrace(memorize_list(MemoList, Mem2, Mem3)),
- decide_action(Agent, Mem3, Mem4),
- declare(memories(Agent, Mem4), S2, S3),
+ undeclare(perceptq(Agent, PerceptQ), S1, S2),
+ set_advstate(S2), % backtrackable leaks :( b_setval(advstate,S2),
+ thought(timestamp(T0,_OldNow), Mem0),
+ process_percept_list(Agent, PerceptQ, T0, Mem0, Mem1),
+ decide_action(Agent, Mem1, Mem2),
+ declare(memories(Agent, Mem2), S2, S3),
  declare(perceptq(Agent, []), S3, S),
- % bugout1(timestamp(Agent, T1)),
  % do_todo(Agent, S4, S),
  % pprint(S, general),
- 
  notrace(must_output_state(S)),!.
-
-refilter_preceptQ(PerceptQ,MemoList):- exclude(preProcessedQ,PerceptQ,MemoList).
-refilter_memory(PerceptQ,MemoList):- reverse(PerceptQ,MemoListSP),exclude(dontRemember,MemoListSP,MemoList).
 
 :- meta_predicate match_functor_or_arg(1,*).
 match_functor_or_arg(Q,P):- compound(P),functor(P,F,_),(call(Q,F)->true;(arg(1,P,E),call(Q,E))),!.
 
-preProcessedQ(_):- !,fail.
-preProcessedQ(P):- \+ atom(P),!,match_functor_or_arg(preProcessedQ,P).
-% preProcessedQ(examine).
-preProcessedQ(msg).
-preProcessedQ(trys_examine).
-
-dontRemember(_):- !,fail.
-dontRemember(P):- \+ atom(P),!,match_functor_or_arg(dontRemember,P).
-%dontRemember(percept_children).
-dontRemember(msg).
-dontRemember(trys_examine).
-dontRemember(percept_props).
 
 
 %run_agent_pass_2_0(_Agent, S0, S0):-!.
