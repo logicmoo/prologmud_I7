@@ -208,11 +208,11 @@ oper_splitk(Agent,Action,Preconds,Postconds):-
   split_k(Agent,PostcondsK,Postconds).
 
 split_k(_Agent,[],[]) :- !.
-split_k(Agent,[~k(P,X,Y)|PrecondsK],[believe(Agent,~h(P,X,Y)),~h(P,X,Y)|Preconds]):- !,
+split_k(Agent,[~(k(P,X,Y))|PrecondsK],[believe(Agent,~h(P,X,Y)),~h(P,X,Y)|Preconds]):- !,
   split_k(Agent,PrecondsK,Preconds).
 split_k(Agent,[k(P,X,Y)|PrecondsK],[believe(Agent,h(P,X,Y)),h(P,X,Y)|Preconds]):- !,
   split_k(Agent,PrecondsK,Preconds).
-split_k(Agent,[~b(P,X,Y)|PrecondsK],[believe(Agent,~h(P,X,Y))|Preconds]):- !, 
+split_k(Agent,[~(b(P,X,Y))|PrecondsK],[believe(Agent,~h(P,X,Y))|Preconds]):- !, 
   split_k(Agent,PrecondsK,Preconds).
 split_k(Agent,[b(P,X,Y)|PrecondsK],[believe(Agent,h(P,X,Y))|Preconds]):- !, 
   split_k(Agent,PrecondsK,Preconds).
