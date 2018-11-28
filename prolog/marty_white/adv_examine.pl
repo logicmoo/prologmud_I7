@@ -47,17 +47,18 @@ is_prop_public(Sense, N, Prop):- is_prop_public_at(Sense,NL, Prop), !, N >= NL.
 
 is_prop_public_at(_,_, P):- \+ callable(P),!,fail.
 
-is_prop_public_at(see,1, desc).
-is_prop_public_at(see,1, emitting).
-is_prop_public_at(see,1, opened).
-is_prop_public_at(see,1, shiny).
+is_prop_public_at(see,3, desc).
+is_prop_public_at(see,3, shiny).
+
+is_prop_public_at(see,2, opened).
+is_prop_public_at(see,2, worn_on).
+is_prop_public_at(_, 2, has_rel).
+is_prop_public_at(see,2, emitting).
+
 is_prop_public_at(touch,1, locked).
 is_prop_public_at(see,1, shape).
-is_prop_public_at(see,1, worn_on).
-
 is_prop_public_at(see,1, in). % has_rel
 is_prop_public_at(see,1, on). % has_rel
-is_prop_public_at(_, 2, has_rel).
 
 % parsing
 is_prop_public_at(knows,1, name).
@@ -109,7 +110,7 @@ act_examine(Agent, Sense, PrepIn, Object, Depth, SA, S3):- Depth = depth(DepthN)
  (DepthN = 1 -> KnowsD = 3 ;  (DepthN = 2 -> KnowsD = 2 ; KnowsD = 1)),
  object_props(Object, knows, KnowsD, KPropList, SA), 
  send_sense((KPropList\==[]), Agent, knows, KnowsD, props(Object, KPropList), SA, S0 ),
- object_props(Object, Sense, 3, PropList, SA), 
+ object_props(Object, Sense, KnowsD, PropList, SA), 
  send_sense((PropList\==[]),Agent, Sense, Depth, props(Object, PropList), S0, S1),
  add_child_precepts(Sense,Agent,PrepIn, DepthN, Object, S1, S2),
  (DepthN=1 -> 
