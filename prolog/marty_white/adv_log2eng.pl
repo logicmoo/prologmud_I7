@@ -428,10 +428,13 @@ logic2eng( Obj, ~(Type), ['(','logically','not','(',Out, '))']):- dmust_det(log2
 
 logic2eng(_Context, time_passes(Agent), ['Time passes for',Agent,'.']).
 
-logic2eng(Context, exits(Relation, Here, Exits), ['Exits',Relation,Here,' are:', ExitText, '\n']):-  list2eng(Context, Exits, ExitText).
+logic2eng(_Context, percept(_Agent, How, _, _), ''):- How == know,!.
+logic2eng(_Context, percept(Agent, see, Depth, props(Object,[shape=What])), extra_verbose(percept(Agent, see, Depth, props(Object,[shape=What])))).
+
+logic2eng(Context, percept(_Agent, _, _Depth, exit_list(Relation, Here, Exits)), ['Exits',Relation,Here,' are:', ExitText, '\n']):-  list2eng(Context, Exits, ExitText).
 
 logic2eng(_Context, percept(_Agent,  Sense, Depth, child_list(Object, Prep, '<mystery>'(Closed,_,_))), extra_verbose([Object, aux(be), Closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
-logic2eng(_Context, percept(_Agent, _Sense, Depth, child_list(Object, Prep, [])), extra_verbose([nothing,Prep,Object]) ):- Depth \= depth(1).
+logic2eng(_Context, percept(_Agent, _Sense, Depth, child_list(Object, Prep, [])), extra_verbose([nothing,Prep,Object]) ):- Depth \= 1.
 logic2eng(Context,  percept( Agent, Sense, _Depth, child_list(Here, Prep, Nearby)), 
     [cap(subj(Agent)), is, Prep, Here, and, es(Sense), ':'  | SeeText]):- 
  select(Agent, Nearby, OthersNearby),!,  list2eng(Context, OthersNearby, SeeText).
@@ -439,8 +442,9 @@ logic2eng(Context,  percept( Agent, Sense, _Depth, child_list(Here, Prep, Nearby
 logic2eng(Context, percept( Agent, Sense, _Depth, child_list(Here, Prep, Nearby)), 
  [cap(subj(Agent)), person(Sense, es(Sense)),Prep,Here, ':', SeeText]):-  list2eng(Context, Nearby, SeeText).
                                  
-logic2eng(Context, percept(Agent, How, _, Info), notices(Agent,How, What)):- 
+logic2eng(Context, percept(Agent, How, Depth, Info), extra_verbose(notices(Agent,How,Depth,What))):-  Depth=1,
   logic2eng(Context, Info, What).
+
 
 logic2eng(Context, percept(Agent, How, _, Info), notices(Agent,How, What)):- 
  \+ same_agent(Context, Agent), logic2eng(Agent, Info, What).

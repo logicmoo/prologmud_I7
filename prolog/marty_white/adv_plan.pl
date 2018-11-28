@@ -102,7 +102,23 @@ oper(Self, Action, Preconds, Effects):- % Hooks to KR above
  append(Preconds,[did(Action)|Effects],Whole).
 
 
-oper(Agent, goto_dir(Agent, walk, ExitName),
+oper(Agent, goto_dir(Agent, _Walk, ExitName),
+     [ Object \= Agent, Here \= Agent,
+       k(in, Agent, Object),
+       b(in, Object, _),
+       h(in, Agent, Object),
+       Object \= Here      
+     ],
+     [ 
+        precept_local(Object, leaves(Agent, Object, ExitName)),
+        % implies believe(Agent, ~h(in, Agent, Object)),
+        ~k(in, Agent, Object),        
+        k(in, Agent, Here),        
+        precept_local(Here, arrives(Agent, Here, Object))
+        % implies, believe(Agent, h(in, Agent, Here))
+     ]) :- ExitName = escape.
+
+oper(Agent, goto_dir(Agent, _Walk, ExitName),
      [ Here \= Agent, There \= Agent,
        b(in, Agent, Here),
        b(exit(ExitName), Here, _),
@@ -132,7 +148,7 @@ oper(Agent, looky(Agent),
 
 
 % Return an operator after substituting Agent for Agent.
-oper(Agent, old_goto_dir(Agent, walk, ExitName),
+oper(Agent, old_goto_dir(Agent, _Walk, ExitName),
      [ h(in, Agent, Here),     
        h(exit(ExitName), Here, There),             
        Here \= Agent, There \= Agent, Here \= There
@@ -150,32 +166,32 @@ oper(world, handle_events(Here),
 
 % deducer Agents who preceive leavers from some exit believe the leaving point is an exit 
 oper(Agent, precept(Agent, leaves(Someone, Here, ExitName)),
-     [ did(goto_dir(Someone, walk, ExitName)),
+     [ did(goto_dir(Someone, _Walk, ExitName)),
        prop(Agent,inherited(deducer)),
        h(in, Agent, Here) ],
      [ believe(Agent, h(exit(ExitName), Here, _)),
        believe(Agent, prop(Someone,inherited(actor)))]).
 % deducer Agents who preceive arivers from some entrance believe the entry location is an exit 
 oper(Agent, precept(Agent, arrives(Someone, Here, ExitName)),
-     [ did(goto_dir(Someone, walk, ExitName)),
+     [ did(goto_dir(Someone, Walk, ExitName)),
        prop(Agent,inherited(deducer)),
        believe(Agent, h(in, Agent, Here)) ],
 
      [ believe(Agent, h(exit(ExitName), Here, _)),
-       believe(Agent, did(goto_dir(Someone, walk, ExitName))),
+       believe(Agent, did(goto_dir(Someone, Walk, ExitName))),
        believe(Agent, h(in, Someone, Here)),
        believe(Agent, prop(Someone,inherited(actor)))]).
 
 % deducer Agents who preceive arivers from some entrance believe the entry location is an exit 
 oper(Agent, precept(Agent, arrives(Someone, Here, ExitName)),
-     [ did(goto_dir(Someone, walk, ExitName)),
+     [ did(goto_dir(Someone, Walk, ExitName)),
        isa(Agent,deducer),
        b(Agent, 
-                precept_local(There, leaving(Someone, walk, EnterName)),
+                precept_local(There, leaving(Someone, Walk, EnterName)),
                 in(Agent, Here)) ],
      [ b(Agent, 
                 exit(ExitName, Here, There),
-                did(goto_dir(Someone, walk, EnterName)),
+                did(goto_dir(Someone, Walk, EnterName)),
                 in(Someone, Here),
                 isa(Someone,actor))]).
 

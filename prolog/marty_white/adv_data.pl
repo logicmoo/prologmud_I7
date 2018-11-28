@@ -148,7 +148,7 @@ type_functor(event, moved(agent, how, inst, from, prop, to)).
 type_functor(event, carrying(agent, list(inst))).
 type_functor(event, destroyed(inst)).
 type_functor(event, did(action)).
-type_functor(event, percept(agent, exits(in, dest, list(exit)))).
+type_functor(event, percept(agent, exit_list(in, dest, list(exit)))).
 type_functor(event, percept(agent, child_list(sense, dest, domrel, depth, list(inst)))).
 type_functor(event, failed(doing, msg)).
 type_functor(event, transformed(inst, inst2)).

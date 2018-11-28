@@ -174,12 +174,12 @@ memorize_doing(Action, Mem0, Mem2):-
 has_depth(Action):- compound(Action), functor(Action,_,A),arg(A,Action,E),compound(E),E=depth(_),!.
 
 trival_act(V):- \+ callable(V), !, fail.
+trival_act(sub__examine(_,_,_,_,_)).
 trival_act(Action):- has_depth(Action).
 trival_act(V):- \+ compound(V), !, fail.
 trival_act(_):- !, fail.
 trival_act(look(_)).
 trival_act(wait(_)).
-trival_act(goto(_,_,_,_)).
 
 satisfy_each(_Ctxt,[]) --> [], !.
 satisfy_each(Context,[Cond|CondList]) --> !,
@@ -208,7 +208,11 @@ oper_splitk(Agent,Action,Preconds,Postconds):-
   split_k(Agent,PostcondsK,Postconds).
 
 split_k(_Agent,[],[]) :- !.
+split_k(Agent,[~k(P,X,Y)|PrecondsK],[believe(Agent,~h(P,X,Y)),~h(P,X,Y)|Preconds]):- !,
+  split_k(Agent,PrecondsK,Preconds).
 split_k(Agent,[k(P,X,Y)|PrecondsK],[believe(Agent,h(P,X,Y)),h(P,X,Y)|Preconds]):- !,
+  split_k(Agent,PrecondsK,Preconds).
+split_k(Agent,[~b(P,X,Y)|PrecondsK],[believe(Agent,~h(P,X,Y))|Preconds]):- !, 
   split_k(Agent,PrecondsK,Preconds).
 split_k(Agent,[b(P,X,Y)|PrecondsK],[believe(Agent,h(P,X,Y))|Preconds]):- !, 
   split_k(Agent,PrecondsK,Preconds).

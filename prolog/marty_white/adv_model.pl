@@ -31,19 +31,11 @@ memorize_appending(Figment, M0, M2) :-  memorize_edit(append,Figment, M0, M2).
 % Manipulate memories (M stands for Memories)
 memorize(Figment, M0, M1) :- assertion(\+ is_list(Figment)), notrace(append([Figment], M0, M1)).
 % memorize(Figment, M0, M1) :- notrace(append([Figment], M0, M1)).
-memorize_list([],M0,M0):-!.
-memorize_list([E|List],M0,M2):-!,
-  memorize_list(List,M0,M1),
-  memorize_list(E,M1,M2).
-memorize_list(Figment, M0, M1):-
-  notrace(append([Figment], M0, M1)).
-%memorize_list(FigmentList, M0, M1) :- notrace((must_be(list,FigmentList),dmust_det(append(FigmentList, M0, M1)))).
-%memorize_list(FigmentList, M0, M1) :- notrace((must_be(list,FigmentList),dmust_det(append(FigmentList, M0, M1)))).
 forget(Figment, M0, M1) :- select(Figment, M0, M1).
 forget_always(Figment, M0, M1) :- select_always(Figment, M0, M1).
 %forget_default(Figment, Default, M0, M1) :-
 % select_default(Figment, Default, M0, M1).
-thought(Figment, M) :- member(Figment, M).
+thought(Figment, M) :- declared(Figment, M).
 
 
 in_agent_model(Agent, Fact, State):- in_model(Fact, State)*-> true ; (agent_thought_model(Agent, ModelData, State), in_model(Fact, ModelData)).
@@ -53,7 +45,7 @@ in_model0(E, L):- \+ is_list(L),declared_link(declared, E, L).
 in_model0(E, L):- compound(E),E = holds_at(_,_),!, member(E, L).
 in_model0(E, L):- member(EE, L), same_element(EE,E).
 same_element(E, E) :- !.
-same_element(holds_at(E,_), E).
+same_element(holds_at(E,T), E):- nonvar(T).
 
 
 
@@ -105,15 +97,16 @@ update_relations( NewHow, [Item|Tail], NewParent, Timestamp, M0, M2) :-
 % If dynamic topology needs remembering, use
 %  h(exit(E), Here, [There1|ThereTail], Timestamp)
 update_model_exit(At, From, _Timestamp, M0, M2) :-
- forget((h(At, From, To)), M0, M1),
- append([(h(At, From, To))], M1, M2).
+ forget((h(exit(At), From, To)), M0, M1),
+ append([(h(exit(At), From, To))], M1, M2).
 update_model_exit(At, From, _Timestamp, M0, M1) :-
- append([(h(At, From, '<mystery>'(exit, At, From)))], M0, M1).
+ append([(h(exit(At), From, '<mystery>'(exit, At, From)))], M0, M1).
 update_model_exit(At, From, To, _Timestamp, M0, M2) :-
- select_always((h(At, From, _To)), M0, M1),
- append([(h(At, From, To))], M1, M2).
+ select_always((h(exit(At), From, _To)), M0, M1),
+ append([(h(exit(At), From, To))], M1, M2).
 
 
+% Model exits from Here.
 update_model_exits([], _From, _T, M, M).
 update_model_exits([Exit|Tail], From, Timestamp, M0, M2) :-
  update_model_exit(Exit, From, Timestamp, M0, M1),
@@ -158,12 +151,10 @@ update_model(_Agent, props(Object, PropList), _Stamp, _Mem, M0, M2) :-
  apply_mapl_rest_state(updateprop(Object), PropList, [], M0, M2).
 
 
-update_model(Agent, percept(Agent2,_,_,_Info), _Timestamp, _Mem, M0, M0):- Agent=@=Agent2, !.
+update_model(Agent, percept(Agent2,_,_,_Info), _Timestamp, _Mem, M0, M0):- Agent \=@= Agent2, !.
 % Model exits from Here.
-update_model(Agent, percept(Agent,_,_,exits(in, Here, Exits)), Timestamp, _Mem, M0, M4) :-
-  % Don't update map here, it's better done in the moved() clause.
-  findall(exit(E), member(E, Exits), ExitRelations),
-  update_model_exits(ExitRelations, Here, Timestamp, M0, M4).% Model exits from Here.
+update_model(Agent, percept(Agent,_,_,exit_list(in, Here, ExitRelations)), Timestamp, _Mem, M0, M4) :-
+  update_model_exits(ExitRelations, Here, Timestamp, M0, M4).
 
 % Model objects seen Here
 update_model(Agent, percept(Agent, _Sense, child_list(_Depth, Here, Prep, Objects)), Timestamp, _Mem, M0, M3):- !,
@@ -190,7 +181,7 @@ update_model(Agent, Percept, Timestamp, _Memory, M, M):-
 well_remembered(none).
 
 maybe_remember(Percept, M0, M0):- functor(Percept,F,_),well_remembered(F),!.
-maybe_remember(percept_props(Whom,see,What,depth(N),_List),M0,M1):- maybe_remember(percept_props(Whom,see,What,depth(N)),M0,M1),!.
+%maybe_remember(percept_props(Whom,see,What,Depth,_List),M0,M1):- maybe_remember(percept_props(Whom,see,WhatDepth,),M0,M1),!.
 maybe_remember(Percept, M0, M1):- append([Percept], M0, M1).
 
 each_update_model(_Agent, [], _Timestamp, _Memory, M, M).

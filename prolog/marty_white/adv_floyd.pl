@@ -20,14 +20,6 @@
 :- bugout1(ensure_loaded('adv_robot_floyd')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-/*extra_look_around(Agent, S0, S9) :-
- undeclare(memories(Agent, Mem0), S0, S1),
- memorize_list([did(look(Agent)), did(inventory)], Mem0, Mem1),
- declare(memories(Agent, Mem1), S1, S2),
- must_act(look(Agent), S2, S3),
- must_act(inventory(Agent), S3, S9).
-*/
-
 random_noise(Agent, [cap(subj(Agent)), Msg]) :- fail, 
  random_member(Msg, [
  'hums quietly to themself.',
@@ -103,7 +95,7 @@ autonomous_create_new_goal(_Agent, _Mem0, _Mem1) :- fail.
 % An unexplored exit here, go that way.
 autonomous_decide_unexplored_exit(Agent, Mem0, Mem2) :-
  agent_thought_model(Agent,ModelData, Mem0),
- in_agent_model(Agent,h(exit(Prev), There, '<mystery>'(_,exit(_), _)), ModelData),
+ in_agent_model(Agent,h(exit(Prev), There, '<mystery>'(exit,_,_)), ModelData),
  in_agent_model(Agent,h(exit(Dir), Here, There), ModelData),
  in_agent_model(Agent,h(in, Agent, Here), ModelData),
  add_todo( goto_dir(Agent, walk, Dir), Mem0, Mem1),
@@ -111,7 +103,7 @@ autonomous_decide_unexplored_exit(Agent, Mem0, Mem2) :-
 autonomous_decide_unexplored_exit(Agent, Mem0, Mem1) :-
  agent_thought_model(Agent,ModelData, Mem0),
  in_agent_model(Agent,h(in, Agent, Here), ModelData),
- in_agent_model(Agent,h(exit(Dir), Here, '<mystery>'(_,exit(_), _)), ModelData),
+ in_agent_model(Agent,h(exit(Dir), Here, '<mystery>'(exit,_,_)), ModelData),
  add_todo( goto_dir(Agent, walk, Dir), Mem0, Mem1).
 
 % An unexplored object!

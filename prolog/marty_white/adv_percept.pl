@@ -193,11 +193,10 @@ process_percept_auto(Agent, Percept, _Stamp, M0, M0) :- was_own_self(Agent, Perc
 
 % Auto examine room items
 process_percept_auto(Agent, percept(Agent, Sense, Depth, child_list(_Here, _Prep, Objects)), _Stamp, Mem0, Mem2) :- 
- agent_thought_model(Agent, _ModelData, Mem0),
- Depth = depth(DepthN),
- getprop(Agent, model_depth = ModelDepth, advstate),  DepthN < ModelDepth, 
- DepthLess is DepthN + 1,
- findall( sub__examine(Agent, Sense, child, Obj, depth(DepthLess)),
+ agent_thought_model(Agent, _ModelData, Mem0), Depth > 1,
+ % getprop(Agent, model_depth = ModelDepth, advstate),  
+ DepthLess is Depth - 1,
+ findall( sub__examine(Agent, Sense, child, Obj, DepthLess),
    ( member(Obj, Objects),    
       Obj \== Agent), % ( \+ member(props(Obj, _), ModelData); true),
    Actions),
@@ -214,9 +213,8 @@ process_percept_auto(Agent, emoted(Speaker,  EmoteType, Star, WordsIn), _Stamp, 
  consider_text(Speaker,EmoteType, Agent, Words, Mem0, Mem1).
 
 % Auto take
-process_percept_auto(Agent, percept_props(Agent, Sense, Object, Depth, PropList), _Stamp, Mem0, Mem2) :-
- Depth = depth(DepthN),
- DepthN > 1, 
+process_percept_auto(Agent, percept_props(Agent, Sense, Object, Depth, PropList), _Stamp, Mem0, Mem2) :- 
+  Depth > 1, 
  (member(inherited(shiny), PropList)),
  Object \== Agent,
  bugout3('~w: ~p~n', [Agent, percept_props(Agent, Sense, Object, Depth, PropList)], autonomous),
@@ -244,7 +242,10 @@ process_percept_player(Agent, [Percept|Tail], Stamp, Mem0, Mem4) :- !,
  process_percept_player(Agent, Percept, Stamp, Mem0, Mem1),
  process_percept_player(Agent, Tail, Stamp, Mem1, Mem4).
 process_percept_player(Agent,Percept, _Stamp, Mem0, Mem0) :- was_own_self(Agent, Percept),!.
-process_percept_player(Agent,Percept, _Stamp, Mem0, Mem0) :- sub_term(Sub,Percept),compound(Sub),Sub=depth(DepthN),getprop(Agent, look_depth = LookDepth, advstate), DepthN > LookDepth, !.
+process_percept_player(_Agent, precept(_,Know,_,_Percept), _Stamp, Mem0, Mem0) :- Know == know, !.
+process_percept_player(Agent1, precept(Agent2,_,_,_), _Stamp, Mem0, Mem0) :- Agent1 \== Agent2, !.
+%process_percept_player(Agent1, precept(Agent2,_,_,_), _Stamp, Mem0, Mem0) :- Agent1 \== Agent2, !.
+%process_percept_player(Agent,Percept, _Stamp, Mem0, Mem0) :- sub_term(Sub,Percept),compound(Sub),Sub=depth(_KnowsD, DepthN),getprop(Agent, look_depth = LookDepth, advstate), DepthN > LookDepth, !.
 process_percept_player(Agent, Percept, _Stamp, Mem0, Mem0) :-
  percept2txt(Agent, Percept, Text),!, player_format('~N~w~n', [Text]),!.
 

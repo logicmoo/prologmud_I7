@@ -272,15 +272,15 @@ aXiom(look(Agent)) -->
   % Agent is At Here
   h(At, Agent, Here),
   % Agent looks At Here
-  eVent(Agent,sub__examine(Agent, see, At, Here, depth(1))).
+  eVent(Agent,sub__examine(Agent, see, At, Here, 3)).
 
 aXiom(examine(Agent, Sense)) --> {is_sense(Sense)}, !, 
    from_loc(Agent, Place),
-   eVent(Agent,sub__examine(Agent, see, in, Place, depth(1))).
+   eVent(Agent,sub__examine(Agent, see, in, Place, 3)).
 
-aXiom(examine(Agent, Object)) --> eVent(Agent,sub__examine(Agent, see, at, Object, depth(1))). 
-aXiom(examine(Agent, Sense, Object)) --> eVent(Agent,sub__examine(Agent, Sense, at, Object, depth(1))), !.
-aXiom(examine(Agent, Sense, Prep, Object)) --> eVent(Agent,sub__examine(Agent, Sense, Prep, Object, depth(1))), !.
+aXiom(examine(Agent, Object)) --> eVent(Agent,sub__examine(Agent, see, at, Object, 3)). 
+aXiom(examine(Agent, Sense, Object)) --> eVent(Agent,sub__examine(Agent, Sense, at, Object, 3)), !.
+aXiom(examine(Agent, Sense, Prep, Object)) --> eVent(Agent,sub__examine(Agent, Sense, Prep, Object, 3)), !.
 
 % listen, smell ...
 aXiom(Action) -->

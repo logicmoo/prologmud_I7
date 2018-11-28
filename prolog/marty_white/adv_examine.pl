@@ -47,40 +47,52 @@ is_prop_public(Sense, N, Prop):- is_prop_public_at(Sense,NL, Prop), !, N >= NL.
 
 is_prop_public_at(_,_, P):- \+ callable(P),!,fail.
 
+% stared at
 is_prop_public_at(see,3, desc).
-is_prop_public_at(see,3, shiny).
+is_prop_public_at(see,3, volume_capacity).
+is_prop_public_at(see,3, volume).
+% groped
+is_prop_public_at(touch,3, locked).
 
+% looked 
+is_prop_public_at(see,2, shiny).
 is_prop_public_at(see,2, opened).
 is_prop_public_at(see,2, worn_on).
 is_prop_public_at(_, 2, has_rel).
 is_prop_public_at(see,2, emitting).
+% felt
+is_prop_public_at(touch,2, shape).
+is_prop_public_at(touch,2, volume).
 
-is_prop_public_at(touch,1, locked).
-is_prop_public_at(see,1, shape).
+% glanced
 is_prop_public_at(see,1, in). % has_rel
 is_prop_public_at(see,1, on). % has_rel
+is_prop_public_at(see,1, shape).
+% bumped
+is_prop_public_at(touch,1, texture).
 
 % parsing
-is_prop_public_at(knows,1, name).
-is_prop_public_at(knows,1, adjs).
-is_prop_public_at(knows,1, nouns).
-is_prop_public_at(knows,1, default_rel).
+is_prop_public_at(know,1, name).
+is_prop_public_at(know,1, adjs).
+is_prop_public_at(know,1, nouns).
+is_prop_public_at(know,1, default_rel).
 
 % dunno where to put eatable
-is_prop_public_at(knows,2, eat).
+is_prop_public_at(know,2, eat).
 
 % debugging
-is_prop_public_at(knows,3, inherit).
-is_prop_public_at(knows,3, isnt).
-is_prop_public_at(knows,3, inheriting).
-is_prop_public_at(knows,3, inherited).
+is_prop_public_at(know,3, inherit).
+is_prop_public_at(know,3, isnt).
+is_prop_public_at(know,3, inheriting).
+is_prop_public_at(know,3, inherited).
 
-is_prop_public_at(knows,4, held_by).
-is_prop_public_at(knows,4, class_desc).
-is_prop_public_at(knows,4, has_sense).
-is_prop_public_at(knows,4, co(_)).
-is_prop_public_at(knows,4, knows_verbs).
-is_prop_public_at(knows,4, can_be).
+is_prop_public_at(know,4, held_by).
+is_prop_public_at(know,4, class_desc).
+is_prop_public_at(know,4, has_sense).
+is_prop_public_at(know,4, knows_verbs).
+is_prop_public_at(know,4, can_be).
+
+is_prop_public_at(see, 5, co(_)).
 
 % action = try it to find out
 is_prop_public_at(action,3, move).
@@ -90,12 +102,12 @@ is_prop_public_at(action,5, before).
 is_prop_public_at(action,5, breaks_into).
 is_prop_public_at(action,5, oper).
 is_prop_public_at(action,5, cant_go).
-is_prop_public_at(S,N, P):- var(N), compound(P), functor(P,F,_), is_prop_public_at(S, 5, F), !, N = 5.
+is_prop_public_at(_, N, P):- var(N), compound(P), functor(P,F,_), is_prop_public_at(action, 5, F), !, N = 5.
 
 is_prop_public_at(_,_, P):- \+ compound(P), !, fail.
 is_prop_public_at(S,N, F = _):- !, is_prop_public_at(S, N, F).
-is_prop_public_at(S,N, P) :- arg(1, P, F), is_prop_public_at(S, N, F).
 is_prop_public_at(S,N, P):- functor(P,F,_), is_prop_public_at(S, N, F).
+is_prop_public_at(S,N, P) :- arg(1, P, F), is_prop_public_at(S, N, F).
 
 object_props(Object, Sense, PropDepth, PropList, S0):- 
  findall(P, (getprop(Object, P, S0), is_prop_public(Sense, PropDepth, P)), PropListL),
@@ -106,16 +118,15 @@ send_sense(IF, Agent, Sense, Depth, Data, S0, S1):-
    queue_agent_percept(Agent, percept(Agent, Sense, Depth, Data), S0, S1)
   ; S0 = S1.
 
-act_examine(Agent, Sense, PrepIn, Object, Depth, SA, S3):- Depth = depth(DepthN),
- (DepthN = 1 -> KnowsD = 3 ;  (DepthN = 2 -> KnowsD = 2 ; KnowsD = 1)),
- object_props(Object, knows, KnowsD, KPropList, SA), 
- send_sense((KPropList\==[]), Agent, knows, KnowsD, props(Object, KPropList), SA, S0 ),
- object_props(Object, Sense, KnowsD, PropList, SA), 
+act_examine(Agent, Sense, PrepIn, Object, Depth, SA, S3):- 
+ object_props(Object, know, Depth, KPropList, SA), 
+ send_sense((KPropList\==[]), Agent, know, Depth, props(Object, KPropList), SA, S0 ),
+ object_props(Object, Sense, Depth, PropList, SA), 
  send_sense((PropList\==[]),Agent, Sense, Depth, props(Object, PropList), S0, S1),
- add_child_precepts(Sense,Agent,PrepIn, DepthN, Object, S1, S2),
- (DepthN=1 -> 
+ add_child_precepts(Sense,Agent,PrepIn, Depth, Object, S1, S2),
+ (Depth>2 -> 
    (prep_object_exitnames(PrepIn, Object, Exits, S0), queue_agent_percept(Agent, 
-                                                            percept(Agent, Sense, Depth, exits(PrepIn, Object, Exits)), S2, S3)) 
+                                                            percept(Agent, Sense, Depth, exit_list(PrepIn, Object, Exits)), S2, S3)) 
     ; S2 = S3),!.
 
 
@@ -130,7 +141,7 @@ add_child_precepts(Sense, Agent, PrepIn, Depth, Object, S1, S2):-
  get_relation_list(Object, RelationSet, S1),
  (member(PrepIn,RelationSet) -> UseRelationSet = [PrepIn] ; UseRelationSet= RelationSet),
  % dmsg(get_relation_list(Object, RelationSet)),
- findall(percept(Agent, Sense, depth(Depth), child_list(Object, At, Children)),
+ findall(percept(Agent, Sense, Depth, child_list(Object, At, Children)),
      ((member(At,UseRelationSet),
        child_precepts(Agent, Sense, Object, At, Depth, Children, S1))), PreceptS),
  queue_agent_percept(Agent,PreceptS, S1, S2).
