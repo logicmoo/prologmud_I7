@@ -30,10 +30,10 @@ get_num(A,1) :- asserta(current_num(A,1)).
 
  
 writeNoln(A) :- trace(on,1),!, write(A).
-writeNoln(A) :- trace(off,1),!.
+writeNoln(_A) :- trace(off,1),!.
 
 
 writeln(A) :- trace(on,1),!,write(A),nl.
-writeln(A) :- trace(off,1),!.
+writeln(_A) :- trace(off,1),!.
 	
 forall(P,Q) :- \+ (P, \+Q).

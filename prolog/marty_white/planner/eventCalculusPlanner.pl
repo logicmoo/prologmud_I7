@@ -1,3 +1,6 @@
+
+prolog_flag(F,Old,New):- ignore(current_prolog_flag(F,Old)),set_prolog_flag(F,New).
+
 %Ensure temporal points are generated correctly under PROLOG
 :-ensure_loaded('genSymPatches.pl').
 
@@ -15,7 +18,7 @@
 
 
 %HTML typing and parsing
-:-ensure_loaded('../htmlTyping/typing.pl').
+%:-ensure_loaded('../htmlTyping/typing.pl').
 
 
 :- include('../knowledgeBaseCGI.pl').
@@ -619,7 +622,7 @@ abresolve(before(X,Y),R1,[],R2,B) :-
    arithmetic expressions) are built in.
 */
 
-abresolve(diff(X,Y),R,[],R,false) :- !, X \= Y.
+abresolve(diff(X,Y),R,[],R,false) :- !, dif(X,Y).
 
 abresolve(is(X,Y),R,[],R,false) :- !, X is Y.
 
@@ -642,7 +645,7 @@ abresolve(valid_html_formChildren(Type, Children),R,[],R,false):- !, valid_html_
 
 
 
-breakupResidual( [[X,Y],[Z,A]]   , X).
+breakupResidual( [[X,_Y],[_Z,_A]]   , X).
 
 
 %Attempt to test for membership of Actions list

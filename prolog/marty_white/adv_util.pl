@@ -211,7 +211,7 @@ apply_state(Goal, S0, S2) :- is_state_getter(Goal),call(Goal,S0),!, S0=S2.
 apply_state(rtrace(Goal), S0, S2) :- !, rtrace(apply_state(Goal, S0, S2)). 
 apply_state(current_state(S0), S0, S2) :- !, S0=S2.
 apply_state(dmust_det((G1,G2)), S0, S2) :- !, apply_state(dmust_det(G1), S0, S1),apply_state(dmust_det(G2), S1, S2).
-apply_state(must(Goal), S0, S2) :- !, dmust_det(apply_state(Goal, S0, S2)). 
+apply_state(must(Goal), S0, S2) :- !, dmust(apply_state(Goal, S0, S2)). 
 apply_state(nop(_), S0, S2) :- !, S0=S2.
 apply_state(dmust_det(Goal), S0, S2) :- !, dmust_det(apply_state(Goal, S0, S2)).
 apply_state(Meta, S0, S2) :- is_state_meta(Meta,N), length(Left,N),Meta=..[F|MetaL],
@@ -300,7 +300,7 @@ subst(Prop,Find,Replace,NewProp):- subst(equivalent,Find,Replace,Prop,NewProp).
 % bagof(Template, X^Goal, List) means to never instantiate X
 % Current behavior:
 % subst(copy_term, macro(Code), expanded(Code, X), macro(foo), expanded(foo, Y))
-%  leaving X unbound. Suppose I wanted X left bound?
+%  departing X unbound. Suppose I wanted X left bound?
 % subst(equivalent, macro(Code), expanded(Code, X), macro(foo), macro(foo))
 %  This won't match Code.
 % subst(unify, macro(Code), expanded(Code, X), macro(foo), expanded(foo, X))

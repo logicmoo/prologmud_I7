@@ -144,7 +144,7 @@ parse2logical(Self, [go|Info], Logic, Mem):- !, dmust_det(txt2goto(Self, walk, I
 % outside
 parse2logical(Self, [ExitName], Logic, Mem) :- 
  in_agent_model(Self, h(exit(ExitName), _, _), Mem), txt2goto(Self, walk, [ExitName], Logic, Mem),!.
-parse2logical(Self, [ExitName], goto_dir(Self, walk, ExitName), Mem) :- 
+parse2logical(Self, [ExitName], go_dir(Self, walk, ExitName), Mem) :- 
   in_agent_model(Self, h(exit(ExitName), _Place, _), Mem).
 
 
@@ -153,7 +153,7 @@ parse2logical(Self, [get, Prep| More], Logic, Mem) :- preposition(spatial, Prep)
 % x shelf~1
 % go on shelf~1
 
-txt2goto(Self, run, [], goto_dir(Self, run, escape), _Mem) :- !.
+txt2goto(Self, run, [], go_dir(Self, run, escape), _Mem) :- !.
 txt2goto(Self, Walk,[to, Prep| More], Logic, Mem) :- !, txt2goto(Self, Walk, [Prep| More], Logic, Mem).
 txt2goto(Self, Walk,[Alias| More], Logic, Mem) :- cmdalias(Alias,Dir), !, txt2goto(Self, Walk,[Dir| More], Logic, Mem).
 
@@ -164,13 +164,13 @@ txt2goto(Self, Walk,[ Prep, Dest], goto_prep_obj(Self, Walk, Prep, Where), Mem) 
  dmust_det(txt2place(Dest, Where, Mem)).
 
 % go north
-txt2goto(Self, Walk,[ ExitName], goto_dir(Self, Walk, ExitName), Mem) :-
+txt2goto(Self, Walk,[ ExitName], go_dir(Self, Walk, ExitName), Mem) :-
  in_agent_model(Self, h(exit(ExitName), _, _), Mem).
 % go escape
-txt2goto(Self, Walk,[ Dir], goto_dir(Self, Walk, Dir), _Mem) :- (compass_direction(Dir);Dir==escape),!.
-txt2goto(Self, Walk,[ Dir], goto_dir(Self, Walk, Dir), _Mem) :- (Dir=down;Dir==up),!.
+txt2goto(Self, Walk,[ Dir], go_dir(Self, Walk, Dir), _Mem) :- (compass_direction(Dir);Dir==escape),!.
+txt2goto(Self, Walk,[ Dir], go_dir(Self, Walk, Dir), _Mem) :- (Dir=down;Dir==up),!.
 % go [out,in,..] 
-txt2goto(Self, Walk,[ Prep], goto_dir(Self, Walk, Prep), _Mem) :- preposition(spatial, Prep).
+txt2goto(Self, Walk,[ Prep], go_dir(Self, Walk, Prep), _Mem) :- preposition(spatial, Prep).
 % go kitchen
 txt2goto(Self, Walk, Dest, goto_loc(Self, Walk, Where), Mem) :-
  txt2place(Dest, Where, Mem).

@@ -96,11 +96,12 @@ update_relations( NewHow, [Item|Tail], NewParent, Timestamp, M0, M2) :-
 
 % If dynamic topology needs remembering, use
 %  h(exit(E), Here, [There1|ThereTail], Timestamp)
-update_model_exit(At, From, _Timestamp, M0, M2) :-
+realize_model_exit(At, From, _Timestamp, M0, M2) :-
  forget((h(exit(At), From, To)), M0, M1),
  append([(h(exit(At), From, To))], M1, M2).
-update_model_exit(At, From, _Timestamp, M0, M1) :-
+realize_model_exit(At, From, _Timestamp, M0, M1) :-
  append([(h(exit(At), From, '<mystery>'(exit, At, From)))], M0, M1).
+
 update_model_exit(At, From, To, _Timestamp, M0, M2) :-
  select_always((h(exit(At), From, _To)), M0, M1),
  append([(h(exit(At), From, To))], M1, M2).
@@ -109,8 +110,13 @@ update_model_exit(At, From, To, _Timestamp, M0, M2) :-
 % Model exits from Here.
 update_model_exits([], _From, _T, M, M).
 update_model_exits([Exit|Tail], From, Timestamp, M0, M2) :-
- update_model_exit(Exit, From, Timestamp, M0, M1),
+ realize_model_exit(Exit, From, Timestamp, M0, M1),
  update_model_exits(Tail, From, Timestamp, M1, M2).
+
+update_model(Knower, arriving(Agent, In, Here, Walk, ExitNameReversed), Timestamp, Mem, M0, M2) :-  
+   \+ in_model(h(exit(ExitNameReversed), Here, _There), M0),
+   realize_model_exit(ExitNameReversed, Here, Timestamp, M0, M1),
+   update_model(Knower, arriving(Agent, In, Here, Walk, ExitNameReversed), Timestamp, Mem, M1, M2).
 
 % Match only the most recent Figment in Memory.
 %last_thought(Figment, Memory) :- % or member1(F, M), or memberchk(Term, List)
@@ -118,23 +124,34 @@ update_model_exits([Exit|Tail], From, Timestamp, M0, M2) :-
 % append(RecentMemory, [Figment|_Tail], Memory),
 % \+ member(FreshFigment, RecentMemory).
 
-update_model(Knower, arriving(Agent,Here,_,ExitNameReversed), Timestamp, Mem, M0, M2) :-  Knower = Agent,    
- dmust_det((  reverse_dir(ExitNameReversed, ExitName, advstate),
-  At = in,
+update_model(Knower, arriving(Agent, At, Here, _, ExitNameReversed), Timestamp, Mem, M0, M2) :-  Knower == Agent,    
   % According to model, where was I?
-  in_model(h(_, Agent, There), M0),
+  dmust(in_model(h(_Was, Agent, There), M0)),
   % TODO: Handle goto(Agent, walk, on, table)
-  % At did I get Here?
-  append(RecentMem, [did(goto_dir(Agent, _, ExitName))|OlderMem], Mem), % find figment
-  \+ member(did(goto_dir(Agent, _, _)), RecentMem),               % guarrantee recentness
+  % reverse_dir(ExitNameReversed, ExitName, advstate),
+  % At did I get Here?  
+  dmust(append(RecentMem, [attempting(go_dir(Agent, _, ExitName))|OlderMem], Mem)), % find figment
+  \+ member(attempting(go_dir(Agent, _, _)), RecentMem),               % guarrantee recentness
   memberchk(timestamp(_T1,_OldNow), OlderMem),               % get associated stamp
   %player_format(Agent, '~p moved: goto(Agent, walk, ~p, ~p) from ~p leads to ~p~n',
   %       [Agent, AtGo, Dest, There, Here]),
-  update_model_exit(exit(ExitName), There, Here, Timestamp, M0, M1), % Model the path.
-  update_relation(At, Agent, Here, Timestamp, M1, M2))). % And update location.
+  update_model_exit(ExitName, There, Here, Timestamp, M0, M11), % Model the path.
+  update_model_exit(ExitNameReversed, Here, There, Timestamp, M11, M1), 
+  update_relation(At, Agent, Here, Timestamp, M1, M2), !. % And update location.
+
+update_model(Knower, arriving(Agent, In, Here, Walk, ExitNameReversed), Timestamp, Mem, M0, M2) :-  
+   \+ in_model(h(In, Agent, Here), M0),
+   update_relations( In, [Agent], Here, Timestamp, M0, M1),
+   update_model(Knower, arriving(Agent, In, Here, Walk, ExitNameReversed), Timestamp, Mem, M1, M2).
 
 update_model(_Agent, moved(_Doer, _How, Object,_From, At, To), Timestamp, _Mem, M0, M1) :-
   update_relation(At, Object, To, Timestamp, M0, M1).
+
+update_model(Agent, Event, Timestamp, Memory, M0, M2) :- fail,
+  implications(event( Event), Preconds, Postconds),   
+    (satisfy_each(preCond(_),Preconds, M0, _)  ->
+      satisfy_each(postCond(_),Postconds, M0, M1) -> M0\=@= M1), !,
+    update_model(Agent, Event, Timestamp, Memory, M1, M2).
 
 
 update_model(Agent, carrying(Agent, Objects), Timestamp, _Memory, M0, M1) :-

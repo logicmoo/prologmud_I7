@@ -81,6 +81,17 @@ can_sense(Agent, Sense, Thing, _State):-
 
 
 
+send_precept(Agent, Event, S0, S2) :- 
+  declared(perceptq(Agent, _Q), S0), !, 
+  queue_agent_percept(Agent, Event, S0, S2).
+send_precept(Agent, Event, S0, S2) :- 
+  do_precept_list(Agent, Event, S0, S2).
+
+do_precept_list(Agent, Events, S0, S2) :- 
+  undeclare(memories(Agent, Mem0), S0, S1),
+  thought(timestamp(Stamp,_OldNow), Mem0),
+  with_agent_console(Agent,process_percept_list(Agent, Events, Stamp, Mem0, Mem3)),
+  declare(memories(Agent, Mem3), S1, S2).
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
@@ -92,6 +103,10 @@ can_sense(Agent, Sense, Thing, _State):-
 queue_agent_percept(Agent, Event, S0, S2) :- 
  \+ is_list(Event),!, 
  queue_agent_percept(Agent, [Event], S0, S2).
+% Agent process event list now
+queue_agent_percept(Agent, Events, S0, S2) :- 
+ getprop(Agent, inherited(no_perceptq), S0), !,
+ do_precept_list(Agent, Events, S0, S2).
 queue_agent_percept(Agent, Events, S0, S2) :-
  dmust_det((select(perceptq(Agent, Queue), S0, S1),
  append(Queue, Events, NewQueue),
@@ -100,20 +115,20 @@ queue_agent_percept(Agent, Events, S0, S2) :-
 
 :- defn_state_setter(queue_event(listok(event))).
 queue_event(Event, S0, S2) :-
- each_sensing_agent(_All, queue_agent_percept(Event), S0, S2).
+ each_sensing_thing(_All, queue_agent_percept(Event), S0, S2).
 
 
-:- defn_state_setter(queue_local_agent_percept//4).
-% Room-level simulation percepts
-queue_local_agent_percept(Agent, Event, Places, S0, S1) :-
+locally__agent_percept__(Agent, Event, Places, S0, S1) :-
  member(Where, Places),can_sense(Agent,_,Where,S0),!,
  queue_agent_percept(Agent, Event, S0, S1),!.
-queue_local_agent_percept(_Agent, _Event, _Places, S0, S0).
+locally__agent_percept__(_Agent, _Event, _Places, S0, S0).
 
 
+% Room-level simulation percepts
+:- defn_state_setter(queue_local_event(listof(event),listof(place))).
 queue_local_event(Event, Places) --> {\+ is_list(Places)}, !, queue_local_event(Event, [Places]).
 queue_local_event(Event, Places) --> 
- each_sensing_agent(_All, queue_local_agent_percept(Event, Places)).
+ each_sensing_thing(_All, locally__agent_percept__(Event, Places)).
 
 
 
@@ -267,9 +282,11 @@ process_percept_main(Agent, Percept, Stamp, Mem0, Mem0):-
 
 
 :- defn_state_setter(process_percept_list(agent, list(event), tstamp)).
+process_percept_list(Agent, Percept, Stamp, Mem0, Mem3) :- 
+ \+ is_list(Percept),!, process_percept_list(Agent, [Percept], Stamp, Mem0, Mem3).
 % caller memorizes PerceptList
 process_percept_list(_Agent, _, _Stamp, Mem, Mem) :-
- declared(inherited(no_perceptq), Mem),
+ declared(inherited(memorize_perceptq), Mem),
  !.
 process_percept_list(Agent, Percept, Stamp, Mem0, Mem3) :-
  dmust_det((

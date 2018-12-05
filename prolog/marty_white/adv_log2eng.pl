@@ -484,8 +484,8 @@ logic2eng(_Agent, memories(Object, PropList), ['\n\n', the(Object), ' remembers:
 logic2eng(_Agent, perceptq(Object, PropList), ['\n\n', the(Object), ' notices:\n'|English] ) :- 
  list2eng([','=',\n'],Object, PropList, English).
 
-logic2eng(_Context, leaving(Actor,How,Where,Dir), [Actor,left,Where,ing(How),Dir] ) :- !.
-logic2eng(_Context, entering(Actor,How,Where,Dir), [Actor,came,ing(How),Dir,to,Where] ) :- !.
+logic2eng(_Context, departing(Actor, In, Where, How, Dir), [Actor,was,In,Where,but,left,ing(How),Dir] ) :- !.
+logic2eng(_Context, arriving(Actor, In, Where, How, Dir), [Actor,came,ing(How),Dir,In,Where] ) :- !.
 
 logic2eng(Context, did(Action), ['did happen: '|English] ) :- !, logic2eng(Context, Action, English ).
 

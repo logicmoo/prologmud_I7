@@ -7,7 +7,7 @@ will_touch(Agent,Thing, S0, S2):-
   h(touchable, Agent,Thing, S0),S0=S2.
 
 eVent(Agent,Event) -->
- queue_agent_percept(Agent, [Event]),
+ send_precept(Agent, Event),
  aXiom(Event).
 
 
@@ -39,40 +39,6 @@ aXiom(emote(Agent, EmoteType, Object, Message)) --> !, % directed message
 % ==============
 aXiom(status_msg(_Begin,_End)) --> [].
 
-aXiom(goto_dir(Agent, Walk, ExitName)) -->         % go n/s/e/w/u/d/in/out  
-  must_act(status_msg(vBegin,goto_dir(Agent, Walk, ExitName))),
-  {break},dmust_det(from_loc(Agent, Here)),  
-  %dmust_det(h(exit(ExitName), Here, _There)),
-  unless(Agent,h(exit(ExitName), Here, _There),
-  (eVent(Agent,leaving(Agent, Here, Walk, ExitName)),
-   must_act(status_msg(vDone,goto_dir(Agent, Walk, ExitName))))).
-
-aXiom(leaving(Agent, Here, Walk, ExitName)) -->
-  %member(At, [*, to, at, through, thru]),
-  h(exit(ExitName), Here, There),             
-  eVent(Agent, terminates(h(_, Agent, Here))),
-  queue_local_event( leaving(Agent, Here, Walk, ExitName), [Here]),
-   % queue_local_event( msg([cap(subj(Agent)), leaves, Here, ing(Walk), to, the, ExitName]), [Here]).
-  sg(reverse_dir(ExitName,ExitNameR)),
-  dmust_det(eVent(Agent,arriving(Agent, There, Walk, ExitNameR))).
-
-aXiom(terminates(h(Prep, Object, Here))) -->
- %ignore(sg(declared(h(Prep, Object, Here)))),
- undeclare(h(Prep, Object, Here)).
-
-aXiom(arriving(Agent, Here, Walk, ReverseDir)) -->
-  queue_local_event( arriving(Agent, Here, Walk, ReverseDir), [Here]),
-  %sg(default_rel(PrepIn, Here)), {atom(PrepIn)},
-  {PrepIn = in},
-  % [cap(subj(Agent)), arrives, PrepIn, Here, ing(Walk), from, the, ReverseDir] 
-  dmust_det(eVent(Agent,initiates(h(PrepIn, Agent, Here)))),
-  dmust_det(add_look(Agent)).
-
-aXiom(initiates(h(Prep, Object, Dest))) -->
- declare(h(Prep, Object, Dest)).
-
-
-
 
 % ==============
 %  WALK TABLE
@@ -89,9 +55,9 @@ aXiom(goto_prep_obj(Agent, Walk, At, Object)) -->
   will_touch(Agent, Object),
   has_rel(At, Object),  
   \+ is_closed(At, Object), 
-  eVent(Agent,entering(Agent, Walk, Object, At)).
+  eVent(Agent,arriving(Agent, Walk, Object, At)).
 
-aXiom(entering(Agent, Walk, Object, At)) -->
+aXiom(arriving(Agent, Walk, Object, At)) -->
   from_loc(Object, Here),
   moveto(Agent, Walk, Agent, At, Object, [Here],
     [subj(Agent), person(Walk, es(Walk)), At, the, Object, .]),
@@ -208,12 +174,12 @@ aXiom(thing_transforms(Thing,Broken))  -->
 aXiom(hit_with(Agent, Thing, With)) -->
   from_loc(Agent, Here),
   hit(Agent, Thing, With, [Here]),
-  queue_agent_percept(Agent, [true, 'OK.']).
+  send_precept(Agent, [true, 'OK.']).
 
 aXiom(hit(Agent, Thing)) -->
   from_loc(Agent, Here),
   hit(Agent, Thing, Agent, [Here]),
-  queue_agent_percept(Agent, [true, 'OK.']).
+  send_precept(Agent, [true, 'OK.']).
 
 hit(Doer, Target, _With, Vicinity) -->
  ignore(( % Only brittle items use this
@@ -244,8 +210,8 @@ aXiom(dig(Agent, Hole, Where, Tool)) -->
 
 aXiom(eat(Agent, Thing)) -->
   (getprop(Thing, can_be(eat,t)) -> 
-  (undeclare(h(_, Thing, _)),queue_agent_percept(Agent, [destroyed(Thing), 'Mmmm, good!'])) ;
-  queue_agent_percept(Agent, [failure(eat(Thing)), 'It''s inedible!'])).
+  (undeclare(h(_, Thing, _)),send_precept(Agent, [destroyed(Thing), 'Mmmm, good!'])) ;
+  send_precept(Agent, [failure(eat(Thing)), 'It''s inedible!'])).
 
 
 aXiom(switch(Agent, OnOff, Thing)) -->
@@ -254,7 +220,7 @@ aXiom(switch(Agent, OnOff, Thing)) -->
   getprop(Thing, effect(switch(OnOff), Term0)),
   {subst(equivalent, ($(self)), Thing, Term0, Term)},
   call(Term),
-  queue_agent_percept(Agent, [true, 'OK']).
+  send_precept(Agent, [true, 'OK']).
 
 aXiom(inventory(Agent)) -->
   can_sense(Agent, see, Agent),
@@ -262,7 +228,7 @@ aXiom(inventory(Agent)) -->
 
 aXiom(does_inventory(Agent)) -->
   findall(What, h(child, What, Agent), Inventory),
-  queue_agent_percept(Agent, [rel_to(held_by, Inventory)]).
+  send_precept(Agent, [rel_to(held_by, Inventory)]).
 
 
 
@@ -303,7 +269,7 @@ aXiom(sub__examine(Agent, Sense, Prep, Object, Depth)) --> dmust_det(act_examine
 aXiom(touch(Agent, Thing)) --> !,
  unless_reason(Agent, will_touch(Agent, Thing),
    cant( reach(Agent, Thing))),
- queue_agent_percept(Agent, [success(touch(Agent, Thing),'Ok.')]).
+ send_precept(Agent, [success(touch(Agent, Thing),'Ok.')]).
 
 
 aXiom(change_state(Agent, Open, Thing, Opened, TF)) --> !, 
@@ -340,7 +306,7 @@ aXiom(switch(OnOff, Thing)) -->
  getprop(Thing, effect(switch(OnOff), Term0)),
  subst(equivalent, $self, Thing, Term0, Term),
  call(Term),
- queue_agent_percept(Agent, [true, 'OK']).
+ send_precept(Agent, [true, 'OK']).
 */
 % todo
 
@@ -410,4 +376,48 @@ change_state(Agent, Open, Thing, Opened, TF,  S0, S):-
  setprop(Thing, =(Opened, TF), S1, S2))),
 
  queue_local_event([setprop(Thing, =(Opened, TF)),msg([Thing,is,TF,Opened])], [Here, Thing], S2, S),!.
+
+
+
+
+
+
+
+end_of_file.
+
+
+
+aXiom(go_dir(Agent, Walk, ExitName)) -->         % go n/s/e/w/u/d/in/out  
+  must_act(status_msg(vBegin,go_dir(Agent, Walk, ExitName))),
+  {break},dmust_det(from_loc(Agent, Here)),  
+  %dmust_det(h(exit(ExitName), Here, _There)),
+  unless(Agent,h(exit(ExitName), Here, _There),
+  (eVent(Agent,departing(Agent, in, Here, Walk, ExitName)),
+   must_act(status_msg(vDone,go_dir(Agent, Walk, ExitName))))).
+
+aXiom(departing(Agent, in, Here, Walk, ExitName)) -->
+  %member(At, [*, to, at, through, thru]),
+  h(exit(ExitName), Here, There),             
+  eVent(Agent, terminates(h(_, Agent, Here))),
+  queue_local_event( departing(Agent, Here, Walk, ExitName), [Here]),
+   % queue_local_event( msg([cap(subj(Agent)), leaves, Here, ing(Walk), to, the, ExitName]), [Here]).
+  sg(reverse_dir(ExitName,ExitNameR)),
+  dmust_det(eVent(Agent,arriving(Agent, There, Walk, ExitNameR))).
+
+aXiom(terminates(h(Prep, Object, Here))) -->
+ %ignore(sg(declared(h(Prep, Object, Here)))),
+ undeclare(h(Prep, Object, Here)).
+
+aXiom(arriving(Agent, Here, Walk, ReverseDir)) -->
+  queue_local_event( arriving(Agent, Here, Walk, ReverseDir), [Here]),
+  %sg(default_rel(PrepIn, Here)), {atom(PrepIn)},
+  {PrepIn = in},
+  % [cap(subj(Agent)), arrives, PrepIn, Here, ing(Walk), from, the, ReverseDir] 
+  dmust_det(eVent(Agent,initiates(h(PrepIn, Agent, Here)))),
+  dmust_det(add_look(Agent)).
+
+aXiom(initiates(h(Prep, Object, Dest))) -->
+ declare(h(Prep, Object, Dest)).
+
+
 

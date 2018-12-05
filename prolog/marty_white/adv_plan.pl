@@ -57,6 +57,48 @@ has_satisfied_goals(Agent, Mem0, Mem3):-
 :- op(900, fy, '~').
 
 /*
+Situation:
+
+Person is in Kitchen
+Floyd is in Pantry
+The Pantry is North of Kitchen
+
+
+Person wants goal satification to be easy.
+Person thinks to know their environment, goal satisfiation will be easier.
+Person goal is to know environment.
+Person thinks if one is being an explorer, they will know their environment.
+Person think doing what explorers do will make persons goal satisfaction easier.
+Person thinks being an explorer means to find unexplored exits and travel to them.
+Person thinks exits are known by looking.
+Person goal is to have looked
+Person the way to satifiy the goal to have looked is to: add_todo(Person,look(Person))
+Person DOES look(Person)
+Person notices exits: north, south, east, west.
+Person thinks north is unexplored
+Person thinks going north will be acting like an explorer
+Person goal is to go north
+Person makes plan to go north.. the plan is very simple: [go_dir(Person,walk,north)]
+Person DOES go_dir(Person,walk,north)
+Person leaves kitchen to the north
+Kitchen(thus Person) sees Person departing kitchen to the north
+Person enters pantry from the south
+Pantry(thus Floyed and Person) sees Person enter pantry arriving from the south
+Floyd belives Person was somewhere other than pantry before
+Floyd belives Person traveled north and there might be an exit in the opposite dirrection (south) leading somewhere other than pantry
+Person belives pantry is where they end up if they go north from kitchen
+Person belives kitchen is where they end up if they go south from pantry
+
+
+look(Person) is a cheap and effective strategy
+
+
+event(trys(go_dir(Person,walk,north)))
+  
+
+
+
+
 precond_matches_effect(Cond, Cond).
 
 precond_matches_effects(path(Here, There), StartEffects) :- 
@@ -85,7 +127,7 @@ sequenced(_Self,
   reverse_dir(Dir,RDir),
   h(exit(Dir), Here, There), % path(Here, There)
   % %Action:
-  did(goto_dir(Self, Walk, Dir)),
+  did(go_dir(Self, Walk, Dir)),
   %PostConds:
   ~h(WasRel, Self, Here),
   notice(Here,leaves(Self,Here,WasRel)),
@@ -96,45 +138,83 @@ sequenced(_Self,
 only_goto:- true.
 planner_only:- nb_current(opers, planner).
 
+:- discontiguous(implications/4).
+
+implications(does, go_dir(Agent, Walk, ExitName),
+     [ h(In, Agent, Here), h(exit(ExitName), Here, There) ],
+     [ event(moving_in_dir(Agent, Walk, ExitName, In, Here, In, There)) ]).
+
+
+implications(event, moving_in_dir(Object, Manner, ExitName, From, Here, To, There),
+     [ Here \= There,  h(exit(ExitName), Here, There), h(exit(ReverseExit), There, Here) ],
+     [  event(departing(Object, From, Here, Manner, ExitName)),
+        event(arriving(Object, To, There, Manner,  ReverseExit))
+        ]).
+
+implications(event, departing(Agent, In, There, _Walk, ExitName),
+    [ h(In, Agent, There), h(exit(ExitName), There, _)], [~h(In, Agent, There)]).
+
+implications(event, arriving(Agent, In, Here, _Walk, ReverseExit),
+    [~h(In, Agent, Here), h(exit(ReverseExit), Here, _)], [ h(In, Agent, Here)]).
+
+
+:- discontiguous(oper/4).
 % oper(_Self, Action, Preconds, Effects)
 oper(Self, Action, Preconds, Effects):- % Hooks to KR above
  fail, sequenced(Self, Whole),
  append(Preconds,[did(Action)|Effects],Whole).
 
 
-oper(Agent, goto_dir(Agent, _Walk, ExitName),
+
+oper(Agent, go_dir(Agent, Walk, ExitName),
+     [ Here \= Agent, There \= Agent, Here \= There, 
+       k(In, Agent, Here),
+       b(exit(ExitName), Here, _),
+       h(exit(ExitName), Here, There),       
+       ReverseExit \= ExitName, 
+       h(exit(ReverseExit), There, Here)],
+     [ 
+        % implies believe(Agent, ~h(in, Agent, Here)),
+        precept_local(Here, departing(Agent, In, Here, Walk, ExitName)),        
+     ~h(In, Agent, Here),  
+      h(In, Agent, There),
+      %b(exit(ExitName), Here, There),
+      %b(exit(ReverseExit), There, Here),
+        % implies, believe(Agent, h(in, Agent, There)),
+       precept_local(There, arriving(Agent, In, There, Walk,  ReverseExit))
+   %  ~b(In, Agent, Here),  
+   %   b(In, Agent, There),
+        % There \= Here
+        ]):- dif(ExitName, escape).
+
+
+% Return an operator after substituting Agent for Agent.
+oper(Agent, go_dir(Agent, _Walk, ExitName),
+     [ b(in, Agent, Here),     
+       b(exit(ExitName), Here, There),             
+       Here \= Agent, There \= Agent, Here \= There
+       ], % path(Here, There)
+     [ ~b(in, Agent, Here),
+        b(in, Agent, There)
+     ]):- fail.
+
+% equiv(precept_local(Here, departing(Agent, In, Here, Walk, ExitName)))  ~h(in, Agent, Here)
+
+oper(Agent, go_dir(Agent, Walk, Escape),
      [ Object \= Agent, Here \= Agent,
-       k(in, Agent, Object),
-       b(in, Object, _),
-       h(in, Agent, Object),
+       k(OldIn, Agent, Object),
+       h(NewIn, Object, Here),
        Object \= Here      
      ],
      [ 
-        precept_local(Object, leaves(Agent, Object, ExitName)),
+        precept_local(Object, departing(Agent, OldIn, Object, Walk, Escape)),
         % implies believe(Agent, ~h(in, Agent, Object)),
-        ~k(in, Agent, Object),        
-        k(in, Agent, Here),        
-        precept_local(Here, arrives(Agent, Here, Object))
+       ~k(OldIn, Agent, Object),        
+        k(NewIn, Agent, Here),        
+        precept_local(Here, arriving(Agent, NewIn, Here, Walk, EscapedObject))
         % implies, believe(Agent, h(in, Agent, Here))
-     ]) :- ExitName = escape.
+     ]) :- Escape = escape, EscapedObject = escaped, \+ only_goto.
 
-oper(Agent, goto_dir(Agent, _Walk, ExitName),
-     [ Here \= Agent, There \= Agent,
-       b(in, Agent, Here),
-       b(exit(ExitName), Here, _),
-       h(in, Agent, Here),
-       h(exit(ExitName), Here, There),
-       ReverseExit \= ExitName, Here \= There,
-       h(exit(ReverseExit), There, Here)
-     ],
-     [ 
-        precept_local(Here, leaves(Agent, Here, ExitName)),
-        % implies believe(Agent, ~h(in, Agent, Here)),
-        ~k(in, Agent, Here),        
-        k(in, Agent, There),        
-        precept_local(There,arrives(Agent, There, ReverseExit))
-        % implies, believe(Agent, h(in, Agent, There))
-     ]).
 
 % Looking causes Percepts
 oper(Agent, looky(Agent),
@@ -144,56 +224,48 @@ oper(Agent, looky(Agent),
        ], 
      [ foreach(
          (h(Sub, Child, Here), dmust_det(h(At, Child, Where))), 
-             precept(Agent, h(At, Child, Where))) ] ).
+             precept(Agent, h(At, Child, Where))) ] ) :- \+ only_goto.
 
 
-% Return an operator after substituting Agent for Agent.
-oper(Agent, old_goto_dir(Agent, _Walk, ExitName),
-     [ h(in, Agent, Here),     
-       h(exit(ExitName), Here, There),             
-       Here \= Agent, There \= Agent, Here \= There
-       ], % path(Here, There)
-     [ ~h(in, Agent, Here),
-        h(in, Agent, There)
-     ]) :- planner_only.
 
 % the World agent has a *goal that no events go unhandled
 oper(world, handle_events(Here),
      [ precept_local(Here, Event)],               
      [ ~precept_local(Here, Event), 
-       foreach((h(in, Agent, Here),prop(Agent,inherited(preceptQ))),precept(Agent,Event))]).
+       foreach((h(in, Agent, Here),prop(Agent,inherited(preceptQ))),precept(Agent,Event))]):- \+ only_goto.
 
 
-% deducer Agents who preceive leavers from some exit believe the leaving point is an exit 
-oper(Agent, precept(Agent, leaves(Someone, Here, ExitName)),
-     [ did(goto_dir(Someone, _Walk, ExitName)),
+% deducer Agents who preceive leavers from some exit believe the departing point is an exit 
+oper(Agent, precept(Agent, departing(Someone, In, Here, Walk, ExitName)),
+     [ did(go_dir(Someone, Walk, ExitName)),
        prop(Agent,inherited(deducer)),
-       h(in, Agent, Here) ],
+       h(In, Agent, Here) ],
      [ believe(Agent, h(exit(ExitName), Here, _)),
-       believe(Agent, prop(Someone,inherited(actor)))]).
-% deducer Agents who preceive arivers from some entrance believe the entry location is an exit 
-oper(Agent, precept(Agent, arrives(Someone, Here, ExitName)),
-     [ did(goto_dir(Someone, Walk, ExitName)),
-       prop(Agent,inherited(deducer)),
-       believe(Agent, h(in, Agent, Here)) ],
-
-     [ believe(Agent, h(exit(ExitName), Here, _)),
-       believe(Agent, did(goto_dir(Someone, Walk, ExitName))),
-       believe(Agent, h(in, Someone, Here)),
-       believe(Agent, prop(Someone,inherited(actor)))]).
+       believe(Agent, prop(Someone,inherited(actor)))]):- \+ only_goto.
 
 % deducer Agents who preceive arivers from some entrance believe the entry location is an exit 
-oper(Agent, precept(Agent, arrives(Someone, Here, ExitName)),
-     [ did(goto_dir(Someone, Walk, ExitName)),
+oper(Agent, precept(Agent, arriving(Someone, In, Here, Walk, ExitName)),
+     [ did(go_dir(Someone, Walk, ExitName)),
+       prop(Agent,inherited(deducer)),
+       believe(Agent, h(In, Agent, Here)) ],
+
+     [ believe(Agent, h(exit(ExitName), Here, _)),
+       believe(Agent, did(go_dir(Someone, Walk, ExitName))),
+       believe(Agent, h(In, Someone, Here)),
+       believe(Agent, prop(Someone,inherited(actor)))]):- \+ only_goto.
+
+% deducer Agents who preceive arivers from some entrance believe the entry location is an exit 
+oper(Agent, precept(Agent, arriving(Someone, In, Here, Walk, ExitName)),
+     [ did(go_dir(Someone, Walk, ExitName)),
        isa(Agent,deducer),
        b(Agent, 
-                precept_local(There, leaving(Someone, Walk, EnterName)),
-                in(Agent, Here)) ],
+                [precept_local(There, departing(Someone, In, There, Walk, EnterName)),
+                in(Agent, Here)]) ],
      [ b(Agent, 
-                exit(ExitName, Here, There),
-                did(goto_dir(Someone, Walk, EnterName)),
+                [exit(ExitName, Here, There),
+                did(go_dir(Someone, Walk, EnterName)),
                 in(Someone, Here),
-                isa(Someone,actor))]).
+                isa(Someone,actor)])]):- \+ only_goto.
 
 
 % h = is really true
@@ -206,14 +278,16 @@ oper(Agent, take(Agent, Thing), % from same room
    h(At, Thing, There)
   ],
   [ ~ k(At, Thing, There),
-      k(held_by, Thing, Agent)]).
+      moves( At, Thing, There, take, held_by, Thing, Agent),
+      k(held_by, Thing, Agent)]):- \+ only_goto.
 
 oper(Agent, drop(Agent, Thing),
   [ Thing \= Agent, exists(Thing), 
       k(held_by, Thing, Agent),
       k(At, Agent, Where)],
   [ ~ h(held_by, Thing, Agent),
-      k(At, Thing, Where)] ).
+      moves(held_by, Thing, Agent, drop, At, Thing, Where),
+      k(At, Thing, Where)] ):- \+ only_goto.
 
 oper(Agent, put(Agent, Thing, Relation, Where), % in somewhere
   [ Thing \= Agent, exists(Thing), exists(Where),
@@ -222,7 +296,9 @@ oper(Agent, put(Agent, Thing, Relation, Where), % in somewhere
       has_rel(Relation, Where),
     ~ is_closed(Relation, Where)],
   [ ~ k(held_by, Thing, Agent),
-      k(Relation, Thing, Where)] ).
+      moves(held_by, Thing, Agent, put, Relation, Thing, Where),
+      k(Relation, Thing, Where)] ):- \+ only_goto.
+     
 
 oper(Agent, give(Agent, Thing, Recipient), % in somewhere
   [ Thing \= Agent, Recipient \= Agent,
@@ -231,7 +307,8 @@ oper(Agent, give(Agent, Thing, Recipient), % in somewhere
       k(touchable, Agent, Recipient),
       k(touchable, Recipient, Agent)],
   [ ~ k(held_by, Thing, Agent),
-      k(held_by, Thing, Recipient)] ).
+      moves(held_by, Thing, Agent, give, held_by, Thing, Recipient),
+      k(held_by, Thing, Recipient)] ):- \+ only_goto.
 
 oper(Agent, tell(Agent, Player, [please, give, Recipient, the(Thing)]),
     [   Recipient \= Player, Agent \= Player,
@@ -241,11 +318,23 @@ oper(Agent, tell(Agent, Player, [please, give, Recipient, the(Thing)]),
         k(touchable, Player, Recipient),
         k(touchable, Recipient, Player)],
     [ ~ k(held_by, Thing, Player),
-        k(held_by, Thing, Recipient)] ).
-
+        moves(held_by, Thing, Player, give, held_by, Thing, Recipient),
+        k(held_by, Thing, Recipient)] ):- \+ only_goto.
 
 % Return an operator after substituting Agent for Self.
-operagent(Agent, Action, Conds, Effects) :- oper(Agent, Action, Conds, Effects).
+operagent(Agent, Action, BConds, BEffects) :- oper_splitk(Agent, Action, Conds, Effects),
+  once((oper_beliefs(Agent, Conds, BConds),
+  oper_beliefs(Agent, Effects, BEffects))).
+
+oper_beliefs(_Agent, [], []):- !.
+oper_beliefs(Agent, [ believe(Agent2,H)|Conds], [H|BConds]):- Agent == Agent2, !,
+  oper_beliefs(Agent, Conds, BConds).
+oper_beliefs(Agent, [ A\=B|Conds], [A\=B|BConds]):- !,
+  oper_beliefs(Agent, Conds, BConds).
+oper_beliefs(Agent, [ exists(B)|Conds], [exists(B)|BConds]):-
+  oper_beliefs(Agent, Conds, BConds).
+oper_beliefs(Agent, [ _|Conds], BConds):-
+  oper_beliefs(Agent, Conds, BConds).
 
 % Return the initial list of operators.
 initial_operators(Agent, Operators) :-
@@ -704,7 +793,7 @@ generate_plan(Knower, Agent, FullPlan, Mem0) :-
 % ----
 
 
-path2dir1(Here, There, goto_dir(_Self, _Walk, Dir), ModelData):- 
+path2dir1(Here, There, go_dir(_Self, _Walk, Dir), ModelData):- 
  in_model(h(exit(Dir), Here, There), ModelData).
 path2dir1(Here, There, goto_obj(_Self, _Walk, There), ModelData) :-
  in_model(h(descended, Here, There), ModelData).

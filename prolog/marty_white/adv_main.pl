@@ -52,6 +52,7 @@ extra :- true. % Fuller, but questionable if needed yet.
 :- consult(adv_edit).
 :- ensure_loaded(adv_axiom).
 
+:- ensure_loaded(adv_abdemo).
 
 :- consult(adv_examine).
 :- consult(adv_action).

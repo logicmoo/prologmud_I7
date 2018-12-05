@@ -133,7 +133,7 @@ type_functor(doing, give(agent, inst, agnt2)).
 type_functor(doing, take(agent, inst)).
 type_functor(doing, drop(agent, inst)).
 
-type_functor(doing, goto_dir(agent, movetype, dir)).
+type_functor(doing, go_dir(agent, movetype, dir)).
 type_functor(doing, goto_obj(agent, movetype, obj)).
 type_functor(doing, goto_prep_obj(agent, movetype, domrel, obj)).
 
@@ -255,7 +255,7 @@ dining_room props place.
      [place,
    % goto($agent, Prep, Dir, dir, result) provides special handling for going in a direction.
    cant_go($agent, up, 'You lack the ability to fly.'),
-   oper(/*garden, */ goto_dir($agent, _, south),
+   oper(/*garden, */ go_dir($agent, _, south),
    % precond(Test, FailureMessage)
      precond(getprop(screendoor, (opened = t)), ['you must open the door first']),
    % body(clause)
@@ -452,7 +452,8 @@ props(screendoor, [
    model_depth = 3,
    mass = 50, volume = 50, % liters  (water is 1 kilogram per liter)
    has_sense(see),
-   inherit(perceptq),
+   %inherit(perceptq),
+   inherit(no_perceptq),
    inherit(memorize),
    inherit(actor),
    inherit(autoscan),
@@ -682,6 +683,7 @@ props(screendoor, [
  type_props(videocamera, [
    inherit(memorize),
    inherit(perceptq),
+   inherit(memorize_perceptq),
    can(switch),
    effect(switch(on), setprop($self, powered = t)),
    effect(switch(off), setprop($self, (powered= f))),

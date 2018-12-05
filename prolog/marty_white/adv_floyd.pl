@@ -98,13 +98,13 @@ autonomous_decide_unexplored_exit(Agent, Mem0, Mem2) :-
  in_agent_model(Agent,h(exit(Prev), There, '<mystery>'(exit,_,_)), ModelData),
  in_agent_model(Agent,h(exit(Dir), Here, There), ModelData),
  in_agent_model(Agent,h(in, Agent, Here), ModelData),
- add_todo( goto_dir(Agent, walk, Dir), Mem0, Mem1),
- add_todo( goto_dir(Agent, walk, Prev), Mem1, Mem2).
+ add_todo( go_dir(Agent, walk, Dir), Mem0, Mem1),
+ add_todo( go_dir(Agent, walk, Prev), Mem1, Mem2).
 autonomous_decide_unexplored_exit(Agent, Mem0, Mem1) :-
  agent_thought_model(Agent,ModelData, Mem0),
  in_agent_model(Agent,h(in, Agent, Here), ModelData),
  in_agent_model(Agent,h(exit(Dir), Here, '<mystery>'(exit,_,_)), ModelData),
- add_todo( goto_dir(Agent, walk, Dir), Mem0, Mem1).
+ add_todo( go_dir(Agent, walk, Dir), Mem0, Mem1).
 
 % An unexplored object!
 autonomous_decide_unexplored_object(Agent, Mem0, Mem2) :-
@@ -129,7 +129,7 @@ autonomous_decide_follow_player(Agent, Mem0, Mem1) :- % 1 is random(2),
  dif(Agent, Player), current_player(Player),
  in_agent_model(Agent,h(_, Player, There), ModelData),
  in_agent_model(Agent,h(exit(Dir), Here, There), ModelData),
- add_todo(goto_dir(Agent, walk, Dir), Mem0, Mem1).
+ add_todo(go_dir(Agent, walk, Dir), Mem0, Mem1).
 
 autonomous_decide_silly_emoter_action(Agent, Mem0, Mem1) :-
  0 is random(5),
@@ -137,7 +137,7 @@ autonomous_decide_silly_emoter_action(Agent, Mem0, Mem1) :-
  add_todo(emote(Agent, act, *, Msg), Mem0, Mem1).
 
 
-always_action(goto_dir(_,_,_)).
+always_action(go_dir(_,_,_)).
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION

@@ -113,20 +113,23 @@ object_props(Object, Sense, PropDepth, PropList, S0):-
  findall(P, (getprop(Object, P, S0), is_prop_public(Sense, PropDepth, P)), PropListL),
  list_to_set(PropListL,PropList), !.
                                    
-send_sense(IF, Agent, Sense, Depth, Data, S0, S1):- 
+maybe_send_sense(IF, Agent, Sense, Depth, Data, S0, S1):- 
  call(IF) ->
-   queue_agent_percept(Agent, percept(Agent, Sense, Depth, Data), S0, S1)
+   send_sense(Agent, Sense, Depth, Data, S0, S1)
   ; S0 = S1.
+
+send_sense(Agent, Sense, Depth, Data, S0, S1):- 
+   queue_agent_percept(Agent, percept(Agent, Sense, Depth, Data), S0, S1).
 
 act_examine(Agent, Sense, PrepIn, Object, Depth, SA, S3):- 
  object_props(Object, know, Depth, KPropList, SA), 
- send_sense((KPropList\==[]), Agent, know, Depth, props(Object, KPropList), SA, S0 ),
+ maybe_send_sense((KPropList\==[]), Agent, know, Depth, props(Object, KPropList), SA, S0 ),
  object_props(Object, Sense, Depth, PropList, SA), 
- send_sense((PropList\==[]),Agent, Sense, Depth, props(Object, PropList), S0, S1),
+ maybe_send_sense((PropList\==[]),Agent, Sense, Depth, props(Object, PropList), S0, S1),
  add_child_precepts(Sense,Agent,PrepIn, Depth, Object, S1, S2),
  (Depth>2 -> 
-   (prep_object_exitnames(PrepIn, Object, Exits, S0), queue_agent_percept(Agent, 
-                                                            percept(Agent, Sense, Depth, exit_list(PrepIn, Object, Exits)), S2, S3)) 
+   (prep_object_exitnames(PrepIn, Object, Exits, S0),
+       send_sense(Agent, Sense, Depth, exit_list(PrepIn, Object, Exits), S2, S3)) 
     ; S2 = S3),!.
 
 

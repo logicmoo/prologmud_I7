@@ -71,6 +71,7 @@ subsetof(lock, touch).
 subsetof(unlock, touch).
 subsetof(switch, touch).
 
+subsetof(walk, goto).
 
 % feel <- taste <- smell <- look <- listen (by distance)
 subsetof(examine, examine).
@@ -192,9 +193,11 @@ satisfy_each(Context, believe(Beliver, Cond)) --> !,
    {satisfy_each(Context,Cond,Memory,NewMemory)},  
    declare(memories(Beliver,NewMemory)).
 
+satisfy_each(postCond(_Action), event(Event), S0, S9) :-  must_act(Event, S0, S9).
+   
 satisfy_each(Context, foreach(Cond,Event), S0, S9) :- findall(Event, phrase(Cond,S0,_), TODO), satisfy_each(Context, TODO, S0, S9).
 satisfy_each(_,precept_local(Where,Event)) --> !, queue_local_event([Event],[Where]).
-satisfy_each(_,precept(Agent,Event)) --> !, queue_agent_percept(Agent,Event).
+satisfy_each(_,precept(Agent,Event)) --> !, send_precept(Agent,Event).
 satisfy_each(postCond(_Action), ~(Cond)) --> !, undeclare_always(Cond).
 satisfy_each(postCond(_Action),  Cond) --> !, declare(Cond).
 satisfy_each(Context, ~(Cond)) --> !, (( \+ satisfy_each(Context, Cond)) ; [failed(Cond)] ).
@@ -208,13 +211,21 @@ oper_splitk(Agent,Action,Preconds,Postconds):-
   split_k(Agent,PostcondsK,Postconds).
 
 split_k(_Agent,[],[]) :- !.
-split_k(Agent,[~(k(P,X,Y))|PrecondsK],[believe(Agent,~h(P,X,Y)),~h(P,X,Y)|Preconds]):- !,
+
+split_k(Agent,[b(P,[V|VS])|PrecondsK],Preconds):- !,
+  split_k(Agent,[b(P,V),b(P,VS)|PrecondsK],Preconds).
+
+split_k(Agent,[~(k(P,X,Y))|PrecondsK],[believe(Agent,~(h(P,X,Y))),~(h(P,X,Y))|Preconds]):- !,
   split_k(Agent,PrecondsK,Preconds).
 split_k(Agent,[k(P,X,Y)|PrecondsK],[believe(Agent,h(P,X,Y)),h(P,X,Y)|Preconds]):- !,
   split_k(Agent,PrecondsK,Preconds).
-split_k(Agent,[~(b(P,X,Y))|PrecondsK],[believe(Agent,~h(P,X,Y))|Preconds]):- !, 
+split_k(Agent,[~(b(P,X,Y))|PrecondsK],[believe(Agent,~(h(P,X,Y)))|Preconds]):- !, 
   split_k(Agent,PrecondsK,Preconds).
 split_k(Agent,[b(P,X,Y)|PrecondsK],[believe(Agent,h(P,X,Y))|Preconds]):- !, 
+  split_k(Agent,PrecondsK,Preconds).
+split_k(Agent,[isa(X,Y)|PrecondsK],[getprop(X,inherited(Y))|Preconds]):- 
+  split_k(Agent,PrecondsK,Preconds).
+split_k(Agent,[in(X,Y)|PrecondsK],[h(in,X,Y)|Preconds]):- 
   split_k(Agent,PrecondsK,Preconds).
 split_k(Agent,[Cond|PrecondsK],[Cond|Preconds]):- 
   split_k(Agent,PrecondsK,Preconds).
@@ -223,7 +234,7 @@ split_k(Agent,[Cond|PrecondsK],[Cond|Preconds]):-
 apply_act( Action) --> 
  action_doer(Action, Agent), 
  do_introspect(Agent,Action, Answer),
- queue_agent_percept(Agent, [answer(Answer), Answer]), !.
+ send_precept(Agent, [answer(Answer), Answer]), !.
 
 apply_act(print_(Agent, Msg)) -->
   h(descended, Agent, Here),
@@ -233,11 +244,17 @@ apply_act(wait(Agent)) -->
  from_loc(Agent, Here),
  queue_local_event(time_passes(Agent),Here).
 
+apply_act(Action) --> 
+ {implications(_DoesEvent,(Action), Preconds, Postconds), action_doer(Action,Agent) },
+ dmust_det(satisfy_each(preCond(_),Preconds)),
+ (((sg(member(failed(Why))),send_precept(Agent, failed(Action,Why))))
+    ; (satisfy_each(postCond(_),Postconds),send_precept(Agent, (Action)))),!.
+
 apply_act( Action) --> 
  {oper_splitk(Agent,Action,Preconds,Postconds)}, !, 
  dmust_det(satisfy_each(preCond(_),Preconds)),
- (((sg(member(failed(Why))),queue_agent_percept(Agent, failed(Action,Why))))
-    ; (satisfy_each(postCond(_),Postconds),queue_agent_percept(Agent, success(Action)))),!.
+ (((sg(member(failed(Why))),send_precept(Agent, failed(Action,Why))))
+    ; (satisfy_each(postCond(_),Postconds),send_precept(Agent, success(Action)))),!.
 
 apply_act( Action) --> aXiom(Action), !.
 
@@ -258,7 +275,7 @@ must_act( Action , S0, S9) :- dmust_tracing(apply_act( Action, S0, S9)) *-> ! ; 
 % must_act( Action) --> rtrace(apply_act( Action, S0, S1)), !.
 must_act( Action) --> 
  action_doer(Action,Agent), 
- queue_agent_percept(Agent, [failure(Action, unknown_to(Agent,Action))]).
+ send_precept(Agent, [failure(Action, unknown_to(Agent,Action))]).
 
 
 act_required_posses('lock','key',$agent).
@@ -298,7 +315,7 @@ required_reason(Agent, Required):- simplify_reason(Required,CUZ), player_format(
 simplify_reason(_:Required, CUZ):- !, simplify_dbug(Required, CUZ).
 simplify_reason(Required, CUZ):- simplify_dbug(Required, CUZ).
 
-
+reverse_dir(north,south,_).
 reverse_dir(reverse(ExitName), ExitName,_) :- nonvar(ExitName),!.
 reverse_dir(Dir,RDir,S0):-
  h(exit(Dir), Here, There, S0),

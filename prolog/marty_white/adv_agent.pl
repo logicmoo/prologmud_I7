@@ -23,10 +23,10 @@ each_live_agent(NewGoal, S0, S2) :-
  get_live_agents(List, S0),
  apply_mapl_state(NewGoal, List, S0, S2).
 
-each_sensing_agent(Sense, NewGoal, S0, S2) :-
+each_sensing_thing(Sense, NewGoal, S0, S2) :-
  dmust_det((get_sensing_objects(Sense, List, S0),
   List\==[],
-  %bugout1(each_sensing_agent(Sense)=(List=NewGoal)),
+  %bugout1(each_sensing_thing(Sense)=(List=NewGoal)),
  apply_mapl_state(NewGoal, List, S0, S2))).
 
 each_agent(Precond, NewGoal, S0, S2) :-
@@ -180,7 +180,6 @@ makep:-
 :- bugout1(ensure_loaded('adv_agents')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 decide_action(Agent, Mem0, Mem2):- 
   has_satisfied_goals(Agent, Mem0, Mem1), !,
   decide_action(Agent, Mem1, Mem2).
@@ -229,44 +228,40 @@ with_agent_console(Agent,Goal):-
   asserta(adv:current_agent(Agent),E),
   Goal,erase(E)),!.
 
-
 run_agent_pass_1(Agent, S0, S) :-
- with_agent_console(Agent,run_agent_pass_1_0(Agent, S0, S)).
-run_agent_pass_1(Agent, S0, S0) :-
+ must_input_state(S0),
+ with_agent_console(Agent,run_agent_pass_1_0(Agent, S0, S)),
+ notrace(must_output_state(S)),!.
+
+
+run_agent_pass_1_0(Agent, S0, S) :-
+ undeclare(perceptq(Agent, PerceptQ), S0, S1), PerceptQ \== [],
+ declare(perceptq(Agent, []), S1, S2),
+ do_precept_list(Agent, PerceptQ, S2, S3),
+ run_agent_pass_1_0(Agent, S3, S).
+
+run_agent_pass_1_0(Agent, S0, S) :- 
+ undeclare(memories(Agent, Mem0), S0, S1),
+ set_advstate(S1), % backtrackable leaks :( b_setval(advstate,S2),
+ decide_action(Agent, Mem0, Mem2),
+ declare(memories(Agent, Mem2), S1, S).
+
+run_agent_pass_1_0(Agent, S0, S0) :-
  bugout3('run_agent_pass_1(~w) FAILED!~n', [Agent], general).
 
+
+
 run_agent_pass_2(Agent, S0, S) :-
- with_agent_console(Agent,run_agent_pass_2_0(Agent, S0, S)).
+ with_agent_console(Agent,do_todo(Agent, S0, S)).
 run_agent_pass_2(Agent, S0, S0) :-
  bugout3('run_agent_pass_2(~w) FAILED!~n', [Agent], general).
 
 
 
-
-run_agent_pass_1_0(Agent, S0, S) :-
- must_input_state(S0), 
- undeclare(memories(Agent, Mem0), S0, S1),
- undeclare(perceptq(Agent, PerceptQ), S1, S2),
- set_advstate(S2), % backtrackable leaks :( b_setval(advstate,S2),
- thought(timestamp(T0,_OldNow), Mem0),
- process_percept_list(Agent, PerceptQ, T0, Mem0, Mem1),
- decide_action(Agent, Mem1, Mem2),
- declare(memories(Agent, Mem2), S2, S3),
- declare(perceptq(Agent, []), S3, S),
- % do_todo(Agent, S4, S),
- % pprint(S, general),
- notrace(must_output_state(S)),!.
-
+  
 :- meta_predicate match_functor_or_arg(1,*).
 match_functor_or_arg(Q,P):- compound(P),functor(P,F,_),(call(Q,F)->true;(arg(1,P,E),call(Q,E))),!.
 
-
-
-%run_agent_pass_2_0(_Agent, S0, S0):-!.
-run_agent_pass_2_0(Agent, S0, S) :-
- must_input_state(S0),
- do_todo(Agent, S0, S),
- notrace(must_output_state(S)),!.
  
 % --------
 

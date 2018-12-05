@@ -11,21 +11,23 @@
 
 */
 
-abdemo(Gs,R) :- %  nop(init_gensym(t)),
-   abdemo(Gs,[[],[]],R,[],N).
+
+
+abdemo(Gs,R) :- % nop(init_gensym(t)),
+   abdemo(Gs,[[],[]],R,[],_N).
 
 
 abdemo([],R,R,N,N).
 
 
 abdemo([holds_at(F1,T)|Gs1],R1,R3,N1,N4) :-
-     F1 \= neg(F2), abresolve(initially(F1),R1,Gs2,R1),
+     F1 \= neg(_), abresolve(initially(F1),R1,Gs2,R1),
      append(Gs2,Gs1,Gs3), add_neg([clipped(0,F1,T)],N1,N2),
      abdemo_naf([clipped(0,F1,T)],R1,R2,N2,N3),
      abdemo(Gs3,R2,R3,N3,N4).
 
 abdemo([holds_at(F1,T3)|Gs1],R1,R5,N1,N4) :-
-     F1 \= neg(F2), abresolve(initiates(A,F1,T1),R1,Gs2,R1),
+     F1 \= neg(_), abresolve(initiates(A,F1,T1),R1,Gs2,R1),
      abresolve(happens(A,T1,T2),R1,[],R2),
      abresolve(before(T2,T3),R2,[],R3),
      append(Gs2,Gs1,Gs3),
@@ -97,40 +99,41 @@ abdemo_naf([declipped(T1,F,T4)|Gs1],R1,R2,N1,N2) :-
           append([before(T1,T3),before(T2,T4)|Gs2],Gs1,Gs3)),Gss),
      abdemo_nafs(Gss,R1,R2,N1,N2).
 
-abdemo_naf([holds_at(F1,T)|Gs],R1,R2,N1,N2) :-
+abdemo_naf([holds_at(F1,T)|_Gs],R1,R2,N1,N2) :-
      opposite(F1,F2), abdemo([holds_at(F2,T)],R1,R2,N1,N2).
 
-abdemo_naf([holds_at(F,T)|Gs],R1,R2,N1,N2) :-
+abdemo_naf([holds_at(_F,_T)|Gs],R1,R2,N1,N2) :-
      abdemo_naf(Gs,R1,R2,N1,N2).
 
-abdemo_naf([before(X,Y)|Gs],R,R,N,N) :- X = Y.
+abdemo_naf([before(X,Y)|_Gs],R,R,N,N) :- X = Y.
 
-abdemo_naf([before(X,Y)|Gs],R,R,N,N) :- X \= Y, demo_before(Y,X,R).
+abdemo_naf([before(X,Y)|_Gs],R,R,N,N) :- X \= Y, demo_before(Y,X,R).
 
 abdemo_naf([before(X,Y)|Gs],R1,R2,N1,N2) :-
      X \= Y, \+ demo_before(Y,X,R1),
      abdemo_naf(Gs,R1,R2,N1,N2).
 
-abdemo_naf([before(X,Y)|Gs],R1,R2,N,N) :-
+abdemo_naf([before(X,Y)|_Gs],R1,R2,N,N) :-
      X \= Y, \+ demo_before(Y,X,R1),
      \+ demo_beq(X,Y,R1), add_before(Y,X,R1,R2).
 
-abdemo_naf([G|Gs1],R,R,N,N) :-
-     G \= clipped(T1,F,T2), G \= declipped(T1,F,T2), G \= holds_at(F,T),
-     G \= before(X,Y), \+ abresolve(G,R,Gs2,R).
+abdemo_naf([G|_Gs1],R,R,N,N) :-
+     G \= clipped(_T1,_F1,_T2), G \= declipped(_T3,_F2,_T4), 
+     G \= holds_at(_F3,_T5), G \= before(_X,_Y), 
+     \+ abresolve(G,R,_Gs2,R).
 
 abdemo_naf([G1|Gs1],R1,R2,N1,N2) :-
-     G1 \= clipped(T1,F,T2), G1 \= declipped(T1,F,T2),
-     G1 \= holds_at(F,T), G1 \= before(X,Y),
+     G1 \= clipped(_T1,_F1,_T2), G1 \= declipped(_T3,_F2,_T4), 
+     G1 \= holds_at(_F3,_T5), G1 \= before(_X,_Y), 
      findall(Gs3,(abresolve(G1,R1,Gs2,R1),append(Gs2,Gs1,Gs3)),Gss),
      Gss \= [], abdemo_nafs(Gss,R1,R2,N1,N2).
 
 
-demo_before(X,Y,[HA,BA]) :- demo_before(X,Y,BA,[]).
+demo_before(X,Y,[_HA,BA]) :- demo_before(X,Y,BA,[]).
 
-demo_before(0,Y,R,L) :- Y \= 0.
+demo_before(0,Y,_R,_L) :- Y \= 0.
 
-demo_before(X,Y,R,L) :- X \= 0, member(before(X,Y),R).
+demo_before(X,Y,R,_L) :- X \= 0, member(before(X,Y),R).
 
 demo_before(X,Y,R,L) :- X \= 0, \+ member(before(X,Y),R), member(X,L).
 
@@ -139,12 +142,12 @@ demo_before(X,Y,R,L) :-
      member(before(X,Z),R), demo_before(Z,Y,R,[X|L]).
 
 
-demo_beq(X,X,R).
+demo_beq(X,X,_R).
 
 demo_beq(X,Y,R) :- X \= Y, demo_before(X,Y,R).
 
 
-add_before(X,Y,[HA,BA]) :- member(before(X,Y),BA).
+add_before(X,Y,[_HA,BA]) :- member(before(X,Y),BA).
 
 add_before(X,Y,[HA,BA],[HA,[before(X,Y)|BA]]) :-
      \+ member(before(X,Y),BA), \+ demo_beq(Y,X,[HA,BA]).
@@ -160,15 +163,28 @@ skolemise(T) :- gensym(t,T).
 
 opposite(neg(F),F).
 
-opposite(F1,neg(F1)) :- F1 \= neg(F2).
+opposite(F1,neg(F1)) :- F1 \= neg(_F2).
 
 
-axiom(initiates(wake_up(X),awake(X),T),[]).
-axiom(terminates(fall_asleep(X),awake(Y),T),[]). 
-axiom(initially(neg(awake(nathan))),[]). 
+axiom(initiates(wake_up(X),awake(X),_T),[]).
+axiom(initiates(open(_,Y),opened(Y),_T),[]).
+axiom(terminates(fall_asleep(X),awake(X),_T),[]). 
+axiom(initially(neg(awake(N))),[N=nathan]). 
+axiom(initially(neg(opened(cont1))),[]). 
 abducible(dummy).
 
 executable(wake_up(_X)).
 executable(fall_asleep(_X)).
+executable(open(_X,_Y)).
+/*
+?- abdemo([holds_at(awake(nathan),t)],R).
+
+  R = [[happens(wake_up(nathan), t1, t1)], [before(t1, t)]]
+
+                                            abdemo([holds_at(awake(nathan),t),holds_at(opened(foo),t)],R)
 
 
+?- abdemo([holds_at(awake(nathan),t),before(t,t2),holds_at(neg(awake(nathan)),t2)],R).
+
+
+*/
