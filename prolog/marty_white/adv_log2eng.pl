@@ -21,17 +21,15 @@
 % CODE FILE SECTION
 % :- ensure_loaded('adv_log2eng').
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+flag_level_compare(Flag,Prop):-flag(Flag,Was,Was),Prop=..[F|Args],apply(F,[Was|Args]).
 
-
-xtreme_english :- flag_level(english,>(2)).
+xtreme_english :- flag_level_compare(english,>(2)).
 any_english :- \+ no_english.
-no_english :- flag_level(english,=(0)).
+no_english :- flag_level_compare(english,=(0)).
 :- ignore(flag(english,0,1)).
 
-pretty :- \+ flag_level(pretty,=(0)).
+pretty :- \+ flag_level_compare(pretty,=(0)).
 :- ignore(flag(pretty,0,1)).
-
-flag_level(Flag,Prop):-flag(Flag,Was,Was),Prop=..[F|Args],apply(F,[Was|Args]).
 
 
 same_agent(A,B):- A=@=B.
@@ -304,29 +302,6 @@ grammar_check(Context, [Word|More], [Word|MoreN]) :-
 
 grammar_check(_Context, A, A).
 
-:- dynamic user:portray/1.
-:- multifile user:portray/1.
-:- module_transparent user:portray/1.
-%user:portray(ItemToPrint) :- print_item_list(ItemToPrint). % called by print.
-
-user:portray(Logic) :- 
- compound(Logic), \+ is_list(Logic),
- flag_level(english,>(1)),
- in_ourpp(1),
- %current_player(Agent),
- Agent = self,
- with_output_to(codes(String),print_english(Agent, Logic)),!,
- simply_pprinted(String,Codes),
- format('{|i7|| ~s |}',[Codes]).
-
-simply_pprinted(String,Codes):- append(LString,[N],String),(N==13;N==10),!,simply_pprinted(LString,Codes).
-simply_pprinted(String,_Codes):- last(String,N),member(N,`.,]`),!,fail.
-simply_pprinted(String,Codes):-
- freeze(C, member(C,`\n\r[{?`)),
- \+ member(C,String),
- String = Codes.
-
-in_ourpp(Level) :- flag(our_pretty_printer,Was,Was),Was=Level.
  
 list2eng(Obj, Some, English):-
  list2eng([], Obj, Some, English).
@@ -647,4 +622,52 @@ expand_english(State, [Term|Tail], [NewTerm|NewTail]) :-
 expand_english(_State, Term, Term).
 
 
+% %%%%%%%%%%%%%%%
+% Our user:portray(Logic) English helpers
+% %%%%%%%%%%%%%%%
+
+player_pprint(Doer, Logic, always):- xtreme_english,!, print_english(Doer, Logic).
+player_pprint(_Doer, D,K):- pprint(D,K).
+
+print_english(Doer, Logic):- is_list(Logic),!, maplist(print_english(Doer), Logic).
+
+print_english(Doer, Logic):- log2eng(Doer, Logic, Eng),dmust_det((eng2txt(Doer, Doer, Eng, Text))), pprint(Text,always).
+
+
+maybe_our_portray_english(Logic):- 
+ compound(Logic), 
+ our_current_portray_level(Level), 
+ Level > 0,
+ Level < 2, 
+ \+ is_list(Logic),
+ flag_level_compare(english,>(1)),
+ our_portray_english_simple_only(Logic),!.
+
+our_portray_english(Logic):-  
+ english_codes(Logic,Codes),
+ format('{|i7|| ~s |}',[Codes]).
+
+our_portray_english_simple_only(Logic):-  
+ english_codes(Logic,Codes),
+ was_simple_english_line(Codes),
+ format('{|i7|| ~s |}',[Codes]).
+
+english_codes(Logic,Codes):- 
+ once(Agent = self ; current_agent(Agent)),
+ with_output_to(codes(SCodes),print_english(Agent, Logic)),!,
+ trim_eols(SCodes,Codes),!.
+
+trim_eols(String,Codes):- append(LString,[N],String),(N==13;N==10),!,trim_eols(LString,Codes).
+trim_eols(Codes,Codes).
+
+was_simple_english_line(String):- last(String,N),member(N,`.,]`),!,fail.
+was_simple_english_line(String):-
+ freeze(C, member(C,`\n\r[{?`)),
+ \+ member(C,String).
+
+:- dynamic user:portray/1.
+:- multifile user:portray/1.
+:- module_transparent user:portray/1.
+user:portray(Logic) :-
+ maybe_our_portray_english(Logic).
 

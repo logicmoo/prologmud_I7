@@ -16,6 +16,7 @@
 % Main file.
 %
 */
+:- ensure_loaded(adv_naming).
 
 filter_spec(true,_):- !.
 filter_spec( \+ Spec, PropList):- !,

@@ -166,14 +166,14 @@ mainloop :-
  declared(quit, State), !.
 main_loop(State) :-
  declared(undo, State),
- current_player(Player),
+ current_agent(Player),
  retract(undo(Player, [_, Prev|Tail])),
  assertz(undo(Player, Tail)),
  !,
  main_loop(Prev).
 main_loop(S0) :-
  %repeat,
- current_player(Player),
+ current_agent(Player),
  retract(undo(Player, [U1, U2, U3, U4, U5, U6|_])),
  assertz(undo(Player, [S0, U1, U2, U3, U4, U5, U6])),
  run_agent(Player, S0, S4),

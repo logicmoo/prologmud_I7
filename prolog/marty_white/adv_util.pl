@@ -170,10 +170,9 @@ is_state_ignorer(P):- \+ atom(P),!,compound(P),functor(P,F,_),!,is_state_ignorer
 is_state_ignorer(F):- is_state_pred(F,1).
 %is_state_ignorer('{}'(term)).
 
-must_input_state(S0):- quietly(dmust_det((is_list(S0);must_state(S0)))).
-must_output_state(S0):- quietly(dmust_det((must_state(S0);is_list(S0)))),quietly(check4bugs(S0)).
-must_state(S0):- is_list(S0),dmust_det(set_advstate(S0)),!.
-must_state(S0):- pprint(must_state(S0),always),trace, check4bugs(S0).
+must_input_state(S0):- quietly(check4bugs(input,S0)).
+must_output_state(S0):- quietly(check4bugs(output,S0)).
+%must_state(S0):- quietly(check4bugs(anon, S0)).
 
 :- module_transparent(apply_state//3).
 :- meta_predicate(apply_state(*,+,-)).
@@ -293,7 +292,7 @@ findterm(Term, T) :-
  T =.. List,
  findterm(Term, List).
 
-subst(Prop,Find,Replace,NewProp):- subst(equivalent,Find,Replace,Prop,NewProp).
+user:subst(Prop,Find,Replace,NewProp):- subst(equivalent,Find,Replace,Prop,NewProp).
 
 % Substitute 'Replace' for 'Find' in T0, yielding T.
 % TODO: add ^ handling like with bagof/setof.

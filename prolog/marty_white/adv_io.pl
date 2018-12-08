@@ -39,6 +39,8 @@
  %setup_console/0, 
  setup_console/1,
 
+ our_current_portray_level/1,
+
  current_error/1,set_error/1, redirect_error_to_string/2
    
    /*post_message/1,
@@ -49,8 +51,10 @@
    svoi_message/4,*/ ]).
 
 :- dynamic(adv:wants_quit/3).
-:- dynamic(adv:console_info/7).
 :- dynamic(adv:console_tokens/2).
+:- dynamic(adv:console_io_player/3).
+:- volatile(adv:console_io_player/3).
+
 
 
 current_error(Stream) :- stream_property(Stream, alias(user_error)), !. % force det. 
@@ -133,8 +137,7 @@ bugout3(A, L, B) :-
  !,
  dmust_det(maplist(simplify_dbug, L, LA)),
  ansi_format([fg(cyan)], '~N% ', []), ansi_format([fg(cyan)], A, LA),
- dmust_det((console_player(Player),overwrote_prompt(Player))),!,
- overwrote_prompt(player).
+ dmust_det((stdio_player(Player),overwrote_prompt(Player))),!.
 bugout3(_, _, _).
 
       
@@ -151,42 +154,55 @@ pprint(Term, B) :-
 pprint(_, _).
 
 :- flag(our_pretty_printer,_,0).
+our_current_portray_level(Level) :- flag(our_pretty_printer,Was,Was),Was=Level.
+:- export(our_current_portray_level/1).
+%our_pretty_printer(Term):- !, fmt90(Term).
+our_pretty_printer(Term):- compound(Term),
+ \+ \+ setup_call_cleanup( flag(our_pretty_printer,Was,Was+1),
+                     \+ \+ our_prolog_pretty_print(Term),
+                     flag(our_pretty_printer,_,Was)).
+% our_pretty_printer(Term):- format(current_output,'~w',[Term]).
+our_pretty_printer(Term):- fmt90(Term).
 
-our_pretty_printer(Term):- compound(Term),!, 
- setup_call_cleanup(
- flag(our_pretty_printer,Was,Was+1),
- prolog_pretty_print:print_term(Term, [portray(true), output(current_output)]),
- flag(our_pretty_printer,_,Was)).
+our_prolog_pretty_print(Term):- 
+  source_variables_lwv(Term,Vs),
+  our_implode_var_names(Vs),
+  prolog_pretty_print:print_term(Term, [ output(current_output)]).
 
-our_pretty_printer(Term):- format(current_output,'~w',[Term]).
+our_implode_var_names(Vars):- \+ compound(Vars),!.
+our_implode_var_names([N=V|Vars]):- ignore(V='$VAR'(N)), our_implode_var_names(Vars).
 
-:- export(console_player/1).
-console_player(Agent):-
- current_input(InStream),
- adv:console_info(_Id, _Alias, InStream, _OutStream, _Host, _Peer, Agent),!.
-console_player(Agent):-
- Agent = 'player~1',
- (( \+ adv:console_info(_Id, _Alias, _InStream, _OutStream, _Host, _Peer, Agent))).
+:- export(stdio_player/1).
+stdio_player(Agent):- nonvar(Agent),!, stdio_player(AgentWas), !, AgentWas == Agent.
+stdio_player(Agent):- stream_property(InStream, fileno(0)), adv:console_io_player(InStream, _, Agent),!.
+stdio_player(Agent):- 
+  Agent = 'player~1',
+ \+ adv:console_io_player(_, _, Agent). 
 
-:- thread_local(adv:current_agent/1).
-current_player(Agent):- adv:current_agent(Agent),!.
-current_player(Agent):- thread_self(Id),adv:console_info(Id,_Alias,_InStream,_OutStream,_Host,_Peer, Agent).
-current_player('player~1').
-:- export(current_player/1).
+:- thread_local(adv:current_agent_tl/1).
+current_player(Agent):- current_agent(AgentWas),!,AgentWas= Agent.
+
+current_agent(Agent):- current_agent_(AgentWas),!,AgentWas= Agent.
+:- export(current_agent/1).
+current_agent_(Agent):- adv:current_agent_tl(Agent),!.
+current_agent_(Agent):- current_input(InStream),adv:console_io_player(InStream, _, Agent).
+current_agent_(Agent):- current_output(OutStream),adv:console_io_player(_, OutStream, Agent).
+%current_agent_(Agent):- thread_self(Id),adv:console_host_io_history_unused(Id,_Alias,_InStream,_OutStream,_Host,_Peer, Agent).
+current_agent_('player~1').
 
 :- dynamic(adv:need_redraw/1).
 overwrote_prompt(Agent):- retractall(adv:need_redraw(Agent)), asserta(adv:need_redraw(Agent)),!.
 
-ensure_has_prompt(Agent):- 
- ttyflush,
+ensure_has_prompt(Agent):-  
  ignore((retract(adv:need_redraw(Agent)),
-  player_format(Agent,'~w@spatial> ',[Agent]),retractall(adv:need_redraw(Agent)))),
+  ttyflush,
+  player_format(Agent,'~N~w@spatial> ',[Agent]),retractall(adv:need_redraw(Agent)))),
   ttyflush.
 
 
 player_format(Fmt,List):-
- current_player(Agent) ->
- notrace(player_format(Agent, Fmt,List)).
+ current_agent(Agent) ->
+ notrace(player_format(Agent, Fmt, List)).
 
 player_format(Agent,Fmt,List):-
  agent_to_output(Agent,OutStream),
@@ -198,7 +214,19 @@ player_format(Agent,Fmt,List):- dmust_det(format(Fmt,List)),
 
 
 
+:- dynamic user:portray/1.
+:- multifile user:portray/1.
+:- module_transparent user:portray/1.
+user:portray(Logic) :-  
+ compound(Logic), 
+ our_current_portray_level(Level),
+ our_portray_at_level(Level, Logic),!.
 
+our_portray_at_level(Level,Logic):- 
+ Level<2,
+ our_pretty_printer(Logic).
+
+%user:portray(ItemToPrint) :- print_item_list(ItemToPrint). % called by print.
 
 
 
@@ -319,7 +347,7 @@ line_to_tokens(LineCodes,_,Tokens):-
  tokenize(LineCodes, TokenCodes),!,
  % Convert list of list of codes to list of atoms:
  findall(Atom, (member(Codes, TokenCodes), atom_codes(Atom, Codes)), Tokens), 
- save_to_history(LineCodes),
+ nop(save_to_history(LineCodes)),
  !.
 
 :- multifile(prolog:history/2).
@@ -343,21 +371,34 @@ add_pending_input0(In,C):- assert(overwritten_chars(In,[C])).
 clear_overwritten_chars(Agent):- agent_to_input(Agent,In),retractall(overwritten_chars(In,_SoFar)).
 restore_overwritten_chars(Agent):- agent_to_input(Agent,In),overwritten_chars(In,SoFar),format('~s',[SoFar]).
 
-using_stream(Stream,OtherAgent):- adv:console_info(_Id,_Alias,_In,Stream,_Host, _Peer, OtherAgent).
-using_stream(Stream,OtherAgent):- adv:console_info(_Id,_Alias,Stream,_Out,_Host, _Peer, OtherAgent).
 
-agent_to_output(Agent, Stream):- adv:console_info(_Id,_Alias,_In,Stream,_Host, _Peer, Agent),!.
+stream_pairs(In,Out):- nonvar(In), var(Out), stream_property(In,file_no(F)),stream_property(Out,file_no(F)),stream_property(Out,output),!.
+stream_pairs(In,Out):- nonvar(Out), var(In), stream_property(Out,file_no(F)),stream_property(In,file_no(F)),stream_property(In,input),!.
+stream_pairs(In,Out):- adv:console_io_player(In,Out, _Agent).
+stream_pairs(In,Out):- var(In), !, stream_property(Out, input), \+ stream_property(Out, file_name(_)), once(stream_pairs(In,Out)), \+ using_stream_in(In,_OtherAgent).
+%stream_pairs(In,Out):- var(Out), !, stream_property(Out, output), \+ stream_property(Out, fileno(2)), once(stream_pairs(In,Out)), \+ using_stream_in(In,_OtherAgent).
+
+using_stream_in(Stream,OtherAgent):- adv:console_io_player(Stream, _, OtherAgent).
+%using_stream_in(Stream,OtherAgent):- adv:console_host_io_history_unused(_Id,_Alias,Stream,_Out,_Host, _Peer, OtherAgent), \+ adv:console_io_player(Stream, OtherAgent).
+
+using_stream(Stream,OtherAgent):- using_stream_in(Stream,OtherAgent).
+using_stream(Stream,OtherAgent):- adv:console_io_player(_, Stream, OtherAgent).
+
+agent_to_output(Agent, Stream):- adv:console_io_player(_, Stream, Agent).
+agent_to_output(Agent, Stream):- adv:console_io_player(InStream, _, Agent),stream_pairs(InStream, Stream).
 agent_to_output(_Agent,Stream):- current_output(Stream), \+ using_stream(Stream,_Other),!.
 agent_to_output(_Agent,Stream):- stream_property(Stream, file_no(1)), \+ using_stream(Stream,_Other),!.
 agent_to_output(Agent, Stream):- fail, agent_to_input(Agent,In), stream_property(In,file_no(F)),stream_property(Stream,file_no(F)),stream_property(Stream,write),!.
 agent_to_output(Agent, Stream):- throw(agent_io(Agent,agent_to_output(Agent, Stream))).
+%agent_to_output(Agent, Stream):- adv:console_host_io_history_unused(_Id,_Alias,_In,Stream,_Host, _Peer, Agent),!.
        
 % agent_to_input(Agent,In):- overwritten_chars(Agent,_SoFar),In=Agent,
-agent_to_input(Agent, Stream):- adv:console_info(_Id,_Alias,Stream,_Out,_Host, _Peer, Agent),!.
+agent_to_input(Agent, Stream):- using_stream_in(Stream,Agent),!.
 agent_to_input(_Agent,Stream):- current_input(Stream), \+ using_stream(Stream,_Other),!.
 agent_to_input(_Agent,Stream):- stream_property(Stream, file_no(0)), \+ using_stream(Stream,_Other),!.
 agent_to_input(Agent, Stream):- fail, agent_to_output(Agent,Stream), stream_property(Stream,file_no(F)),stream_property(Stream,file_no(F)),stream_property(Stream,read),!.
 agent_to_input(Agent, Stream):- throw(agent_io(Agent,agent_to_input(Agent, Stream))).
+%agent_to_input(Agent, Stream):- adv:console_host_io_history_unused(_Id,_Alias,Stream,_Out,_Host, _Peer, Agent),!.
 
 is_main_console:- current_input(Stream), stream_property(Stream, file_no(0)).
 

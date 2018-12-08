@@ -148,7 +148,7 @@ update_model(_Agent, moved(_Doer, _How, Object,_From, At, To), Timestamp, _Mem, 
   update_relation(At, Object, To, Timestamp, M0, M1).
 
 update_model(Agent, Event, Timestamp, Memory, M0, M2) :- fail,
-  implications(event( Event), Preconds, Postconds),   
+  implications(event , ( Event), Preconds, Postconds),   
     (satisfy_each(preCond(_),Preconds, M0, _)  ->
       satisfy_each(postCond(_),Postconds, M0, M1) -> M0\=@= M1), !,
     update_model(Agent, Event, Timestamp, Memory, M1, M2).

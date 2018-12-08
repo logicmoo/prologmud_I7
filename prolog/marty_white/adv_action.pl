@@ -106,7 +106,7 @@ psubsetof(A, C) :-
  subsetof(B, C).
 
 
-maybe_pause(Agent):- console_player(CP),(Agent==CP -> wait_for_input([user_input],_,0) ; true).
+maybe_pause(Agent):- stdio_player(CP),(Agent==CP -> wait_for_input([user_input],_,0) ; true).
 
 do_command(Agent, Action) -->
   {overwrote_prompt(Agent)},
@@ -341,10 +341,10 @@ add_look(Agent) -->
 
 
 :- defn_state_none(action_doer(action,-agent)).
-action_doer(Action,Agent):- \+ compound(Action),!, dmust_det(current_player(Agent)),!.
-action_doer(Action,Agent):- functor(Action,Verb,_),verbatum_anon(Verb),current_player(Agent),!.
+action_doer(Action,Agent):- \+ compound(Action),!, dmust_det(current_agent(Agent)),!.
+action_doer(Action,Agent):- functor(Action,Verb,_),verbatum_anon(Verb),current_agent(Agent),!.
 action_doer(Action,Agent):- arg(1,Action,Agent), nonvar(Agent), \+ preposition(_,Agent),!.
-action_doer(Action,Agent):- throw(missing(action_doer(Action,Agent))).
+action_doer(Action,Agent):- trace,throw(missing(action_doer(Action,Agent))).
 
 action_verb_agent_thing(Action, Verb, Agent, Thing):-
   notrace((compound(Action),Action=..[Verb,Agent|Args], \+ verbatum_anon(Verb))), !,

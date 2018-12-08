@@ -11,6 +11,11 @@
 
 % :- set_prolog_flag(gc,false).
 
+:- use_module(library(logicmoo_util_strings)).
+
+%atom_contains(Atom,SubAtom):- atomic_list_concat([_,_|_],SubAtom,Atom).
+
+
 :- if(exists_source(library(xlisting))).
 :- use_module(library(xlisting)).
 :- endif.
@@ -81,8 +86,6 @@ call_u(Q):- notrace(current_predicate(_,Q)),call(call,Q).
 :- endif.
 
 
-asserta_if_new(A):- clause(A,true)->true;asserta(A).
-atom_contains(Atom,SubAtom):- atomic_list_concat([_,_|_],SubAtom,Atom).
 
 %! nop( :Goal) is det.
 %

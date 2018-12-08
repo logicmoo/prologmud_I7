@@ -30,12 +30,6 @@ printable_state(S,S).
 
 include_functor(List,P):- compound(P),functor(P,F,_),member(F,List),!.
 
-print_english(Doer, Logic):- is_list(Logic),!, maplist(print_english(Doer), Logic).
-print_english(Doer, Logic):- log2eng(Doer, Logic, Eng),dmust_det((eng2txt(Doer, Doer, Eng, Text))), pprint(Text,always).
-
-meta_pprint(Doer, Logic, always):- xtreme_english,!, print_english(Doer, Logic).
-meta_pprint(_Doer, D,K):- pprint(D,K).
-
 % do_metacmd(Doer, Action, S0, S1)
 :- add_help(quit,"Quits the game.").
 
@@ -78,8 +72,11 @@ do_metacmd(Doer, nospy(Pred), S0, S0) :- security_of(Doer,admin), nospy(Pred).
 :- add_help(possess(agent),"Take possession of a character").
 do_metacmd(Doer, possess(NewAgent), S0, S0) :-
  security_of(Doer,wizard),
- retract(current_player(_Agent)),
- asserta(current_player(NewAgent)).
+ current_agent(OldAgent),
+ current_input(InputConsole),
+ retractall(console_controls_agent(_,OldAgent)),
+ retractall(console_controls_agent(_,NewAgent)),
+ asserta(console_controls_agent(InputConsole, NewAgent)).
 do_metacmd(Doer, Echo, S0, S0) :-
  security_of(Doer,admin),
  Echo =.. [echo|Args],
@@ -87,45 +84,45 @@ do_metacmd(Doer, Echo, S0, S0) :-
 do_metacmd(Doer, state, S0, S0) :-
  security_of(Doer,wizard),
  printable_state(S0,S),
- meta_pprint(Doer, S, always),
+ player_pprint(Doer, S, always),
  maybe_pause(Doer).
 do_metacmd(Doer, props, S0, S0) :-
  security_of(Doer,wizard),
  printable_state(S0,S),
  include(include_functor([props,h]),S,SP),
  reverse(SP,SPR),
- meta_pprint(Doer, SPR, always),
+ player_pprint(Doer, SPR, always),
  maybe_pause(Doer).
 do_metacmd(Doer, perceptq, S0, S0) :-
  security_of(Doer,wizard),
  printable_state(S0,S),
  include(include_functor([perceptq]),S,SP),
  reverse(SP,SPR),
- meta_pprint(Doer, SPR, always),
+ player_pprint(Doer, SPR, always),
  maybe_pause(Doer).
 do_metacmd(Doer, types, S0, S0) :-
  security_of(Doer,wizard),
  printable_state(S0,S),
  include(include_functor([type_props]),S,SP),
  reverse(SP,SPR),
- meta_pprint(Doer, SPR, always),
+ player_pprint(Doer, SPR, always),
  maybe_pause(Doer).
 do_metacmd(Doer, mems, S0, S0) :-
  security_of(Doer,wizard),
  printable_state(S0,S),
  include(@>=(props(_,_)),S,SP),
  reverse(SP,SPR),
- meta_pprint(Doer, SPR, always),
+ player_pprint(Doer, SPR, always),
  maybe_pause(Doer).
 do_metacmd(Doer, model, S0, S0) :-
  security_of(Doer,admin),
  agent_thought_model(Doer,ModelData, S0),
- meta_pprint(Doer, ModelData, always),
+ player_pprint(Doer, ModelData, always),
  maybe_pause(Doer).
 do_metacmd(Doer, mem, S0, S0) :-
  security_of(Doer,admin),
  declared(memories(Doer, Memory), S0),
- meta_pprint(Doer, Memory, always),
+ player_pprint(Doer, Memory, always),
  maybe_pause(Doer).
 do_metacmd(Doer, make, S0, S0) :-
  security_of(Doer,wizard),
@@ -152,12 +149,12 @@ do_metacmd(Doer, inspect(Self, getprop(Target,NamedProperty)), S0, S0) :-
  pred_holder(NamedProperty,PropertyPred),
  PropAndData=..[PropertyPred,Data],
  findall(Data,getprop(Target,PropAndData,S0),DataList),
- meta_pprint(Self, DataList, always),
+ player_pprint(Self, DataList, always),
  maybe_pause(Doer).
 
 do_metacmd(Doer, create(Type), S0, S9) :-
  security_of(Doer,wizard),
- dmust_det((current_player(Agent),
+ dmust_det((current_agent(Agent),
  h(Prep, Agent, Here, S0),
  create_new_unlocated(Type, Object, S0, S1),
  declare(h(Prep, Object, Here), S1, S9),

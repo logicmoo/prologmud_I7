@@ -18,8 +18,12 @@
 */
 
 :- dynamic(adv:wants_quit/3).
-:- dynamic(adv:console_info/7).
 :- dynamic(adv:console_tokens/2).
+
+:- dynamic(adv:console_io_conn_history/7).
+:- dynamic(adv:console_io_player/3).
+:- volatile(adv:console_io_player/3).
+:- volatile(adv:console_io_conn_history/7).
 
 :- use_module(library(socket)).
 
@@ -93,38 +97,27 @@ adv_serve_client(InStream, OutStream, Host, Peer, Alias) :-
   [adv_serve_client(Id,Alias,InStream,OutStream, Host, Peer)]), !, 
  call_cleanup(srv_catch(adventure_client_process(Id,Alias,InStream,OutStream, Host, Peer)), 
    adventure_client_cleanp(Id,Alias,InStream,OutStream)).
-/*
-
- set_stream(InStream, tty(true)), 
- % set_prolog_flag(tty_control, false), 
- set_prolog_flag(tty_control, true), 
-
-*/
-
-/*
-adv_server_client(InStream, OutStream, _, _):-
- thread_self(Id), 
- format(OutStream, 'Go away!!~n', []), 
- close(InStream), 
- close(OutStream), 
- thread_detach(Id).
-*/
 
 srv_catch(Goal):- catch(once(call(call,Goal)),E,((notrace(bugout1(error_srv_catch(E,Goal))),!,fail))).
 ignore_srv_catch(Goal):- ignore(srv_catch(Goal)).
+tflush(OutStream):- ignore_srv_catch((flush_output(OutStream), ttyflush)).
 
 adventure_client_cleanp(Id,Alias,InStream,OutStream):- 
- srv_catch((adv:console_info(Id,Alias,InStream,OutStream, Host, Peer, Agent) -> 
- ((assertz(adv:agent_discon(Agent)),
- bugout1((adv:agent_discon(Agent))),
- stream_property(Err,file_no(2)),
- set_stream(Err,alias(Agent)),
- bugout1(adventure_client_cleanp_agent(Id,Alias,InStream,OutStream, Host, Peer, Agent)))) ;
- bugout1(failed_adventure_client_cleanp(Id,Alias,InStream,OutStream)))),
- retractall(adv:console_info(Id,Alias,InStream,OutStream, Host, Peer, Agent)),
+ ignore(notice_agent_discon(Id,Alias,InStream,OutStream)),
+ retractall(adv:console_io_player(_,OutStream,_)),
+ retractall(adv:console_io_player(InStream,_,_)),
  ignore_srv_catch(close(InStream)), 
  ignore_srv_catch(close(OutStream)),
  ignore_srv_catch(thread_detach(Id)).
+
+notice_agent_discon(Id,Alias,InStream,OutStream):- 
+  once((
+    adv:console_io_player(InStream,_,Agent);
+    adv:console_io_player(_,OutStream,Agent);
+    (adv:console_io_conn_history(_, Alias,_,_, _, _, Agent), \+ adv:console_io_player(_,_,Agent));
+    (adv:console_io_conn_history(Id, _,_,_, _, _, Agent), \+ adv:console_io_player(_,_,Agent)))),
+ assertz(adv:agent_discon(Agent)),
+ bugout1((adv:agent_discon(Agent))),!.
 
 
 :- dynamic(adv:peer_character/2).
@@ -136,7 +129,7 @@ guess_previous_agent_0(_, Peer, Agent):- adv:peer_agent(Peer, Agent),!.
 guess_previous_agent_0(Host, _, Agent):- adv:peer_agent(Host, Agent),!.
 
 guess_previous_agent(Host, Peer, Agent):- guess_previous_agent_0(Host, Peer, Agent),
- \+ adv:console_info(_Id,_Alias,_InStream,_OutStream, _Host, _Peer, Agent).
+ \+ adv:console_io_player(_, _, Agent).
 
 guess_previous_agent(_Host, _Peer, Agent):- gensym('telnet~',Agent).
 
@@ -146,13 +139,22 @@ prompt_for_agent(Id,Alias,InStream,OutStream, Host, Peer, Agent,Name):-
  ignore(adv:peer_character(Peer,Name)),
  ignore(adv:peer_character(Host,Name)),
  (var(Name) -> format(OutStream, 'Enter your name [or leave bank for "~w"]: ', [Agent]), read_line_to_string(InStream,Name) ; true),
- asserta_if_new(adv:agent_character(Agent,Name)),
- asserta_if_new(adv:peer_character(Peer,Name)),
- asserta_if_new(adv:peer_character(Host,Name)),
- asserta_if_new(adv:peer_agent(Peer,Agent)),
- asserta_if_new(adv:peer_agent(Host,Agent)),
- set_stream(user_output,alias(Agent)),
- asserta(adv:console_info(Id,Alias,InStream,OutStream, Host, Peer, Agent)), 
+ accept_agent(Id,Alias,InStream,OutStream, Host, Peer, Agent,Name).
+
+aaifn(A):- clause(A,true)->true;asserta(A).
+
+accept_agent(Id,Alias,InStream,OutStream, Host, Peer, Agent,Name):-
+ aaifn(adv:agent_character(Agent,Name)),
+ aaifn(adv:peer_character(Peer,Name)),
+ aaifn(adv:peer_character(Host,Name)),
+ aaifn(adv:peer_agent(Peer,Agent)),
+ aaifn(adv:peer_agent(Host,Agent)),
+ %set_stream(user_output,alias(Agent)),
+ asserta(adv:console_io_conn_history(Id,Alias,InStream,OutStream, Host, Peer, Agent)), 
+   retractall(adv:console_io_player(InStream,_,_)),
+   retractall(adv:console_io_player(_,OutStream,_)),
+   retractall(adv:console_io_player(_,_,Agent)),
+   asserta(adv:console_io_player(InStream,OutStream,Agent)),
  assertz(adv:agent_conn(Agent,Name,Alias,adventure_client_process(Id,Alias,InStream,OutStream, Host, Peer))),!.
 
 welcome_adv_tnet(OutStream):- 
@@ -169,45 +171,49 @@ adventure_client_process(Id,Alias,InStream,OutStream, Host, Peer):-
  overwrote_prompt(Agent),
  setup_console,
  repeat, 
- srv_catch(adv_tlnet_readloop(Id, InStream, Alias)),
- adv:wants_quit(_,InStream,_),!. 
+ dmust(adv:console_io_player(InStream, OutStream, CurrentAgent)),
+ adv_tlnet_readloop(Id, InStream, OutStream, CurrentAgent),
+ needs_logout_p(Id, InStream, CurrentAgent), !. 
 
+needs_logout_p(Id, InStream, _Agent):-
+  adv:wants_quit(Id, _, _);
+  adv:wants_quit(_, InStream, _).
+needs_logout_p(_, InStream, _Agent):-
+  \+ adv:console_io_player(InStream, _, _).
+needs_logout_p(_, InStream, Agent):-
+  adv:wants_quit(_, _, Agent),
+  \+ (( adv:console_io_player(InStream, _, Other), Other\==Agent)).
 
-tflush(OutStream):- ignore_srv_catch((flush_output(OutStream), ttyflush)).
-
-adv_tlnet_readloop(Id, InStream, _Alias):- adv:wants_quit(Id, InStream, _Agent),!.
-
-adv_tlnet_readloop(Id, InStream, Alias):- 
- adv:console_info(Id, Alias, InStream,_OutStream,_Host,_Peer, Agent),
- adv:console_tokens(Agent, _Words), sleep(0.1), !.
-
-adv_tlnet_readloop(Id, InStream, Alias):- 
- srv_catch(adv:console_info(Id,Alias,InStream,OutStream, Host, Peer, Agent)), 
+adv_tlnet_readloop(Id, InStream, _OutStream, Agent):- 
+ needs_logout_p(Id, InStream, Agent),
+ sleep(0.1), !.
+adv_tlnet_readloop(_Id, _InStream, OutStream, Agent):-  
+ adv:console_tokens(Agent, _Words),
  tflush(OutStream),
+ sleep(0.1), !.
+adv_tlnet_readloop(_Id, InStream, OutStream, Agent):- 
  ensure_has_prompt(Agent),
- current_input(In), wait_for_input([In,InStream,user_input],Found,0.1),
- Found\==[], 
- tflush(OutStream),
+ current_input(In), wait_for_input([In,InStream,user_input],Found,0.1), 
+ Found==[], !,
+ tflush(OutStream).
+adv_tlnet_readloop(Id, InStream, OutStream, Agent):-
  read_line_to_tokens(Agent,InStream,[],Words),
  tflush(OutStream),
- dmust_det(adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, Words)).
+ dmust_det(adv_tlnet_words(Id, InStream, Agent, Words)),!.
 
 
-adv_tlnet_words(_Id,_Alias,_InStream,_OutStream, _Host, _Peer, _Agent, [prolog]):- !, prolog.
-adv_tlnet_words(_Id,_Alias,_InStream,_OutStream, _Host, _Peer, _Agent, ['You'|_]):- !, trace,prolog.
-
-adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, [quit]):-
- nop(adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent)),
- asserta(adv:wants_quit(Id, InStream, Agent)).
-adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, end_of_file):-
- nop(adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent)),
- asserta(adv:wants_quit(Id, InStream, Agent)).
-
-adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, Words0):-
- nop(adv_tlnet_words(Id,Alias,InStream,OutStream, Host, Peer, Agent, Words0)),
- (Words0==[]->Words=[wait];Words=Words0),
- nop((bugout3('~NTelent: ~q~n', [adv:console_tokens(Agent, Words)]))), 
- assertz(adv:console_tokens(Agent, Words)),
- nop((format(OutStream, '~NYou: ~q~n', [adv:console_tokens(Agent, Words)]))), 
+adv_tlnet_words(Id, InStream, Agent, []):- 
+  adv_tlnet_words( Id, InStream, Agent, [wait]).
+adv_tlnet_words(Id, InStream, Agent, [quit]):- 
+  adv_tlnet_words(Id, InStream, Agent, end_of_file).
+adv_tlnet_words(Id, InStream, Agent, end_of_file):-
+  asserta(adv:wants_quit(Id, InStream, Agent)),
+  bugout3('~NTelent: ~q~n', [adv:wants_quit(Id, InStream, Agent)], telnet).
+adv_tlnet_words(_Id, _InStream, _Agent, [prolog]):- !,
+  prolog.  
+adv_tlnet_words(Id, InStream, Agent, Words):- 
+  assertz(adv:console_tokens(Agent, Words)),
+  nop((bugout3('~NTelent: ~q~n', [adv_tlnet_words(Id, InStream, Agent, Words)], telnet))),
+ % nop((adv:console_io_player(InStream,OutStream,Agent),format(OutStream, '~NYou: ~q~n', [adv:console_tokens(Agent, Words)]))), 
  !.
 

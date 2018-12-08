@@ -20,7 +20,7 @@ aXiom(talk(Agent, Object, Message)) -->  % directed message
 
 aXiom(say(Agent, Message)) -->          % undirected message
   from_loc(Agent, Here),                              
-  queue_local_event([say(Agent, Here, Message)], [Here]).
+  queue_local_event([talk(Agent, Here, *, Message)], [Here]).
 
 /*
 aXiom(emote(Agent, EmoteType, Object, Message)) --> !, % directed message
@@ -227,8 +227,9 @@ aXiom(inventory(Agent)) -->
   must_act( does_inventory(Agent)).
 
 aXiom(does_inventory(Agent)) -->
-  findall(What, h(child, What, Agent), Inventory),
-  send_precept(Agent, [rel_to(held_by, Inventory)]).
+  eVent(Agent,examine(Agent, Agent)).
+  %findall(What, h(child, What, Agent), Inventory),
+  %send_precept(Agent, [rel_to(held_by, Inventory)]).
 
 
 
