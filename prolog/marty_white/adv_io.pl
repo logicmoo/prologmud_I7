@@ -146,7 +146,6 @@ bugout3(_, _, _).
 %:- set_stream(user_input,timeout(0.1)).
 
 
-
 pprint(Term, B) :-
  bug(B),
  !,

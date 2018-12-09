@@ -176,7 +176,7 @@ parse2logical(Doer, [take, Object], take(Doer, Object), _Mem) :- !.
 /*verb(give,
  [human(Doer),done_by(Doer, Action),
   frame(Action), act_of(give, Action),
-  inanimate(Object),mainObject(Object, Action),
+  inanimate(Object),objectActedOn(Object, Action),
   human(Recipient),recipient(Recipient, Action) ] ).
 */
 %lac(verbSemTrans, xGiveTheWord, 0, xDitransitiveNPNPFrame, and(objectGiven('ACTION', 'OBJECT'), isa('ACTION', actGivingSomething), giver('ACTION', 'SUBJECT'), givee('ACTION', 'OBLIQUE-OBJECT')), 2046576).
@@ -284,7 +284,7 @@ add_dataframe_types([PrepProp| FrameArgs], [_|VarsOf], Frame,[PrepProp| NextProp
   add_dataframe_types(FrameArgs, VarsOf , Frame, NextProps). 
 
 
-make_dataframe(FrameArgs, TextArgs, VarsOf, Action, Frame):- 
+parse_dataframe(FrameArgs, VarsOf, Action, Frame, TextArgs):- 
   nth0(Nth,FrameArgs,Prep-Prop, NewFrameArgs), atom(Prop),
   append(Left,[SamePrep, TextArg| Right], TextArgs),
   same_word(Prep, SamePrep),!,
@@ -292,9 +292,9 @@ make_dataframe(FrameArgs, TextArgs, VarsOf, Action, Frame):-
   nth0(Nth,VarsOf,NewArg,NewVarsOf),  
    push_frame(textString(NewArg,TextArg),Frame),
    push_frame(t(Prop,Action, NewArg),Frame),
-   make_dataframe(NewFrameArgs, NewTextArgs, NewVarsOf, Action, Frame).
+   parse_dataframe(NewFrameArgs, NewVarsOf, Action, Frame, NewTextArgs).
 
-make_dataframe(FrameArgs ,TextArgs, VarsOf, Action, Frame):- 
+parse_dataframe(FrameArgs, VarsOf, Action, Frame, TextArgs):- 
   nth0(Nth,FrameArgs,Prop, NewFrameArgs), atom(Prop), Prep = Prop,
   append(Left,[SamePrep, TextArg| Right], TextArgs),
   same_word(Prep,SamePrep),!,
@@ -303,9 +303,9 @@ make_dataframe(FrameArgs ,TextArgs, VarsOf, Action, Frame):-
   delete(NewArg,VarsOf,NewVarsOf),
   push_frame(textString(NewArg,TextArg),Frame),
   push_frame(t(Prop,Action, NewArg),Frame),  
-  make_dataframe(NewFrameArgs, NewTextArgs, NewVarsOf, Action, Frame).
+  parse_dataframe(NewFrameArgs, NewVarsOf, Action, Frame, NewTextArgs).
 
-make_dataframe(FrameArgs ,TextArgs, VarsOf, Action, Frame):-
+parse_dataframe(FrameArgs, VarsOf, Action, Frame, TextArgs):-
   make_dataframe_simple(FrameArgs ,TextArgs, VarsOf, Action, Frame).
 
 make_dataframe_simple([], [], _VarsOf, _Action, _Frame):- !.
@@ -331,7 +331,7 @@ make_dataframe_simple([Prop| FrameArgs],TextArgs, [NewArg|VarsOf], Action, Frame
 % give love to sally
 % give sally some love
 verb_frame1(Action, give,
-  [does-done_by:tAnimate,to-recipient:tAnimate,some-mainObject:object,with-using:bpart],
+  [does-done_by:tAnimate,to-recipient:tAnimate,some-objectActedOn:object,with-using:bpart],
   [the,Doer,does,$verb,to,Recipient,the,Object,using,Instrument],
   [done_by(Action,Doer),
 
@@ -389,7 +389,7 @@ verb_frame1(Action, give,
 %    at cover of book
 % 
 verb_frame1(Action,etch,
- [does-done_by:tAnimate,text-depliction:glyphic,on-target:surface,of-mainObject,with-using:tTool],
+ [does-done_by:tAnimate,text-depliction:glyphic,on-target:surface,of-objectActedOn,with-using:tTool],
  [the,Doer,does,$verb,some,Depliction,on,Surface,of,Object,using,Instrument],
  [done_by(Action,Doer),
    pre(isa(Instrument,tKnife),cntrls(Doer, Instrument),can_reach(Instrument, Object)),
@@ -399,7 +399,7 @@ verb_frame1(Action,etch,
   post(part_of(Depliction, Surface))]).
 
 verb_frame1(Action,put,
- [does-done_by:tAnimate,some-mainObject:object,to-region,of-container,with-using:bpart],
+ [does-done_by:tAnimate,some-objectActedOn:object,to-region,of-container,with-using:bpart],
  [the,Doer,does,$verb,some,Object,at,Region,of,Container,using,Instrument],
  [done_by(Action,Doer),
   cntrls(Doer, Instrument), can_reach(Instrument, Region),
@@ -418,7 +418,7 @@ parse2logical(Agent, [dig, ShapeHole], dig(Agent, ShapeHole, Where, Instrument),
 */
 
 verb_frame1(Action, dig,
- [does-done_by:tAnimate,some-shape_of,on-faceOf:surfaceOf(Object),in-mainObject:tGround,with-using:tTool],
+ [does-done_by:tAnimate,some-shape_of,on-faceOf:surfaceOf(Object),in-objectActedOn:tGround,with-using:tTool],
  [the,Doer,does,$verb,some,ShapeHole,on,Surface,into,Object,using,Instrument],
 [done_by(Action,Doer),
   normally(
@@ -440,7 +440,7 @@ parse2logical(Doer, [VerbText|TextArgs], Frame, _Mem):-
     correct_normals(UNormals,Normals),
     DoerFrame=[DoerAgent|FrameArgs],
     term_variables(English,VarsOf),
-    all_different_bindings(VarsOf),
+    all_different_bindings([Action|VarsOf]),
     once(VerbText=Verb;same_word(VerbD,Verb)),
     select(done_by(Action,Doer),Normals, Frame),
     dmust_det((push_frame(isa(Action,'tAction'),Frame),
@@ -450,7 +450,7 @@ parse2logical(Doer, [VerbText|TextArgs], Frame, _Mem):-
     debug_var("Actor",Doer),    
     maplist(assign_var_name(Frame),[DoerAgent|FrameArgs],VarsOf),
     add_dataframe_types([DoerAgent|FrameArgs], VarsOf, Frame, BetterFrameArgs), 
-    make_dataframe(BetterFrameArgs,[Doer|TextArgs],VarsOf, Action, Frame), 
+    parse_dataframe(BetterFrameArgs,VarsOf, Action, Frame, [Doer|TextArgs]), 
     pprint(Frame, always))).
 
 frmprint(Frame) :-
@@ -517,6 +517,12 @@ verb_frame1(Action, like,
   [done_by(Action,Doer),
    feelsAbout(Doer,Object,LotsOrLittle)]).
 
+verb_frame1(Action, want,
+  [does-done_by:tAnimate,to-targetAction:action],
+  [the,Doer,does,$verb,want,to,AlsoDo],
+  [done_by(Action,Doer),
+   wantsToDo(Doer,Action,AlsoDo)]).
+
 
 % %%%%%%%%%%%%%%
 bpart_contol(break,broken).
@@ -525,7 +531,7 @@ bpart_contol(light,lit).
 bpart_contol(unlight,unlit).
 % %%%%%%%%%%%%%%
 verb_frame1(Action,Light,
-   \[does-done_by:tAnimate,some-mainObject,with-using:bpart],
+   \[does-done_by:tAnimate,some-objectActedOn,with-using:bpart],
    [the,Doer,does,$verb,the,Object,using,Instrument], 
    [done_by(Action,Doer),
     pre(cntrls(Doer, Instrument),can_reach(Instrument, Object)),    
@@ -542,7 +548,7 @@ verb_frame1(Action,Light,
 %parse2logical(Doer, [switch, Thing, OnOff], Result, M) :- preposition(_, OnOff), !, parse2logical(Doer, [switch, OnOff, Thing], Result, M).
 
 verb_frame1(Action,switch,
-   [does-done_by:tAnimate,some-mainObject,to-state:on_off,with-using:bpart],
+   [does-done_by:tAnimate,some-objectActedOn,to-state:on_off,with-using:bpart],
    [the,Doer,does,$verb,the,Object,to,On,using,Instrument],
  [done_by(Action,Doer),
   pre(cntrls(Doer, Instrument),can_reach(Instrument, Object)),
@@ -560,7 +566,7 @@ verb_undos(close,opened,bpart).
 verb_undos(unlock,locked,key).
 % %%%%%%%%%%%%%%
 verb_frame1(Action,Unlock,
- [does-done_by:tAnimate,some-mainObject,with-using:Key],
+ [does-done_by:tAnimate,some-objectActedOn,with-using:Key],
  [the,Doer,does,$verb,the,Object,using,Instrument],
  [done_by(Action,Doer),
   pre(cntrls(Doer, Instrument),can_reach(Instrument, Object)),
@@ -571,7 +577,7 @@ verb_frame1(Action,Unlock,
 verb_cantbe_causes(open,locked,opened).
 % %%%%%%%%%%%%%%
 verb_frame1(Action,Open,
-   [does-done_by:tAnimate,some-mainObject,with-using:bpart],
+   [does-done_by:tAnimate,some-objectActedOn,with-using:bpart],
    [the,Doer,does,$verb,the,Object,using,Instrument],
   [done_by(Action,Doer),
    pre(cntrls(Doer, Instrument),can_reach(Instrument, Object)),
@@ -585,7 +591,7 @@ verb_frame1(Action,Open,
 verb_undos_causes1(lock,opened,locked,key).
 % %%%%%%%%%%%%%%
 verb_frame1(Action,Lock,
- [does-done_by:tAnimate,some-mainObject,with-using:Key],
+ [does-done_by:tAnimate,some-objectActedOn,with-using:Key],
  [the,Doer,does,$verb,the,Object,using,Instrument],
  [done_by(Action,Doer),
   pre(cntrls(Doer, Instrument),can_reach(Instrument, Object)),
@@ -600,7 +606,7 @@ verb_tool_ends_ensures(burn,match,unflaming,burned).
 verb_tool_ends_ensures(extinguish,extinguiser,flaming,unburned).
 % %%%%%%%%%%%%%%
 verb_frame1(Action,Burn,
- [does-done_by:tAnimate,some-mainObject,with-using:Match],
+ [does-done_by:tAnimate,some-objectActedOn,with-using:Match],
  [the,Doer,does,$verb,the,Object, with, Instrument],
  [done_by(Action,Doer),
   pre(cntrls(Doer, Instrument),can_reach(Instrument, Object)),

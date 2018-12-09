@@ -5,6 +5,7 @@
 :- op(500,fx,+).
 :- op(500,fx,-).
 
+:- ensure_loaded(library(with_thread_local)).	% misc
 
 %load_plus_xg_file(_M,F):- consume0(F,+).
 
@@ -16,11 +17,11 @@
 
 abolish_xg(Prop):- ignore(tlxgproc:current_xg_module(M)),
   ignore((((user:current_xg_pred(M,F,N,Props),member(Prop,Props),member(Prop,Props),
-                 ignore((memberchk(xg_pred=P,Props),dbug(abolising(current_xg_pred(M,F,N,Props))),
+                 ignore((memberchk(xg_pred=P,Props),bugout1(abolising(current_xg_pred(M,F,N,Props))),
                    predicate_property(P,number_of_clauses(NC)),flag(xg_assertions,A,A-NC))),
                  abolish(F,N),retractall(user:current_xg_pred(M,F,N,_)))),fail)).
 
-new_pred(P):- dmust(tlxgproc:current_xg_module(M)),new_pred(M,P).
+new_pred(P):- must(tlxgproc:current_xg_module(M)),new_pred(M,P).
 new_pred(M,P0):- functor(P0,F,A),functor(P,F,A),new_pred(M,P,F,A),!.
 
 /*
@@ -55,9 +56,9 @@ xg_process_te_clone((H ... T --> R),Mode,((P :- Q))) :- !, xg_process_te_clone((
 xg_process_te_clone((L --> R),Mode,((P :- Q))) :- !,xg_process_te_clone(L,R,Mode,P,Q).
 xg_process_te_clone((L ---> R),Mode,((P :- Q))) :- !,xg_process_te_clone(L,R,Mode,P,Q).
 
-chat80_term_expansion(In,Out):- compound(In),functor(In,'-->',_),trace,  dmust(xg_process_te_clone(In,+,Out)).
-chat80_term_expansion((H ... T ---> R),((P :- Q))) :- dmust( xg_process_te_clone((H ... T),R,+,P,Q)).
-chat80_term_expansion((L ---> R), ((P :- Q))) :- dmust(xg_process_te_clone(L,R,+,P,Q)).
+chat80_term_expansion(In,Out):- compound(In),functor(In,'-->',_),trace,  must(xg_process_te_clone(In,+,Out)).
+chat80_term_expansion((H ... T ---> R),((P :- Q))) :- must( xg_process_te_clone((H ... T),R,+,P,Q)).
+chat80_term_expansion((L ---> R), ((P :- Q))) :- must(xg_process_te_clone(L,R,+,P,Q)).
 
 
 chat80_term_expansion_now(( :- _) ,_ ):-!,fail.
@@ -129,7 +130,7 @@ xg_process((L ---> R),Mode) :- !,
    usurping(Mode,P),
    xg_assertz((P :- Q)), !.
 xg_process(( :- G),_) :- !,
-   call_u(G).
+   call(G).
 xg_process((P :- Q),Mode) :-
    usurping(Mode,P),
    new_pred(P),
@@ -139,7 +140,7 @@ xg_process(P,Mode) :-
    new_pred(P),
    xg_assertz(P).
 
-xg_assertz(P):- flag(xg_assertions,A,A+1),dmust((tlxgproc:current_xg_module(M),nop(dbug(M:xg_assertz(P))),M:assertz(P))),!.
+xg_assertz(P):- flag(xg_assertions,A,A+1),must((tlxgproc:current_xg_module(M),nop(dbug(M:xg_assertz(P))),M:assertz(P))),!.
 
 xg_erase_safe(_,H):- erase(H).
 
@@ -147,7 +148,7 @@ xg_complete(_F) :-
    recorded('xg.usurped',P,R0), xg_erase_safe(recorded('xg.usurped',P,R0),R0),
    recorded(P,'xg.usurped',R1), xg_erase_safe(recorded(P,'xg.usurped',R1),R1),
    fail.
-xg_complete(F):- flag(read_terms,T,T),dbug(info(read(T,F))),nl,nl.
+xg_complete(F):- flag(read_terms,T,T),bugout1(info(read(T,F))),nl,nl.
 
 usurping(+,_) :- !.
 usurping(-,P) :-

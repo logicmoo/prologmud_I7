@@ -9,8 +9,9 @@
 % CHATTOP.PL
 
 :-public hi/0, hi/1, quote/1.
+:-export((hi/0, hi/1, quote/1)).
 
-:- mode control(+),
+:- mode control80(+),
 	doing(+,+),
 	uses(+,?),
         process(+),
@@ -313,7 +314,7 @@ hi :-
 hi(File) :-
    repeat,
       ask(File,P),
-      control(P), !,
+      control80(P), !,
       end(File).
 
 ask(user,P) :- !,
@@ -363,26 +364,26 @@ end(user) :- !.
 end(F) :-
    close(F).
 
-control([W,'.']) :- 
+control80([W,'.']) :- 
    (W==bye; W==quit; W==exit; W==done; W==thanks),
    !,
    display('Cheerio.'),
    nl.
-control([trace,'.']) :- !,
+control80([trace,'.']) :- !,
    tracing ~= on,
    display('Tracing from now on!'), nl, fail.
-control([do,not,trace,'.']) :- !,
+control80([do,not,trace,'.']) :- !,
    tracing ~= off,
    display('No longer tracing.'), nl, fail.
-control([do,mini,demo,'.']) :- !,
+control80([do,mini,demo,'.']) :- !,
    display('Executing mini demo...'), nl,
    demo(mini), fail.
-control([do,main,demo,'.']) :- !,
+control80([do,main,demo,'.']) :- !,
    display('Executing main demo...'), nl,
    demo(main), fail.
-control([test,chat,'.']) :- !,
+control80([test,chat,'.']) :- !,
    test_chat, fail.
-control(U0) :-
+control80(U0) :-
    check_words(U0,U),
    process(U),
    fail.

@@ -46,7 +46,14 @@
             test_chat/0,
 	    rtest_chats/1                       % +Times
 	  ]).
+:- user:ensure_loaded(library(parser_sharing)).	% misc
 :- ensure_loaded(chat80/chat).
+
+:- system:abolish(system:time/1).
+:- system:use_module(library(statistics)).
+:- system:import(prolog_statistics:time/1).
+user:test_chat80:- trace,chat80:test.
+
 
 /** <module> CHAT80 driver for SWI-Prolog
 */

@@ -17,7 +17,7 @@
 % Interface.
 % ---------
 :- export(database80/1).
-database80(X):- catch(database_u(X),E,(dbug(error(E,database_u(X))),trace,database_u(X))).
+database80(X):- catch(database_u(X),E,(bugout1(error(E,database_u(X))),trace,database_u(X))).
 
 database_t(aggregate(X,Y,Z)) :- aggregate(X,Y,Z).
 database_t(one_of(X,Y)) :- one_of(X,Y).
