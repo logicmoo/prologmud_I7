@@ -15,7 +15,7 @@ abolish_xg(Prop):- ignore(tlxgproc:current_xg_module(M)),
                  ignore((memberchk(xg_pred=P,Props),dmsg(abolising(current_xg_pred(M,F,N,Props))),predicate_property(P,number_of_clauses(NC)),flag(xg_assertions,A,A-NC))),
                  abolish(F,N),retractall(user:current_xg_pred(M,F,N,_)))).
 
-new_pred(P):- dmust(tlxgproc:current_xg_module(M)),new_pred(M,P).
+new_pred(P):- must(tlxgproc:current_xg_module(M)),new_pred(M,P).
 new_pred(M,P0):- functor(P0,F,A),functor(P,F,A),new_pred(M,P,F,A),!.
 
 new_pred(M,_,F,A):- user:current_xg_pred(M,F,A,_),!.
@@ -41,9 +41,9 @@ xg_process_te_clone((H ... T --> R),Mode,((P :- Q))) :- !, xg_process_te_clone((
 xg_process_te_clone((L --> R),Mode,((P :- Q))) :- !,xg_process_te_clone(L,R,Mode,P,Q).
 xg_process_te_clone((L ---> R),Mode,((P :- Q))) :- !,xg_process_te_clone(L,R,Mode,P,Q).
 
-chat80_term_expansion(In,Out):- compound(In),functor(In,'-->',_),trace,  dmust(xg_process_te_clone(In,+,Out)).
-chat80_term_expansion((H ... T ---> R),((P :- Q))) :- dmust( xg_process_te_clone((H ... T),R,+,P,Q)).
-chat80_term_expansion((L ---> R), ((P :- Q))) :- dmust(xg_process_te_clone(L,R,+,P,Q)).
+chat80_term_expansion(In,Out):- compound(In),functor(In,'-->',_),trace,  must(xg_process_te_clone(In,+,Out)).
+chat80_term_expansion((H ... T ---> R),((P :- Q))) :- must( xg_process_te_clone((H ... T),R,+,P,Q)).
+chat80_term_expansion((L ---> R), ((P :- Q))) :- must(xg_process_te_clone(L,R,+,P,Q)).
 
 
 chat80_term_expansion_now(( :- _) ,_ ):-!,fail.
@@ -125,7 +125,7 @@ xg_process(P,Mode) :-
    new_pred(P),
    xg_assertz(P).
 
-xg_assertz(P):- flag(xg_assertions,A,A+1),dmust((tlxgproc:current_xg_module(M),nop(dmsg(M:xg_assertz(P))),M:assertz(P))),!.
+xg_assertz(P):- flag(xg_assertions,A,A+1),must((tlxgproc:current_xg_module(M),nop(dmsg(M:xg_assertz(P))),M:assertz(P))),!.
 
 xg_complete(_F) :-
    recorded('xg.usurped',P,R0), erase_safe(recorded('xg.usurped',P,R0),R0),

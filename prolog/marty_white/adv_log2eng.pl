@@ -170,7 +170,7 @@ compile_eng(Context, Inst, TheThing):- atom(Inst), inst_of(Inst, Type, N), N\==0
  (nth0(N, [(unknown), '', the, thee, old, some, a], Det) -> true; atom_concat('#',N,Det)),
  compile_eng(Context, [Det, Type], TheThing).
 
-compile_eng(Context, Atom, Text):- fail, atom(Atom), dmust_det(atomic_list_concat(ABC,' ',Atom)),
+compile_eng(Context, Atom, Text):- fail, atom(Atom), must_det(atomic_list_concat(ABC,' ',Atom)),
  ABC=[A,B|C],!,
  compile_eng_txt(Context, [A,B|C], Text).
 
@@ -383,9 +383,9 @@ logic2eng(_Obj, [English|Rest], [English|Rest]):- english_directve(English),!.
 logic2eng(_Obj, [], []).
 
 logic2eng(Obj, [Prop|Tail], Text) :- !,
- dmust_det((log2eng(Obj, Tail, UText2) ->
+ must_det((log2eng(Obj, Tail, UText2) ->
  flatten([UText2], Text2),
- dmust_det(log2eng(Obj, Prop, UText1)) -> 
+ must_det(log2eng(Obj, Prop, UText1)) -> 
  flatten([UText1], Text1),
  append_if_new(Text1, Text2, Text))), !.
 
@@ -399,7 +399,7 @@ logic2eng(Obj, HWestFromTo_At, [ Ago | Info]):-
   logic2eng(Obj, HWestFromTo, Info).
 
 logic2eng(_Obj, Prop, [String]):- compound(Prop), no_english, !, format(atom(String), '~q', [Prop]), !.
-logic2eng( Obj, ~(Type), ['(','logically','not','(',Out, '))']):- dmust_det(log2eng(Obj, Type, Out)), !.
+logic2eng( Obj, ~(Type), ['(','logically','not','(',Out, '))']):- must_det(log2eng(Obj, Type, Out)), !.
 
 logic2eng(_Context, time_passes(Agent), ['Time passes for',Agent,'.']).
 
@@ -631,7 +631,7 @@ player_pprint(_Doer, D,K):- pprint(D,K).
 
 print_english(Doer, Logic):- is_list(Logic),!, maplist(print_english(Doer), Logic).
 
-print_english(Doer, Logic):- log2eng(Doer, Logic, Eng),dmust_det((eng2txt(Doer, Doer, Eng, Text))), pprint(Text,always).
+print_english(Doer, Logic):- log2eng(Doer, Logic, Eng),must_det((eng2txt(Doer, Doer, Eng, Text))), pprint(Text,always).
 
 
 maybe_our_portray_english(Logic):- 

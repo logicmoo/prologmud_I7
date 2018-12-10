@@ -62,8 +62,8 @@ ttynl:- format('~N'),flush_output.
 
 :- consult(xgproc).             % XG generator
 
-:- load_plus_xg_file(chat80,'chat80/clone.xg').
-:- load_plus_xg_file(chat80,'chat80/lex.xg').
+:- load_plus_xg_file(chat80,library('chat80/clone.xg')).
+:- load_plus_xg_file(chat80,library('chat80/lex.xg')).
 
 % :- compile_xg_clauses.
 % :- consult(newg).		% clone + lex

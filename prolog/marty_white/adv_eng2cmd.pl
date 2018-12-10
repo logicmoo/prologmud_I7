@@ -225,15 +225,15 @@ do_eval_or_same({O},{O}):- !.
 do_eval_or_same(G,GG):- compound_name_arguments(G,HT,[F|GL]), atom(F), member(HT,[t,h]), !,
  compound_name_arguments(GM,F,GL),!,do_eval_or_same(GM,GG).
 
-do_eval_or_same(textString(P,G),textString(P,GG)):- ground(G),!, dmust(to_string_lc(G,GG)),!.
+do_eval_or_same(textString(P,G),textString(P,GG)):- ground(G),!, must(to_string_lc(G,GG)),!.
 /*
 do_eval_or_same(PEG,PEGG):- notrace((compound_name_arguments(PEG,F,Args),downcase_atom(F,D),(atom_concat(_,'text',D);atom_concat(_,'string',D)), 
-  append(Left,[G],Args))),ground(G), \+ string(G), !, dmust(to_string_lc(G,GG)),!,
+  append(Left,[G],Args))),ground(G), \+ string(G), !, must(to_string_lc(G,GG)),!,
   append(Left,[GG],NewArgs),compound_name_arguments(PEGG,F,NewArgs).
 */
-do_eval_or_same(isa(P,G),isa(P,GG)):- ground(G),!, dmust(asCol(G,GG)),!.
+do_eval_or_same(isa(P,G),isa(P,GG)):- ground(G),!, must(asCol(G,GG)),!.
 
-do_eval_or_same(xfn(P,G),GG):- !, dmust( call(P,G,GG)),!.
+do_eval_or_same(xfn(P,G),GG):- !, must( call(P,G,GG)),!.
 do_eval_or_same(G,GG):- compound_name_arguments(G,F,GL), F\==percept_props, !,
  maplist(do_eval_or_same,GL,GGL),!,compound_name_arguments(GG,F,GGL).
 do_eval_or_same(G,G).    
@@ -443,7 +443,7 @@ parse2logical(Doer, [VerbText|TextArgs], Frame, _Mem):-
     all_different_bindings([Action|VarsOf]),
     once(VerbText=Verb;same_word(VerbD,Verb)),
     select(done_by(Action,Doer),Normals, Frame),
-    dmust_det((push_frame(isa(Action,'tAction'),Frame),
+    must_det((push_frame(isa(Action,'tAction'),Frame),
     push_frame(textString(Action,VerbText),Frame),
     push_frame(occurs(Action,Tense),Frame),    
     debug_var([Verb,'Event'],Action),
@@ -775,13 +775,13 @@ flee_run_escape(escape).
 % get [out,in,..] Object
 parse_imperative_movement(Doer, [get, Prep, Object], goto_prep_obj(Doer, walk, Prep, Object), _Mem) :- preposition(spatial, Prep).
 % n/s/e/w/u/d
-parse_imperative_movement(Doer, [Dir], Logic, M):- maybe_compass_direction(Dir,Actual), !, dmust_det(txt2goto(Doer, walk, [Actual], Logic, M)).
+parse_imperative_movement(Doer, [Dir], Logic, M):- maybe_compass_direction(Dir,Actual), !, must_det(txt2goto(Doer, walk, [Actual], Logic, M)).
 % escape/flee/run .. 
-parse_imperative_movement(Doer, [Escape|Info], Logic, M):- flee_run_escape(Escape), !, dmust_det(txt2goto(Doer, run, Info, Logic, M)).
+parse_imperative_movement(Doer, [Escape|Info], Logic, M):- flee_run_escape(Escape), !, must_det(txt2goto(Doer, run, Info, Logic, M)).
 % out/into
-parse_imperative_movement(Doer, [Prep], Logic, M) :- preposition(spatial, Prep), !, dmust_det(txt2goto(Doer, walk, [Prep], Logic, M)).
+parse_imperative_movement(Doer, [Prep], Logic, M) :- preposition(spatial, Prep), !, must_det(txt2goto(Doer, walk, [Prep], Logic, M)).
 % go .. 
-parse_imperative_movement(Doer, [go|Info], Logic, M):- !, dmust_det(txt2goto(Doer, walk, Info, Logic, M)).
+parse_imperative_movement(Doer, [go|Info], Logic, M):- !, must_det(txt2goto(Doer, walk, Info, Logic, M)).
 % outside
 parse_imperative_movement(Doer, [ExitName], Logic, M) :- 
  in_agent_model(Doer, h(exit(ExitName), _, _), M), txt2goto(Doer, walk, [ExitName], Logic, M),!.
@@ -789,7 +789,7 @@ parse_imperative_movement(Doer, [ExitName], go_dir(Doer, walk, ExitName), M) :-
   in_agent_model(Doer, h(exit(ExitName), _Place, _), M).
 
 
-parse_imperative_movement(Doer, [get, Prep| More], Logic, M) :- preposition(spatial, Prep), !, dmust_det(txt2goto(Doer, walk, [Prep| More], Logic, M)).
+parse_imperative_movement(Doer, [get, Prep| More], Logic, M) :- preposition(spatial, Prep), !, must_det(txt2goto(Doer, walk, [Prep| More], Logic, M)).
 
 % x shelf~1
 % go on shelf~1
@@ -802,7 +802,7 @@ txt2goto(Doer, Walk,[Alias| More], Logic, M) :- cmdalias(Alias,Dir), !, txt2goto
 % go in car
 txt2goto(Doer, Walk,[ Prep, Dest], goto_prep_obj(Doer, Walk, Prep, Where), M) :- 
  preposition(spatial, Prep),!,
- dmust_det(txt2place(Dest, Where, M)).
+ must_det(txt2place(Dest, Where, M)).
 
 % go north
 txt2goto(Doer, Walk,[ ExitName], go_dir(Doer, Walk, ExitName), M) :-

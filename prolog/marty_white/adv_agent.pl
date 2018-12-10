@@ -24,7 +24,7 @@ each_live_agent(NewGoal, S0, S2) :-
  apply_mapl_state(NewGoal, List, S0, S2).
 
 each_sensing_thing(Sense, NewGoal, S0, S2) :-
- dmust_det((get_sensing_objects(Sense, List, S0),
+ must_det((get_sensing_objects(Sense, List, S0),
   List\==[],
   %bugout1(each_sensing_thing(Sense)=(List=NewGoal)),
  apply_mapl_state(NewGoal, List, S0, S2))).
@@ -85,7 +85,7 @@ add_goals(Goals, Mem0, Mem2) :-
 
 
 add_todo(Auto, Mem0, Mem3) :- Auto = auto(Agent),
- %dmust_det(member(inst(Agent), Mem0)),
+ %must_det(member(inst(Agent), Mem0)),
  autonomous_decide_action(Agent, Mem0, Mem3),!.
 add_todo(Action, Mem0, Mem2) :- 
  forget(todo(OldToDo), Mem0, Mem1),
@@ -144,7 +144,7 @@ console_decide_action(Agent, Mem0, Mem1):-
  notrace((
  ttyflush,
  agent_to_input(Agent,In),
- dmust_det(is_stream(In)),
+ must_det(is_stream(In)),
  setup_console,
  ensure_has_prompt(Agent),
  read_line_to_tokens(Agent, In,[], Words0), 
@@ -177,7 +177,7 @@ makep:-
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
-:- bugout1(ensure_loaded('adv_agents')).
+%:- bugout1(ensure_loaded('adv_agents')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 decide_action(Agent, Mem0, Mem2):- 
@@ -192,7 +192,7 @@ decide_action(Agent, Mem0, Mem0) :-
 % Telnet client
 decide_action(Agent, Mem0, Mem1) :-
  notrace(declared(inherited(telnet), Mem0)),!,
- dmust_det(telnet_decide_action(Agent, Mem0, Mem1)).
+ must_det(telnet_decide_action(Agent, Mem0, Mem1)).
 
 % Stdin Client
 decide_action(Agent, Mem0, Mem1) :-

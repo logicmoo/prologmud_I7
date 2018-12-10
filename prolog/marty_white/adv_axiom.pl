@@ -24,7 +24,7 @@ aXiom(say(Agent, Message)) -->          % undirected message
 
 /*
 aXiom(emote(Agent, EmoteType, Object, Message)) --> !, % directed message
- dmust_det((
+ must_det((
  action_sensory(EmoteType, Sense),
  can_sense(Agent, Sense, Object),
  % get_open_traverse(EmoteType, Sense), h(Sense, Agent, Here), 
@@ -263,7 +263,7 @@ aXiom(sub__examine(Agent, Sense, Prep, Object, Depth)) -->
 aXiom(sub__examine(Agent, Sense, Prep, Object, Depth)) -->
   \+ can_sense(Agent, Sense, Object), !,
   must_act( failed(examine(Agent, Sense, Prep, Object, Depth), \+ can_sense(Agent, Sense, Object))).
-aXiom(sub__examine(Agent, Sense, Prep, Object, Depth)) --> dmust_det(act_examine(Agent, Sense, Prep, Object, Depth)),!.
+aXiom(sub__examine(Agent, Sense, Prep, Object, Depth)) --> must_det(act_examine(Agent, Sense, Prep, Object, Depth)),!.
 
 
 % used mainly to debug if things are locally accessable
@@ -347,7 +347,7 @@ setloc_silent(Prep, Object, Dest) -->
 
 
 change_state(Agent, Open, Thing, Opened, TF,  S0, S):- 
- % dmust_det
+ % must_det
  ((
  maybe_when(psubsetof(Open, touch),
    required_reason(Agent, will_touch(Agent, Thing, S0, _))),
@@ -390,8 +390,8 @@ end_of_file.
 
 aXiom(go_dir(Agent, Walk, ExitName)) -->         % go n/s/e/w/u/d/in/out  
   must_act(status_msg(vBegin,go_dir(Agent, Walk, ExitName))),
-  {break},dmust_det(from_loc(Agent, Here)),  
-  %dmust_det(h(exit(ExitName), Here, _There)),
+  {break},must_det(from_loc(Agent, Here)),  
+  %must_det(h(exit(ExitName), Here, _There)),
   unless(Agent,h(exit(ExitName), Here, _There),
   (eVent(Agent,departing(Agent, in, Here, Walk, ExitName)),
    must_act(status_msg(vDone,go_dir(Agent, Walk, ExitName))))).
@@ -403,7 +403,7 @@ aXiom(departing(Agent, in, Here, Walk, ExitName)) -->
   queue_local_event( departing(Agent, Here, Walk, ExitName), [Here]),
    % queue_local_event( msg([cap(subj(Agent)), leaves, Here, ing(Walk), to, the, ExitName]), [Here]).
   sg(reverse_dir(ExitName,ExitNameR)),
-  dmust_det(eVent(Agent,arriving(Agent, There, Walk, ExitNameR))).
+  must_det(eVent(Agent,arriving(Agent, There, Walk, ExitNameR))).
 
 aXiom(terminates(h(Prep, Object, Here))) -->
  %ignore(sg(declared(h(Prep, Object, Here)))),
@@ -414,8 +414,8 @@ aXiom(arriving(Agent, Here, Walk, ReverseDir)) -->
   %sg(default_rel(PrepIn, Here)), {atom(PrepIn)},
   {PrepIn = in},
   % [cap(subj(Agent)), arrives, PrepIn, Here, ing(Walk), from, the, ReverseDir] 
-  dmust_det(eVent(Agent,initiates(h(PrepIn, Agent, Here)))),
-  dmust_det(add_look(Agent)).
+  must_det(eVent(Agent,initiates(h(PrepIn, Agent, Here)))),
+  must_det(add_look(Agent)).
 
 aXiom(initiates(h(Prep, Object, Dest))) -->
  declare(h(Prep, Object, Dest)).

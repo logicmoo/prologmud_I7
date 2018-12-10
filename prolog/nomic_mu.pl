@@ -55,7 +55,7 @@ srv_mu:-
 
 run_mu:- 
    setup_console,
-   dmust(adventure),!.
+   must(adventure),!.
 
 
 usage_mu:- format('~N

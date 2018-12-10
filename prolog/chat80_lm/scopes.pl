@@ -259,7 +259,7 @@ apply_set([],X,true:P,S,setof(X,P,S)).
 apply_set([I|Is],X,Range:P,S,
       setof([I|Is]:V,(Range,setof(X,P,V)),S)).
 
-governs_det(Det,_Det0):-dmust(nonvar(Det)),fail.
+governs_det(Det,_Det0):-must(nonvar(Det)),fail.
 governs_det(Det,set(J)) :-
    index_det(Det,I),
    I \== J.

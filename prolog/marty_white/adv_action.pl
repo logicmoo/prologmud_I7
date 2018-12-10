@@ -184,7 +184,7 @@ trival_act(wait(_)).
 
 satisfy_each(_Ctxt,[]) --> [], !.
 satisfy_each(Context,[Cond|CondList]) --> !,
-  dmust_det(satisfy_each(Context,Cond)), !,
+  must_det(satisfy_each(Context,Cond)), !,
   ((sg(member(failed(_Why)))) ; satisfy_each(Context,CondList)),!.
 satisfy_each(_Ctx,A \= B) --> {dif(A,B)},!.
 
@@ -246,13 +246,13 @@ apply_act(wait(Agent)) -->
 
 apply_act(Action) --> 
  {implications(_DoesEvent,(Action), Preconds, Postconds), action_doer(Action,Agent) },
- dmust_det(satisfy_each(preCond(_),Preconds)),
+ must_det(satisfy_each(preCond(_),Preconds)),
  (((sg(member(failed(Why))),send_precept(Agent, failed(Action,Why))))
     ; (satisfy_each(postCond(_),Postconds),send_precept(Agent, (Action)))),!.
 
 apply_act( Action) --> 
  {oper_splitk(Agent,Action,Preconds,Postconds)}, !, 
- dmust_det(satisfy_each(preCond(_),Preconds)),
+ must_det(satisfy_each(preCond(_),Preconds)),
  (((sg(member(failed(Why))),send_precept(Agent, failed(Action,Why))))
     ; (satisfy_each(postCond(_),Postconds),send_precept(Agent, success(Action)))),!.
 
@@ -341,7 +341,7 @@ add_look(Agent) -->
 
 
 :- defn_state_none(action_doer(action,-agent)).
-action_doer(Action,Agent):- \+ compound(Action),!, dmust_det(current_agent(Agent)),!.
+action_doer(Action,Agent):- \+ compound(Action),!, must_det(current_agent(Agent)),!.
 action_doer(Action,Agent):- functor(Action,Verb,_),verbatum_anon(Verb),current_agent(Agent),!.
 action_doer(Action,Agent):- arg(1,Action,Agent), nonvar(Agent), \+ preposition(_,Agent),!.
 action_doer(Action,Agent):- trace,throw(missing(action_doer(Action,Agent))).

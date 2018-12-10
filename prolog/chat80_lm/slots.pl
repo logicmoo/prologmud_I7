@@ -129,9 +129,9 @@ i_np_mod(Mod,X,Slots,Slots,Pred0,Pred,QMods0,QMods,Up,Id,_) :-
    i_rel(Mod,X,Pred0,Pred,QMods0,QMods,Up,Id).
 
 %i_noun(Noun,Type-X,P,Slots) :-
-%   no_repeats(dmust(noun_template(Noun,Type,X,P,Slots))).
+%   no_repeats(must(noun_template(Noun,Type,X,P,Slots))).
 i_noun(Noun,Type-X,P,Slots) :-
-   no_repeats(dmust(noun_template(Noun,Type,X,P,Slots))).
+   no_repeats(must(noun_template(Noun,Type,X,P,Slots))).
 
 i_bind(Prep,Slots0,Slots,_,X,Id,varg,P,[],[]) :-
    in_slot(Slots0,Case,X,Id,Slots,P),

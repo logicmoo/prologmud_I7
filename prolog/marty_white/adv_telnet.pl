@@ -171,7 +171,7 @@ adventure_client_process(Id,Alias,InStream,OutStream, Host, Peer):-
  overwrote_prompt(Agent),
  setup_console,
  repeat, 
- dmust(adv:console_io_player(InStream, OutStream, CurrentAgent)),
+ must(adv:console_io_player(InStream, OutStream, CurrentAgent)),
  adv_tlnet_readloop(Id, InStream, OutStream, CurrentAgent),
  needs_logout_p(Id, InStream, CurrentAgent), !. 
 
@@ -199,7 +199,7 @@ adv_tlnet_readloop(_Id, InStream, OutStream, Agent):-
 adv_tlnet_readloop(Id, InStream, OutStream, Agent):-
  read_line_to_tokens(Agent,InStream,[],Words),
  tflush(OutStream),
- dmust_det(adv_tlnet_words(Id, InStream, Agent, Words)),!.
+ must_det(adv_tlnet_words(Id, InStream, Agent, Words)),!.
 
 
 adv_tlnet_words(Id, InStream, Agent, []):- 

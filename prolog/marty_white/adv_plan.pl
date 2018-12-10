@@ -223,7 +223,7 @@ oper(Agent, looky(Agent),
        h(Sub, Agent, Here)       
        ], 
      [ foreach(
-         (h(Sub, Child, Here), dmust_det(h(At, Child, Where))), 
+         (h(Sub, Child, Here), must_det(h(At, Child, Where))), 
              precept(Agent, h(At, Child, Where))) ] ) :- \+ only_goto.
 
 

@@ -114,9 +114,9 @@ not_violate0(NotCCW,POS):-loop_check_chat80((ccw_db(NotCCW,CC)->CC=POS;true),fai
 :-meta_predicate(plt2_call(+,+,0)).
 % plt_call(Goal):-plt,!,no_repeats(Goal),dmsg(succeed_plt_call(Goal)).
 plt_call(NotCCW,_POS,_Goal):-member(NotCCW,['?','river','borders']),!,fail.
-plt_call(NotCCW,POS,Goal):-plt,!,loop_check_chat80(no_repeats(Goal)),not_violate(NotCCW,POS),dmust(once(not_violate(NotCCW,POS);(dmsg(succeed_plt_call(NotCCW,POS,Goal)),!,fail))).
+plt_call(NotCCW,POS,Goal):-plt,!,loop_check_chat80(no_repeats(Goal)),not_violate(NotCCW,POS),must(once(not_violate(NotCCW,POS);(dmsg(succeed_plt_call(NotCCW,POS,Goal)),!,fail))).
 plt2_call(NotCCW,_POS,_Goal):-member(NotCCW,['?','river','borders']),!,fail.
-plt2_call(NotCCW,POS,Goal):-plt2,!,loop_check_chat80(no_repeats(Goal)),not_violate(NotCCW,POS),dmust(once(not_violate(NotCCW,POS);(dmsg(succeed_plt_call(NotCCW,POS,Goal)),!,fail))).
+plt2_call(NotCCW,POS,Goal):-plt2,!,loop_check_chat80(no_repeats(Goal)),not_violate(NotCCW,POS),must(once(not_violate(NotCCW,POS);(dmsg(succeed_plt_call(NotCCW,POS,Goal)),!,fail))).
 
 
 adverb_db(Quickly):-plt,talk_db(adv,Quickly),not_ccw(Quickly).
@@ -460,7 +460,7 @@ maybe_noun_or_adj(T):- var(T)->true;(atom(T),not_ccw(T)).
 %  chat80("how are you?").
 % test_chat80("you flow").
 
-test_chat80(U):- locally(t_l:chat80_interactive, dmust(chat80(U))).
+test_chat80(U):- locally(t_l:chat80_interactive, must(chat80(U))).
 
 t10:- 
    test_chat80("how many postures are there?"),
@@ -1127,10 +1127,10 @@ must_test_804([what, percentage, of, countries, border, each, ocean, ?],
 % answers([[arctic_ocean, 2.5641025641025643]])],[time(0.0020000000000000018)]).
 
 :- share_mp((t11/0,t12/0,t13/0,t14/0,t15/0,t16/0)).
-t11:- locally_hide(lmconf:use_cyc_database,locally(t_l:tracing80, forall(must_test_801(U,R,O),once(ignore(dmust(process_run_diff(report,U,R,O))))))).
-t12:- locally_hide(lmconf:use_cyc_database,locally(t_l:tracing80, forall(must_test_802(U,R,O),once(ignore(dmust(process_run_diff(report,U,R,O))))))).
-t13:- locally_hide(lmconf:use_cyc_database,locally(t_l:tracing80, forall(must_test_803(U,R,O),once(ignore(dmust(process_run_diff(report,U,R,O))))))).
-t14:- locally_hide(lmconf:use_cyc_database,locally(t_l:tracing80, forall(must_test_804(U,R,O),once(ignore(dmust(process_run_diff(report,U,R,O))))))).
+t11:- locally_hide(lmconf:use_cyc_database,locally(t_l:tracing80, forall(must_test_801(U,R,O),once(ignore(must(process_run_diff(report,U,R,O))))))).
+t12:- locally_hide(lmconf:use_cyc_database,locally(t_l:tracing80, forall(must_test_802(U,R,O),once(ignore(must(process_run_diff(report,U,R,O))))))).
+t13:- locally_hide(lmconf:use_cyc_database,locally(t_l:tracing80, forall(must_test_803(U,R,O),once(ignore(must(process_run_diff(report,U,R,O))))))).
+t14:- locally_hide(lmconf:use_cyc_database,locally(t_l:tracing80, forall(must_test_804(U,R,O),once(ignore(must(process_run_diff(report,U,R,O))))))).
 
 
 answer804([OCEAN, RATIO]):-
@@ -1143,6 +1143,6 @@ answer804([OCEAN, RATIO]):-
       )).
 t15:- forall(answer804([OCEAN, RATIO]),wdmsg(answer804([OCEAN, RATIO]))).
 
-t16:- locally_hide(lmconf:use_cyc_database,locally(t_l:tracing80, forall(must_test_805(U,R,O),once(ignore(dmust(process_run_diff(report,U,R,O))))))).
-t17:- locally_hide(lmconf:use_cyc_database,locally(t_l:tracing80, forall(must_test_806(U,R,O),once(ignore(dmust(process_run_diff(report,U,R,O))))))).
+t16:- locally_hide(lmconf:use_cyc_database,locally(t_l:tracing80, forall(must_test_805(U,R,O),once(ignore(must(process_run_diff(report,U,R,O))))))).
+t17:- locally_hide(lmconf:use_cyc_database,locally(t_l:tracing80, forall(must_test_806(U,R,O),once(ignore(must(process_run_diff(report,U,R,O))))))).
 

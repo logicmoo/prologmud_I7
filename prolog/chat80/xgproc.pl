@@ -5,7 +5,7 @@
 :- op(500,fx,+).
 :- op(500,fx,-).
 
-:- ensure_loaded(library(with_thread_local)).	% misc
+:- ensure_loaded(library(scope_locally/with_thread_local)).	% misc
 
 %load_plus_xg_file(_M,F):- consume0(F,+).
 
@@ -17,7 +17,7 @@
 
 abolish_xg(Prop):- ignore(tlxgproc:current_xg_module(M)),
   ignore((((user:current_xg_pred(M,F,N,Props),member(Prop,Props),member(Prop,Props),
-                 ignore((memberchk(xg_pred=P,Props),bugout1(abolising(current_xg_pred(M,F,N,Props))),
+                 ignore((memberchk(xg_pred=P,Props),dmsg(abolising(current_xg_pred(M,F,N,Props))),
                    predicate_property(P,number_of_clauses(NC)),flag(xg_assertions,A,A-NC))),
                  abolish(F,N),retractall(user:current_xg_pred(M,F,N,_)))),fail)).
 
@@ -96,7 +96,8 @@ statistics_heap(H,0):- statistics(clauses,H).
 consume0(F,Mode) :-
    seeing(Old),
    statistics_heap(H0,Hf0),
-   see(F),
+   absolute_file_name(F,FE),
+   see(FE),
    tidy_consume(F,Mode),
  ( (seeing(User)-> User=user), !; seen ),
    see(Old),
@@ -148,7 +149,7 @@ xg_complete(_F) :-
    recorded('xg.usurped',P,R0), xg_erase_safe(recorded('xg.usurped',P,R0),R0),
    recorded(P,'xg.usurped',R1), xg_erase_safe(recorded(P,'xg.usurped',R1),R1),
    fail.
-xg_complete(F):- flag(read_terms,T,T),bugout1(info(read(T,F))),nl,nl.
+xg_complete(F):- flag(read_terms,T,T),dmsg(info(read(T,F))),nl,nl.
 
 usurping(+,_) :- !.
 usurping(-,P) :-

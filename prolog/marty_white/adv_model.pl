@@ -126,11 +126,11 @@ update_model(Knower, arriving(Agent, In, Here, Walk, ExitNameReversed), Timestam
 
 update_model(Knower, arriving(Agent, At, Here, _, ExitNameReversed), Timestamp, Mem, M0, M2) :-  Knower == Agent,    
   % According to model, where was I?
-  dmust(in_model(h(_Was, Agent, There), M0)),
+  must(in_model(h(_Was, Agent, There), M0)),
   % TODO: Handle goto(Agent, walk, on, table)
   % reverse_dir(ExitNameReversed, ExitName, advstate),
   % At did I get Here?  
-  dmust(append(RecentMem, [attempting(go_dir(Agent, _, ExitName))|OlderMem], Mem)), % find figment
+  must(append(RecentMem, [attempting(go_dir(Agent, _, ExitName))|OlderMem], Mem)), % find figment
   \+ member(attempting(go_dir(Agent, _, _)), RecentMem),               % guarrantee recentness
   memberchk(timestamp(_T1,_OldNow), OlderMem),               % get associated stamp
   %player_format(Agent, '~p moved: goto(Agent, walk, ~p, ~p) from ~p leads to ~p~n',
@@ -160,7 +160,7 @@ update_model(Agent, wearing(Agent, Objects), Timestamp, _Memory, M0, M1) :-
  update_relations( worn_by, Objects, Agent, Timestamp, M0, M1).
 
 update_model(Agent, percept(Agent, _Sense, _Depth, child_list(Object, At, Children)), Timestamp, _Mem, M0, M2) :-
- dmust_det((remove_children( At, Children, Object, Timestamp, M0, M1),
+ must_det((remove_children( At, Children, Object, Timestamp, M0, M1),
    update_relations( At, Children, Object, Timestamp, M1, M2))).
 update_model(Agent, percept_props(Agent, _Sense, Object, _Depth, PropList), _Stamp, _Mem, M0, M2) :-
  apply_mapl_rest_state(updateprop(Object), PropList, [], M0, M2).

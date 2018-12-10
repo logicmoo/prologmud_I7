@@ -17,12 +17,13 @@
    op(1150,fx,(dynamic_multifile_exported))]).
 
 
-:- ensure_loaded(library(no_repeats)).
+% Miscellaneous generic utility predicates.
+:- ensure_loaded(library(logicmoo_common)).
+:- ensure_loaded(library(must_sanity)).
 % :- op(900, fy, not).
 
-% Miscellaneous generic utility predicates.
 
-:- user:ensure_loaded(library(poor_bugger)).
+% :- user:ensure_loaded(library(poor_bugger)).
 
 
 :- module_transparent(only_pfc/1).

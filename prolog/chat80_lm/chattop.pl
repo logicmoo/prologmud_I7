@@ -198,10 +198,10 @@ p1:- format('~N% ---------------------------------------------------------------
      
 p4(Term):-format('~N%                       ~q',[Term]).
 
-words_to_w2(U,W2):-var(U),dmust(W2=U).
-words_to_w2([],W2):-dmust(W2=[]).
+words_to_w2(U,W2):-var(U),must(W2=U).
+words_to_w2([],W2):-must(W2=[]).
 words_to_w2(U,W2):- \+ is_list(U),convert_to_atoms_list(U,List),U \=@= List,!,words_to_w2(List,W2).
-words_to_w2(U,W2):- \+ compound(U),dmust(W2=U).
+words_to_w2(U,W2):- \+ compound(U),must(W2=U).
 words_to_w2([W|WL],[W2|W2L]):-w_to_w2(W,W2),words_to_w2(WL,W2L).
 
 
@@ -248,8 +248,8 @@ term_depth0(C,TDO):-is_list(C),!,findall(D,(member(T,C),term_depth0(T,D)),DL), m
 term_depth0(C,TDO):-C=..[_|LIST],findall(D,(member(T,LIST),term_depth0(T,D)),DL), max_list([0|DL],TD),TDO is TD+1,!.
 
 
-is_sane(C):- dmust((term_depth(C,D),D<100)).
-is_sane_nv(C):-dmust((nonvar(C),term_depth(C,D),D<100)).
+is_sane(C):- must((term_depth(C,D),D<100)).
+is_sane_nv(C):-must((nonvar(C),term_depth(C,D),D<100)).
 
 sent_to_parsed(U,E):- deepen_pos(parser_chat80:sentence80(E,U,[],[],[])).
 
@@ -358,7 +358,7 @@ sent_to_prelogic(S0,S) :-
 
 sent_to_prelogic(S0,S) :- 
   t_l:chat80_interactive,plt,
-   dmust((i_sentence(S0,S1),
+   must((i_sentence(S0,S1),
    clausify80(S1,S2),
    simplify(S2,S))),!.
 

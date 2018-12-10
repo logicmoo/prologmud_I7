@@ -17,7 +17,7 @@
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
-:- bugout1(ensure_loaded('adv_robot_floyd')).
+%:- bugout1(ensure_loaded('adv_robot_floyd')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 random_noise(Agent, [cap(subj(Agent)), Msg]) :- fail, 
@@ -70,7 +70,7 @@ autonomous_decide_action(Agent, Mem0, Mem0) :-
 autonomous_decide_action(Agent, Mem0, _) :-
  once((agent_thought_model(Agent,ModelData, Mem0),
  (\+ in_agent_model(Agent, h(_, Agent, _), ModelData) -> (pprint(Mem0, always),pprint(ModelData, always)) ; true),
- dmust_det(in_agent_model(Agent,h(_Prep, Agent, Here), ModelData)),
+ must_det(in_agent_model(Agent,h(_Prep, Agent, Here), ModelData)),
  nonvar(Here))), 
  fail.
 
@@ -123,7 +123,7 @@ autonomous_decide_unexplored_object(Agent, Mem0, Mem1) :- fail,
 
 % Follow Player to adjacent rooms.
 autonomous_decide_follow_player(Agent, Mem0, Mem1) :- % 1 is random(2),
- dmust_det((
+ must_det((
  agent_thought_model(Agent,ModelData, Mem0),
  in_agent_model(Agent,h(_, Agent, Here), ModelData))),
  dif(Agent, Player), current_agent(Player),

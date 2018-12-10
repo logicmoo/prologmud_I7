@@ -154,7 +154,7 @@ do_metacmd(Doer, inspect(Self, getprop(Target,NamedProperty)), S0, S0) :-
 
 do_metacmd(Doer, create(Type), S0, S9) :-
  security_of(Doer,wizard),
- dmust_det((current_agent(Agent),
+ must_det((current_agent(Agent),
  h(Prep, Agent, Here, S0),
  create_new_unlocated(Type, Object, S0, S1),
  declare(h(Prep, Object, Here), S1, S9),

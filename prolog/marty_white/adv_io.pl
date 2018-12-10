@@ -25,7 +25,7 @@
  player_format/2,
  player_format/3,
  bugout3/2,
- %bugout1/1,
+ bugout1/1,
  bugout3/3,
  with_tty/2,
  pprint/2,
@@ -124,7 +124,7 @@ bug(_) :- debugging(adv(all)).
 bug(B) :- debugging(adv(B),YN),!,YN.
 bug(_) :- debugging(adv(unknown),YN),!,YN.
 
-% bugout1(L) :- bugout3('~q', [L], always).
+bugout1(L) :- bugout3('~q', [L], always).
 
 bugout3(A, B) :-
  bug(B),
@@ -135,9 +135,9 @@ bugout3(_, _).
 bugout3(A, L, B) :-
  bug(B),
  !,
- dmust_det(maplist(simplify_dbug, L, LA)),
+ must_det(maplist(simplify_dbug, L, LA)),
  ansi_format([fg(cyan)], '~N% ', []), ansi_format([fg(cyan)], A, LA),
- dmust_det((stdio_player(Player),overwrote_prompt(Player))),!.
+ must_det((stdio_player(Player),overwrote_prompt(Player))),!.
 bugout3(_, _, _).
 
       
@@ -205,9 +205,9 @@ player_format(Fmt,List):-
 
 player_format(Agent,Fmt,List):-
  agent_to_output(Agent,OutStream),
- dmust_det(format(OutStream,Fmt,List)),!,
+ must_det(format(OutStream,Fmt,List)),!,
  overwrote_prompt(Agent).
-player_format(Agent,Fmt,List):- dmust_det(format(Fmt,List)),
+player_format(Agent,Fmt,List):- must_det(format(Fmt,List)),
  overwrote_prompt(Agent).
 
 
@@ -216,7 +216,7 @@ player_format(Agent,Fmt,List):- dmust_det(format(Fmt,List)),
 :- dynamic user:portray/1.
 :- multifile user:portray/1.
 :- module_transparent user:portray/1.
-user:portray(Logic) :-  
+user:portray(Logic) :- fail,  
  compound(Logic), 
  our_current_portray_level(Level),
  our_portray_at_level(Level, Logic),!.
@@ -315,8 +315,8 @@ read_line_to_tokens(_Agent,In,Prev,Tokens):-
             (read_line_to_codes(In,LineCodesR),read_pending_input(In,_,[]))), 
  append(Prev,LineCodesR,LineCodes),
  NegOne is -1,  
- dmust_det(line_to_tokens(LineCodes,NegOne,Tokens0)),!,
- dmust_det(Tokens0=Tokens).
+ must_det(line_to_tokens(LineCodes,NegOne,Tokens0)),!,
+ must_det(Tokens0=Tokens).
 
 line_to_tokens([],_,[]):-!.
 line_to_tokens(NegOne,NegOne,end_of_file):-!.

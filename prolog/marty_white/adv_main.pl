@@ -71,7 +71,7 @@ extra :- true. % Fuller, but questionable if needed yet.
 
 adventure_init :-
  %guitracer,
- dmust_det((
+ must_det((
  test_ordering,
  init_logging,
  (retractall(advstate_db(_));true),!,
@@ -103,7 +103,7 @@ adventure :-
 
 main(S0, S9) :-
  notrace((set_advstate(S0))),
- dmust_det(update_telnet_clients(S0,S1)),
+ must_det(update_telnet_clients(S0,S1)),
  ((set_advstate(S1),
  % pprint(S1,general),
  get_live_agents(LiveAgents, S1),
@@ -134,9 +134,9 @@ telnet_decide_action(Agent, Mem0, Mem0):-
  bugout3('~w @ ~w telnet: Already about to: ~w~n', [Agent, Here, Action], telnet).
 
 telnet_decide_action(Agent, Mem0, Mem1) :-
- %dmust_det(thought(timestamp(T0), Mem0)),
+ %must_det(thought(timestamp(T0), Mem0)),
  retract(adv:console_tokens(Agent, Words)), !,
- dmust_det((parse_command(Agent, Words, Action, Mem0),
+ must_det((parse_command(Agent, Words, Action, Mem0),
  if_tracing(bugout3('Telnet TODO ~p~n', [Agent: Words->Action], telnet)),
  add_todo(Action, Mem0, Mem1))), !.
 telnet_decide_action(Agent, Mem, Mem) :-
@@ -148,7 +148,7 @@ telnet_decide_action(Agent, Mem, Mem) :-
 %:- endif.
 
 main_once:- 
- dmust_det((
+ must_det((
    retract(advstate_db(S0)),
    main(S0, S1),
    asserta(advstate_db(S1)),
