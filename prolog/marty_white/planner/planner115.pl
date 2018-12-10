@@ -76,12 +76,24 @@
    that follows from HA, BA is a list of before atoms, and BC is the transitive
    closure of BA.
 */
+first_d(1000).
+/*
+%next_d(0). next_d(1).
+%next_d(2). next_d(4).
+next_d(32).  next_d(64). next_d(98).
+next_d(D1, D2):- D1<5,!,D2 is D1+1.
+next_d(D1, D2):- D1<9,!,D2 is D1+2.
+next_d(D1, D2):- next_d(D2),D2>D1,!.
+next_d(D1, D2):- D2 is D1+200.
+%next_d(D1, D2):- D2 is (D1+7).
+*/
+
 abdemo_special(long,Gs,R):-abdemo_timed(Gs,R).
 abdemo_special(_,Gs,R):- abdemo(Gs,R).
 
 abdemo(Gs,[HA,BA]) :-
-     init_gensym(t),
-     abdemo_top(Gs,[[[],[]],[[],[]]],[[HA,HC],[BA,BC]],[],N,0),
+     init_gensym(t), first_d(D),
+     abdemo_top(Gs,[[[],[]],[[],[]]],[[HA,HC],[BA,BC]],[],N,D),
      write_plan_len(HA,BA).
 
 abdemo_timed(Gs,[HA,BA]) :-
@@ -112,7 +124,7 @@ abdemo_cont([[HA,HC],[BA,BC]],R2,N1,N3) :-
 /* abdemo_id is an iterative deepening version of abdemo. */
 
 abdemo_id(Gs,R1,R2,N1,N2,D) :-
-     write('Depth: '), writenl(D), nl, abdemo(Gs,R1,R2,N1,N2,D).
+     write('DMS'), write(D), write(' '), abdemo(Gs,R1,R2,N1,N2,D).
 
 abdemo_id(Gs,R1,R2,N1,N2,D1) :- D2 is D1+1, abdemo_id(Gs,R1,R2,N1,N2,D2).
 

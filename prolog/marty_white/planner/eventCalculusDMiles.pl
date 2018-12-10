@@ -115,7 +115,7 @@ abdemo_top(Gs,R1,R3,N1,N3,D) :-
 abdemo_cont([[HA,TC],RB],[[HA,TC],RB],N,N) :- all_executable(HA), !.
 
 abdemo_cont([[HA,HC],[BA,BC]],R2,N1,N3) :-
-     write(' Abstract '), write_plan_len(HA,BA),
+     write('Abstract plan: '), write(HA), writenl(BA), nl,
      refine([[HA,HC],[BA,BC]],N1,Gs,R1,N2), action_count([[HA,HC],[BA,BC]],D),
      abdemo_top(Gs,R1,R2,N2,N3,D).
 
