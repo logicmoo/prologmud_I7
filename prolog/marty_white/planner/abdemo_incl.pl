@@ -10,7 +10,7 @@ write_plan(HA,BA):- write('Plan: '), write(HA), write('-'), write(BA), write('  
 %writeNoln(A) :-  write(A),!.
 writeNoln(_).
 
-%writeln(A) :-  write(A), nl,!.
+writenl(_).
 writeYesln(_).
 
 
