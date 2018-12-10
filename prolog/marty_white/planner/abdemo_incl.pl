@@ -11,6 +11,7 @@ write_plan(HA,BA):- write('Plan: '), write(HA), write('-'), write(BA), write('  
 writeNoln(_).
 
 writenl(_).
+
 writeYesln(_).
 
 

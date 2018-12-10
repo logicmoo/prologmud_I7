@@ -1,6 +1,6 @@
 
 :- include(abdemo_incl).
-abdemo_special(_,Gs,R):- plan(Gs,R, 100, 3).
+abdemo_special(_,Gs,R):- plan(Gs,R, 100, 10000).
 
 
 %Ensure temporal points are generated correctly under PROLOG
