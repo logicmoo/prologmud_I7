@@ -12,8 +12,10 @@
 
 */
 
+:- include(abdemo_incl).
 
 /*
+
    This is an abductive meta-interpreter for abduction with negation-as-
    failure, with built-in features for handling event calculus queries.
    In effect this implements a partial-order planner. not(clipped) facts
@@ -40,7 +42,7 @@
 
    F is expected to be fully bound when we call abdemo(holds_at(F,T)).
    It's assumed that all primitive actions (two argument happens) are
-   in the residue (ie: none are in the program).
+   in the residue.
 
    Although the interpreter will work with any logic program, the axioms of
    the event calculus are compiled in to the meta-level.
@@ -63,7 +65,13 @@
         abdemo(Goals,ResidueIn,ResidueOut,NegationsIn,NegationsOut)
 */
 
-abdemo(Gs,R) :-
+abdemo_special(loops,Gs,R):- write(cant_abdemo(loops,Gs,R)),!,nl.
+abdemo_special(_,Gs,R):- abdemo_timed(Gs,[R,N]), write_plan_len(R,N), nl, write_plan(R,[]).
+
+
+abdemo(Gs,R) :- abdemo(Gs,[[],[]],R,[],N).
+
+abdemo_timed(Gs,R) :-
      ticks(Z1), abdemo(Gs,[[],[]],R,[],N), ticks(Z2),
      Z is (Z2-Z1)/60, write('Total time taken '), writenl(Z), nl.
 
@@ -377,7 +385,10 @@ abdemo_naf([G1|Gs1],R1,R2,N1,N2) :-
 */
 
 abdemo_naf_cont(R1,Gs,R2,R2,N,N).
+
 abdemo_naf_cont(R1,Gs,R2,R3,N1,N2) :- R1 \= R2, abdemo_naf(Gs,R1,R3,N1,N2).
+
+
 
 
 /*
@@ -393,7 +404,7 @@ abdemo_naf_cont(R1,Gs,R2,R3,N1,N2) :- R1 \= R2, abdemo_naf(Gs,R1,R3,N1,N2).
 */
 
  
-check_nafs(false,N1,R,R,N2,N2) :- !.
+check_nafs(false,N1,R,R,N2,N2) :- !.
 
 check_nafs(true,N,[[happens(A,T)|RH],RB],R,N1,N2) :-
      check_nafs(A,T,N,[[happens(A,T)|RH],RB],R,N1,N2).
@@ -667,25 +678,4 @@ or(false,false,false).
 or(false,true,true).
 
 
-axiom(initiates(wake_up(X),awake(X),_T),[]).
-axiom(initiates(open(_,Y),opened(Y),_T),[]).
-axiom(terminates(fall_asleep(X),awake(X),_T),[]). 
-axiom(initially(neg(awake(N))),[N=nathan]). 
-axiom(initially(neg(opened(cont1))),[]). 
-abducible(dummy).
 
-executable(wake_up(_X)).
-executable(fall_asleep(_X)).
-executable(open(_X,_Y)).
-/*
-?- abdemo([holds_at(awake(nathan),t)],R).
-
-  R = [[happens(wake_up(nathan), t1, t1)], [before(t1, t)]]
-
-                                            abdemo([holds_at(awake(nathan),t),holds_at(opened(foo),t)],R)
-
-
-?- abdemo([holds_at(awake(nathan),t),before(t,t2),holds_at(neg(awake(nathan)),t2)],R).
-
-
-*/

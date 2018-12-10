@@ -85,6 +85,7 @@ parse_command(Doer, Tokens, Action, Memory) :-
 
 :- nb_setval(parsemem,[inst(error)]).
 
+:- meta_predicate(with_parse_mem(*,0)).
 with_parse_mem(Mem, Goal):-
   b_getval(parsemem,MemWas),
   setup_call_cleanup(

@@ -113,6 +113,7 @@ object_props(Object, Sense, PropDepth, PropList, S0):-
  findall(P, (getprop(Object, P, S0), is_prop_public(Sense, PropDepth, P)), PropListL),
  list_to_set(PropListL,PropList), !.
                                    
+:- meta_predicate(maybe_send_sense(0,*,*,*,*,*,*)).
 maybe_send_sense(IF, Agent, Sense, Depth, Data, S0, S1):- 
  call(IF) ->
    send_sense(Agent, Sense, Depth, Data, S0, S1)

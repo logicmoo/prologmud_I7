@@ -19,7 +19,7 @@ init_gensym(A) :- asserta(current_num(A,0)).
 
 get_num(A,Num) :- 
 	retract(current_num(A,Num1)), !,
-	writeln(Num1),
+	% writeln(Num1),
 	Num is Num1+1,
 	asserta(current_num(A,Num)).
 
@@ -28,12 +28,4 @@ get_num(A,1) :- asserta(current_num(A,1)).
 /* Emulates the writenl(1) function */
 
 
- 
-writeNoln(A) :- trace(on,1),!, write(A).
-writeNoln(_A) :- trace(off,1),!.
 
-
-writeln(A) :- trace(on,1),!,write(A),nl.
-writeln(_A) :- trace(off,1),!.
-	
-forall(P,Q) :- \+ (P, \+Q).

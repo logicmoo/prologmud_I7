@@ -18,8 +18,8 @@
 
 
 % Miscellaneous generic utility predicates.
-:- ensure_loaded(library(logicmoo_common)).
-:- ensure_loaded(library(must_sanity)).
+:- reexport(library(logicmoo_common)).
+%:- ensure_loaded(library(must_sanity)).
 % :- op(900, fy, not).
 
 
@@ -33,7 +33,6 @@ only_if_pfc(_):- fail.
 :- module_transparent(only_if_adv/1).
 :- meta_predicate only_if_adv(0).
 only_if_adv(P):- call(P).
-
 
 :- module_transparent(each_parser_module_1/1).
 each_parser_module(M):- no_repeats(each_parser_module_0(M)).
@@ -179,7 +178,7 @@ define_shared_loadable_pred(M,P):- current_prolog_flag(access_level,system),!,se
 define_shared_loadable_pred(M,P):- % throw(old_code),
    '$current_source_module'(SM),'$current_typein_module'(CM),
    %mpred_ain(isBorked==>M:P),
-   functor(P,F,A),bugout1(def_parser_data(sm=SM,cm=CM,m=M,F/A)),
+   functor(P,F,A),dmsg(def_parser_data(sm=SM,cm=CM,m=M,F/A)),
    dynamic(M:P),multifile(M:P),discontiguous(M:P).
 
 :- module_transparent(show_shared_pred_info/1).
@@ -189,9 +188,9 @@ show_shared_pred_info(FA):-
    functor(P,F,A),
    ((User:predicate_property(P,defined))->
        (predicate_property(P,number_of_clauses(N)),
-         (N<20 -> User:listing(FA) ; bugout1(big(User,F/A)));
-    bugout1(unkonw_number_of_clauses(User,F/A)));bugout1(undefined(User,F/A))),
-   findall(PP,User:predicate_property(P,PP),PPL),bugout1(FA=PPL),!.
+         (N<20 -> User:listing(FA) ; dmsg(big(User,F/A)));
+    dmsg(unkonw_number_of_clauses(User,F/A)));dmsg(undefined(User,F/A))),
+   findall(PP,User:predicate_property(P,PP),PPL),dmsg(FA=PPL),!.
 :- share_mp(show_shared_pred_info/1).
 
 

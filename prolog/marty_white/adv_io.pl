@@ -126,11 +126,7 @@ bug(_) :- debugging(adv(unknown),YN),!,YN.
 
 bugout1(L) :- bugout3('~q', [L], always).
 
-bugout3(A, B) :-
- bug(B),
- !,
- bugout1(B:A).
-bugout3(_, _).
+bugout3(A, B) :- bugout3('~q', [A], B).
 
 bugout3(A, L, B) :-
  bug(B),
@@ -152,6 +148,8 @@ pprint(Term, B) :-
  player_format('~N~@~N',[our_pretty_printer(Term)]),!.
 pprint(_, _).
 
+:- use_module(library(hybrid_db/portray_vars)).
+
 :- flag(our_pretty_printer,_,0).
 our_current_portray_level(Level) :- flag(our_pretty_printer,Was,Was),Was=Level.
 :- export(our_current_portray_level/1).
@@ -164,12 +162,9 @@ our_pretty_printer(Term):- compound(Term),
 our_pretty_printer(Term):- fmt90(Term).
 
 our_prolog_pretty_print(Term):- 
-  source_variables_lwv(Term,Vs),
-  our_implode_var_names(Vs),
-  prolog_pretty_print:print_term(Term, [ output(current_output)]).
+  pretty_numbervars(Term,Term2),
+  prolog_pretty_print:print_term(Term2, [ output(current_output)]).
 
-our_implode_var_names(Vars):- \+ compound(Vars),!.
-our_implode_var_names([N=V|Vars]):- ignore(V='$VAR'(N)), our_implode_var_names(Vars).
 
 :- export(stdio_player/1).
 stdio_player(Agent):- nonvar(Agent),!, stdio_player(AgentWas), !, AgentWas == Agent.

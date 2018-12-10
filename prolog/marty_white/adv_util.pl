@@ -70,7 +70,7 @@ defn_state_none(P):- defn_state_pred(P,0).
 defn_state_getter(P):- defn_state_pred(P,1).
 defn_state_setter(P):- defn_state_pred(P,2).
 
-:- defn_state_none(user:bugout1(term)).
+:- defn_state_none(adv_io:bugout1(term)).
 :- defn_state_none(adv_io:bugout3(string,list(term),term)).
 :- defn_state_none(adv_io:bugout3(string,term)).
 :- defn_state_none(==(term,term)).

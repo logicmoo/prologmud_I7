@@ -46,7 +46,7 @@
             test_chat/0,
 	    rtest_chats/1                       % +Times
 	  ]).
-:- user:ensure_loaded(library(parser_sharing)).	% misc
+:- ensure_loaded(library(parser_sharing)).	% misc
 :- ensure_loaded(chat80/chat).
 
 :- system:abolish(system:time/1).

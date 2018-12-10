@@ -176,7 +176,7 @@ cycQuery80(Q):- notrace(current_predicate(_,Q)),call(Q).
 %:- shared_parser_data(parser_chat80:noun/6).
 %:- shared_parser_data(parser_chat80:det/7).
 
-chat80_t(UIn):- chat80_t(UIn,O1,_O2),bugout1(O1).
+chat80_t(UIn):- chat80_t(UIn,O1,_O2),wdmsg(O1).
 chat80_t(UIn,O1,O2):-
    convert_to_sel_string(fail,a,=,UIn,Mid),!,
    process_run_real(_Callback,_StartParse,Mid,O1,O2),

@@ -19,6 +19,7 @@
 
 %:- ensure_loaded(adv_main).
 
+:- meta_predicate(memorize_edit(3,*,*,*)).
 memorize_edit(Pred3, Figment, M0, M2) :- assertion(\+ is_list(Figment)),
    Figment =.. [Name,Value], OldFigment =.. [Name,OldValue],
    (forget(OldFigment, M0, M1) 

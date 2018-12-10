@@ -17,7 +17,9 @@
 %
 */
 
-:- reexport(library(logicmoo_common)).
+
+:- reexport(library(logicmoo_utils_all)).
+ludef:- list_undefined([module_class([user,system,library,test,development])]).
 
 :- export(simplify_dbug/2).
 simplify_dbug(G,GG):- \+ compound(G),!,GG=G.
@@ -148,15 +150,15 @@ never_trace(Spec):- '$hide'(Spec),'$iso'(Spec),trace(Spec, -all).
 %:- never_trace(lists:append(_,_,_)).
 :- meta_predicate(dshow_call(*)).
 dshow_call((G1,G2)):- !,dshow_fail(G1),dshow_fail(G2).
-dshow_call(G):- simplify_dbug(G,GG), swi_soft_if_then(G,bugout1(success_dshow_call(GG)),(bugout1(failed_dshow_call(GG)),!,fail)).
+dshow_call(G):- simplify_dbug(G,GG), (G*->dmsg(success_dshow_call(GG));(dmsg(failed_dshow_call(GG)),!,fail)).
 
 :- meta_predicate(dshow_fail(*)).
 dshow_fail('\\+'(G1)):- !, \+ dshow_true(G1).
-dshow_fail(G):- simplify_dbug(G,GG), swi_soft_if_then(G, true , (bugout1(failed_dshow_call(GG)),!,fail)).
+dshow_fail(G):- simplify_dbug(G,GG), (G*->true;(dmsg(failed_dshow_call(GG)),!,fail)).
 
 :- meta_predicate(dshow_true(*)).
 dshow_true('\\+'(G1)):- !, \+ dshow_fail(G1).
-dshow_true(G):- simplify_dbug(G,GG),  swi_soft_if_then(G, bugout1(success_dshow_call(GG)) , (!,fail)).
+dshow_true(G):- simplify_dbug(G,GG),  (G*->dmsg(success_dshow_call(GG));fail).
 
 
 
