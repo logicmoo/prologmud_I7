@@ -95,12 +95,6 @@ abdemo(Gs,[HA,BA]) :-
      abdemo_top(Gs,[[[],[]],[[],[]]],[[HA,HC],[BA,BC]],[],N,D),   
      write_plan_len(HA,BA).
 
-/*
-abdemo(Gs,[HA,BA]) :-
-     init_gensym(t),
-     abdemo_top(Gs,[[[],[]],[[],[]]],[[HA,HC],[BA,BC]],[],N,0),   
-     write_plan_len(HA,BA).
-*/
 abdemo_timed(Gs,[HA,BA]) :-
      ticks(Z1),
      abdemo(Gs,[HA,BA]),

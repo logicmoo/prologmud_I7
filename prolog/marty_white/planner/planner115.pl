@@ -61,8 +61,7 @@
    corresponds to length of plan.
 */
 
-
-
+:- include(abdemo_incl).
 
 /* TOP LEVEL */
 
@@ -77,10 +76,18 @@
    that follows from HA, BA is a list of before atoms, and BC is the transitive
    closure of BA.
 */
+abdemo_special(long,Gs,R):-abdemo_timed(Gs,R).
+abdemo_special(_,Gs,R):- abdemo(Gs,R).
 
 abdemo(Gs,[HA,BA]) :-
-     init_gensym(t), ticks(Z1),
+     init_gensym(t),
      abdemo_top(Gs,[[[],[]],[[],[]]],[[HA,HC],[BA,BC]],[],N,0),
+     write_plan_len(HA,BA).
+
+abdemo_timed(Gs,[HA,BA]) :-
+     ticks(Z1),
+     abdemo(Gs,[HA,BA]),
+     write_plan(HA,BA),
      ticks(Z2), Z is (Z2-Z1)/60, write('Total time taken '), writenl(Z), nl.
 
 
@@ -600,7 +607,7 @@ abdemo_naf_cont(R1,Gs,R2,R3,N1,N2,D) :-
 */
 
 
-check_nafs(false,N1,R,R,N2,N2,D) :- !.
+check_nafs(false,N1,R,R,N2,N2,D) :- !. % 
 
 check_nafs(true,N,[[[happens(A,T1,T2)|HA],TC],RB],R,N1,N2,D) :-
      check_nafs(A,T1,T2,N,[[[happens(A,T1,T2)|HA],TC],RB],R,N1,N2,D).
@@ -661,7 +668,7 @@ add_before(X,Y,[RH,[BA,TC]],[RH,[BA,TC]]) :- member(before(X,Y),TC), !.
 
 add_before(X,Y,[[HA,HC],[BA,BC1]],[[HA,HC],[[before(X,Y)|BA],BC2]]) :-
      \+ demo_beq(Y,X,[[HA,HC],[BA,BC1]]), find_bef_connections(X,Y,BC1,C1,C2),
-     find_beq_connections(X,Y,HC,C3,C4), delete(X,C3,C5), delete(Y,C4,C6),
+     find_beq_connections(X,Y,HC,C3,C4), delete_abdemo(X,C3,C5), delete_abdemo(Y,C4,C6),
      append(C5,C1,C7), append(C6,C2,C8),
      cross_prod_bef(C7,C8,C9,BC1), append(C9,BC1,BC2).
 
@@ -677,7 +684,7 @@ add_happens(A,T1,T2,[[HA,HC1],[BA,BC1]],[[[happens(A,T1,T2)|HA],HC2],[BA,BC2]]) 
      \+ demo_before(T2,T1,[[HA,HC1],[BA,BC1]]),
      find_beq_connections(T1,T2,HC1,C1,C2), cross_prod_beq(C1,C2,C3,HC1),
      append(C3,HC1,HC2), find_bef_connections(T1,T2,BC1,C4,C5),
-     cross_prod_bef(C4,C5,C6,BC1), delete(before(T1,T2),C6,C7),
+     cross_prod_bef(C4,C5,C6,BC1), delete_abdemo(before(T1,T2),C6,C7),
      append(C7,BC1,BC2).
 
 /*
@@ -889,11 +896,11 @@ append_negs([],[],[]).
 append_negs([N|Ns1],Ns2,Ns4) :- add_neg(N,Ns2,Ns3), append(Ns1,Ns3,Ns4).
 
 
-delete(X,[],[]).
+delete_abdemo(X,[],[]).
 
-delete(X,[X|L],L) :- !.
+delete_abdemo(X,[X|L],L) :- !.
 
-delete(X,[Y|L1],[Y|L2]) :- delete(X,L1,L2).
+delete_abdemo(X,[Y|L1],[Y|L2]) :- delete_abdemo(X,L1,L2).
 
 
 /* Skolemisation */
