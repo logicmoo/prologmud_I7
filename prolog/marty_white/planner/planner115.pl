@@ -124,7 +124,7 @@ abdemo_cont([[HA,HC],[BA,BC]],R2,N1,N3) :-
 /* abdemo_id is an iterative deepening version of abdemo. */
 
 abdemo_id(Gs,R1,R2,N1,N2,D) :-
-     write('DMS'), write(D), write(' '), abdemo(Gs,R1,R2,N1,N2,D).
+     write(' DMS'), write(D), write(' '), abdemo(Gs,R1,R2,N1,N2,D).
 
 abdemo_id(Gs,R1,R2,N1,N2,D1) :- D2 is D1+1, abdemo_id(Gs,R1,R2,N1,N2,D2).
 

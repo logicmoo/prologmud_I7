@@ -77,15 +77,18 @@
    closure of BA.
 */
 first_d(0).
-
-%next_d(0). next_d(1).
+/*
+%next_d(0). next_d(2).
 %next_d(2). next_d(4).
 next_d(32).  next_d(64). next_d(98).
 next_d(D1, D2):- D1<5,!,D2 is D1+1.
-next_d(D1, D2):- D1<9,!,D2 is D1+2.
 next_d(D1, D2):- next_d(D2),D2>D1,!.
-next_d(D1, D2):- D2 is D1+200.
-%next_d(D1, D2):- D2 is (D1+7).
+
+*/
+next_d(D1, D2):- D1<9,!,D2 is D1+3.
+next_d(D1, D2):- D1<90,!,D2 is D1+30.
+next_d(D1, D2):- D2 is D1+300.
+
 
 abdemo_special(long,Gs,R):-abdemo_timed(Gs,R).
 abdemo_special(_,Gs,R):- abdemo(Gs,R).

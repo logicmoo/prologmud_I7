@@ -2,9 +2,9 @@
 %:- use_module(library(logicmoo_common)).
 
 %:- consult(planner19a).
-:- consult(planner115).
+%:- consult(planner115).
 %:- consult(eventCalculusPlanner).
-%:- consult(eventCalculusDmiles).
+:- consult(eventCalculusDMiles).
 
 testing_msg(_).
 

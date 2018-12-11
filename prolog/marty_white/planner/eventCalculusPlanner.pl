@@ -243,7 +243,7 @@ all_executable([happens(A,T1,T2)|R] ,HighLevel) :- (HighLevel =:= 0 ->
 */
 
 abdemo(Gs,[[HA,TC1],[BA,TC2]],R,N1,N2,D) :-
-   fail, abdemo_trace(2),
+    trace(on,0),
     writeNoln('Goals: '), writeYesln(Gs),
      writeNoln('Happens: '), writeYesln(HA),
      writeNoln('Befores: '), writeYesln(BA),
@@ -568,6 +568,8 @@ check_clipping([G|Gs],R1,R2,N1,N2,D) :-
    if a happens fact has been added to the residue.
 */
 
+:- discontiguous(abresolve/5).
+
 abresolve(terms_or_rels_or_imposs(A,F,T),R,Gs,R,false) :- axiom(releases(A,F,T),Gs).
 abresolve(terms_or_rels_or_imposs(A,F,T),R,Gs,R,false) :- axiom(terminates(A,F,T),Gs).
 
@@ -624,7 +626,7 @@ abresolve(before(X,Y),R1,[],R2,B) :-
    arithmetic expressions) are built in.
 */
 
-abresolve(diff(X,Y),R,[],R,false) :- !, dif(X,Y).
+abresolve(diff(X,Y),R,[],R,false) :- !, X \= Y.
 
 abresolve(is(X,Y),R,[],R,false) :- !, X is Y.
 
@@ -636,18 +638,17 @@ abresolve(is(X,Y),R,[],R,false) :- !, X is Y.
 abresolve(prolog(Code),R,[],R,false) :- !, Code.
 
 %Access Knowledge base
-abresolve(knowledgeBase(Username, GroupList),R,[],R,false) :- !, 
-  ::(knowledgeDb,lookupUserProlog(Username, Groups), !,listMember(GroupList, Groups)),!.
+abresolve(knowledgeBase(Username, GroupList),R,[],R,false) :- !, '::'(knowledgeDb , lookupUserProlog(Username, Groups), !,listMember(GroupList, Groups)),!.
 
 %Check html attributes
 abresolve(valid_html_form(Type, Att),R,[],R,false):- !, valid_html_form(Type,Att).
 
-%Check html child_list
+%Check html children
 abresolve(valid_html_formChildren(Type, Children),R,[],R,false):- !, valid_html_formChildren(Type,Children).
 
 
 
-breakupResidual( [[X,_Y],[_Z,_A]]   , X).
+breakupResidual( [[X,Y],[Z,A]]   , X).
 
 
 %Attempt to test for membership of Actions list
@@ -1149,4 +1150,7 @@ skolemise(T).
 
 opposite(neg(F),F) :- !.
 opposite(F,neg(F)).
+
+trace(off,0).
+trace(off,1).
 
