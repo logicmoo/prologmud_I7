@@ -10,7 +10,7 @@
 
 do_test_gen(What) :- fluent(P),functor(P,F,A),functor(What,F,A).
 
-local_demo(L,R):-  abdemo_special(loops,L,R),!, dm('PASSED:',(L:-R)).
+local_demo(L,R):-  abdemo_special(depth(0,10),L,R),!, dm('PASSED:',(L:-R)).
 local_demo(L,R):-  dm('FAILED:',(L:-R)).
 
 
@@ -95,12 +95,12 @@ axiom(happens(rise_and_fall(Event),T1,T4),
       % not(clipped(T1,begun(Event),T2)),      
       happens(ending(Event),T3)]).
 
-axiom(terminates(begining(Event),holds_at( never_ocurred(Event),T),T), []).
-axiom( initiates(begining(Event),holds_at(    just_begun(Event),T),T), []).
-axiom(terminates( ocuring(Event),holds_at(    just_begun(Event),T),T), []).
-axiom( initiates( ocuring(Event),holds_at(    now_occurs(Event),T),T), []).
-axiom(terminates(  ending(Event),holds_at(    now_occurs(Event),T),T), []).
-axiom( initiates(  ending(Event),holds_at(   has_occured(Event),T),T), []).
+axiom(terminates(begining(Event),holds_at( never_ocurred(Event),t),t), []).
+axiom( initiates(begining(Event),holds_at(    just_begun(Event),t),t), []).
+axiom(terminates( ocuring(Event),holds_at(    just_begun(Event),t),t), []).
+axiom( initiates( ocuring(Event),holds_at(    now_occurs(Event),t),t), []).
+axiom(terminates(  ending(Event),holds_at(    now_occurs(Event),t),t), []).
+axiom( initiates(  ending(Event),holds_at(   has_occured(Event),t),t), []).
 
 axiom(initially( (never_ocurred(Event))),[]):- executable(Event).
 axiom(initially( neg(just_begun(Event))),[]):- executable(Event).
