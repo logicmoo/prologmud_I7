@@ -11,7 +11,7 @@ function test_swipl() {
   swipl -O -l $1 -g run_tests
 }
 
-for i in test_*.pl; do
+for i in ectest/test_*.pl; do
     if [ -f $i ];then
         #echo "I do something with the file $i"
         #test_it $1 $i $2 "$3."
@@ -19,7 +19,7 @@ for i in test_*.pl; do
     fi
 done
 
-for i in test?.pl; do
+for i in ectest/test?.pl; do
     if [ -f $i ];then
        #test_it $1 $i $2 "$3."
        test_$1 $i

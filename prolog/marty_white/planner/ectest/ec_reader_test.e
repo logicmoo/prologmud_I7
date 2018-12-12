@@ -942,6 +942,9 @@ event TakeOutOf(agent,physobj,physobj)
 HoldsAt(Inside(physobj1,physobj2),time) ->
 physobj1!=physobj2.
 
+holdsAt(inside(physobj1,physobj2),time) -> physobj1 != physobj2.
+
+
 ; A state constraint says that if a physical object is
 ; inside another physical object, the second physical object
 ; is not inside the first physical object:
@@ -2060,8 +2063,6 @@ event CryForJoy(agent)
 ; A precondition axiom states that for
 ; an agent to cry for joy,
 ; the agent must be happy:
-
-:- break.
 
 [agent,time]
 Happens(CryForJoy(agent),time) ->

@@ -22,24 +22,12 @@
 :- meta_predicate now_doing(1,?).
 :- meta_predicate each_doing(1,?).
 :- meta_predicate doing(1,*).
-
-
-till_eof(In) :-
-        repeat,
-            (   at_end_of_stream(In)
-            ->  !
-            ;   (read_pending_codes(In, Chars, []),
-                (t_l:echo_mode(echo_file) ->
-                  echo_format('~s',[Chars]);
-                  true),
-                fail)
-            ).
-
+  
 %:- use_module(library(logicmoo_startup)).
 :- use_module(library(file_utils/filestreams)).
 
 %:- initialization(ec_reader_test,main).
-ec_reader_test :- convert_ec_to_pl('ec_reader_test.e',user_output).
+ec_reader_test :- convert_ec_to_pl('ectest/ec_reader_test.e',user_output).
 
 :- thread_local(t_l:sreader_options/2).
 
@@ -88,44 +76,10 @@ process_stream_peeked213(S,"["):- !, read_stream_until(S,[],`]`,Codes), read_n_s
 process_stream_peeked213(S,"{"):- !, read_stream_until(S,[],`}`,Codes), read_n_save_vars(Codes).
 process_stream_peeked213(S,"#!"):- !, till_eol(S).
 
-read_n_save_vars(Codes):- ec_read3(Codes,VarNames,_Vs),asserta(etmp:temp_varnames(VarNames)).
-/*
+read_n_save_vars(Codes):- ec_read3(Codes,VarNames,_Vs),
+  ((VarNames={A}, atom(A)) -> asserta(etmp:temp_varnames([A])); 
+  asserta(etmp:temp_varnames(VarNames))).
 
-
-end_of_file.
-
-
-      [fluent,time]
-      (HoldsAt(fluent,time) &
-       !ReleasedAt(fluent,time+1) &
-       !({event} Happens(event,time) & Terminates(event,fluent,time))) ->
-      HoldsAt(fluent,time+1).
-
-      [fluent,time]
-   (HoldsAt(fluent,time) &
-    !ReleasedAt(fluent,time+1) &
-    !({event} Happens(event,time) & Terminates(event,fluent,time))) ->
-   HoldsAt(fluent,time+1).
-
-   [fluent,time]
-   (!HoldsAt(fluent,time) &
-    !ReleasedAt(fluent,time+1) &
-    !({event} Happens(event,time) & Initiates(event,fluent,time))) ->
-   !HoldsAt(fluent,time+1).
-
-   [fluent,time]
-   (!ReleasedAt(fluent,time) &
-    !({event} Happens(event,time) & Releases(event,fluent,time))) ->
-   !ReleasedAt(fluent,time+1).
-
-   [fluent,time]
-   (ReleasedAt(fluent,time) &
-    !({event} Happens(event,time) &
-      (Initiates(event,fluent,time) |
-       Terminates(event,fluent,time)))) ->
-   ReleasedAt(fluent,time+1).
-
-*/
 upcased_functors(G):- 
  notrace((allow_variable_name_as_functor = N,
    current_prolog_flag(N,Was))),!,
@@ -164,11 +118,12 @@ process_ec_stream(S):- must((read_term(S,T,[variable_names(Vs)]),put_variable_na
 code_type_eot(Last):- (char_type(Last,to_lower('.'));char_type(Last,to_lower(')'))).
    
 % continue_process_ec_stream(_S, [], space):- !.
+continue_process_ec_stream(_S, [], _):- !.
 continue_process_ec_stream(_S, [], end_of_line):- !.
-continue_process_ec_stream(S, Codes, space):- !, atom_codes(Token, Codes), last(Codes,Last), 
-   assertion(char_type(Last,alpha)),
+continue_process_ec_stream(S, Codes, space):- last(Codes,Last), 
+   once([Last]=`!`;char_type(Last,alpha)),!,
    trim_off_whitepace(S),!, 
-   process_ec_stream_token(Token,S),!.
+   atom_codes(Token, Codes), process_ec_stream_token(Token,S),!.
 continue_process_ec_stream(S, NextCodes, _CanBe ):-  !, % to_lower('(') | end_of_line
    last(NextCodes,Last),
    cont_one_ec_compound(S, NextCodes, Last,Term), process_out(Term).
@@ -216,42 +171,48 @@ map_callables(Call, HT, HTTerm):- !,
  map_callables(Call, '$'(F,L),'$'(FF,LL)),
  compound_name_arguments(HTTerm,FF,LL).
 
-my_unCamelcase(X,Y):- atom(X), fix_predname(X,Y),!.
-my_unCamelcase(X,Y):- unCamelcase(X,Y).
-
 fix_predname(~,neg).
 fix_predname(!,neg).
-fix_predname(F,neg):- downcase_atom(F,not).
+fix_predname('|',or).
+fix_predname('&',and).
+fix_predname(F,not):- downcase_atom(F,not).
 fix_predname(F,holds_at):- downcase_atom(F,holdsat).
 fix_predname(F,Happens):- builtin_pred(Happens),downcase_atom(F,Happens),!.
 
-fix_ec_terms(Term0,Term,Vs):- 
+my_unCamelcase(X,Y):- atom(X), fix_predname(X,Y),!.
+my_unCamelcase(X,Y):- unCamelcase(X,Y).
+
+fix_ec_term(Term2,Term):- map_callables(my_unCamelcase,Term2,Term).
+
+fix_ec_read(Term0,Term,Vs):- 
   findall(E,(etmp:temp_varnames(L), member(E,L)), LL),
   sort(LL,LLS),
   insert_vars(Term0,LLS,Term1,Vs),!,
   pretty_numbervars(Term1,Term2),
-  my_fix_case(Term2,Term),!.
-
-my_fix_case(Term2,Term):- map_callables(my_unCamelcase,Term2,Term).
+  fix_ec_term(Term2,Term),!.
 
 ec_read1(String,Term,Vs):- 
   ec_read3(String,Term0,_Vars),!,
-  fix_ec_terms(Term0,Term,Vs).
+  fix_ec_read(Term0,Term,Vs).
 
 
-
-
-  %retractall(etmp:temp_varnames(_)).
 ec_read1(T,Term,Vars):- ec_read2(T,Term,Vars),!.
 
 ec_read2(T,Term,Vars):- 
-   cleanout(T,'{','}',S3,SSS), read_n_save_vars(S3),
+   cleanout(T,'{','}',S3,SSS),!, read_n_save_vars(S3),
    ec_read2(SSS,Term,Vars).
 ec_read2(T,Term,Vars):- 
-   cleanout(T,'[',']',S3,SSS), read_n_save_vars(S3),
+   cleanout(T,'[',']',S3,SSS),!, read_n_save_vars(S3),
    ec_read2(SSS,Term,Vars).
-ec_read2(T,Term,Vars):- ec_read3(T,Term,Vars).
-   
+ec_read2(Txt,Term,Vars):- 
+   text_to_string(Txt,T),
+   atomics_to_string(List,'!=',T),List\=[_],
+   atomics_to_string(List,(\=),NewT),!,
+   ec_read2(NewT,Term,Vars).
+ec_read2(T,Term,Vars):- must(ec_read3(T,Term,Vars)),!.
+
+
+
 cleanout(T,B,E,S3,SSS):-
  text_to_string(T,S1),
  atomic_list_concat([A1,A2|Rest],B,S1),
@@ -265,15 +226,6 @@ cleanout(T,B,E,S3,SSS):-
  atomic_list_concat([A1,S4],'',SSS).
 
 
- 
-   
-%ec_read1(String,Term,Vars):- catch(read_term_from_atom(String,Term,[var_prefix(true),variable_names(Vars),module(ecread),syntax_errors(error)]),_,fail),!.
-%read_prolog_like(Term):- 
-/*
-(!ReleasedAt(fluent,time) &
-    !({event} Happens(event,time) & Releases(event,fluent,time))) ->
-   !ReleasedAt(fluent,time+1) 
-*/
 read_one_ec_compound(S,Term):- 
    read_stream_until_true(S,[],char_type_inverse(_Was,or([to_lower('.'),end_of_line])),Text),
    unpad_codes(Text,Codes),last(Codes,Last),
@@ -289,6 +241,10 @@ cont_one_ec_compound(S,InCodes,_WasLast,Term):-
    cont_one_ec_compound(S,Codes,Last,Term).
 
 is_special(range).
+
+is_special(xor).
+is_special(ignore).
+
 is_special(sort).
 is_special(option).
 is_special(reified).
@@ -317,20 +273,24 @@ builtin_pred(initially).
 
 % process_out(load(SS)):- !, convert_ec_to_pl(file(SS),current_output).
 process_out(t(X,[Y])):- !, process_out(t(X,Y)).
-process_out(t(X,Y)):- atom(X), is_list(Y), is_special(X), SS=..[X|Y], process_out(SS).
+% process_out(t(X,Y)):- atom(X), is_list(Y), is_special(X), SS=..[X|Y], process_out(SS).
 process_out(t(X,Y)):- atom(X), SS=..[X,Y], process_out(SS).
-process_out(SL):- my_fix_case(SL,SO) -> SL\=@=SO, !, process_out(SO).
+process_out(sort(col([S1,S2]))):- !,
+  process_out(subsort(S1,S2)).
+process_out(SL):- fix_ec_term(SL,SO) -> SL\=@=SO, !, process_out(SO).
 process_out(S):- must(glean_data(S)), must(process_outward(S)),!.
 
-process_outward(SS):- must(pretty_numbervars(SS,SS1)),flush_output, ansi_format([fg(yellow)],'~n~N~p.~n',[SS1]),retractall(etmp:temp_varnames(_)).
+process_outward(SS):- must(pretty_numbervars(SS,SS1)),flush_output, ansi_format([fg(yellow)],'~N~p.~n~n',[SS1]),retractall(etmp:temp_varnames(_)).
 
 glean_data(SL):- \+ compound(SL),!.
-glean_data(sort(S1,S2)):- !, glean_data(sort(S1)),glean_data(sort(S2)).
+
+glean_data(subsort(S1,S2)):- !, glean_data(sort(S1)),glean_data(sort(S2)),assert_gleaned(subsort(S1,S2)).
 glean_data(sort(S)):- !, assert_gleaned(sort(S)).
 glean_data(isa(E,S)):- !, assert_gleaned(isa(E,S)).
 glean_data(SL):- SL=..[S,L], \+ is_special(S), is_list(L), !, glean_data(sort(S)),maplist(glean_data(hasInstance(S)),L).
 glean_data(_).
 
+assert_gleaned(sort(S)):-  !, asserta(gleaned(sort(S))).
 assert_gleaned(SS):-  asserta(gleaned(SS)),pretty_numbervars(SS,SS1),flush_output, ansi_format([fg(yellow)],'~n~N% ~p.~n',[gleaned(SS1)]).
 
 glean_data(hasInstance(S),E):- !, glean_data(isa(E,S)).
@@ -352,14 +312,14 @@ process_ec_stream_token(reified,S):- !,read_stream_until(S,[],` `, Text),
    text_to_string(Text,St), atom_concat('reified_',St,Type),!,process_ec_stream_token(Type,S).
 process_ec_stream_token(Type,S):- read_line_to_string(S,String),process_ec_token_with_string(Type,String).
 
-process_ec_token_with_string(Type,String):- atomics_to_string(VList,',',String),  VList \= [_], !, 
-   maplist(process_ec_token_with_string(Type),VList).
+%process_ec_token_with_string(Type,String):- atomics_to_string(VList,',',String),  VList \= [_], !, maplist(process_ec_token_with_string(Type),VList).
 process_ec_token_with_string(_,""):-!.
 process_ec_token_with_string(Type,String):- token_stringsss(String,Out),process_out(t(Type,Out)).
 
 token_stringsss("",[]):-!.
 token_stringsss(String,Out):- normalize_space(string(S),String), S\==String,!,token_stringsss(S,Out).
-token_stringsss(String,VVList):- atomics_to_string(VList,':',String), VList \= [_], remove_blanks(VList,VVList),!.
+token_stringsss(String,col(VVList)):- atomics_to_string(VList,':',String), VList \= [_], remove_blanks(VList,VVList),!.
+token_stringsss(String,VVList):- atomics_to_string(VList,',',String), VList \= [_], remove_blanks(VList,VVList),!.
 token_stringsss(String,VVList):- atomics_to_string(VList,' ',String), remove_blanks(VList,VVList),!.
   
 
@@ -391,6 +351,7 @@ subsplit(SS,Splitter,Value):-
    maplist(to_atomic_value,ValueA,Value).%,process_out(option(List)).
    %atomics_to_string(['[',SS,']'],' ',NewList),ec_from_atom(NewList,Value).
 
+to_atomic_value(A,N):- number(A),!,N=A.
 to_atomic_value(A,N):- normalize_space(atom(S),A), S\==A,!,to_atomic_value(S,N).
 to_atomic_value(A,N):- atom_number(A,N).
 to_atomic_value(A,A).
@@ -429,7 +390,7 @@ echo_format(_Fmt,_Args):- flush_output, t_l:block_comment_mode(Was),Was==invisib
 echo_format(Fmt,Args):- t_l:block_comment_mode(_),t_l:echo_mode(echo_file),!,format(Fmt,Args),flush_output.
 echo_format(Fmt,Args):- t_l:echo_mode(echo_file),!,format(Fmt,Args),flush_output.
 echo_format(Fmt,Args):- format(Fmt,Args),flush_output,!.
-echo_format(_Fmt,_Args).
+%echo_format(_Fmt,_Args).
 
 
 write_stream_item(Out,T):- 
@@ -439,4 +400,16 @@ write_stream_item(Out,T):-
   format(Out,'~N~n',[]),!,flush_output(Out).
 
 
+
+
+till_eof(In) :-
+        repeat,
+            (   at_end_of_stream(In)
+            ->  !
+            ;   (read_pending_codes(In, Chars, []),
+                (t_l:echo_mode(echo_file) ->
+                  echo_format('~s',[Chars]);
+                  true),
+                fail)
+            ).
 
