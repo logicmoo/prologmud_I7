@@ -22,14 +22,14 @@ These tests Pass
 
 do_test(test_np_box_1) :-  local_demo([holds_at(directlyIn(lisa,livingRoom),t)],R).
 do_test(test_np_box_2) :-  local_demo([holds_at(inRoom(lisa,livingRoom),t)],R).
-do_test(test_np_box_1) :-  local_demo([holds_at(directlyIn(lisa,kitchen),t)],R).
+do_test(test_np_box_3) :-  local_demo([holds_at(directlyIn(lisa,kitchen),t)],R).
 
 */
+do_test(test_np_box_4) :-  local_demo([holds_at(inRoom(lisa,kitchen),t)],R).
 
-% fix this next test and the follwing should pass
+% fix this next test and the "test_np_box_occurs" should pass
 do_test(has_occured) :-  local_demo([has_occured(move(lisa,box,livingRoom,lisa))],R).
 
-do_test(test_np_box_4) :-  local_demo([holds_at(inRoom(lisa,kitchen),t)],R).
 
 semi_legit_time(happens(_,T1),T1):- !.
 semi_legit_time(happens(_,_,T2),T2):-!.
@@ -46,7 +46,7 @@ sort_on_times_arg(Result,Holds1,Holds2):-
      -> true;
         sort_on_times_arg(Result,Holds1,Holds2)).
 
-do_test(test_np_box_10) :-  
+do_test(test_np_box_occurs) :-  
  findall(E, (axiom(E,[]),functor(E,happens,_)), UHapsList),
  predsort(sort_on_times_arg,UHapsList,HapsList),
  dm('HapsList =',HapsList), 
