@@ -93,8 +93,10 @@ fluent F_ConditionSatisfied(rule)
 ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; FILE: includes/SaaSPatterns/RulesPatterns/ruleModel.e
 ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-fluent F_RuleEffectPermitted(rule); prédéfinies
-fluent F_RuleEffectNOTpermitted(rule) ;prédéfinies
+fluent F_RuleEffectPermitted(rule)
+; prédéfinies
+fluent F_RuleEffectNOTpermitted(rule) 
+;prédéfinies
 
 
 fluent F_RuleDenied(rule)

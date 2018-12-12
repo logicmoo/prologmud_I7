@@ -18,15 +18,25 @@ load foundations/EC.e
 sort agent
 
 fluent Awake(agent)
+;;   executable(wake_up(_X)).
 event WakeUp(agent)
 
+;;   axiom(initiates(wake_up(X),awake(X),T),[]).
 [agent,time] Initiates(WakeUp(agent),Awake(agent),time).
 
 agent James
+;; axiom(initially(neg(awake(nathan))),[]). 
 !HoldsAt(Awake(James),0).
+
 Delta: Happens(WakeUp(James),0).
 
 completion Delta Happens
 
 range time 0 1
 range offset 1 1
+
+;;   axiom(terminates(fall_asleep(X),awake(Y),T),[]). 
+;;  
+;;   abducible(dummy).
+;; executable(fall_asleep(_X)).
+
