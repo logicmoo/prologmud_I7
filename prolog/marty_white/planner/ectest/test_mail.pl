@@ -1,4 +1,4 @@
-:- include(abdemo_test).
+:- include('../abdemo_test').
 /*
 
    Formulae for the mail delivery domain.

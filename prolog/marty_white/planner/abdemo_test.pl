@@ -1,10 +1,14 @@
 
 %:- use_module(library(logicmoo_common)).
 
+%:- consult(eventCalculusPlanner).
 %:- consult(planner19a).
 %:- consult(planner115).
-%:- consult(eventCalculusPlanner).
 :- consult(eventCalculusDMiles).
+
+:- discontiguous reified_sort/1. 
+:- discontiguous sort/1. 
+:- discontiguous axiom/2. 
 
 testing_msg(_).
 

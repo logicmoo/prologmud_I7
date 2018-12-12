@@ -47,8 +47,6 @@ covert_to_pl(Out, F):- ec_to_pl(do_ec_convert, Out, F).
 
 :- thread_local(t_l:ec_options/2).
 
-ec_open_input(F, S):- open(F, read, S).
-
 
 ec_to_pl(Why, Out, F):- dmsg(ec_to_pl(Why, Out, F)), fail.
 ec_to_pl(Why, Out, F):- notrace(is_stream(F)), !, ec_in_to_pl(Why, Out, F).
@@ -61,13 +59,14 @@ ec_to_pl(Why, Out, F):-
    findall(N, absolute_file_name(F, N, [file_type(txt), file_errors(fail), expand(false), solutions(all)]), L), 
    L\=[F], !, maplist(ec_to_pl(Why, Out), L).
 ec_to_pl(Why, Outs, In):- atom(In), 
-  setup_call_cleanup(ec_open_input(In, Ins), 
+  setup_call_cleanup(open(In, Ins), 
      ec_in_to_pl(Why, Outs, Ins), 
      close(Ins)).
 
 
 ec_in_to_pl(Why, Out, F):- dmsg(ec_in_to_pl(Why, Out, F)), fail.
-ec_in_to_pl(_, _, Ins):- assertion(stream_property(Ins, input)), fail.
+ec_in_to_pl(_, _, Ins):- retractall(last_s_l(_,_)),
+  assertion(stream_property(Ins, input)), fail.
   
 ec_in_to_pl(Why, Outs, Ins):- 
    atomic(Outs), is_stream(Outs), !, 
@@ -253,17 +252,35 @@ my_unCamelcase(X, Y):- atom(X), fix_predname(X, Y), !.
 my_unCamelcase(X, Y):- upcase_atom(X, X), !, downcase_atom(X, Y).
 my_unCamelcase(X, Y):- unCamelcase(X, Y).
 
+/*
+xfr_ec(SS,O):- s_l(S,L),O=(etmp:ec_option(SS,L:S)),ground(SS),!.
+xfr_ec(SS,O):- s_l(S,L),O=(etmp:ec_option(SS,L:S+X)), nb_current('$variable_names',X),!.
+
+*/
 
 fix_ec_term(C, C):- \+ callable(C), !.
+fix_ec_term(X, Y):- \+ compound(X), !, my_unCamelcase(X, Y).
+%fix_ec_term(X, Y):- xfr_ec(X, Y),X\=@=Y,!,fix_ec_term(X, Y).
+fix_ec_term(neg(holds_at(N,V)),O):-fix_ec_term((holds_at(neg(N),V)),O).
 fix_ec_term(t(X, [Y]), O):- !, fix_ec_term(t(X, Y), O).
 fix_ec_term(load(X), load(X)).
 fix_ec_term(option([N, V]), O):- !, fix_ec_term(option(N, V), O).
 fix_ec_term(range([N, V, H]), O):- !, fix_ec_term(range(N, V, H), O).
-% fix_ec_term(t(X, Y), O):- atom(X), is_list(Y), is_special(X), SS=..[X|Y], fix_ec_term(SS, O).
+% fix_ec_term(t(X, Y), O):- atom(X), is_list(Y), is_special_macro(X), SS=..[X|Y], fix_ec_term(SS, O).
 fix_ec_term(t(X, Y), O):- atom(X), SS=..[X, Y], fix_ec_term(SS, O).
 fix_ec_term(sort(col([S1, S2])), O):- !, fix_ec_term(subsort(S1, S2), O).
 fix_ec_term(function(F, [M]), O):- fix_ec_term(function(F, M), O).
-fix_ec_term(Term2, Term):- map_callables(my_unCamelcase, Term2, Term).
+fix_ec_term(Compound=Value, Term):- compound(Compound), append_term(Compound, Value, Term0), fix_ec_term(Term0, Term).
+fix_ec_term('$VAR'(HT), '$VAR'(HT)):-!.
+fix_ec_term(Term1, Term):- 
+  map_callables(my_unCamelcase, Term1, HTTermO),
+  Term1\=@=HTTermO,!,
+  fix_ec_term(HTTermO, Term).
+fix_ec_term(HT, HTTermO):- !, 
+ compound_name_arguments(HT, F, L), 
+ maplist(fix_ec_term,L,LL),
+ compound_name_arguments(HTTerm, F, LL),
+ map_callables(my_unCamelcase, HTTerm, HTTermO).
 
 verbatum_functor(function). verbatum_functor(event). 
 verbatum_functor(predicate). verbatum_functor(fluent).
@@ -304,7 +321,7 @@ ec_read2(Txt, Term):-
 ec_read2(T, Term):- 
    must(ec_read3(T, Term)), !.
    
-
+   
 
 
 cleanout(T, B, E, S3, SSS):-
@@ -339,16 +356,17 @@ cont_one_ec_compound(S, InCodes, WasLast, Term):-
    unpad_codes(Text, Codes), last(Codes, Last), 
    cont_one_ec_compound(S, Codes, Last, Term).
 
-is_special(range).
-
-is_special(xor).
-is_special(mutex).
-is_special(ignore).
-
-is_special(sort).
-is_special(option).
-is_special(reified).
-is_special(completion).
+is_special_macro(range).
+is_special_macro(mutex).
+is_special_macro(ignore).
+is_special_macro(reified_sort).
+is_special_macro(noninertial).
+is_special_macro(sort).
+is_special_macro(option).
+is_special_macro(reified).
+is_special_macro(load).
+is_special_macro(completion).
+is_special_macro(xor).
 %predicate, option range load fluent event noninertial xor completion
 
 builtin_pred(initiates).
@@ -360,12 +378,15 @@ builtin_pred(declipped).
 builtin_pred(clipped).
 builtin_pred(before).
 builtin_pred(after).
-builtin_pred(executable).
 builtin_pred(sort).
-builtin_pred(predicate).
-builtin_pred(function).
-builtin_pred(event).
 builtin_pred(initially).
+
+
+decl_arg_sorts(fluent).
+decl_arg_sorts(event).
+decl_arg_sorts(executable).
+decl_arg_sorts(predicate).
+decl_arg_sorts(function).
 
 % builtin_pred(releasedAt).
 
@@ -388,10 +409,38 @@ s_l(F,L):-
 
 % process_out(Why, load(SS)):- !, ec_to_pl(Why, Out, file(SS), current_output).
 process_out(Why, SL):- fix_ec_term(SL, SO) -> SL\=@=SO, !, process_out(Why, SO).
-process_out(Why, S):- must(glean_data(Why, S)), must(call(Why, S)), !.
+process_out(Why, S):- must(glean_data(Why, S)),xfr_ec(S,S2), must(call(Why, S2)), !.
 
-process_ec(option(N,V)):- retractall(etmp:ec_option(N,_)),asserta(etmp:ec_option(N,V)).
-process_ec(SS):- s_l(S,L),assert(etmp:ec_option(SS,L:S)).
+
+%process_ec(X):- xfr_ec(X,Y),X\=@=Y,process_ec(Y).
+process_ec(ec_option(X,Y)):- assert(etmp:ec_option(X,Y)),dmsg(red(assert(ec_option(X,Y)))).
+process_ec(axiom(X,Y)):- s_l(S,L),nb_current('$variable_names',Vs),!,process_ec(axiom(X,Y,lsv(L:S,Vs))).
+process_ec(P):- assert(P),nop(dmsg(green(P))).
+
+xfr_ec(etmp:ec_option(X,Y),ec_option(X,Y)):-!.
+xfr_ec(option(N,V),O):- retractall(etmp:ec_option(N,_)),xfr_ec(ec_option(N,V),O).
+xfr_ec(holds_at(N,AT),O):- AT==0, xfr_ec(initially(N),O).
+xfr_ec(ec_option(X,Y),ec_option(X,Y)):-!.
+xfr_ec(event(P),O):- compound_name_arity(P,F,A),compound_name_arity(PP,F,A), xfr_ec(executable(PP),O).
+xfr_ec(P,P):- functor(P,F,1),decl_arg_sorts(F),!.
+xfr_ec(P,P):- functor(P,F,_),is_special_macro(F),!.
+xfr_ec(axiom(X,Y),axiom(X,Y)):-!.
+xfr_ec(isa(X,Y),isa(X,Y)):-!.
+%xfr_ec(subsort(X,Y),subsort(X,Y)):-!.
+xfr_ec(range(X,Y,Z),range(X,Y,Z)):-!.
+xfr_ec(happens(F, T1, T2), O):- T1==T2,!, xfr_ec(happens(F, T1), O).
+xfr_ec(P,O):- P=..[C,E],C\==initially, !,xfr_ec(isa(E,C),O).
+
+xfr_ec(isa(F, W), axiom(isa(F, W),[])):-!.
+xfr_ec(subsort(F, W), axiom(subsort(F, W),[])):-!.
+xfr_ec(happens(F, W), axiom(happens(F, W),[])):-!.
+xfr_ec(initially(F), axiom(initially(F),[])):-!.
+xfr_ec(holds_at(F, W), axiom(holds_at(F, W),[])):-!.
+xfr_ec((PRE->POST),axiom(POST,List)):- /* functor(POST,F,2),builtin_pred(F),*/ conjuncts_to_list(PRE,List).
+xfr_ec((PRE),axiom(POST,[])):- /* functor(POST,F,2),builtin_pred(F),*/ xfr_ec(PRE,POST).
+xfr_ec(O,O).
+
+uses_isa(C):- atom(C), \+ decl_arg_sorts(C).
 
 do_ec_load(SS):- do_ec_convert(SS),
   process_ec(SS).
@@ -402,7 +451,7 @@ do_ec_convert(load(F)):- mention_s_l, exists_file(F), ec_load(F),!.
 %do_ec_convert(load(F)):- exists_file(F),!,ec_to_pl(do_ec_convert, current_output, F).
 
 do_ec_convert(SS):- must(pretty_numbervars(SS, SS1)), 
-   flush_output, format('~N'), ansi_format([fg(yellow)], ':- ~p.~n~n', [process_ec(SS1)]), flush_output, !.
+   flush_output, format('~N'), ansi_format([fg(yellow)], '~p.~n~n', [(SS1)]), flush_output, !.
    %maybe_mention_s_l.
 do_ec_convert(Data):- wdmsg(do_ec_convert(Data)).
 
@@ -410,7 +459,7 @@ glean_data(Why, SL):- \+ compound(SL), !, dmsg(warn(glean_data(Why, SL))).
 glean_data(Why, subsort(S1, S2)):- !, glean_data(Why, sort(S1)), glean_data(Why, sort(S2)), assert_gleaned(Why, subsort(S1, S2)).
 glean_data(Why, sort(S)):- !, assert_gleaned(Why, sort(S)).
 glean_data(Why, isa(E, S)):- !, assert_gleaned(Why, isa(E, S)).
-glean_data(Why, SL):- SL=..[S, L], \+ is_special(S), is_list(L), !, glean_data(Why, sort(S)), 
+glean_data(Why, SL):- SL=..[S, L], \+ is_special_macro(S), is_list(L), !, glean_data(Why, sort(S)), 
   maplist(glean_data(Why, hasInstance(S)), L).
 glean_data(_, _).
 
@@ -437,7 +486,7 @@ process_ec_stream_token(Why, reified, S):- !, read_stream_until(S, [], ` `, Text
    text_to_string(Text, St), atom_concat('reified_', St, Type), !, process_ec_stream_token(Why, Type, S).
 process_ec_stream_token(Why, Type, S):- read_line_to_string_echo(S, String), process_ec_token_with_string(Why, Type, String).
 
-process_ec_token_with_string(Why, Type, String):- \+ is_special(Type), atomics_to_string(VList, ',', String), VList \= [_], !, 
+process_ec_token_with_string(Why, Type, String):- \+ is_special_macro(Type), atomics_to_string(VList, ',', String), VList \= [_], !, 
   maplist(process_ec_token_with_string(Why, Type), VList).
 process_ec_token_with_string(_, _, ""):-!.
 process_ec_token_with_string(Why, Type, String):- token_stringsss(String, Out), process_out(Why, t(Type, Out)).

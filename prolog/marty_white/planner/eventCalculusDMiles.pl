@@ -63,6 +63,7 @@
 
 :- include(abdemo_incl).
 
+:- style_check(+discontiguous).
 /* TOP LEVEL */
 
 
@@ -89,13 +90,12 @@ next_d(D1, D2):- D1<9,!,D2 is D1+3.
 next_d(D1, D2):- D1<90,!,D2 is D1+30.
 next_d(D1, D2):- D2 is D1+300.
 
-
 abdemo_special(long,Gs,R):-abdemo_timed(Gs,R).
 abdemo_special(_,Gs,R):- abdemo(Gs,R).
 
 abdemo(Gs,[HA,BA]) :-
      init_gensym(t), first_d(D),
-     abdemo_top(Gs,[[[],[]],[[],[]]],[[HA,HC],[BA,BC]],[],N,D),   
+     abdemo_top(Gs,[[[],[]],[[],[]]],[[HA,HC],[BA,BC]],[],N,D),
      write_plan_len(HA,BA).
 
 abdemo_timed(Gs,[HA,BA]) :-
@@ -151,19 +151,20 @@ all_executable([happens(A,T1,T2)|R]) :- executable(A), all_executable(R).
 */
 
 abdemo(Gs,[[HA,TC1],[BA,TC2]],R,N1,N2,D) :-
-     when_tracing(3, (
-     write('Goals: '), writenl(Gs),
+     trace(on), write('Goals: '), writenl(Gs),
      write('Happens: '), writenl(HA),
      write('Befores: '), writenl(BA),
-     write('Nafs: '), writenl(N1), nl, nl)), fail.
+     write('Nafs: '), writenl(N1), nl, nl, fail.
 
 abdemo([],R,R,N,N,D).
+abdemo([G|Gs],R1,R2,N1,N2,D):-
+  abdemo_cons(G,Gs,R1,R2,N1,N2,D).
 
 /*
    Now we have two clauses which are meta-level representations of the two
    event calculus axioms for holds_at.
 
-        holds_at(F,T) <- initiallyp(F) and not clipped(0,F,T)
+        holds_at(F,T) <- initially(F) and not clipped(0,F,T)
 
         holds_at(F,T3) <-
              happens(A,T1,T2) and T2 < T3 and
@@ -175,10 +176,14 @@ abdemo([],R,R,N,N,D).
    the residue. Resolving happens goals is the job of the refinement phase.
 */
 
-abdemo([holds_at(F1,T)|Gs1],R1,R3,N1,N4,D) :-
+abdemo_cons(holds_at(F1,T),Gs1,R1,R3,N1,N3,D):- 
+  abdemo_cons_holds_at(F1,T,Gs1,R1,R3,N1,N3,D).
+
+:- discontiguous abdemo_cons/7.
+abdemo_cons_holds_at(F1,T,Gs1,R1,R3,N1,N4,D) :-
      F1 \= neg(F2), abresolve(initially(F1),R1,Gs2,R1,B),
-     append(Gs2,Gs1,Gs3), add_neg([clipped(0,F1,T)],N1,N2),
-     abdemo_naf([clipped(0,F1,T)],R1,R2,N2,N3,D),
+     append(Gs2,Gs1,Gs3), add_neg_car(clipped(0,F1,T),N1,N2),
+     abdemo_naf_cons(clipped(0,F1,T),[],R1,R2,N2,N3,D),
      abdemo(Gs3,R2,R3,N3,N4,D).
 
 /*
@@ -188,14 +193,14 @@ abdemo([holds_at(F1,T)|Gs1],R1,R3,N1,N4,D) :-
    we've added the corresponding happens and before facts to the residue.
 */
 
-abdemo([holds_at(F1,T3)|Gs1],R1,R6,N1,N5,D) :-
-     F1 \= neg(F2), abresolve(initiates(A,F1,T1),R1,Gs2,R1,B1),
+abdemo_cons_holds_at(F1,T3,Gs1,R1,R6,N1,N5,D) :-
+     F1 \= neg(_F2), abresolve(initiates(A,F1,T1),R1,Gs2,R1,B1),
      abresolve(happens(A,T1,T2),R1,[],R2,B2),
      check_depth(R2,D),
      abresolve(before(T2,T3),R2,[],R3,B3),
      append(Gs2,Gs1,Gs3), check_nafs(B2,N1,R3,R4,N1,N2,D),
-     add_neg([clipped(T1,F1,T3)],N2,N3),
-     abdemo_naf([clipped(T1,F1,T3)],R4,R5,N3,N4,D),
+     add_neg_car(clipped(T1,F1,T3),N2,N3),
+     abdemo_naf_cons(clipped(T1,F1,T3),[],R4,R5,N3,N4,D),
      abdemo(Gs3,R5,R6,N4,N5,D).
 
 /*
@@ -209,20 +214,20 @@ abdemo([holds_at(F1,T3)|Gs1],R1,R6,N1,N5,D) :-
              terminates(A,F,T1) and not declipped(T1,F,T2)
 */
 
-abdemo([holds_at(neg(F),T)|Gs1],R1,R3,N1,N4,D) :-
+abdemo_cons_holds_at(neg(F),T,Gs1,R1,R3,N1,N4,D) :-
      abresolve(initially(neg(F)),R1,Gs2,R1,B),
-     append(Gs2,Gs1,Gs3), add_neg([declipped(0,F,T)],N1,N2),
-     abdemo_naf([declipped(0,F,T)],R1,R2,N2,N3,D),
+     append(Gs2,Gs1,Gs3), add_neg_car(declipped(0,F,T),N1,N2),
+     abdemo_naf_cons(declipped(0,F,T),[],R1,R2,N2,N3,D),
      abdemo(Gs3,R2,R3,N3,N4,D).
 
-abdemo([holds_at(neg(F),T3)|Gs1],R1,R6,N1,N5,D) :-
+abdemo_cons_holds_at(neg(F),T3,Gs1,R1,R6,N1,N5,D) :-
      abresolve(terminates(A,F,T1),R1,Gs2,R1,B1),
      abresolve(happens(A,T1,T2),R1,[],R2,B2),
      check_depth(R2,D),
      abresolve(before(T2,T3),R2,[],R3,B3),
      append(Gs2,Gs1,Gs3), check_nafs(B2,N1,R3,R4,N1,N2,D),
-     add_neg([declipped(T1,F,T3)],N2,N3),
-     abdemo_naf([declipped(T1,F,T3)],R4,R5,N3,N4,D),
+     add_neg_car(declipped(T1,F,T3),N2,N3),
+     abdemo_naf_cons(declipped(T1,F,T3),[],R4,R5,N3,N4,D),
      abdemo(Gs3,R5,R6,N4,N5,D).
 
 /*
@@ -234,11 +239,11 @@ abdemo([holds_at(neg(F),T3)|Gs1],R1,R6,N1,N5,D) :-
    of sub-goals between compound events wherever possible.
 */
 
-abdemo([happens(A,T1,T2)|Gs],R1,R4,N1,N3,D) :-
+abdemo_cons(happens(A,T1,T2),Gs,R1,R4,N1,N3,D) :-
      !, abresolve(happens(A,T1,T2),R1,[],R2,B), check_depth(R2,D),
      check_nafs(B,N1,R2,R3,N1,N2,D), abdemo(Gs,R3,R4,N2,N3,D).
 
-abdemo([happens(A,T)|Gs],R1,R4,N1,N3,D) :-
+abdemo_cons(happens(A,T),Gs,R1,R4,N1,N3,D) :-
      !, abresolve(happens(A,T),R1,[],R2,B), check_depth(R2,D),
      check_nafs(B,N1,R2,R3,N1,N2,D), abdemo(Gs,R3,R4,N2,N3,D).
 
@@ -258,7 +263,7 @@ abdemo([happens(A,T)|Gs],R1,R4,N1,N3,D) :-
    definition, then those recorded in the negations list.
 */
 
-abdemo([expand([happens(A,T1,T2)|Bs])|Gs1],R1,R8,N1,N8,D) :-
+abdemo_cons(expand([happens(A,T1,T2)|Bs]),Gs1,R1,R8,N1,N8,D) :-
      !, axiom(happens(A,T1,T2),Gs2),
      add_sub_actions(Gs2,R1,R2,N1,N2,D,Hs),
      solve_befores(Bs,R2,R3,N2,N3,D),
@@ -274,11 +279,11 @@ abdemo([expand([happens(A,T1,T2)|Bs])|Gs1],R1,R8,N1,N8,D) :-
    constraints (ie: holds_at if holds_at clauses).
 */
 
-abdemo([not(G)|Gs],R1,R3,N1,N4,D) :-
-     !, abdemo_naf([G],R1,R2,N1,N2,D), add_neg([G],N2,N3),
+abdemo_cons(not(G),Gs,R1,R3,N1,N4,D) :-
+     !, abdemo_naf_cons(G,[],R1,R2,N1,N2,D), add_neg_car(G,N2,N3),
      abdemo(Gs,R2,R3,N3,N4,D).
 
-abdemo([G|Gs1],R1,R3,N1,N2,D) :-
+abdemo_cons(G,Gs1,R1,R3,N1,N2,D) :-
      abresolve(G,R1,Gs2,R2,B), append(Gs2,Gs1,Gs3),
      abdemo(Gs3,R2,R3,N1,N2,D).
 
@@ -300,7 +305,7 @@ action_count([[HA,TC],RB],L) :- length(HA,L).
 abdemo_holds_ats([],R,R,N,N,D).
 
 abdemo_holds_ats([holds_at(F,T)|Gs],R1,R3,N1,N3,D) :-
-     !, abdemo([holds_at(F,T)],R1,R2,N1,N2,D),
+     !, abdemo_cons_holds_at(F,T,[],R1,R2,N1,N2,D),
      abdemo_holds_ats(Gs,R2,R3,N2,N3,D).
 
 abdemo_holds_ats([G|Gs],R1,R2,N1,N2,D) :-
@@ -310,10 +315,11 @@ abdemo_holds_ats([G|Gs],R1,R2,N1,N2,D) :-
 solve_other_goals([],R,R,N,N,D).
 
 solve_other_goals([G|Gs],R1,R3,N1,N3,D) :-
-     G \= holds_at(F,T), G \= happens(A,T1,T2),
-     G \= happens(A,T), G \= before(T1,T2),
-     G \= not(clipped(T1,F,T2)), G \= not(declipped(T1,F,T2)), !,
-     abdemo([G],R1,R2,N1,N2,D),
+     G \= holds_at(_F,_T), G \= happens(_A,_T1,_T2),
+     G \= happens(_A,_T), G \= before(_T1,_T2),
+     G \= not(clipped(_T1,_F,_T2)), G \= not(declipped(_T1,_F,_T2)), !,
+
+     abdemo_cons(G,[],R1,R2,N1,N2,D),
      solve_other_goals(Gs,R2,R3,N2,N3,D).
 
 solve_other_goals([G|Gs],R1,R2,N1,N2,D) :-
@@ -327,20 +333,22 @@ solve_other_goals([G|Gs],R1,R2,N1,N2,D) :-
 */
 
 add_sub_actions([],R,R,N,N,D,[]).
+add_sub_actions([G|Gs],R1,R2,N1,N2,D,L):-
+  add_sub_actions_cons(G,Gs,R1,R2,N1,N2,D,L).
 
-add_sub_actions([happens(A,T1,T2)|Gs],R1,R3,N1,N3,D,Hs2) :-
+add_sub_actions_cons(happens(A,T1,T2),Gs,R1,R3,N1,N3,D,Hs2) :-
      !, abresolve(happens(A,T1,T2),R1,[],R2,B), check_depth(R2,D),
      add_sub_actions(Gs,R2,R3,N2,N3,D,Hs1), cond_add(B,happens(A,T1,T2),Hs1,Hs2).
 
-add_sub_actions([happens(A,T)|Gs],R1,R3,N1,N3,D,Hs2) :-
+add_sub_actions_cons(happens(A,T),Gs,R1,R3,N1,N3,D,Hs2) :-
      !, abresolve(happens(A,T),R1,[],R2,B), check_depth(R2,D),
      add_sub_actions(Gs,R2,R3,N2,N3,D,Hs1), cond_add(B,happens(A,T,T),Hs1,Hs2).
 
-add_sub_actions([before(T1,T2)|Gs],R1,R3,N1,N3,D,Hs) :-
+add_sub_actions_cons(before(T1,T2),Gs,R1,R3,N1,N3,D,Hs) :-
      !, abresolve(before(T1,T2),R1,[],R2,B),
      add_sub_actions(Gs,R2,R3,N2,N3,D,Hs).
 
-add_sub_actions([G|Gs],R1,R2,N1,N2,D,Hs) :-
+add_sub_actions_cons(G,Gs,R1,R2,N1,N2,D,Hs) :-
      add_sub_actions(Gs,R1,R2,N1,N2,D,Hs).
 
 
@@ -352,7 +360,7 @@ cond_add(true,H,Hs,[H|Hs]).
 solve_befores([],R,R,N,N,D).
 
 solve_befores([before(T1,T2)|Gs],R1,R3,N1,N3,D) :-
-     !, abdemo([before(T1,T2)],R1,R2,N1,N2,D),
+     !, abdemo_cons(before(T1,T2),[],R1,R2,N1,N2,D),
      solve_befores(Gs,R2,R3,N2,N3,D).
 
 solve_befores([G|Gs],R1,R2,N1,N2,D) :-
@@ -368,12 +376,9 @@ check_sub_action_nafs([happens(A,T1,T2)|Hs],N1,R1,R3,N2,N4,D) :-
 
 check_clipping([],R,R,N,N,D) :- !.
 
-check_clipping([not(clipped(T1,F,T2))|Gs],R1,R3,N1,N3,D) :-
-     !, abdemo_naf([clipped(T1,F,T2)],R1,R2,N1,N2,D),
-     check_clipping(Gs,R2,R3,N2,N3,D).
-
-check_clipping([not(declipped(T1,F,T2))|Gs],R1,R3,N1,N3,D) :-
-     !, abdemo_naf([declipped(T1,F,T2)],R1,R2,N1,N2,D),
+check_clipping([not(Clipped)|Gs],R1,R3,N1,N3,D) :- 
+  (Clipped= clipped(T1,F,T2); Clipped=declipped(T1,F,T2)),
+     !, abdemo_naf_cons(Clipped,[],R1,R2,N1,N2,D),
      check_clipping(Gs,R2,R3,N2,N3,D).
 
 check_clipping([G|Gs],R1,R2,N1,N2,D) :-
@@ -444,6 +449,7 @@ abresolve(before(X,Y),R1,[],R2,B) :-
    arithmetic expressions) are built in.
 */
 
+abresolve(dif(X,Y),R,[],R,false) :- !, dif(X,Y).
 abresolve(diff(X,Y),R,[],R,false) :- !, X \= Y.
 
 abresolve(is(X,Y),R,[],R,false) :- !, X is Y.
@@ -452,7 +458,12 @@ abresolve(G,R,[],[G|R],false) :- abducible(G).
 
 abresolve(G,R,Gs,R,false) :- axiom(G,Gs).
 
+:- dynamic(axiom/3).
+:- multifile(axiom/3).
+:- dynamic(axiom/2).
+:- multifile(axiom/2).
 
+axiom(G,Gs):- axiom(G,Gs,_).
 
 
 /* ABDEMO_NAFS and CHECK_NAFS */
@@ -485,7 +496,7 @@ abdemo_nafs([N|Ns],R1,R3,N1,N3,D) :-
 
 
 /*
-   abdemo_naf([G1...Gn],R1,R2) demos not((G1) and ... and (Gn)).
+   abdemo_naf( [G1...Gn],R1,R2) demos not((G1) and ... and (Gn)).
 
    As for abdemo, the main event calculus axioms are compiled into the
    meta-level in abdemo_naf. In addition to the two holds_at axioms, we
@@ -508,14 +519,19 @@ abdemo_nafs([N|Ns],R1,R3,N1,N3,D) :-
    component actions.
 */
 
-abdemo_naf([clipped(T1,F,T4)|Gs1],R1,R2,N1,N2,D) :-
+abdemo_naf( [G|Gs1 ],R1,R2,N1,N2,D) :-
+  abdemo_naf_cons(G,Gs1,R1,R2,N1,N2,D).
+
+:- discontiguous abdemo_naf_cons/7.
+
+abdemo_naf_cons(clipped(T1,F,T4),Gs1,R1,R2,N1,N2,D) :-
      !, findall(Gs3,
           (abresolve(terms_or_rels(A,F,T2),R1,Gs2,R1,false),
           abresolve(happens(A,T2,T3),R1,[],R1,false),
           append([before(T1,T3),before(T2,T4)|Gs2],Gs1,Gs3)),Gss),
      abdemo_nafs(Gss,R1,R2,N1,N2,D).
 
-abdemo_naf([declipped(T1,F,T4)|Gs1],R1,R2,N1,N2,D) :-
+abdemo_naf_cons(declipped(T1,F,T4),Gs1,R1,R2,N1,N2,D) :-
      !, findall(Gs3,
           (abresolve(inits_or_rels(A,F,T2),R1,Gs2,R1,false),
           abresolve(happens(A,T2,T3),R1,[],R1,false),
@@ -535,15 +551,17 @@ abdemo_naf([declipped(T1,F,T4)|Gs1],R1,R2,N1,N2,D) :-
    argument in its head.
 */
 
-/* DANGER: Cut in next clause rules out other ways to solve holds_at(F2,T). */
+abdemo_naf_cons(holds_at(F1,T),Gs1,R1,R3,N1,N3,D):- !,
+  abdemo_naf_cons_holds_at(F1,T,Gs1,R1,R3,N1,N3,D).
 
-abdemo_naf([holds_at(F1,T)|Gs1],R1,R3,N1,N3,D) :-
+/* DANGER: Cut in next clause rules out other ways to solve holds_at(F2,T). */
+abdemo_naf_cons_holds_at(F1,T,Gs1,R1,R3,N1,N3,D) :-
      opposite(F1,F2), copy_term(Gs1,Gs2),
-     abdemo([holds_at(F2,T)],R1,R2,N1,N2,D), !,
+     abdemo_cons_holds_at(F2,T,[],R1,R2,N1,N2,D), !,
      abdemo_naf_cont(R1,Gs2,R2,R3,N1,N3,D).
 
-abdemo_naf([holds_at(F,T)|Gs],R1,R2,N1,N2,D) :-
-     !, abdemo_naf(Gs,R1,R2,N1,N2,D).
+abdemo_naf_cons_holds_at(_F,_T,Gs,R1,R2,N1,N2,D) :-
+      abdemo_naf(Gs,R1,R2,N1,N2,D).
 
 /*
    Special facilities for handling temporal ordering facts are built in.
@@ -555,11 +573,11 @@ abdemo_naf([holds_at(F,T)|Gs],R1,R2,N1,N2,D) :-
    before(Y,X) to the residue.
 */
 
-abdemo_naf([before(X,Y)|Gs],R,R,N,N,D) :- X == Y, !.
+abdemo_naf_cons(before(X,Y),Gs,R,R,N,N,D) :- X == Y, !.
 
-abdemo_naf([before(X,Y)|Gs],R,R,N,N,D) :- demo_before(Y,X,R), !.
+abdemo_naf_cons(before(X,Y),Gs,R,R,N,N,D) :- demo_before(Y,X,R), !.
 
-abdemo_naf([before(X,Y)|Gs1],R1,R2,N1,N2,D) :-
+abdemo_naf_cons(before(X,Y),Gs1,R1,R2,N1,N2,D) :-
      !, append(Gs1,[postponed(before(X,Y))],Gs2),
      abdemo_naf(Gs2,R1,R2,N1,N2,D).
 
@@ -570,28 +588,29 @@ abdemo_naf([before(X,Y)|Gs1],R1,R2,N1,N2,D) :-
    before goal appears in the goal list as postponed(before(X,Y)).
 */
 
-abdemo_naf([postponed(before(X,Y))|Gs],R1,R2,N,N,D) :-
+abdemo_naf_cons(postponed(before(X,Y)),Gs,R1,R2,N,N,D) :-
      \+ demo_beq(X,Y,R1), add_before(Y,X,R1,R2).
 
-abdemo_naf([postponed(before(X,Y))|Gs],R1,R2,N1,N2,D) :-
+abdemo_naf_cons(postponed(before(X,Y)),Gs,R1,R2,N1,N2,D) :-
      !, abdemo_naf(Gs,R1,R2,N1,N2,D).
 
 /* 
    We drop through to the general case for goals other than special event
    calculus goals.
 */
+:-  discontiguous(abdemo_naf_cons/7).
+abdemo_naf_cons(not(G),Gs1,R1,R3,N1,N3,D):- !, abdemo_naf_cons_not(G,Gs1,R1,R3,N1,N3,D).
 
 /* DANGER: Cut in next clause rules out other ways to solve G. */
-
-abdemo_naf([not(G)|Gs1],R1,R3,N1,N3,D) :-
-     copy_term(Gs1,Gs2), abdemo([G],R1,R2,N1,N2,D), !,
+abdemo_naf_cons_not(G,Gs1,R1,R3,N1,N3,D) :-
+     copy_term(Gs1,Gs2), abdemo_cons(G,[],R1,R2,N1,N2,D), !,
      abdemo_naf_cont(R1,Gs2,R2,R3,N1,N3,D).
 
-abdemo_naf([not(G)|Gs],R1,R2,N1,N2,D) :- !, abdemo_naf(Gs,R1,R2,N1,N2,D).
+abdemo_naf_cons_not(_G,Gs,R1,R2,N1,N2,D) :- abdemo_naf(Gs,R1,R2,N1,N2,D).
 
-abdemo_naf([G|Gs1],R,R,N,N,D) :- \+ abresolve(G,R,Gs2,R,false), !.
+abdemo_naf_cons(G,Gs1,R,R,N,N,D) :- \+ abresolve(G,R,Gs2,R,false), !.
 
-abdemo_naf([G1|Gs1],R1,R2,N1,N2,D) :-
+abdemo_naf_cons(G1,Gs1,R1,R2,N1,N2,D) :-
      findall(Gs2,(abresolve(G1,R1,Gs3,R1,false),append(Gs3,Gs1,Gs2)),Gss),
      abdemo_nafs(Gss,R1,R2,N1,N2,D).
 
@@ -839,7 +858,7 @@ split_befores([],T1,T2,T3,T4,[],[]).
 
 split_befores([before(T1,T2)|Bs1],T3,T4,T5,T6,Bs2,[before(T1,T2)|Bs3]) :-
      no_match(T1,T2,T3,T4), !, split_befores(Bs1,T3,T4,T5,T6,Bs2,Bs3).
-
+                                        
 split_befores([before(T1,T2)|Bs1],T3,T4,T5,T6,[before(T7,T8)|Bs2],Bs3) :-
      substitute_time(T1,T3,T4,T5,T6,T7), substitute_time(T2,T3,T4,T5,T6,T8),
      split_befores(Bs1,T3,T4,T5,T6,Bs2,Bs3).
@@ -857,10 +876,10 @@ split_beqs([beq(T1,T2)|Bs1],T3,T4,T5,T6,[beq(T7,T8)|Bs2],Bs3) :-
 
 split_nafs([],T1,T2,T3,T4,[],[]).
 
-split_nafs([[clipped(T1,F,T2)]|Bs1],T3,T4,T5,T6,Bs2,[[clipped(T1,F,T2)]|Bs3]) :-
+split_nafs([[  clipped(T1,F,T2)]|Bs1],T3,T4,T5,T6,Bs2,[[clipped(T1,F,T2)]|Bs3]) :-
      no_match(T1,T2,T3,T4), !, split_nafs(Bs1,T3,T4,T5,T6,Bs2,Bs3).
 
-split_nafs([[clipped(T1,F,T2)]|Bs1],T3,T4,T5,T6,
+split_nafs([[  clipped(T1,F,T2)]|Bs1],T3,T4,T5,T6,
           [not(clipped(T7,F,T8))|Bs2],Bs3) :-
      !, substitute_time(T1,T3,T4,T5,T6,T7), substitute_time(T2,T3,T4,T5,T6,T8),
      split_nafs(Bs1,T3,T4,T5,T6,Bs2,Bs3).
@@ -899,8 +918,8 @@ no_match(T1,T2,T3,T4) :- T1 \= T3, T2 \= T3, T1 \= T4, T2 \= T4.
    giving Ns2. Duplicates are ignored, but N must be fully bound.
 */
 
+add_neg_car(N,Ns,Ns2):- add_neg([N],Ns,Ns2).
 add_neg(N,Ns,Ns) :- member(N,Ns), !.
-
 add_neg(N,Ns,[N|Ns]).
 
 
@@ -930,6 +949,6 @@ opposite(neg(F),F) :- !.
 opposite(F,neg(F)).
 
 
-
+trace(off).
 
 
