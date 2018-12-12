@@ -27,8 +27,8 @@ do_test(has_occured) :-  local_demo([has_occured(move(lisa,box,livingRoom,lisa))
 do_test(test_np_box_4) :-  local_demo([holds_at(inRoom(lisa,kitchen),t)],R).
 
 semi_legit_time(happens(_,T1),T1):- !.
-semi_legit_time(happens(_,T1,_),T1):-!.
 semi_legit_time(happens(_,_,T2),T2):-!.
+semi_legit_time(happens(_,T1,_),T1):-!.
 semi_legit_time(Holds1,T1):- 
    functor(Holds1,F,A), 
    member(F1,[number,string,atom]),
