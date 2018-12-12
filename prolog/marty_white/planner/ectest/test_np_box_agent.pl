@@ -16,9 +16,14 @@ local_demo(L,R):-  dm('FAILED:',(L:-R)).
 
 dm(TF,P):- format('~N~n~w ~p.~n',[TF,P]),trace.
 
-/*do_test(test_np_box_1) :-  local_demo([holds_at(directlyIn(lisa,livingRoom),t)],R).
+/*
+
+These tests Pass
+
+do_test(test_np_box_1) :-  local_demo([holds_at(directlyIn(lisa,livingRoom),t)],R).
 do_test(test_np_box_2) :-  local_demo([holds_at(inRoom(lisa,livingRoom),t)],R).
 do_test(test_np_box_1) :-  local_demo([holds_at(directlyIn(lisa,kitchen),t)],R).
+
 */
 
 % fix this next test and the follwing should pass
