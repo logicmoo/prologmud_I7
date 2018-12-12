@@ -80,8 +80,7 @@ removed_one_ws(S):-
 removed_n_chars(_S,N):- N<1,!.
 removed_n_chars(S,N):- get_code(S,_),Nm1 is N-1, removed_n_chars(S,Nm1).
 
-trim_off_whitepace(S):- removed_one_ws(S),!,trim_off_whitepace(S).
-trim_off_whitepace(_).
+trim_off_whitepace(S):- repeat, \+ removed_one_ws(S).
 
 %process_stream_peeked213(S," ;"):- !, till_eol(S).
 process_stream_peeked213(S,";"):- !, read_line_to_string(S,Comment),echo_format('~N%~s~n',[Comment]).
@@ -89,7 +88,7 @@ process_stream_peeked213(S,"["):- !, read_stream_until(S,[],`]`,Codes), read_n_s
 process_stream_peeked213(S,"{"):- !, read_stream_until(S,[],`}`,Codes), read_n_save_vars(Codes).
 process_stream_peeked213(S,"#!"):- !, till_eol(S).
 
-read_n_save_vars(Codes):- ec_read3(Codes,VarNames,_Vs),asserta(temp_varnames(VarNames)).
+read_n_save_vars(Codes):- ec_read3(Codes,VarNames,_Vs),asserta(etmp:temp_varnames(VarNames)).
 /*
 
 
@@ -139,19 +138,20 @@ upcased_functors(G):-
 %
 % Process file stream input
 %
-
-process_ec_stream_meta_peek(S) :- notrace(removed_one_ws(S)), process_ec_stream_meta_peek(S).
+process_ec_stream_meta_peek(S) :- notrace(removed_one_ws(S)),!.
 process_ec_stream_meta_peek(S) :- (peek_string(S,2,W);peek_string(S,1,W)),process_stream_peeked213(S,W),!.
 
 
 %process_ec_stream(S):- assertion(stream_property(S,input)).
 process_ec_stream(S):- notrace(at_end_of_stream(S)),!,nop(visit_script_term_pre_expanded(end_of_file)).
-process_ec_stream(S):- process_ec_stream_meta_peek(S), !, process_ec_stream(S).
-process_ec_stream(S):-  
-   OR = [to_lower('.'),to_lower('('), space, end_of_line],
+process_ec_stream(S):- process_ec_stream_meta_peek(S),!.
+process_ec_stream(S):- 
+   OR = [to_lower('.'),to_lower('('), end_of_line, space],
    read_stream_until_true(S,[],char_type_inverse(Was,or(OR)), Text),
-   unpad_codes(Text,Codes), last(Codes,Last),
-   continue_process_ec_stream(S,Codes,Last,Was).
+   unpad_codes(Text,Codes), must(continue_process_ec_stream(S,Codes,Was)),!.
+
+process_ec_stream(S):- read_line_to_string(S,Comment),echo_format('~N%RROOR:  ~s~n',[Comment]), break.
+
 /*
 process_ec_stream(S):- must((read_term(S,T,[variable_names(Vs)]),put_variable_names( Vs))),
   call(b_setval,'$variable_names',Vs), b_setval('$term',T), 
@@ -162,10 +162,15 @@ process_ec_stream(S):- must((read_term(S,T,[variable_names(Vs)]),put_variable_na
 
 */
 code_type_eot(Last):- (char_type(Last,to_lower('.'));char_type(Last,to_lower(')'))).
-
-continue_process_ec_stream(S,Codes, Last, space):- atom_codes(Token, Codes), assertion(char_type(Last,alpha)),
+   
+% continue_process_ec_stream(_S, [], space):- !.
+continue_process_ec_stream(_S, [], end_of_line):- !.
+continue_process_ec_stream(S, Codes, space):- !, atom_codes(Token, Codes), last(Codes,Last), 
+   assertion(char_type(Last,alpha)),
+   trim_off_whitepace(S),!, 
    process_ec_stream_token(Token,S),!.
-continue_process_ec_stream(S, NextCodes, Last, _CanBe ):-  !, % to_lower('(') | end_of_line
+continue_process_ec_stream(S, NextCodes, _CanBe ):-  !, % to_lower('(') | end_of_line
+   last(NextCodes,Last),
    cont_one_ec_compound(S, NextCodes, Last,Term), process_out(Term).
 
 unpad_codes(Text,Codes):- text_to_string(Text,String),normalize_space(codes(Codes),String).
@@ -179,43 +184,64 @@ ec_read3(String,Term,Vars):-
    module(ecread)]),_,fail))),!,
   maplist(ignore,Vars).
 
-:- dynamic(temp_varnames/1).
+:- use_module(library(hybrid_db/portray_vars)).
+:- dynamic(etmp:temp_varnames/1).
 insert_vars(Term,[],Term,[]).
 insert_vars(Term0,[V|LL],Term,[V=VV|Has]):-
   insert1_var(Term0,V,VV,Term1),
   insert_vars(Term1,LL,Term,Has).
-:- use_module(library(hybrid_db/portray_vars)).
 
 
 insert1_var(Term0,V,VV,Term1):- 
   debug_var(V,VV), 
   subst(Term0,V,VV,Term1).
 
+special_directive(manualrelease).
+special_directive(completion).
+special_directive(ignore).
+special_directive('!').
+special_directive('neg').
+
 map_callables(_,Term0,Term):- \+ callable(Term0), !, Term0=Term.
 map_callables(_,Term0,Term):- []== Term0,!, Term =[].
 %map_callables(Call,Term0,Term):- atom(Term0),!,call(Call,Term0,Term).
 map_callables(_Call,Term0,Term):- \+ compound(Term0),!,Term0=Term.
 map_callables(_, '$VAR'(HT),'$VAR'(HT)):-!.
-map_callables(Call,[H|T],[HTerm|TTerm]):- map_callables(Call,H,HTerm),map_callables(Call,T,TTerm),!.
+map_callables(Call,[H|T],[HTerm|TTerm]):- !, map_callables(Call,H,HTerm),map_callables(Call,T,TTerm),!.
 map_callables(Call,  '$'(F,A), '$'(FF,AA)):- A==[],[] = AA,!,call(Call, F, FF).
-map_callables(Call,  '$'(F,[A]), '$'(F,[AA])):- !, map_callables(Call,A,AA).
+map_callables(Call,  '$'(F,[A]), '$'(F,[AA])):- \+ special_directive(F), !, map_callables(Call,A,AA).
 map_callables(Call,  '$'(F,A), '$'(FF,AA)) :- call(Call,F,FF), maplist(map_callables(Call),A,AA),!.
 map_callables(Call, HT, HTTerm):- !, 
  compound_name_arguments(HT,F,L),
  map_callables(Call, '$'(F,L),'$'(FF,LL)),
  compound_name_arguments(HTTerm,FF,LL).
 
+my_unCamelcase(X,Y):- atom(X), fix_predname(X,Y),!.
+my_unCamelcase(X,Y):- unCamelcase(X,Y).
 
-ec_read1(String,Term,Vs):- 
-  ec_read3(String,Term0,_Vars),!,
-  findall(E,(temp_varnames(L), member(E,L)), LL),
+fix_predname(~,neg).
+fix_predname(!,neg).
+fix_predname(F,neg):- downcase_atom(F,not).
+fix_predname(F,holds_at):- downcase_atom(F,holdsat).
+fix_predname(F,Happens):- builtin_pred(Happens),downcase_atom(F,Happens),!.
+
+fix_ec_terms(Term0,Term,Vs):- 
+  findall(E,(etmp:temp_varnames(L), member(E,L)), LL),
   sort(LL,LLS),
   insert_vars(Term0,LLS,Term1,Vs),!,
   pretty_numbervars(Term1,Term2),
-  map_callables(unCamelcase,Term2,Term),!.
-  
+  my_fix_case(Term2,Term),!.
 
-  %retractall(temp_varnames(_)).
+my_fix_case(Term2,Term):- map_callables(my_unCamelcase,Term2,Term).
+
+ec_read1(String,Term,Vs):- 
+  ec_read3(String,Term0,_Vars),!,
+  fix_ec_terms(Term0,Term,Vs).
+
+
+
+
+  %retractall(etmp:temp_varnames(_)).
 ec_read1(T,Term,Vars):- ec_read2(T,Term,Vars),!.
 
 ec_read2(T,Term,Vars):- 
@@ -256,23 +282,47 @@ read_one_ec_compound(S,Term):-
 cont_one_ec_compound(_S,Text,Last,Term):- code_type_eot(Last),
    unpad_codes(Text,Codes),ec_from_atom(Codes,Term).
 
-cont_one_ec_compound(S,InCodes,WasLast,Term):- process_ec_stream_meta_peek(S), cont_one_ec_compound(S,InCodes,WasLast,Term).
+cont_one_ec_compound(S,InCodes,WasLast,Term):- process_ec_stream_meta_peek(S),!,cont_one_ec_compound(S,InCodes,WasLast,Term).
 cont_one_ec_compound(S,InCodes,_WasLast,Term):- 
    read_stream_until_true(S,InCodes,char_type_inverse(_Was,or([to_lower('.'),end_of_line])),Text),
    unpad_codes(Text,Codes),last(Codes,Last),
    cont_one_ec_compound(S,Codes,Last,Term).
 
 is_special(range).
+is_special(sort).
 is_special(option).
 is_special(reified).
 is_special(completion).
 %predicate, option range load fluent event noninertial xor completion
 
+builtin_pred(initiates).
+builtin_pred(terminates).
+builtin_pred(releases).
+builtin_pred(holds_at).
+builtin_pred(happens).
+builtin_pred(declipped).
+builtin_pred(clipped).
+builtin_pred(before).
+builtin_pred(after).
+builtin_pred(executable).
+builtin_pred(sort).
+builtin_pred(predicate).
+builtin_pred(function).
+builtin_pred(event).
+builtin_pred(initially).
+
+% builtin_pred(releasedAt).
+
+
+
 % process_out(load(SS)):- !, convert_ec_to_pl(file(SS),current_output).
+process_out(t(X,[Y])):- !, process_out(t(X,Y)).
 process_out(t(X,Y)):- atom(X), is_list(Y), is_special(X), SS=..[X|Y], process_out(SS).
 process_out(t(X,Y)):- atom(X), SS=..[X,Y], process_out(SS).
-process_out(S):- glean_data(S), process_outward(S).
-process_outward(SS):- pretty_numbervars(SS,SS1), format('~N~p.~n',[SS1]),retractall(temp_varnames(_)).
+process_out(SL):- my_fix_case(SL,SO) -> SL\=@=SO, !, process_out(SO).
+process_out(S):- must(glean_data(S)), must(process_outward(S)),!.
+
+process_outward(SS):- must(pretty_numbervars(SS,SS1)),flush_output, ansi_format([fg(yellow)],'~n~N~p.~n',[SS1]),retractall(etmp:temp_varnames(_)).
 
 glean_data(SL):- \+ compound(SL),!.
 glean_data(sort(S1,S2)):- !, glean_data(sort(S1)),glean_data(sort(S2)).
@@ -281,31 +331,65 @@ glean_data(isa(E,S)):- !, assert_gleaned(isa(E,S)).
 glean_data(SL):- SL=..[S,L], \+ is_special(S), is_list(L), !, glean_data(sort(S)),maplist(glean_data(hasInstance(S)),L).
 glean_data(_).
 
-assert_gleaned(SS):-  asserta(gleaned(SS)),pretty_numbervars(SS,SS1), format('~N% ~p.~n',[gleaned(SS1)]).
+assert_gleaned(SS):-  asserta(gleaned(SS)),pretty_numbervars(SS,SS1),flush_output, ansi_format([fg(yellow)],'~n~N% ~p.~n',[gleaned(SS1)]).
 
-glean_data(hasInstance(S),E):- !,glean_data(isa(E,S)).
+glean_data(hasInstance(S),E):- !, glean_data(isa(E,S)).
 
 
 
-process_ec_stream_token(load,S):- read_line_to_string(S,String),normalize_space(atom(SS),String),
-   process_out(load(SS)).
-process_ec_stream_token(option,S):- !, read_tokens_til_eol(S,' ',Value),process_out(t(option,Value)).
-process_ec_stream_token(sort,S):- read_tokens_til_eol(S,':',Value),SS=..[sort|Value],process_out(SS).
-process_ec_stream_token(Event,S):- memberchk(Event,[fluent,predicate,event]),!,
-   read_one_ec_compound(S,Value),
-   process_out(t(Event,Value)).
-process_ec_stream_token(Sort,S):- read_tokens_til_eol(S,' ',Value),process_out(t(Sort,Value)).
+process_ec_stream_token(Atom,S):- atom_concat(New,'!',Atom),!,process_ec_stream_token(New,S).
+process_ec_stream_token(Type,S):- normalize_space(atom(A),Type), A\==Type,!,process_ec_stream_token(A,S).
+process_ec_stream_token(Text,S):- \+ atom(Text),!,text_to_atom(Text,Atom), process_ec_stream_token(Atom,S).
+process_ec_stream_token(function,S):- !,read_stream_until(S,[],`:`, Text),read_line_to_string(S,String),
+  append(TextL,[_],Text),
+  ec_read1(TextL,Value, _),
+  token_stringsss(String,Type),
+   process_out((function(Value,Type))).
+
+process_ec_stream_token(Type,S):- downcase_atom(Type, Event), memberchk(Event,[fluent,predicate,event]),!,
+   read_one_ec_compound(S,Value), process_out(t(Event,Value)).
+process_ec_stream_token(reified,S):- !,read_stream_until(S,[],` `, Text),
+   text_to_string(Text,St), atom_concat('reified_',St,Type),!,process_ec_stream_token(Type,S).
+process_ec_stream_token(Type,S):- read_line_to_string(S,String),process_ec_token_with_string(Type,String).
+
+process_ec_token_with_string(Type,String):- atomics_to_string(VList,',',String),  VList \= [_], !, 
+   maplist(process_ec_token_with_string(Type),VList).
+process_ec_token_with_string(_,""):-!.
+process_ec_token_with_string(Type,String):- token_stringsss(String,Out),process_out(t(Type,Out)).
+
+token_stringsss("",[]):-!.
+token_stringsss(String,Out):- normalize_space(string(S),String), S\==String,!,token_stringsss(S,Out).
+token_stringsss(String,VVList):- atomics_to_string(VList,':',String), VList \= [_], remove_blanks(VList,VVList),!.
+token_stringsss(String,VVList):- atomics_to_string(VList,' ',String), remove_blanks(VList,VVList),!.
+  
+
+remove_blanks([],[]).
+remove_blanks([''|I],O):- !, remove_blanks(I,O).
+remove_blanks([E|I],O):- string(E),normalize_space(string(EE),E), E\==EE,!,remove_blanks([EE|I],O).
+remove_blanks([E|I],O):- atom(E),normalize_space(atom(EE),E), E\==EE,!,remove_blanks([EE|I],O).
+remove_blanks([E|I],O):- to_atomic_value(E,EE),E\==EE,!,remove_blanks([EE|I],O).
+remove_blanks([E|I],[E|O]):- remove_blanks(I,O).
+%process_ec_stream_token(Sort,S):- read_tokens_til_eol(S,' ',Value),process_out(t(Sort,Value)).
 %process_ec_stream_token(reified," sort",S):- read_tokens_til_eol(S,Value),process_out(reified_sort(Value)).
 
 /*
 */
 read_tokens_til_eol(S,Splitter,Value):-
   trim_off_whitepace(S), !, read_line_to_string(S,String), 
-   text_to_string(String,RString),
-   normalize_space(string(SS),RString),
+   text_to_string(String,SS),
+   subsplit(Splitter,SS,Value).
+
+subsplit([],String,Value):- to_atomic_value(String,Value).
+subsplit([A|B],String,Value):-  
+   normalize_space(string(SS),String),
+   atomic_list_concat(ValueS,A,SS),
+   maplist(subsplit(B),ValueS,Value).
+
+
+subsplit(SS,Splitter,Value):- 
    atomic_list_concat(ValueA,Splitter,SS),
    maplist(to_atomic_value,ValueA,Value).%,process_out(option(List)).
-   %string_list_concat(['[',SS,']'],' ',NewList),ec_from_atom(NewList,Value).
+   %atomics_to_string(['[',SS,']'],' ',NewList),ec_from_atom(NewList,Value).
 
 to_atomic_value(A,N):- normalize_space(atom(S),A), S\==A,!,to_atomic_value(S,N).
 to_atomic_value(A,N):- atom_number(A,N).
@@ -324,10 +408,10 @@ char_type_inverse(Type, [Spec],Code):- !,char_type_inverse(Type, Spec,Code).
 char_type_inverse(Type, [Spec|List],Code):- !,char_type_inverse(_, Spec,Code),char_type_inverse(Type, List,Code).
 char_type_inverse(Type, Spec, Code):- char_type(Code,Spec), Type=Spec.
 
-read_stream_until_true(S,Buffer,Pred,Buffer):- at_end_of_stream(S),ignore(call(Pred,10)),!.
-read_stream_until_true(S,Buffer,Pred,Codes):- get_code(S,Char), 
-  (call(Pred,Char) -> append(Buffer,[Char],Codes) ; 
-  (append(Buffer,[Char],NextBuffer),read_stream_until_true(S,NextBuffer,Pred,Codes))).
+read_stream_until_true(S,Buffer,Pred,Buffer):- at_end_of_stream(S),!,ignore(call(Pred,10)).
+read_stream_until_true(S,Buffer,Pred,Codes):- get_code(S,Char),  
+  (call(Pred,Char) -> notrace(append(Buffer,[Char],Codes)) ; 
+  (notrace(append(Buffer,[Char],NextBuffer)),read_stream_until_true(S,NextBuffer,Pred,Codes))).
   
 
 

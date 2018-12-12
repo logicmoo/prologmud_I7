@@ -160,7 +160,7 @@ abdemo([],R,R,N,N,D).
    Now we have two clauses which are meta-level representations of the two
    event calculus axioms for holds_at.
 
-        holds_at(F,T) <- initiallyp(F) and not clipped(0,F,T)
+        holds_at(F,T) <- initially(F) and not clipped(0,F,T)
 
         holds_at(F,T3) <-
              happens(A,T1,T2) and T2 < T3 and
@@ -836,7 +836,7 @@ split_befores([],T1,T2,T3,T4,[],[]).
 
 split_befores([before(T1,T2)|Bs1],T3,T4,T5,T6,Bs2,[before(T1,T2)|Bs3]) :-
      no_match(T1,T2,T3,T4), !, split_befores(Bs1,T3,T4,T5,T6,Bs2,Bs3).
-
+                                        
 split_befores([before(T1,T2)|Bs1],T3,T4,T5,T6,[before(T7,T8)|Bs2],Bs3) :-
      substitute_time(T1,T3,T4,T5,T6,T7), substitute_time(T2,T3,T4,T5,T6,T8),
      split_befores(Bs1,T3,T4,T5,T6,Bs2,Bs3).

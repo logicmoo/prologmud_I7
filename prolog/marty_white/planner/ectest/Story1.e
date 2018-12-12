@@ -17,7 +17,6 @@
 ;   pages = "875--910",
 ; }
 ;
-; see examples/FrankEtAl2003/Story1.txt
 
 option modeldiff on
 

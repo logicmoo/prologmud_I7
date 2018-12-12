@@ -921,6 +921,8 @@ PartOf(stuff1,stuff2) &
 ; stuff out of some other stuff,
 ; the first stuff's location will be released
 ; from inertia:
+
+
 [agent,stuff1,stuff2,location,time]
 Releases(HoldSome(agent,stuff1,stuff2),At(stuff1,location),time).
 
@@ -935,6 +937,7 @@ event TakeOutOf(agent,physobj,physobj)
 
 ; A state constraint says that a physical object cannot
 ; be inside itself:
+
 [physobj1,physobj2,time]
 HoldsAt(Inside(physobj1,physobj2),time) ->
 physobj1!=physobj2.
@@ -2057,6 +2060,9 @@ event CryForJoy(agent)
 ; A precondition axiom states that for
 ; an agent to cry for joy,
 ; the agent must be happy:
+
+:- break.
+
 [agent,time]
 Happens(CryForJoy(agent),time) ->
 HoldsAt(Happy(agent),time).
