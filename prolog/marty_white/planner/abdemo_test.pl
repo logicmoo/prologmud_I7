@@ -8,7 +8,9 @@
 
 :- discontiguous reified_sort/1. 
 :- discontiguous sort/1. 
-:- discontiguous axiom/2. 
+:- discontiguous axiom/2.
+:- discontiguous do_test/1.
+:- multifile do_test/1.
 
 testing_msg(_).
 

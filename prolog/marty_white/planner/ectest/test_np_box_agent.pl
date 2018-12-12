@@ -21,30 +21,57 @@ do_test(test_np_box_2) :-  local_demo([holds_at(inRoom(lisa,livingRoom),t)],R).
 do_test(test_np_box_1) :-  local_demo([holds_at(directlyIn(lisa,kitchen),t)],R).
 */
 do_test(test_np_box_4) :-  local_demo([holds_at(inRoom(lisa,kitchen),t)],R).
+
+semi_legit_time(Holds1,T1):- 
+   functor(Holds1,F,A), 
+   (arg(A,Holds1,T1);arg(_,Holds1,T1)), 
+   T1\==[], atomic(T1).
+
+sort_on_times_arg(Result,Holds1,Holds2):- 
+   (((semi_legit_time(Holds1,T1),semi_legit_time(Holds2,T2),
+      compare(Result,T1,T2), Result\== (=))) 
+     -> true;
+        sort_on_times_arg(Result,Holds1,Holds2)).
+
 do_test(test_np_box_10) :-  
- gensym(hap_,Time0),
- findall(E, (axiom(E,Precond),functor(E,happens,_)), HapsList),
+ findall(E, (axiom(E,[]),functor(E,happens,_)), UHapsList),
+ predsort(sort_on_times_arg,UHapsList,HapsList),
  dm('HapsList =',HapsList), 
- make_befores(Time0, HapsList, Befores, _Out),
- dm('Befores =',Befores),
- append(Befores,HapsList,Goal),
-    local_demo(Goal,_R),!.
-    
+ /* 
+   HapsList = 
+          [happens(move(lisa,newspaper,livingRoom,box),0),
+          happens(move(lisa,box,livingRoom,lisa),1),happens(move(lisa,lisa,livingRoom,kitchen),2),happens(move(lisa,box,lisa,kitchen),3),happens(move(lisa,lisa,kitchen,livingRoom),4)].
+*/
+
+ 
+ make_falling_edges(t_plus_, t_minus_1, HapsList, Edges, _Out),
+ dm('Edges =',Edges), !,
+ /*
+   Edges = [before(hap_1,0),
+            holds_at(has_occured(move(lisa,newspaper,livingRoom,box)),0),
+            before(0,1),holds_at(has_occured(move(lisa,box,livingRoom,lisa)),1),
+            before(1,2),holds_at(has_occured(move(lisa,lisa,livingRoom,kitchen)),2),
+            before(2,3),holds_at(has_occured(move(lisa,box,lisa,kitchen)),3),
+            before(3,4),holds_at(has_occured(move(lisa,lisa,kitchen,livingRoom)),4)].
+ */
+ local_demo(Edges,_R),!.
+
 do_test(test_np_box_agent) :-  forall(do_test_gen(What), local_demo([holds_at(What,When)],R)).
 
-make_falling_edges(LastTime,[],[],LastTime):-!.
-make_falling_edges(LastTime,[happens(Event,When1)|HapsList],[holds_at(has_occured(Event),When1),before(LastTime,When1)|Befores],Out):- 
-  make_falling_edges(When1, HapsList,Befores,Out).
-make_falling_edges(LastTime,[happens(Event,When1,When2)|HapsList],[holds_at(has_occured(Event),When1),before(LastTime,When1)|Befores],Out):- 
-  make_falling_edges(When2, HapsList,Befores,Out).
+make_falling_edges(_Stem,LastTime,[],[],LastTime):-!.
+make_falling_edges(Stem, LastTime,
+              [happens(Event, When1)|HapsList],
+              [before(LastTime, ThisTime),holds_at(has_occured(Event),ThisTime)|Befores],Out):- 
+   atom_concat_gs(Stem, When1, ThisTime),
+  make_falling_edges(Stem,ThisTime, HapsList,Befores,Out).
+make_falling_edges(Stem,LastTime,
+              [happens(Event,When1,When2)|HapsList],
+              [before(LastTime,ThisTime),holds_at(has_occured(Event),ThisTime)|Befores],Out):- 
+   atom_concat_gs(Stem, When1, ThisTime),
+   atom_concat_gs(Stem, When2, NextTime),
+  make_falling_edges(Stem, NextTime, HapsList,Befores,Out).
 
-make_befores(LastTime,[],[],LastTime):-!.
-make_befores(LastTime,[happens(Event,When1,When2)|HapsList],[before(LastTime,When1)|Befores],Out):- 
-  make_befores(When2, HapsList,Befores,Out).
-make_befores(LastTime,[happens(Event,When1)|HapsList],[before(LastTime,When1)|Befores],Out):- 
-  make_befores(When1, HapsList,Befores,Out).
-
-
+atom_concat_gs(Stem, When1, ThisTime):- atom_concat(Stem, When1, Lose1),gensym(Lose1,ThisTime).
 
 /*
 
@@ -75,10 +102,10 @@ axiom( initiates( ocuring(Event),holds_at(    now_occurs(Event),T),T), []).
 axiom(terminates(  ending(Event),holds_at(    now_occurs(Event),T),T), []).
 axiom( initiates(  ending(Event),holds_at(   has_occured(Event),T),T), []).
 
-axiom(initially(  never_ocurred(Event)),[]):-  execution(Event).
-axiom(initially( neg(just_begun(Event))),[]):- execution(Event).
-axiom(initially( neg(now_occurs(Event))),[]):- execution(Event).
-axiom(initially(neg(has_occured(Event))),[]):- execution(Event).
+axiom(initially( (never_ocurred(Event))),[]):- executable(Event).
+axiom(initially( neg(just_begun(Event))),[]):- executable(Event).
+axiom(initially( neg(now_occurs(Event))),[]):- executable(Event).
+axiom(initially(neg(has_occured(Event))),[]):- executable(Event).
 
 %
 %
