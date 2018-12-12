@@ -157,14 +157,16 @@ special_directive(ignore).
 special_directive('!').
 special_directive('neg').
 
+
 map_callables(_,Term0,Term):- \+ callable(Term0), !, Term0=Term.
 map_callables(_,Term0,Term):- []== Term0,!, Term =[].
-%map_callables(Call,Term0,Term):- atom(Term0),!,call(Call,Term0,Term).
+map_callables(Call,Term0,Term):- atom(Term0),!,call(Call,Term0,Term).
 map_callables(_Call,Term0,Term):- \+ compound(Term0),!,Term0=Term.
+map_callables(Call,Compound=Value,Term):- compound(Compound),append_term(Compound,Value,Term0),map_callables(Call,Term0,Term).
 map_callables(_, '$VAR'(HT),'$VAR'(HT)):-!.
 map_callables(Call,[H|T],[HTerm|TTerm]):- !, map_callables(Call,H,HTerm),map_callables(Call,T,TTerm),!.
 map_callables(Call,  '$'(F,A), '$'(FF,AA)):- A==[],[] = AA,!,call(Call, F, FF).
-map_callables(Call,  '$'(F,[A]), '$'(F,[AA])):- \+ special_directive(F), !, map_callables(Call,A,AA).
+%map_callables(Call,  '$'(F,[A]), '$'(F,[AA])):- \+ special_directive(F), !, map_callables(Call,A,AA).
 map_callables(Call,  '$'(F,A), '$'(FF,AA)) :- call(Call,F,FF), maplist(map_callables(Call),A,AA),!.
 map_callables(Call, HT, HTTerm):- !, 
  compound_name_arguments(HT,F,L),
@@ -173,15 +175,26 @@ map_callables(Call, HT, HTTerm):- !,
 
 fix_predname(~,neg).
 fix_predname(!,neg).
-fix_predname('|',or).
-fix_predname('&',and).
+fix_predname('|',';').
+fix_predname('&',',').
 fix_predname(F,not):- downcase_atom(F,not).
 fix_predname(F,holds_at):- downcase_atom(F,holdsat).
 fix_predname(F,Happens):- builtin_pred(Happens),downcase_atom(F,Happens),!.
 
 my_unCamelcase(X,Y):- atom(X), fix_predname(X,Y),!.
+my_unCamelcase(X,Y):- upcase_atom(X,X),!,downcase_atom(X,Y).
 my_unCamelcase(X,Y):- unCamelcase(X,Y).
 
+
+fix_ec_term(C,C):- \+ callable(C),!.
+fix_ec_term(t(X,[Y]),O):- !, fix_ec_term(t(X,Y),O).
+fix_ec_term(load(X),load(X)).
+fix_ec_term(option([N,V]),O):- !, fix_ec_term(option(N,V),O).
+fix_ec_term(range([N,V,H]),O):- !, fix_ec_term(range(N,V,H),O).
+% fix_ec_term(t(X,Y),O):- atom(X), is_list(Y), is_special(X), SS=..[X|Y], fix_ec_term(SS,O).
+fix_ec_term(t(X,Y),O):- atom(X), SS=..[X,Y], fix_ec_term(SS,O).
+fix_ec_term(sort(col([S1,S2])),O):- !, fix_ec_term(subsort(S1,S2),O).
+fix_ec_term(function(F,[M]),O):- fix_ec_term(function(F,M),O).
 fix_ec_term(Term2,Term):- map_callables(my_unCamelcase,Term2,Term).
 
 fix_ec_read(Term0,Term,Vs):- 
@@ -272,11 +285,6 @@ builtin_pred(initially).
 
 
 % process_out(load(SS)):- !, convert_ec_to_pl(file(SS),current_output).
-process_out(t(X,[Y])):- !, process_out(t(X,Y)).
-% process_out(t(X,Y)):- atom(X), is_list(Y), is_special(X), SS=..[X|Y], process_out(SS).
-process_out(t(X,Y)):- atom(X), SS=..[X,Y], process_out(SS).
-process_out(sort(col([S1,S2]))):- !,
-  process_out(subsort(S1,S2)).
 process_out(SL):- fix_ec_term(SL,SO) -> SL\=@=SO, !, process_out(SO).
 process_out(S):- must(glean_data(S)), must(process_outward(S)),!.
 
