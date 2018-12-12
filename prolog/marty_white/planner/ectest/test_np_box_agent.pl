@@ -20,6 +20,10 @@ dm(TF,P):- format('~N~n~w ~p.~n',[TF,P]),trace.
 do_test(test_np_box_2) :-  local_demo([holds_at(inRoom(lisa,livingRoom),t)],R).
 do_test(test_np_box_1) :-  local_demo([holds_at(directlyIn(lisa,kitchen),t)],R).
 */
+
+% fix this next test and the follwing should pass
+do_test(has_occured) :-  local_demo([has_occured(move(lisa,box,livingRoom,lisa))],R).
+
 do_test(test_np_box_4) :-  local_demo([holds_at(inRoom(lisa,kitchen),t)],R).
 
 semi_legit_time(Holds1,T1):- 
@@ -88,7 +92,7 @@ axiom(initiates(shift_pack(Agnt,P,R1,R2,R3),inRoom(P,R3),T),
      [holds_at(atRoom(Agnt,R1),T), holds_at(inRoom(P,R2),T)]).
 */
 
-axiom(happens(rise_and_fall(Event),T1,T4),
+axiom(happens(rise_and_fall(Event),T1,T3),
      [happens(begining(Event),T1), before(T1,T2), 
       happens(ocuring(Event),T2,T3),  before(T2,T3),
       % because its ocuring the begining not clipped?
