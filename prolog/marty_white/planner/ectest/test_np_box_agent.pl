@@ -52,20 +52,26 @@ do_test(test_np_box_occurs) :-
  dm('HapsList =',HapsList), 
  /* 
    HapsList = 
-          [happens(move(lisa,newspaper,livingRoom,box),0),
-          happens(move(lisa,box,livingRoom,lisa),1),happens(move(lisa,lisa,livingRoom,kitchen),2),happens(move(lisa,box,lisa,kitchen),3),happens(move(lisa,lisa,kitchen,livingRoom),4)].
+         [happens(move(lisa,newspaper,livingRoom,box),0),
+          happens(move(lisa,box,livingRoom,lisa),1),
+          happens(move(lisa,lisa,livingRoom,kitchen),2),
+          happens(move(lisa,box,lisa,kitchen),3),
+          happens(move(lisa,lisa,kitchen,livingRoom),4)].
 */
 
- 
- make_falling_edges(t_plus_, t_minus_1, HapsList, Edges, _Out),
+ make_falling_edges(t_plus_, t_minus_1, HapsList, [_|Edges], _Out),
  dm('Edges =',Edges), !,
  /*
-   Edges = [before(hap_1,0),
-            holds_at(has_occured(move(lisa,newspaper,livingRoom,box)),0),
-            before(0,1),holds_at(has_occured(move(lisa,box,livingRoom,lisa)),1),
-            before(1,2),holds_at(has_occured(move(lisa,lisa,livingRoom,kitchen)),2),
-            before(2,3),holds_at(has_occured(move(lisa,box,lisa,kitchen)),3),
-            before(3,4),holds_at(has_occured(move(lisa,lisa,kitchen,livingRoom)),4)].
+   Edges = [holds_at(has_occured(move(lisa,newspaper,livingRoom,box)),t_plus_01),
+            before(t_plus_01,t_plus_11),
+            holds_at(has_occured(move(lisa,box,livingRoom,lisa)),t_plus_11),
+            before(t_plus_11,t_plus_21),
+            holds_at(has_occured(move(lisa,lisa,livingRoom,kitchen)),t_plus_21),
+            before(t_plus_21,t_plus_31),
+            holds_at(has_occured(move(lisa,box,lisa,kitchen)),
+            t_plus_31),before(t_plus_31,t_plus_41),
+            holds_at(has_occured(move(lisa,lisa,kitchen,livingRoom)),t_plus_41)].
+
  */
  local_demo(Edges,_R),!.
 
