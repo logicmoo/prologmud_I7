@@ -1,4 +1,257 @@
 /*
+% NomicMUD: A MUD server written in Prolog
+%
+% Some parts used Inform7, Guncho, PrologMUD and Marty's Prolog Adventure Prototype
+% 
+% July 10,1996 - John Eikenberry 
+% Copyright (C) 2004 Marty White under the GNU GPL
+% 
+% Dec 13, 2035 - Douglas Miles
+%
+%
+% Logicmoo Project changes:
+%
+% Main file.
+%
+*/
+
+:- dynamic(axiom/3).
+:- multifile(axiom/3).
+:- dynamic(axiom/2).
+:- multifile(axiom/2).
+:- dynamic(axiom/1).
+:- multifile(axiom/1).
+
+axiom(G,Gs):- axiom(G,Gs,_Info).
+axiom(G,[]):- axiom(G).
+
+testing_msg(_).
+
+testing_options(verbose, all):- true.
+testing_options(debug, failure):- true.
+
+testing_option(N):- var(N),!, fail.
+testing_option(N=V):- !, testing_options(N, V).
+testing_option(not(N)):- !, \+ testing_option(N).
+testing_option(N):- is_list(N), !, maplist(testing_option,N).
+testing_option(N):- testing_options(N, false),!,fail.
+testing_option(N):- testing_options(verbose, N),!.
+
+
+maybe_nl:- format('~N',[]).
+
+if_debug(NV, G):- tracing, !, ignore(notrace(((testing_option(NV),dbginfo_i(G))))),!.
+if_debug(NV, G):- ignore((testing_option(NV),dbginfo_i(G))),!.
+
+if_debug_else(NV,G,E):- testing_option(NV) -> dbginfo_i(G); dbginfo_i(E).
+
+catch_ignore(G):- ignore(catch(G,error(_,_),fail)),!.
+
+dbginfo_i(G):-  catch_ignore(dbginfo(G)).
+
+
+test_body(N,(Was=G,Body),Info,Vs):- Was==N,!, copy_term(G,NewN),!,Was=G, test_body(NewN,(Body),Info,Vs).
+test_body(N,true,Info,Vs):- !, test_body(N,solve_goal(N,R),Info,['R'=R|Vs]).
+test_body(N,Body,Info,Vs):-
+   if_debug(verbose, nl(2)),
+   if_debug(verbose, [Info,nl(1)]),
+   if_debug(all,['body'=Body,nl(2)]),
+   copy_term(Body,BodyA),
+   maybe_nl, write('START OUTPUT of '), write(N), write(' >>>>>'),
+   maybe_nl, 
+   ticks(Z1),   
+   (call(Body)-> (Passed = true) ; Passed = '?!?!??!FAILED!?!?!?'),
+   ticks(Z2), TotalTime is (Z2-Z1)/1000, 
+   maybe_nl, write('<<<<< ENDOF OUTPUT of '), write(N),nl,
+   if_debug(verbose, nl(2)),
+   if_debug(all,['bodyAgain'=BodyA, nl, nl, Vs]),
+   maybe_nl, nl, 
+   (Passed == true -> ansi_format(fg(cyan),'!!!PASSED!!! ~w time=~w',[N,TotalTime]) ;
+     (ansi_format(hfg(red),'~p ~w time=~w',[Passed,N,TotalTime]),sleep(1.0))),   
+   if_debug(verbose, nl(2)).
+
+
+dbginfo(Var):- var(Var),!, maybe_nl, format('ListVAR = ~p~n',[Var]).
+dbginfo([]):- !, maybe_nl. 
+dbginfo(call(G)):- !, catch_ignore(G).
+dbginfo({G}):- !, maybe_nl, catch_ignore(G).
+dbginfo([A|B]):- !, maybe_nl, dbginfo(A), maybe_nl, dbginfo(B),!.
+dbginfo(N=V):- !, maybe_nl, portray_clause(var(N):-V).
+dbginfo(nl):- !, maybe_nl, nl.
+dbginfo(nl(N)):- !, maybe_nl, forall(between(0,N,_),nl).
+dbginfo(fmt(F,A)):- !, format(F,A).
+dbginfo(afmt(Ansi,F,A)):- !, format(Ansi,F,A).
+dbginfo(NV):- portray_clause(:- NV), !.
+
+dbginfo(A,B):- dbginfo([A,B]).
+
+run_tests:- 
+  clause_w_names(do_test(N),Body,_Ref,File,Vs),
+  once(test_body(N,Body,File,Vs)),
+  fail.
+run_tests:- current_prolog_flag(debug,false) -> halt(7) ; true.
+
+
+fail_solve_goal(G,R):- \+ solve_goal(G,R).
+
+solve_goal(Gs,R):- solve_goal(Gs,R,1,4).
+solve_goal(Gs,R,H,L):- 
+  When = now,
+  must(fix_goal(When,Gs,Gs0)), !,
+  must(fix_time_args(When,Gs0,Gss)), !,
+  if_debug(all, [realGoal=Gss]),
+  abdemo_special(depth(H,L), Gss, R).
+
+fix_goal(_, Nil,[]):- Nil==[],!.
+fix_goal(T,[G|Gs],GGs):- !, fix_goal(T,G,G0),fix_goal(T,Gs,Gs0),append(G0,Gs0,GGs),!.
+fix_goal(T,(G,Gs),GGs):- !, fix_goal(T,G,G0),fix_goal(T,Gs,Gs0),append(G0,Gs0,GGs),!.
+fix_goal(T,{Gs},GGs):- !, fix_goal(T,Gs,GGs).
+fix_goal(T, G, [Gs, b(T,T2),b(T2,end)]):- G =.. [F,A], already_good(F,2), G0 =.. [F,A,T], next_t(T,T2), fix_goal(T2,G0,Gs).
+fix_goal(_, G, [G]):- functor(G,F,A), already_good(F,A),!.
+fix_goal(T, G, [happens(G,T)]):- executable(G),!.
+fix_goal(T, G, [holds_at(G,T)]).
+
+between_r(H,L,N):- nonvar(N),!,between(L,H,N).
+between_r(H,L,N):- var(N),Hm1 is H - L, !, between(L,H,NN), N is NN - Hm1.
+
+semi_legit_time(happens(_,T1),T1).
+semi_legit_time(happens(_,_,T2),T2).
+semi_legit_time(happens(_,T1,_),T1).
+semi_legit_time(not(Holds),T):- !, semi_legit_time(Holds,T).
+semi_legit_time(Holds1,T1):- 
+   functor(Holds1,F,_),
+   time_arg(F,N),
+   arg(N,Holds1,T1).
+semi_legit_time(Holds1,T1):- 
+   functor(Holds1,_,A), 
+   member(P1,[number,string,atom]),
+   (arg(A,Holds1,T1);arg(_,Holds1,T1)), 
+   T1\==[], call(P1,T1).
+
+sort_on_times_arg(Result,Holds1,Holds2):- 
+   (((semi_legit_time(Holds1,T1),semi_legit_time(Holds2,T2),
+      compare(Result,T1,T2), Result\== (=))) 
+     -> true;
+        sort_on_times_arg(Result,Holds1,Holds2)).
+
+time_arg(b, N):- between(1,2,N).
+time_arg(beq, N):- between(1,2,N).
+time_arg(holds_at, 2).
+time_arg(happens, N):- between_r(3,2,N), N\=1.
+time_arg(clipped, N):- between_r(3,1,N), N\=2.
+time_arg(declipped, N):- between_r(3,1,N), N\=2.
+
+fix_time_args(T,[G|Gs],Gss):- 
+  semi_legit_time(G,ST),
+  fix_time_args1(ST,[G|Gs],Gs0),
+  fix_time_args2(T,Gs0,Gss).
+
+fix_time_args2(_,Gs,Gss):-
+  Gss = [b(start,now),b(now,aft),b(aft,end)|Gs].
+
+visit_time_args(_,In,[],[],In).
+visit_time_args(Stem,In,[G|Gs],[GO|GsO],Out):- !, 
+    visit_time_args(Stem,In,G,GO,Mid),
+    visit_time_args(Stem,Mid,Gs,GsO,Out).
+visit_time_args(Stem,In,holds_at(A,T1),holds_at(A,T1R),Out):- 
+   correct_time_arg(Stem,In,T1,T1R,Out).
+visit_time_args(Stem,In,happens(A,T1,T2),happens(A,T1R,T2R),Out):- 
+   correct_time_arg(Stem,In,T1,T1R,B0),
+   correct_time_arg(Stem,B0,T2,T2R,Out).
+visit_time_args(Stem,In,happens(A,T1),happens(A,T1R),Out):- 
+   correct_time_arg(Stem,In,T1,T1R,Out).
+visit_time_args(Stem,In,b(T1,T2),b(T1R,T2R),Out):- 
+   correct_time_arg(Stem,In,T1,T1R,B0),
+   correct_time_arg(Stem,B0,T2,T2R,Out).
+visit_time_args(Stem,In,not(G),not(GG),Out):- !, visit_time_args(Stem,In,G,GG,Out).
+visit_time_args(Stem,In,beq(T1,T2),beq(T1R,T2R),Out):- 
+   correct_time_arg(Stem,In,T1,T1R,B0),
+   correct_time_arg(Stem,B0,T2,T2R,Out).
+visit_time_args(Stem,In,clipped(T1,A,T2),clipped(T1R,A,T2R),Out):- 
+   correct_time_arg(Stem,In,T1,T1R,B0),
+   correct_time_arg(Stem,B0,T2,T2R,Out).
+visit_time_args(Stem,In,declipped(T1,A,T2),declipped(T1R,A,T2R),Out):- 
+   correct_time_arg(Stem,In,T1,T1R,B0),
+   correct_time_arg(Stem,B0,T2,T2R,Out).
+visit_time_args(_,In,G,G,In).
+
+correct_time_arg(_Stem,In, TN, TpN, In):- memberchk(TN=TpN,In),!.
+correct_time_arg(Stem,In, T+N, TpN, Out):- N<0, NN is abs(N),!,correct_time_arg(Stem,In, T-NN, TpN, Out).
+correct_time_arg(Stem,In, T-N, TpN, Out):- N<0, NN is abs(N),!,correct_time_arg(Stem,In, T+NN, TpN, Out).
+correct_time_arg(Stem,In, Now-N, T, Out):- N>1, NN is N-1, correct_time_arg(_Stem,In, Now+1, Tm2, Mid),
+  correct_time_arg(Stem, Mid, Tm2+NN, T, Out).
+correct_time_arg(Stem,In, Now-N, T, Out):- N<1, NN is N+1, correct_time_arg(_Stem,In, Now-1, Tm2, Mid),
+  correct_time_arg(Stem, Mid, Tm2-NN, T, Out).
+
+
+correct_time_arg(_Stem,In, T+0, T, In):-!.
+correct_time_arg(_Stem,In, T-0, T, In):-!.
+correct_time_arg(_Stem,In, T+1, TT, In):- memberchk(b(T,TT),In),!.
+correct_time_arg(_Stem,In, T-1, TT, In):- memberchk(b(TT,T),In),!.
+correct_time_arg(_Stem,In, T-1, TT, [b(TT,T)|In]):- next_t(TT,T),!.
+correct_time_arg(_Stem,In, T+1, TT, [b(T,TT)|In]):- next_t(T,TT),!.
+correct_time_arg(_Stem,In, T+N, TpN, [b(T,TpN),ignore(T+N=TpN)|In]):- atom_concat(T,N,TpN).
+correct_time_arg(_Stem,In, T-N, TpN, [b(TpN,T),ignore(T-N=TpN)|In]):- atomic_list_concat([T,N],minus,TpN).
+correct_time_arg(Stem,In, TN, TpN, Out):- number(TN), !, correct_time_arg(Stem,In, Stem+TN, TpN, Out).
+correct_time_arg(_Stem,In, TN, TN, In):- atom(TN),!.
+correct_time_arg(_Stem,In, TN, TN, In).
+
+next_t(t,start).
+next_t(start,now).
+next_t(now,aft).
+next_t(aft,Aft_1):- var(Aft_1),!,gensym(aft_,Aft_1).
+
+
+fix_time_args1(T,G,Gs):- 
+  visit_time_args(T,[],G,Gs,_Mid).
+
+
+
+make_falling_edges_v2(_Stem,LastTime,[],[],LastTime):-!.
+make_falling_edges_v2(Stem,LastTime,
+              [happens(Event,When1)|HapsList],
+              [before(LastTime,ThisTime),happens(Event,ThisTime,NextTime)|Befores],Out):- 
+   atom_concat_gs(Stem, When1, ThisTime),
+   atom_concat_gs(Stem, When1, NextTime),
+  make_falling_edges_v2(Stem, NextTime, HapsList,Befores,Out).
+make_falling_edges_v2(Stem,LastTime,
+              [happens(Event,When1,When2)|HapsList],
+              [before(LastTime,ThisTime),happens(Event,ThisTime,NextTime)|Befores],Out):- 
+   atom_concat_gs(Stem, When1, ThisTime),
+   atom_concat_gs(Stem, When2, NextTime),
+  make_falling_edges_v2(Stem, NextTime, HapsList,Befores,Out).
+
+atom_concat_gs(Stem, When1, ThisTime):- atom_concat(Stem, When1, Lose1),gensym(Lose1,ThisTime).
+
+make_falling_edges(_Stem,LastTime,[],[],LastTime):-!.
+make_falling_edges(Stem, LastTime,
+              [happens(Event, When1)|HapsList],
+              [before(LastTime, ThisTime),holds_at(has_occured(Event),ThisTime)|Befores],Out):- 
+   atom_concat_gs(Stem, When1, ThisTime),
+  make_falling_edges(Stem,ThisTime, HapsList,Befores,Out).
+make_falling_edges(Stem,LastTime,
+              [happens(Event,When1,When2)|HapsList],
+              [before(LastTime,ThisTime),holds_at(has_occured(Event),ThisTime)|Befores],Out):- 
+   atom_concat_gs(Stem, When1, ThisTime),
+   atom_concat_gs(Stem, When2, NextTime),
+  make_falling_edges(Stem, NextTime, HapsList,Befores,Out).
+
+
+already_good(happens, 2).
+already_good(happens, 3).
+already_good(holds_at, 2).
+already_good(b, 2).
+already_good(is, 2).
+already_good(diff, 2).
+already_good(dif, 2).
+already_good(terms_or_rels,3).
+already_good(F,A):- functor(P,F,A),clause(abducible(PP),_),compound(PP),PP=P.
+already_good(F,A):- functor(P,F,A),clause(abducible(PP),_),compound(PP),PP=P.
+
+:- if((prolog_load_context(file,F),prolog_load_context(source,F))).
+:- style_check(-singleton).
+
+/*
 
    ABDUCTIVE EVENT CALCULUS
 
@@ -73,8 +326,8 @@
         abdemo_top(Goals,ResidueIn,ResidueOut,NegationsIn,NegationsOut,DepthBound)
 
    The residue has the form [[HA,HC],[BA,BC]], where HA is a list of happens
-   atoms, HC is the transistive closure of the before-or-equal relation on times
-   that follows from HA, BA is a list of before atoms, and BC is the transitive
+   atoms, HC is the transistive closure of the b-or-equal relation on times
+   that follows from HA, BA is a list of before "b" atoms, and BC is the transitive
    closure of BA.
 */
 first_d(0).
@@ -92,11 +345,18 @@ next_d(D1, D2):- D1<9,!,D2 is D1+3.
 next_d(D1, D2):- D1<90,!,D2 is D1+30.
 next_d(D1, D2):- D2 is D1+300.
 
-abdemo_special(long,Gs,R):-abdemo_timed(Gs,R).
+% abdemo_special(long,Gs,R):-abdemo_timed(Gs,R).
+abdemo_special(W,Gs,R):- \+ is_list(Gs), !, functor(Gs,F,_),!, abdemo_special(W+F,[Gs],R).
 abdemo_special(depth(Low,High),Gs,R):- 
    b_setval(last_d,High),!,
-   abdemo_top(Gs,[[[],[]],[[],[]]],[[HA,HC],[BA,BC]],[],N,Low).
-abdemo_special(_,Gs,R):- abdemo(Gs,R).
+   abdemo_top(Gs,[[[],[]],[[],[]]],[[HA,HC],[BA,BC]],[],N,Low),
+   R = [[HA,BA],[HC,-]].
+
+abdemo_special(_,Gs,R):- 
+ init_gensym(t), first_d(D),
+     abdemo_top(Gs,[[[],[]],[[],[]]],[[HA,HC],[BA,BC]],[],N,D),
+     write_plan_len(HA,BA),
+   R = [[HA,BA],[HC,-]].
 
 abdemo(Gs,[HA,BA]) :-
      init_gensym(t), first_d(D),
@@ -131,9 +391,10 @@ abdemo_cont([[HA,HC],[BA,BC]],R2,N1,N3) :-
 /* abdemo_id is an iterative deepening version of abdemo. */
 
 abdemo_id(Gs,R1,R2,N1,N2,D) :-
-     write(' D'), write(D), write(' '), ttyflush, abdemo(Gs,R1,R2,N1,N2,D).
+     write(' D'), write(D), write(' '), ttyflush, 
+     (abdemo(Gs,R1,R2,N1,N2,D)*-> true; (next_d(D,D2)->abdemo_id(Gs,R1,R2,N1,N2,D2))).
 
-abdemo_id(Gs,R1,R2,N1,N2,D1) :- next_d(D1,D2), abdemo_id(Gs,R1,R2,N1,N2,D2).
+
 
 
 all_executable([]).
@@ -195,14 +456,14 @@ abdemo_cons_holds_at(F1,T,Gs1,R1,R3,N1,N4,D) :-
    The order in which resolution steps are carried out in the next
    clause is crucial. We resolve initiates first in order to instantiate 
    A, but we don't want to proceed with sub-goals of initiates until
-   we've added the corresponding happens and before facts to the residue.
+   we've added the corresponding happens and before "b" facts to the residue.
 */
 
 abdemo_cons_holds_at(F1,T3,Gs1,R1,R6,N1,N5,D) :-
      F1 \= neg(_F2), abresolve(initiates(A,F1,T1),R1,Gs2,R1,B1),
      abresolve(happens(A,T1,T2),R1,[],R2,B2),
      check_depth(R2,D),
-     abresolve(before(T2,T3),R2,[],R3,B3),
+     abresolve(b(T2,T3),R2,[],R3,B3),
      append(Gs2,Gs1,Gs3), check_nafs(B2,N1,R3,R4,N1,N2,D),
      add_neg_car(clipped(T1,F1,T3),N2,N3),
      abdemo_naf_cons(clipped(T1,F1,T3),[],R4,R5,N3,N4,D),
@@ -229,7 +490,7 @@ abdemo_cons_holds_at(neg(F),T3,Gs1,R1,R6,N1,N5,D) :-
      abresolve(terminates(A,F,T1),R1,Gs2,R1,B1),
      abresolve(happens(A,T1,T2),R1,[],R2,B2),
      check_depth(R2,D),
-     abresolve(before(T2,T3),R2,[],R3,B3),
+     abresolve(b(T2,T3),R2,[],R3,B3),
      append(Gs2,Gs1,Gs3), check_nafs(B2,N1,R3,R4,N1,N2,D),
      add_neg_car(declipped(T1,F,T3),N2,N3),
      abdemo_naf_cons(declipped(T1,F,T3),[],R4,R5,N3,N4,D),
@@ -255,10 +516,10 @@ abdemo_cons(happens(A,T),Gs,R1,R4,N1,N3,D) :-
 /*
    The next clause deals with the expansion of compound actions. These appear
    as goals of the form expand([happens(A,T1,T2)|Bs]), where happens(A,T1,T2)
-   is the compound action to be expanded and Bs is a list of "before" goals.
+   is the compound action to be expanded and Bs is a list of "b" goals.
    These goals are placed in the goal list by calls to "refine". The various
    sub-goals generated by the expansion are treated in a careful order. First,
-   the compound action's sub-actions are added to the residue. Then the "before"
+   the compound action's sub-actions are added to the residue. Then the "b"
    goals that "refine" took out of the residue are put back (with their newly
    skolemised time constants). The holds_at goals are solved next, on the
    assumption that they are either guards or supply context for the expansion.
@@ -317,13 +578,21 @@ abdemo_holds_ats([G|Gs],R1,R2,N1,N2,D) :-
      abdemo_holds_ats(Gs,R1,R2,N1,N2,D).
 
 
+non_regular_goal(G):- \+ regular_goal(G).
+
+regular_goal(holds_at(_F, _T)).
+regular_goal(happens(_A, _T)).
+regular_goal(happens(_A, _T1, _T2)).
+regular_goal(b(_T1, _T2)).
+regular_goal(not(Clip)):- nonvar(Clip), (Clip = clipped(_T1,_F,_T2) ; Clip = declipped(_DT1,_FD,_DT2)).
+
 solve_other_goals([],R,R,N,N,D).
 
-solve_other_goals([G|Gs],R1,R3,N1,N3,D) :-
-     G \= holds_at(_F,_T), G \= happens(_A,_T1,_T2),
-     G \= happens(_A,_T), G \= before(_T1,_T2),
-     G \= not(clipped(_T1,_F,_T2)), G \= not(declipped(_T1,_F,_T2)), !,
+solve_other_goals([G|Gs],R1,R3,N1,N3,D) :- 
 
+
+
+     non_regular_goal(G), !,
      abdemo_cons(G,[],R1,R2,N1,N2,D),
      solve_other_goals(Gs,R2,R3,N2,N3,D).
 
@@ -349,8 +618,8 @@ add_sub_actions_cons(happens(A,T),Gs,R1,R3,N1,N3,D,Hs2) :-
      !, abresolve(happens(A,T),R1,[],R2,B), check_depth(R2,D),
      add_sub_actions(Gs,R2,R3,N2,N3,D,Hs1), cond_add(B,happens(A,T,T),Hs1,Hs2).
 
-add_sub_actions_cons(before(T1,T2),Gs,R1,R3,N1,N3,D,Hs) :-
-     !, abresolve(before(T1,T2),R1,[],R2,B),
+add_sub_actions_cons(b(T1,T2),Gs,R1,R3,N1,N3,D,Hs) :-
+     !, abresolve(b(T1,T2),R1,[],R2,B),
      add_sub_actions(Gs,R2,R3,N2,N3,D,Hs).
 
 add_sub_actions_cons(G,Gs,R1,R2,N1,N2,D,Hs) :-
@@ -364,8 +633,8 @@ cond_add(true,H,Hs,[H|Hs]).
 
 solve_befores([],R,R,N,N,D).
 
-solve_befores([before(T1,T2)|Gs],R1,R3,N1,N3,D) :-
-     !, abdemo_cons(before(T1,T2),[],R1,R2,N1,N2,D),
+solve_befores([b(T1,T2)|Gs],R1,R3,N1,N3,D) :-
+     !, abdemo_cons(b(T1,T2),[],R1,R2,N1,N2,D),
      solve_befores(Gs,R2,R3,N2,N3,D).
 
 solve_befores([G|Gs],R1,R2,N1,N2,D) :-
@@ -382,6 +651,7 @@ check_sub_action_nafs([happens(A,T1,T2)|Hs],N1,R1,R3,N2,N4,D) :-
 check_clipping([],R,R,N,N,D) :- !.
 
 check_clipping([not(Clipped)|Gs],R1,R3,N1,N3,D) :- 
+  % Will we need copy_term ?
   (Clipped= clipped(T1,F,T2); Clipped=declipped(T1,F,T2)),
      !, abdemo_naf_cons(Clipped,[],R1,R2,N1,N2,D),
      check_clipping(Gs,R2,R3,N2,N3,D).
@@ -438,14 +708,14 @@ abresolve(happens(A,T1,T2),R1,[],R2,B) :-
      !, B = true, skolemise(T1), skolemise(T2), add_happens(A,T1,T2,R1,R2).
 
 /*
-   If either X or Y is not bound in a call to abresolve(before(X,Y)) then
+   If either X or Y is not bound in a call to abresolve(b(X,Y)) then
    they get skolemised.
 */
 
-abresolve(before(X,Y),R,[],R,false) :-
+abresolve(b(X,Y),R,[],R,false) :-
      skolemise(X), skolemise(Y), demo_before(X,Y,R), !.
 
-abresolve(before(X,Y),R1,[],R2,B) :-
+abresolve(b(X,Y),R1,[],R2,B) :-
      !, B = false, skolemise(X), skolemise(Y), \+ demo_beq(Y,X,R1),
      add_before(X,Y,R1,R2).
 
@@ -463,13 +733,6 @@ abresolve(G,R,[],[G|R],false) :- abducible(G).
 
 abresolve(G,R,Gs,R,false) :- axiom(G,Gs).
 
-:- dynamic(axiom/3).
-:- multifile(axiom/3).
-:- dynamic(axiom/2).
-:- multifile(axiom/2).
-
-axiom(G,Gs):- axiom(G,Gs,_).
-
 
 /* ABDEMO_NAFS and CHECK_NAFS */
 
@@ -484,7 +747,7 @@ axiom(G,Gs):- axiom(G,Gs,_).
 
    where Negations is the list of negations to be established, ResidueIn
    is the old residue, ResidueOut is the new residue (abdemo_nafs can add
-   both before and happens facts, as well as other abducibles, to the
+   both before "b" and happens facts, as well as other abducibles, to the
    residue), NegationsIn is the old list of negations (same as Negations
    for top-level call), and NegationsOut is the new list of negations
    (abdemo_nafs can add new clipped goals to NegationsIn).
@@ -533,21 +796,21 @@ abdemo_naf_cons(clipped(T1,F,T4),Gs1,R1,R2,N1,N2,D) :-
      !, findall(Gs3,
           (abresolve(terms_or_rels(A,F,T2),R1,Gs2,R1,false),
           abresolve(happens(A,T2,T3),R1,[],R1,false),
-          append([before(T1,T3),before(T2,T4)|Gs2],Gs1,Gs3)),Gss),
+          append([b(T1,T3),b(T2,T4)|Gs2],Gs1,Gs3)),Gss),
      abdemo_nafs(Gss,R1,R2,N1,N2,D).
 
 abdemo_naf_cons(declipped(T1,F,T4),Gs1,R1,R2,N1,N2,D) :-
      !, findall(Gs3,
           (abresolve(inits_or_rels(A,F,T2),R1,Gs2,R1,false),
           abresolve(happens(A,T2,T3),R1,[],R1,false),
-          append([before(T1,T3),before(T2,T4)|Gs2],Gs1,Gs3)),Gss),
+          append([b(T1,T3),b(T2,T4)|Gs2],Gs1,Gs3)),Gss),
      abdemo_nafs(Gss,R1,R2,N1,N2,D).
 
 /*
    To show the classical negation of holds_at(F) (which is what we want), we
    have to show that holds_at(neg(F)). Conversely, to show the classical
    negation of holds_at(neg(F)) we have to show holds_at(F). Within a call
-   to abdemo_naf, we can add both happens and before (and other abducibles)
+   to abdemo_naf, we can add both happens and before "b" (and other abducibles)
    to the residue. This removes a potential source of incompleteness.
 
    Note that F must be a ground term to preserve soundness and completeness.
@@ -570,33 +833,33 @@ abdemo_naf_cons_holds_at(_F,_T,Gs,R1,R2,N1,N2,D) :-
 
 /*
    Special facilities for handling temporal ordering facts are built in.
-   We can add a before fact to the residue to preserve the failure of
-   a clipped goal. The failure of a before goal does NOT mean that the
+   We can add a before "b" fact to the residue to preserve the failure of
+   a clipped goal. The failure of a before "b" goal does NOT mean that the
    negation of that goal is assumed to be true. (The Clark completion is
-   not applicable to temporal ordering facts.) Rather, to make before(X,Y)
-   fail, before(Y,X) has to follow. One way to achieve this is to add
-   before(Y,X) to the residue.
+   not applicable to temporal ordering facts.) Rather, to make b(X,Y)
+   fail, b(Y,X) has to follow. One way to achieve this is to add
+   b(Y,X) to the residue.
 */
 
-abdemo_naf_cons(before(X,Y),Gs,R,R,N,N,D) :- X == Y, !.
+abdemo_naf_cons(b(X,Y),Gs,R,R,N,N,D) :- X == Y, !.
 
-abdemo_naf_cons(before(X,Y),Gs,R,R,N,N,D) :- demo_before(Y,X,R), !.
+abdemo_naf_cons(b(X,Y),Gs,R,R,N,N,D) :- demo_before(Y,X,R), !.
 
-abdemo_naf_cons(before(X,Y),Gs1,R1,R2,N1,N2,D) :-
-     !, append(Gs1,[postponed(before(X,Y))],Gs2),
+abdemo_naf_cons(b(X,Y),Gs1,R1,R2,N1,N2,D) :-
+     !, append(Gs1,[postponed(b(X,Y))],Gs2),
      abdemo_naf(Gs2,R1,R2,N1,N2,D).
 
 /*
-   A before fact is only added to the residue as a last resort. Accordingly,
-   if we encounter a before(X,Y) goal and cannot show before(Y,X), we
+   A before "b" fact is only added to the residue as a last resort. Accordingly,
+   if we encounter a b(X,Y) goal and cannot show b(Y,X), we
    postpone that goal until we've tried other possibilities. A postponed
-   before goal appears in the goal list as postponed(before(X,Y)).
+   before "b" goal appears in the goal list as postponed(b(X,Y)).
 */
 
-abdemo_naf_cons(postponed(before(X,Y)),Gs,R1,R2,N,N,D) :-
+abdemo_naf_cons(postponed(b(X,Y)),Gs,R1,R2,N,N,D) :-
      \+ demo_beq(X,Y,R1), add_before(Y,X,R1,R2).
 
-abdemo_naf_cons(postponed(before(X,Y)),Gs,R1,R2,N1,N2,D) :-
+abdemo_naf_cons(postponed(b(X,Y)),Gs,R1,R2,N1,N2,D) :-
      !, abdemo_naf(Gs,R1,R2,N1,N2,D).
 
 /* 
@@ -659,12 +922,12 @@ check_nafs(A,T1,T2,[N|Ns],R1,R3,N1,N3,D) :-
 
 
 check_naf(A,T2,T3,[clipped(T1,F,T4)],R1,R2,N1,N2,D) :-
-     !, findall([before(T1,T3),before(T2,T4)|Gs],
+     !, findall([b(T1,T3),b(T2,T4)|Gs],
           (abresolve(terms_or_rels(A,F,T2),R1,Gs,R1,false)),Gss),
      abdemo_nafs(Gss,R1,R2,N1,N2,D).
 
 check_naf(A,T2,T3,[declipped(T1,F,T4)],R1,R2,N1,N2,D) :-
-     !, findall([before(T1,T3),before(T2,T4)|Gs],
+     !, findall([b(T1,T3),b(T2,T4)|Gs],
           (abresolve(inits_or_rels(A,F,T2),R1,Gs,R1,false)),Gss),
      abdemo_nafs(Gss,R1,R2,N1,N2,D).
 
@@ -685,7 +948,7 @@ check_naf(A,T1,T2,N,R1,R2,N1,N2,D) :- abdemo_naf(N,R1,R2,N1,N2,D).
 
 demo_before(0,Y,R) :- !, Y \= 0.
 
-demo_before(X,Y,[RH,[BA,TC]]) :- member(before(X,Y),TC).
+demo_before(X,Y,[RH,[BA,TC]]) :- member(b(X,Y),TC).
 
 /* demo_beq is demo before or equal. */
 
@@ -697,15 +960,15 @@ demo_beq(X,Y,[[HA,TC],RB]) :- member(beq(X,Y),TC).
 
 
 /*
-   add_before(X,Y,R1,R2) adds before(X,Y) to the residue R1 giving R2.
-   It does this by maintaining the transitive closure of the before and beq
+   add_before(X,Y,R1,R2) adds b(X,Y) to the residue R1 giving R2.
+   It does this by maintaining the transitive closure of the before "b" and "beq"
    relations in R2, and assumes that R1 is already transitively closed.
    R1 and R2 are just the temporal ordering parts of the residue.
 */
 
-add_before(X,Y,[RH,[BA,TC]],[RH,[BA,TC]]) :- member(before(X,Y),TC), !.
+add_before(X,Y,[RH,[BA,TC]],[RH,[BA,TC]]) :- member(b(X,Y),TC), !.
 
-add_before(X,Y,[[HA,HC],[BA,BC1]],[[HA,HC],[[before(X,Y)|BA],BC2]]) :-
+add_before(X,Y,[[HA,HC],[BA,BC1]],[[HA,HC],[[b(X,Y)|BA],BC2]]) :-
      \+ demo_beq(Y,X,[[HA,HC],[BA,BC1]]), find_bef_connections(X,Y,BC1,C1,C2),
      find_beq_connections(X,Y,HC,C3,C4), delete_abdemo(X,C3,C5), delete_abdemo(Y,C4,C6),
      append(C5,C1,C7), append(C6,C2,C8),
@@ -714,7 +977,7 @@ add_before(X,Y,[[HA,HC],[BA,BC1]],[[HA,HC],[[before(X,Y)|BA],BC2]]) :-
 /*
    add_happens(A,T1,T2,R1,R2) adds happens(A,T1,T2) to the residue R1
    giving R2. Because happens(A,T1,T2) -> T1 <= T2, this necessitates
-   updating the transitive closures of the before and beq facts in the residue.
+   updating the transitive closures of the before "b" and "beq" facts in the residue.
    Duplicates aren't checked for, as it's assumed this is done by the
    calling predicate.
 */
@@ -723,7 +986,7 @@ add_happens(A,T1,T2,[[HA,HC1],[BA,BC1]],[[[happens(A,T1,T2)|HA],HC2],[BA,BC2]]) 
      \+ demo_before(T2,T1,[[HA,HC1],[BA,BC1]]),
      find_beq_connections(T1,T2,HC1,C1,C2), cross_prod_beq(C1,C2,C3,HC1),
      append(C3,HC1,HC2), find_bef_connections(T1,T2,BC1,C4,C5),
-     cross_prod_bef(C4,C5,C6,BC1), delete_abdemo(before(T1,T2),C6,C7),
+     cross_prod_bef(C4,C5,C6,BC1), delete_abdemo(b(T1,T2),C6,C7),
      append(C7,BC1,BC2).
 
 /*
@@ -734,13 +997,13 @@ add_happens(A,T1,T2,[[HA,HC1],[BA,BC1]],[[[happens(A,T1,T2)|HA],HC2],[BA,BC2]]) 
 
 find_bef_connections(X,Y,[],[X],[Y]).
 
-find_bef_connections(X,Y,[before(Z,X)|R],[Z|C1],C2) :-
+find_bef_connections(X,Y,[b(Z,X)|R],[Z|C1],C2) :-
      !, find_bef_connections(X,Y,R,C1,C2).
 
-find_bef_connections(X,Y,[before(Y,Z)|R],C1,[Z|C2]) :-
+find_bef_connections(X,Y,[b(Y,Z)|R],C1,[Z|C2]) :-
      !, find_bef_connections(X,Y,R,C1,C2).
 
-find_bef_connections(X,Y,[before(Z1,Z2)|R],C1,C2) :-
+find_bef_connections(X,Y,[b(Z1,Z2)|R],C1,C2) :-
      find_bef_connections(X,Y,R,C1,C2).
 
 /*
@@ -767,8 +1030,8 @@ cross_prod_bef([X|C1],C2,R3,R) :-
 
 cross_one_bef(X,[],[],R).
 
-cross_one_bef(X,[Y|C],[before(X,Y)|R1],R) :-
-     \+ member(before(X,Y),R), !, cross_one_bef(X,C,R1,R).
+cross_one_bef(X,[Y|C],[b(X,Y)|R1],R) :-
+     \+ member(b(X,Y),R), !, cross_one_bef(X,C,R1,R).
 
 cross_one_bef(X,[Y|C],R1,R) :- cross_one_bef(X,C,R1,R).
 
@@ -793,21 +1056,21 @@ cross_one_beq(X,[Y|C],R1,R) :- cross_one_beq(X,C,R1,R).
 
 /*
    refine(R1,N1,Gs,R2,N2) takes the earliest compound action out of the residue
-   R1 and puts it in the goal list Gs, along with all "before", not(clipped) and
+   R1 and puts it in the goal list Gs, along with all "b", not(clipped) and
    not(declipped) facts that refer to the same time points. These time points
    are unskolemised, so that they can be bound to existing time points in the
    residue, thus permitting sub-actions to be shared between abstract actions.
    This almost restores the state of computation to the state S before the chosen
    action was added to the residue in the first place. But not quite, because
-   some derived before facts will be retained in the transitive closure part
-   of the before part of the residue that weren't there in state S. This doesn't
+   some derived before "b" facts will be retained in the transitive closure part
+   of the before "b" part of the residue that weren't there in state S. This doesn't
    matter, however, because these derived facts will need to be there eventually
-   anyway, when those before facts that have been transferred from residue to goal
+   anyway, when those before "b" facts that have been transferred from residue to goal
    list get put back in the residue.
 
    The compound action extracted from the residue is marked for expansion by
    inserting it in the goal list in the form expand([happens(A,T1,T2)|Bs]),
-   where Bs is the list of "before" facts taken out of the residue, as
+   where Bs is the list of "b" facts taken out of the residue, as
    described above. When abdemo comes across a goal of this form, it will
    resolve the "happens" part against program clauses. The reason for
    not doing this resolution here is that we want to backtrack to alternative
@@ -861,10 +1124,10 @@ order(happens(A1,T1,T2),happens(A2,T3,T4),RB,happens(A2,T3,T4),happens(A1,T1,T2)
 
 split_befores([],T1,T2,T3,T4,[],[]).
 
-split_befores([before(T1,T2)|Bs1],T3,T4,T5,T6,Bs2,[before(T1,T2)|Bs3]) :-
+split_befores([b(T1,T2)|Bs1],T3,T4,T5,T6,Bs2,[b(T1,T2)|Bs3]) :-
      no_match(T1,T2,T3,T4), !, split_befores(Bs1,T3,T4,T5,T6,Bs2,Bs3).
                                         
-split_befores([before(T1,T2)|Bs1],T3,T4,T5,T6,[before(T7,T8)|Bs2],Bs3) :-
+split_befores([b(T1,T2)|Bs1],T3,T4,T5,T6,[b(T7,T8)|Bs2],Bs3) :-
      substitute_time(T1,T3,T4,T5,T6,T7), substitute_time(T2,T3,T4,T5,T6,T8),
      split_befores(Bs1,T3,T4,T5,T6,Bs2,Bs3).
 
@@ -957,3 +1220,5 @@ opposite(F,neg(F)).
 trace(off).
 
 
+
+:- endif.

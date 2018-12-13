@@ -15,3 +15,24 @@ prolog_flag(F,Old,New):- ignore(current_prolog_flag(F,Old)),set_prolog_flag(F,Ne
 /* Emulates the writenl(1) function */
 
 
+  
+clause_w_names(Head,Body,ClauseRef,file=line_of(Line,File),Vs):- 
+  clause(Head,Body,ClauseRef),
+  once((
+  clause(CHead,CBody,ClauseRef),
+  term_variables(CHead+CBody,LocalVars),
+  (prolog_clause:clause_info(ClauseRef, File, _TermPos, _,[variable_names(Vs)]) 
+  -> 
+  (  clause(CHead,CBody,ClauseRef),
+     term_variables(CHead+CBody,LocalVars),
+     term_variables(Vs,ClauseVars),
+     ClauseVars = LocalVars
+  ) 
+  ;
+  (
+     Vs= [clauseVars=LocalVars]
+  )),
+  Head+Body = CHead+CBody,
+  ignore(clause_property(ClauseRef, line_count(Line))),
+  ignore(clause_property(ClauseRef, file(File))))).
+

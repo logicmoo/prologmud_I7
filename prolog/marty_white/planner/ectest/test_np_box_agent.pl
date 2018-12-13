@@ -10,11 +10,11 @@
 
 do_test_gen(What) :- fluent(P),functor(P,F,A),functor(What,F,A).
 
-local_demo(L,R):-  abdemo_special(depth(0,10),L,R),!, dm('PASSED:',(L:-R)).
-local_demo(L,R):-  dm('FAILED:',(L:-R)).
+local_demo(L,R):-  dbginfo('L'=L),abdemo_special(depth(0,10),L,R),!.
+local_demo(L,R):-  dm('FAILED:',(L:-R)),trace,!,abdemo_special(depth(0,10),L,R).
 
 
-dm(TF,P):- format('~N~n~w ~p.~n',[TF,P]),trace.
+dm(TF,P):- format('~N~n~w ~p.~n',[TF,P]).
 
 /*
 
@@ -25,26 +25,33 @@ do_test(test_np_box_2) :-  local_demo([holds_at(inRoom(lisa,livingRoom),t)],R).
 do_test(test_np_box_3) :-  local_demo([holds_at(directlyIn(lisa,kitchen),t)],R).
 
 */
-do_test(test_np_box_4) :-  local_demo([holds_at(inRoom(lisa,kitchen),t)],R).
+%do_test(test_np_box_4) :-  local_demo([holds_at(inRoom(lisa,kitchen),t)],R).
 
 % fix this next test and the "test_np_box_occurs" should pass
-do_test(has_occured) :-  local_demo([has_occured(move(lisa,box,livingRoom,lisa))],R).
+%do_test(has_occured) :-  local_demo([has_occured(move(lisa,box,livingRoom,lisa))],R).
+
+% 
+do_test(happened) :-  local_demo([happens(move(lisa,box,livingRoom,lisa),T)],R).
+
+do_test(happened2) :-  local_demo([happens(move(lisa,box,livingRoom,lisa),T1,T2)],R).
+
+% 
+do_test(happend2b) :-  local_demo(
+              [happens(move(lisa,newspaper,livingRoom,box),t_plus_01),
+                before(t_plus_01, t_plus_41),
+               happens(move(lisa,lisa,kitchen,livingRoom),t_plus_41)],R).
+
+do_test(happend2a) :-  local_demo(
+              [happens(move(lisa,newspaper,livingRoom,box),t_plus_01,t_plus_02),
+                before(t_plus_01, t_plus_41),
+               happens(move(lisa,lisa,kitchen,livingRoom),t_plus_41,t_plus_42)],R).
+
+do_test(happend2r) :-  local_demo(
+              [happens(move(lisa,newspaper,livingRoom,box),t_plus_01,t_plus_02),
+                before(t_plus_41, t_plus_01),
+               happens(move(lisa,lisa,kitchen,livingRoom),t_plus_41,t_plus_42)],R).
 
 
-semi_legit_time(happens(_,T1),T1):- !.
-semi_legit_time(happens(_,_,T2),T2):-!.
-semi_legit_time(happens(_,T1,_),T1):-!.
-semi_legit_time(Holds1,T1):- 
-   functor(Holds1,F,A), 
-   member(F1,[number,string,atom]),
-   (arg(A,Holds1,T1);arg(_,Holds1,T1)), 
-   T1\==[], call(F1,T1).
-
-sort_on_times_arg(Result,Holds1,Holds2):- 
-   (((semi_legit_time(Holds1,T1),semi_legit_time(Holds2,T2),
-      compare(Result,T1,T2), Result\== (=))) 
-     -> true;
-        sort_on_times_arg(Result,Holds1,Holds2)).
 
 do_test(test_np_box_occurs) :-  
  findall(E, (axiom(E,[]),functor(E,happens,_)), UHapsList),
@@ -59,7 +66,7 @@ do_test(test_np_box_occurs) :-
           happens(move(lisa,lisa,kitchen,livingRoom),4)].
 */
 
- make_falling_edges(t_plus_, t_minus_1, HapsList, [_|Edges], _Out),
+ make_falling_edges_v2(t_plus_, t_minus_1, HapsList, [_|Edges], _Out),
  dm('Edges =',Edges), !,
  /*
    Edges = [holds_at(has_occured(move(lisa,newspaper,livingRoom,box)),t_plus_01),
@@ -72,25 +79,29 @@ do_test(test_np_box_occurs) :-
             t_plus_31),before(t_plus_31,t_plus_41),
             holds_at(has_occured(move(lisa,lisa,kitchen,livingRoom)),t_plus_41)].
 
+   Edges_V2 = [happens(move(lisa,newspaper,livingRoom,box),t_plus_01,t_plus_02),
+               before(t_plus_02,t_plus_11),
+               happens(move(lisa,box,livingRoom,lisa),t_plus_11,t_plus_12),
+               before(t_plus_12,t_plus_21),
+               happens(move(lisa,lisa,livingRoom,kitchen),t_plus_21,t_plus_22),
+               before(t_plus_22,t_plus_31),
+               happens(move(lisa,box,lisa,kitchen),t_plus_31,t_plus_32),
+               before(t_plus_32,t_plus_41),
+               happens(move(lisa,lisa,kitchen,livingRoom),t_plus_41,t_plus_42)].
+   .
+
+
+   Edges_T3 = [happens(move(lisa,newspaper,livingRoom,box),t_plus_01,t_plus_02),
+               before(t_plus_01,t_plus_41),
+               happens(move(lisa,lisa,kitchen,livingRoom),t_plus_41,t_plus_42)].
+.
+
+
  */
  local_demo(Edges,_R),!.
 
 do_test(test_np_box_agent) :-  forall(do_test_gen(What), local_demo([holds_at(What,When)],R)).
 
-make_falling_edges(_Stem,LastTime,[],[],LastTime):-!.
-make_falling_edges(Stem, LastTime,
-              [happens(Event, When1)|HapsList],
-              [before(LastTime, ThisTime),holds_at(has_occured(Event),ThisTime)|Befores],Out):- 
-   atom_concat_gs(Stem, When1, ThisTime),
-  make_falling_edges(Stem,ThisTime, HapsList,Befores,Out).
-make_falling_edges(Stem,LastTime,
-              [happens(Event,When1,When2)|HapsList],
-              [before(LastTime,ThisTime),holds_at(has_occured(Event),ThisTime)|Befores],Out):- 
-   atom_concat_gs(Stem, When1, ThisTime),
-   atom_concat_gs(Stem, When2, NextTime),
-  make_falling_edges(Stem, NextTime, HapsList,Befores,Out).
-
-atom_concat_gs(Stem, When1, ThisTime):- atom_concat(Stem, When1, Lose1),gensym(Lose1,ThisTime).
 
 /*
 
@@ -422,23 +433,23 @@ axiom(terminates(move(Agent,Physobj,Agent,Room),directlyIn(Physobj,Agent),Time),
 % ectest/TestBoxRoom.e:103
 %
 % Happens(move(Lisa,Newspaper,LivingRoom,Box),0).
-axiom(happens(move(lisa,newspaper,livingRoom,box),0),[]).
+axiom_hide(happens(move(lisa,newspaper,livingRoom,box),0),[]).
 
 %
 % Happens(move(Lisa,Box,LivingRoom,Lisa),1).
-axiom(happens(move(lisa,box,livingRoom,lisa),1),[]).
+axiom_hide(happens(move(lisa,box,livingRoom,lisa),1),[]).
 
 %
 % Happens(move(Lisa,Lisa,LivingRoom,Kitchen),2).
-axiom(happens(move(lisa,lisa,livingRoom,kitchen),2),[]).
+axiom_hide(happens(move(lisa,lisa,livingRoom,kitchen),2),[]).
 
 %
 % Happens(move(Lisa,Box,Lisa,Kitchen),3).
-axiom(happens(move(lisa,box,lisa,kitchen),3),[]).
+axiom_hide(happens(move(lisa,box,lisa,kitchen),3),[]).
 
 %
 % Happens(move(Lisa,Lisa,Kitchen,LivingRoom),4).
-axiom(happens(move(lisa,lisa,kitchen,livingRoom),4),[]).
+axiom_hide(happens(move(lisa,lisa,kitchen,livingRoom),4),[]).
 
 %
 % ectest/TestBoxRoom.e:109

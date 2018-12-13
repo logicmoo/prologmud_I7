@@ -16,9 +16,9 @@ do_test(mail2)   :- abdemo_special(loops,[holds_at(in(p1,r3),t)],R).
 
 axiom(happens(shift_pack(P,R1,R2,R3),T1,T6),
      [happens(go_to_room(R1,R2),T1,T2),
-     before(T2,T3), not(clipped(T2,in(R2),T3)), not(clipped(T1,in(P,R2),T3)),
-     happens(pick_up(P),T3), before(T3,T4), happens(go_to_room(R2,R3),T4,T5),
-     before(T5,T6), not(clipped(T3,got(P),T6)), not(clipped(T5,in(R3),T6)),
+     b(T2,T3), not(clipped(T2,in(R2),T3)), not(clipped(T1,in(P,R2),T3)),
+     happens(pick_up(P),T3), b(T3,T4), happens(go_to_room(R2,R3),T4,T5),
+     b(T5,T6), not(clipped(T3,got(P),T6)), not(clipped(T5,in(R3),T6)),
      happens(put_down(P),T6)]).
 
 axiom(initiates(shift_pack(P,R1,R2,R3),in(P,R3),T),
@@ -29,12 +29,12 @@ axiom(happens(go_to_room(R,R),T,T),[]).
 
 axiom(happens(go_to_room(R1,R3),T1,T3),
      [connects(D,R1,R2), towards(R2,R3,R1),
-     happens(go_to_room(R2,R3),T2,T3), before(T1,T2), happens(go_through(D),T1),
+     happens(go_to_room(R2,R3),T2,T3), b(T1,T2), happens(go_through(D),T1),
      not(clipped(T1,in(R2),T2))]).
 
 axiom(happens(go_to_room(R1,R3),T1,T3),
      [connects(D,R1,R2), happens(go_through(D),T1),
-     happens(go_to_room(R2,R3),T2,T3), before(T1,T2),
+     happens(go_to_room(R2,R3),T2,T3), b(T1,T2),
      not(clipped(T1,in(R2),T2))]).
 
 axiom(initiates(go_to_room(R1,R2),in(R2),T),[holds_at(in(R1),T)]).

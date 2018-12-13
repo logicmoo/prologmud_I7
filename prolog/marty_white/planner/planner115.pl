@@ -12,6 +12,7 @@
 
 */
 
+:- include(eventCalculusDMiles).
 
 /*
    This is an abductive meta-interpreter for abduction with negation-as-

@@ -22,4 +22,8 @@ ticks(Z1):-  statistics(runtime,[Z1,_]).
 ?- prolog_flag(single_var_warnings,_,off).
 
 
+clause_w_names(Head,Body,ClauseRef,[allVars=LocalVars,props=Props]):- 
+  clause(Head,Body,ClauseRef),
+  findall(Prop,clause_property(ClauseRef, Prop), Props),
+  term_variables(Head+Body,LocalVars).
 
