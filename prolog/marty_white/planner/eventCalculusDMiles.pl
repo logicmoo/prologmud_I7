@@ -55,8 +55,8 @@ test_body(N,true,Info,Vs):- !, test_body(N,solve_goal(N,R),Info,['R'=R|Vs]).
 test_body(N,Body,Info,Vs):-
    if_debug(verbose, nl(2)),
    if_debug(verbose, [Info,nl(1)]),
-   if_debug(all,['body'=Body,nl(2)]),
-   copy_term(Body,BodyA),
+   %if_debug(all,['body'=Body,nl(2)]),
+   % copy_term(Body,BodyA),
    maybe_nl, write('START OUTPUT of '), write(N), write(' >>>>>'),
    maybe_nl, 
    ticks(Z1),   
@@ -64,10 +64,12 @@ test_body(N,Body,Info,Vs):-
    ticks(Z2), TotalTime is (Z2-Z1)/1000, 
    maybe_nl, write('<<<<< ENDOF OUTPUT of '), write(N),nl,
    if_debug(verbose, nl(2)),
-   if_debug(all,['bodyAgain'=BodyA, nl, nl, Vs]),
+   % if_debug(all,['bodyAgain'=BodyA, nl, nl, Vs]),
+   if_debug(all,Vs),
    maybe_nl, nl, 
    (Passed == true -> ansi_format(fg(cyan),'!!!PASSED!!! ~w time=~w',[N,TotalTime]) ;
-     (ansi_format(hfg(red),'~p ~w time=~w',[Passed,N,TotalTime]),sleep(1.0))),   
+     (ansi_format(hfg(red),'~p ~w time=~w',[Passed,N,TotalTime]),sleep(1.0))),
+   nl,
    if_debug(verbose, nl(2)).
 
 
@@ -99,7 +101,7 @@ solve_goal(Gs,R,H,L):-
   When = now,
   must(fix_goal(When,Gs,Gs0)), !,
   must(fix_time_args(When,Gs0,Gss)), !,
-  if_debug(all, [realGoal=Gss]),
+  %if_debug(all, [realGoal=Gss]),
   abdemo_special(depth(H,L), Gss, R).
 
 fix_goal(_, Nil,[]):- Nil==[],!.
