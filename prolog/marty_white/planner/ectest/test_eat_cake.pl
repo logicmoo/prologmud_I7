@@ -6,7 +6,7 @@
 
 */
 
-end_of_file.
+% end_of_file.
 
 do_test(num_cakes(0)).
 do_test(num_cakes(1)).
