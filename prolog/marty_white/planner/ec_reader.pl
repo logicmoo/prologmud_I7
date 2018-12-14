@@ -16,13 +16,26 @@
 */
 :- module(ec_reader,[process_ec/1]).
 
+:- meta_predicate ec_to_pl(1,:,*), ec_in_to_pl(1,:,*).
+:- meta_predicate map_callables(2,*,*).
+:- meta_predicate in_space_cmt(0).
+:- meta_predicate process_ec_stream(1,*).
+:- meta_predicate process_out(1,*).
+:- meta_predicate ec_io(1,*).
+:- meta_predicate upcased_functors(0).
+:- meta_predicate read_stream_until_true(*,*,1,*).
+:- meta_predicate process_ec_stream_token(1,*,*).
+:- meta_predicate continue_process_ec_stream_too(1,*,*,*).
+:- meta_predicate process_ec_token_with_string(1,*,*).
+:- meta_predicate continue_process_ec_stream(1,*,*,*).
+
 :- thread_local(t_l:each_file_term/1).
 :- thread_local(t_l:block_comment_mode/1).
 :- thread_local(t_l:echo_mode/1).
 
-:- meta_predicate now_doing(1, ?).
-:- meta_predicate each_doing(1, ?).
-:- meta_predicate doing(1, *).
+%:- meta_predicate now_doing(1, ?).
+%:- meta_predicate each_doing(1, ?).
+%:- meta_predicate doing(1, *).
   
 %:- use_module(library(logicmoo_startup)).
 :- use_module(library(file_utils/filestreams)).
@@ -60,7 +73,7 @@ ec_to_pl(Why, Out, F):-
    findall(N, absolute_file_name(F, N, [file_type(txt), file_errors(fail), expand(false), solutions(all)]), L), 
    L\=[F], !, maplist(ec_to_pl(Why, Out), L).
 ec_to_pl(Why, Outs, In):- atom(In), 
-  setup_call_cleanup(open(In, Ins), 
+  setup_call_cleanup(open(In, read, Ins), 
      ec_in_to_pl(Why, Outs, Ins), 
      close(Ins)).
 
@@ -474,7 +487,7 @@ glean_data(Why, hasInstance(S), E):- !, glean_data(Why, isa(E, S)).
 
 process_ec_stream_token(Why, Atom, S):- atom_concat(New, '!', Atom), !, process_ec_stream_token(Why, New, S).
 process_ec_stream_token(Why, Type, S):- normalize_space(atom(A), Type), A\==Type, !, process_ec_stream_token(Why, A, S).
-process_ec_stream_token(Why, Text, S):- \+ atom(Text), !, text_to_atom(Text, Atom), process_ec_stream_token(Why, Atom, S).
+process_ec_stream_token(Why, Text, S):- \+ atom(Text), !, text_to_string(Text, String), atom_string(Atom,String), process_ec_stream_token(Why, Atom, S).
 process_ec_stream_token(Why, function, S):- !, read_stream_until(S, [], `:`, Text), read_line_to_string_echo(S, String), 
   append(TextL, [_], Text), 
   ec_read1(TextL, Value, _), 
@@ -532,6 +545,7 @@ to_atomic_value(A, N):- normalize_space(atom(S), A), S\==A, !, to_atomic_value(S
 to_atomic_value(A, N):- atom_number(A, N).
 to_atomic_value(A, A).
 
+:- meta_predicate(read_stream_until(+,+,*,-)).
 read_stream_until(S, Buffer, [Until], Codes):- !, name(N, [Until]), char_code(N, UntilCode), !, 
  read_stream_until_true(S, Buffer, ==(UntilCode), Codes).
 read_stream_until(S, Buffer, UntilCode, Codes):- integer(UntilCode), !, 

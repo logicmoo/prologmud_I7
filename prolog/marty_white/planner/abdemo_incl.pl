@@ -14,16 +14,17 @@ is_sicstus:- \+ current_prolog_flag(version_data,swi(_,_,_,_)).
 testing_msg(_).
 
 :- use_module('./ec_reader').
-:- process_ec(option(verbose, all)).
-:- process_ec(option(extreme, false)).
-:- process_ec(option(debug, failure)).
 
-set_testing_options(N,V):- retractall(etmp:ec_option(N,_)),asserta(etmp:ec_option(N,V)).
+set_ec_option(N,V):- retractall(etmp:ec_option(N,_)),asserta(etmp:ec_option(N,V)).
+
+:- set_ec_option(verbose, all).
+:- set_ec_option(extreme, false).
+:- set_ec_option(debug, failure).
 
 is_dbginfo(N):- var(N),!, fail.
 is_dbginfo(N=V):- !, etmp:ec_option(N, V).
-is_dbginfo(not(N)):- !, \+ testing_option(N).
-is_dbginfo(N):- is_list(N), !, maplist(testing_option,N).
+is_dbginfo(not(N)):- !, \+ is_dbginfo(N).
+is_dbginfo(N):- is_list(N), !, maplist(is_dbginfo,N).
 is_dbginfo(N):- etmp:ec_option(N, false),!,fail.
 is_dbginfo(N):- etmp:ec_option(verbose, N),!.
 
@@ -32,9 +33,10 @@ maybe_nl:- notrace(format('~N',[])).
 
 dbginfo(NV, G):- notrace(tracing), !,notrace,dbginfo(NV, G),notrace(trace).
 dbginfo(NV, G):- \+ is_dbginfo(NV) -> true ; dbginfo(G). 
+:- export(dbginfo/1).
+dbginfo_else(NV,G,E):- is_dbginfo(NV) -> dbginfo(G); dbginfo(E).
 
-dbginfo_else(NV,G,E):- testing_option(NV) -> dbginfo(G); dbginfo(E).
-
+:- meta_predicate catch_ignore(0).
 catch_ignore(G):- ignore(catch(G,E,wdmsg(E))),!.
 
 dbginfo(G):- notrace(tracing),!,notrace,dbginfo(G),notrace(trace).
@@ -49,11 +51,12 @@ dbginfo(nl(N)):- !, maybe_nl, catch_ignore(forall(between(0,N,_),nl)).
 dbginfo(fmt(F,A)):- !, catch_ignore(format(F,A)).
 dbginfo(afmt(Ansi,F,A)):- !, catch_ignore(ansi_format(Ansi,F,A)).
 dbginfo(NV):- catch_ignore(portray_clause(:- NV)), !.
-
+:- export(dbginfo/1).
 % =========================================
 % Test Decls
 % =========================================
 
+:- meta_predicate test_body(*,0,*,*).
 test_body(N,(Was=G,Body),Info,Vs):- Was==N,!, copy_term(G,NewN),!,Was=G, test_body(NewN,(Body),Info,Vs).
 test_body(N,true,Info,Vs):- !, test_body(N,abdemo_solve(N,R),Info,['R'=R|Vs]).
 test_body(N,Body,Info,Vs):-
@@ -188,7 +191,7 @@ needs_process_axiom(P):- functor(P,F,_),arg_info(_,F,_).
 hook_ec_axioms(What, File):- var(File), !, current_input(Input), hook_ec_axioms(What, Input).
 hook_ec_axioms(What, file(_File,AbsFile)):- !, hook_ec_axioms(What, file(AbsFile)).
 hook_ec_axioms(What, file(AbsFile)):- !, hook_ec_axioms(What, AbsFile).
-hook_ec_axioms(What, File):- 
+hook_ec_axioms(What, File):- fail, 
     prolog_load_context(module, M),
     dmsg(hook_ec_axioms(M, What, File)),fail.
 hook_ec_axioms(What, File):- atom(File), exists_file(File),
@@ -252,6 +255,7 @@ semi_legit_time(Holds1,T1):-
    (arg(A,Holds1,T1);arg(_,Holds1,T1)), 
    T1\==[], call(P1,T1).
 
+:- export(sort_on_times_arg/3).
 sort_on_times_arg(Result,Holds1,Holds2):- 
    (((semi_legit_time(Holds1,T1),semi_legit_time(Holds2,T2),
       compare(Result,T1,T2), Result\== (=))) 
@@ -337,7 +341,7 @@ fix_time_args1(T,G,Gs):-
   visit_time_args(T,[],G,Gs,_Mid).
 
 
-
+:- export(make_falling_edges_v2/5).
 make_falling_edges_v2(_Stem,LastTime,[],[],LastTime):-!.
 make_falling_edges_v2(Stem,LastTime,
               [happens(Event,When1)|HapsList],

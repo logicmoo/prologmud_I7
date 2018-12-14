@@ -8,6 +8,7 @@
 % ectest/TestBoxRoom.e:1
 :- include('../abdemo_test').
 
+
 do_test_gen(What) :- current_plan_domain(fluent(P)),functor(P,F,A),functor(What,F,A).
 
 local_demo(L,R):-  dbginfo('L'=L),abdemo_special(depth(0,10),L,R),!.
@@ -53,8 +54,10 @@ do_test(happend2r) :- fail, local_demo(
 
 
 
-do_test(test_np_box_occurs) :-  
- findall(E, (axiom(E,[]),functor(E,happens,_)), UHapsList),
+do_test(test_np_box_occurs) :- test_np_box_occurs.
+
+test_np_box_occurs:- 
+ findall(E, (current_axiom(E,[]),functor(E,happens,_)), UHapsList),
  predsort(sort_on_times_arg,UHapsList,HapsList),
  dbginfo('HapsList'=HapsList), 
  /* 
