@@ -101,7 +101,6 @@ test_np_box_occurs:-
 
 
  */
- trace,
  local_demo(Edges,_R),!.
 
 do_test(test_np_box_agent) :-  forall(do_test_gen(What), local_demo([holds_at(What,When)],R)).

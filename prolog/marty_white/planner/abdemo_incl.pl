@@ -221,7 +221,9 @@ needs_proccess( M:H, How):- nonvar(H),!,needs_proccess(H,How).
 
 fail_solve_goal(G,R):- \+ abdemo_solve(G,R).
 
+:- export(abdemo_solve/2).
 abdemo_solve(Gs,R):- abdemo_solve(Gs,R,1,4).
+:- export(abdemo_solve/4).
 abdemo_solve(Gs,R,H,L):- 
   When = now,
   must(fix_goal(When,Gs,Gs0)), !,
