@@ -15,6 +15,7 @@
 %
 */
 
+:- module(ec,[needs_proccess/2,process_axiom/2]).
 
 %:- if((prolog_load_context(file,F),prolog_load_context(source,F))).
 :- style_check(-singleton).

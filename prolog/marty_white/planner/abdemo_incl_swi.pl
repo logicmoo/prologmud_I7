@@ -16,9 +16,9 @@ prolog_flag(F,Old,New):- ignore(current_prolog_flag(F,Old)),set_prolog_flag(F,Ne
 
 
   
-clause_w_names(Head,Body,ClauseRef,file=line_of(Line,File),Vs):- 
+system:clause_w_names(Head,Body,ClauseRef,file=line_of(Line,File),Vs):-   
   clause(Head,Body,ClauseRef),
-  once((
+  must_det_l(((
   clause(CHead,CBody,ClauseRef),
   term_variables(CHead+CBody,LocalVars),
   (prolog_clause:clause_info(ClauseRef, File, _TermPos, _,[variable_names(Vs)]) 
@@ -32,7 +32,8 @@ clause_w_names(Head,Body,ClauseRef,file=line_of(Line,File),Vs):-
   (
      Vs= [clauseVars=LocalVars]
   )),
-  Head+Body = CHead+CBody,
+  (_:Head)+Body = CHead+CBody,
   ignore(clause_property(ClauseRef, line_count(Line))),
-  ignore(clause_property(ClauseRef, file(File))))).
+  ignore(clause_property(ClauseRef, file(File)))))),
+  dmsg(clause_w_names(Head,Body,ClauseRef,file=line_of(Line,File),Vs)).
 

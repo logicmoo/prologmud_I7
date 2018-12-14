@@ -14,6 +14,7 @@
 % Main file.
 %
 */
+:- module(ec_reader,[process_ec/1]).
 
 :- thread_local(t_l:each_file_term/1).
 :- thread_local(t_l:block_comment_mode/1).

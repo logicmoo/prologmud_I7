@@ -6,24 +6,26 @@
 
 is_sicstus:- \+ current_prolog_flag(version_data,swi(_,_,_,_)).
 
+
 % =========================================
 % Debug Info
 % =========================================
 
 testing_msg(_).
 
-:- dynamic(testing_options/2).
-testing_options(verbose, all).
-testing_options(extreme, fail).
-testing_options(debug, failure).
-set_testing_options(N,V):- retractall(testing_options(N,_)),asserta(testing_options(N,V)).
+:- use_module('./ec_reader').
+:- process_ec(option(verbose, all)).
+:- process_ec(option(extreme, false)).
+:- process_ec(option(debug, failure)).
+
+set_testing_options(N,V):- retractall(etmp:ec_option(N,_)),asserta(etmp:ec_option(N,V)).
 
 is_dbginfo(N):- var(N),!, fail.
-is_dbginfo(N=V):- !, testing_options(N, V).
+is_dbginfo(N=V):- !, etmp:ec_option(N, V).
 is_dbginfo(not(N)):- !, \+ testing_option(N).
 is_dbginfo(N):- is_list(N), !, maplist(testing_option,N).
-is_dbginfo(N):- testing_options(N, false),!,fail.
-is_dbginfo(N):- testing_options(verbose, N),!.
+is_dbginfo(N):- etmp:ec_option(N, false),!,fail.
+is_dbginfo(N):- etmp:ec_option(verbose, N),!.
 
 
 maybe_nl:- notrace(format('~N',[])).
@@ -79,7 +81,7 @@ run_tests:-
   once(test_body(N,Body,File,Vs)),
   fail.
 run_tests:- current_prolog_flag(debug,false) -> halt(7) ; true.
-
+:- export(run_tests/0).
 
 % =========================================
 % Plan Portrayal
@@ -112,16 +114,21 @@ system:abducible(A):- current_plan_domain(abducible(A)).
 system:executable(A):- current_plan_domain(executable(A)).
 :- lock_predicate(system:executable/1).
 
+%:- dynamic(current_axiom/3).
+%:- multifile(current_axiom/3).
+%:- dynamic(current_plan_domain/2).
+%:- multifile(current_plan_domain/2).
+
+:- module_transparent(system:current_plan_domain/1).
 system:current_plan_domain(A):- current_plan_domain((A), _LSV).
 :- lock_predicate(system:current_plan_domain/1).
+%:- system:import(current_plan_domain/2).
 
+:- module_transparent(system:current_axiom/2).
 system:current_axiom(G,Gs):- current_axiom(G,Gs,_Info).
 :- lock_predicate(system:current_axiom/2).
+%:- system:import(current_axiom/3).
 
-:- dynamic(current_axiom/3).
-:- multifile(current_axiom/3).
-:- dynamic(current_plan_domain/2).
-:- multifile(current_plan_domain/2).
 
 get_linfo(lsvm(L,F,Vs,M)):- 
   current_stream(F,read,S),atom(F),
@@ -176,9 +183,6 @@ needs_process_axiom(abducible(_)).
 needs_process_axiom(executable(_)).
 needs_process_axiom(P):- functor(P,F,_),arg_info(_,F,_).
 
-needs_proccess(PA, LSV):- needs_process_axiom(PA), get_process_axiom(LSV).
-needs_proccess((H :- B),How):- nonvar(H),!,needs_proccess(H,How).
-needs_proccess( M:H, How):- nonvar(H),!,needs_proccess(H,How).
 
 :- module_transparent(hook_ec_axioms/2).
 hook_ec_axioms(What, File):- var(File), !, current_input(Input), hook_ec_axioms(What, Input).
@@ -203,23 +207,9 @@ prolog:make_hook(before, Files):-  maplist(hook_ec_axioms(make(before)),Files), 
 :- multifile prolog:message//1.
 prolog:message(welcome) -->  {hook_ec_axioms(welcome, welcome),fail}.
 
-
-:- multifile(user:term_expansion/4).
-:- dynamic(user:term_expansion/4).
-:- module_transparent(user:term_expansion/4).
-user:term_expansion(In,P,Out,PO):- 
-  notrace((nonvar(P),compound(In),needs_proccess(In, Type),PO=P)),
-  Out = ( :- call(Type, In) ).
-
-/*
-:- multifile
-	user:prolog_event_hook/1.
-
-user:prolog_event_hook(erased(Ref)) :-
-	retract(clause_info_cache(Ref, _, _, _)),
-	debug(clause_info, 'Retracted info for ~p', [Ref]),
-	fail.				% allow other hooks
-*/
+needs_proccess(PA, LSV):- needs_process_axiom(PA), get_process_axiom(LSV).
+needs_proccess((H :- B),How):- nonvar(H),!,needs_proccess(H,How).
+needs_proccess( M:H, How):- nonvar(H),!,needs_proccess(H,How).
 
 
 % =========================================
@@ -389,6 +379,14 @@ already_good(terms_or_rels,3).
 already_good(F,A):- functor(P,F,A),clause(abducible(PP),_),compound(PP),PP=P.
 already_good(F,A):- functor(P,F,A),clause(abducible(PP),_),compound(PP),PP=P.
 
+
+:- multifile(user:term_expansion/4).
+:- dynamic(user:term_expansion/4).
+:- module_transparent(user:term_expansion/4).
+:- user:import(ec:needs_proccess/2).
+user:term_expansion(In,P,Out,PO):- 
+  notrace((nonvar(P),compound(In), In\=(:- _), needs_proccess(In, Type),PO=P)),
+  Out = ( :- call(Type, In) ).
 
 ?- is_sicstus -> prolog_flag(single_var_warnings,_,off) ; true.
 
