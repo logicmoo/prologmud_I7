@@ -57,7 +57,7 @@ reified_sort(fluent).
 reified_sort(event).
 predicate(happens(event,time)).
 predicate(holds_at(fluent,time)).
-predicate(releasedAt(fluent,time)).
+predicate(releases(fluent,time)).
 predicate(initiates(event,fluent,time)).
 predicate(terminates(event,fluent,time)).
 predicate(releases(event,fluent,time)).

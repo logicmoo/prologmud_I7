@@ -8,7 +8,7 @@
 % ectest/TestBoxRoom.e:1
 :- include('../abdemo_test').
 
-do_test_gen(What) :- fluent(P),functor(P,F,A),functor(What,F,A).
+do_test_gen(What) :- current_plan_domain(fluent(P)),functor(P,F,A),functor(What,F,A).
 
 local_demo(L,R):-  dbginfo('L'=L),abdemo_special(depth(0,10),L,R),!.
 local_demo(L,R):-  dm('FAILED:',(L:-R)),trace,!,abdemo_special(depth(0,10),L,R).
@@ -56,7 +56,7 @@ do_test(happend2r) :- fail, local_demo(
 do_test(test_np_box_occurs) :-  
  findall(E, (axiom(E,[]),functor(E,happens,_)), UHapsList),
  predsort(sort_on_times_arg,UHapsList,HapsList),
- dm('HapsList =',HapsList), 
+ dbginfo('HapsList'=HapsList), 
  /* 
    HapsList = 
          [happens(move(lisa,newspaper,livingRoom,box),0),
@@ -67,7 +67,7 @@ do_test(test_np_box_occurs) :-
 */
 
  make_falling_edges_v2(t_plus_, t_minus_1, HapsList, [_|Edges], _Out),
- dm('Edges =',Edges), !,
+ dbginfo('Edges'=Edges), !,
  /*
    Edges = [holds_at(has_occured(move(lisa,newspaper,livingRoom,box)),t_plus_01),
             before(t_plus_01,t_plus_11),
@@ -98,6 +98,7 @@ do_test(test_np_box_occurs) :-
 
 
  */
+ trace,
  local_demo(Edges,_R),!.
 
 do_test(test_np_box_agent) :-  forall(do_test_gen(What), local_demo([holds_at(What,When)],R)).

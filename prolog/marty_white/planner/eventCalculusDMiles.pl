@@ -15,242 +15,8 @@
 %
 */
 
-:- dynamic(axiom/3).
-:- multifile(axiom/3).
-:- dynamic(axiom/2).
-:- multifile(axiom/2).
-:- dynamic(axiom/1).
-:- multifile(axiom/1).
 
-axiom(G,Gs):- axiom(G,Gs,_Info).
-axiom(G,[]):- axiom(G).
-
-testing_msg(_).
-
-testing_options(verbose, all):- true.
-testing_options(debug, failure):- true.
-
-testing_option(N):- var(N),!, fail.
-testing_option(N=V):- !, testing_options(N, V).
-testing_option(not(N)):- !, \+ testing_option(N).
-testing_option(N):- is_list(N), !, maplist(testing_option,N).
-testing_option(N):- testing_options(N, false),!,fail.
-testing_option(N):- testing_options(verbose, N),!.
-
-
-maybe_nl:- format('~N',[]).
-
-if_debug(NV, G):- tracing, !, ignore(notrace(((testing_option(NV),dbginfo_i(G))))),!.
-if_debug(NV, G):- ignore((testing_option(NV),dbginfo_i(G))),!.
-
-if_debug_else(NV,G,E):- testing_option(NV) -> dbginfo_i(G); dbginfo_i(E).
-
-catch_ignore(G):- ignore(catch(G,error(_,_),fail)),!.
-
-dbginfo_i(G):-  catch_ignore(dbginfo(G)).
-
-
-test_body(N,(Was=G,Body),Info,Vs):- Was==N,!, copy_term(G,NewN),!,Was=G, test_body(NewN,(Body),Info,Vs).
-test_body(N,true,Info,Vs):- !, test_body(N,solve_goal(N,R),Info,['R'=R|Vs]).
-test_body(N,Body,Info,Vs):-
-   if_debug(verbose, nl(2)),
-   if_debug(verbose, [Info,nl(1)]),
-   %if_debug(all,['body'=Body,nl(2)]),
-   % copy_term(Body,BodyA),
-   maybe_nl, write('START OUTPUT of '), write(N), write(' >>>>>'),
-   maybe_nl, 
-   ticks(Z1),   
-   (call(Body)-> (Passed = true) ; Passed = '?!?!??!FAILED!?!?!?'),
-   ticks(Z2), TotalTime is (Z2-Z1)/1000, 
-   maybe_nl, write('<<<<< ENDOF OUTPUT of '), write(N),nl,
-   if_debug(verbose, nl(2)),
-   % if_debug(all,['bodyAgain'=BodyA, nl, nl, Vs]),
-   if_debug(all,Vs),
-   maybe_nl, nl, 
-   (Passed == true -> ansi_format(fg(cyan),'!!!PASSED!!! ~w time=~w',[N,TotalTime]) ;
-     (ansi_format(hfg(red),'~p ~w time=~w',[Passed,N,TotalTime]),sleep(1.0))),
-   nl,
-   if_debug(verbose, nl(2)).
-
-
-dbginfo(Var):- var(Var),!, maybe_nl, format('ListVAR = ~p~n',[Var]).
-dbginfo([]):- !, maybe_nl. 
-dbginfo(call(G)):- !, catch_ignore(G).
-dbginfo({G}):- !, maybe_nl, catch_ignore(G).
-dbginfo([A|B]):- !, maybe_nl, dbginfo(A), maybe_nl, dbginfo(B),!.
-dbginfo(N=V):- !, maybe_nl, portray_clause(var(N):-V).
-dbginfo(nl):- !, maybe_nl, nl.
-dbginfo(nl(N)):- !, maybe_nl, forall(between(0,N,_),nl).
-dbginfo(fmt(F,A)):- !, format(F,A).
-dbginfo(afmt(Ansi,F,A)):- !, format(Ansi,F,A).
-dbginfo(NV):- portray_clause(:- NV), !.
-
-dbginfo(A,B):- dbginfo([A,B]).
-
-run_tests:- 
-  clause_w_names(do_test(N),Body,_Ref,File,Vs),
-  once(test_body(N,Body,File,Vs)),
-  fail.
-run_tests:- current_prolog_flag(debug,false) -> halt(7) ; true.
-
-
-fail_solve_goal(G,R):- \+ solve_goal(G,R).
-
-solve_goal(Gs,R):- solve_goal(Gs,R,1,4).
-solve_goal(Gs,R,H,L):- 
-  When = now,
-  must(fix_goal(When,Gs,Gs0)), !,
-  must(fix_time_args(When,Gs0,Gss)), !,
-  %if_debug(all, [realGoal=Gss]),
-  abdemo_special(depth(H,L), Gss, R).
-
-fix_goal(_, Nil,[]):- Nil==[],!.
-fix_goal(T,[G|Gs],GGs):- !, fix_goal(T,G,G0),fix_goal(T,Gs,Gs0),append(G0,Gs0,GGs),!.
-fix_goal(T,(G,Gs),GGs):- !, fix_goal(T,G,G0),fix_goal(T,Gs,Gs0),append(G0,Gs0,GGs),!.
-fix_goal(T,{Gs},GGs):- !, fix_goal(T,Gs,GGs).
-fix_goal(T, G, [Gs, b(T,T2),b(T2,end)]):- G =.. [F,A], already_good(F,2), G0 =.. [F,A,T], next_t(T,T2), fix_goal(T2,G0,Gs).
-fix_goal(_, G, [G]):- functor(G,F,A), already_good(F,A),!.
-fix_goal(T, G, [happens(G,T)]):- executable(G),!.
-fix_goal(T, G, [holds_at(G,T)]).
-
-between_r(H,L,N):- nonvar(N),!,between(L,H,N).
-between_r(H,L,N):- var(N),Hm1 is H - L, !, between(L,H,NN), N is NN - Hm1.
-
-semi_legit_time(happens(_,T1),T1).
-semi_legit_time(happens(_,_,T2),T2).
-semi_legit_time(happens(_,T1,_),T1).
-semi_legit_time(not(Holds),T):- !, semi_legit_time(Holds,T).
-semi_legit_time(Holds1,T1):- 
-   functor(Holds1,F,_),
-   time_arg(F,N),
-   arg(N,Holds1,T1).
-semi_legit_time(Holds1,T1):- 
-   functor(Holds1,_,A), 
-   member(P1,[number,string,atom]),
-   (arg(A,Holds1,T1);arg(_,Holds1,T1)), 
-   T1\==[], call(P1,T1).
-
-sort_on_times_arg(Result,Holds1,Holds2):- 
-   (((semi_legit_time(Holds1,T1),semi_legit_time(Holds2,T2),
-      compare(Result,T1,T2), Result\== (=))) 
-     -> true;
-        sort_on_times_arg(Result,Holds1,Holds2)).
-
-time_arg(b, N):- between(1,2,N).
-time_arg(beq, N):- between(1,2,N).
-time_arg(holds_at, 2).
-time_arg(happens, N):- between_r(3,2,N), N\=1.
-time_arg(clipped, N):- between_r(3,1,N), N\=2.
-time_arg(declipped, N):- between_r(3,1,N), N\=2.
-
-fix_time_args(T,[G|Gs],Gss):- 
-  semi_legit_time(G,ST),
-  fix_time_args1(ST,[G|Gs],Gs0),
-  fix_time_args2(T,Gs0,Gss).
-
-fix_time_args2(_,Gs,Gss):-
-  Gss = [b(start,now),b(now,aft),b(aft,end)|Gs].
-
-visit_time_args(_,In,[],[],In).
-visit_time_args(Stem,In,[G|Gs],[GO|GsO],Out):- !, 
-    visit_time_args(Stem,In,G,GO,Mid),
-    visit_time_args(Stem,Mid,Gs,GsO,Out).
-visit_time_args(Stem,In,holds_at(A,T1),holds_at(A,T1R),Out):- 
-   correct_time_arg(Stem,In,T1,T1R,Out).
-visit_time_args(Stem,In,happens(A,T1,T2),happens(A,T1R,T2R),Out):- 
-   correct_time_arg(Stem,In,T1,T1R,B0),
-   correct_time_arg(Stem,B0,T2,T2R,Out).
-visit_time_args(Stem,In,happens(A,T1),happens(A,T1R),Out):- 
-   correct_time_arg(Stem,In,T1,T1R,Out).
-visit_time_args(Stem,In,b(T1,T2),b(T1R,T2R),Out):- 
-   correct_time_arg(Stem,In,T1,T1R,B0),
-   correct_time_arg(Stem,B0,T2,T2R,Out).
-visit_time_args(Stem,In,not(G),not(GG),Out):- !, visit_time_args(Stem,In,G,GG,Out).
-visit_time_args(Stem,In,beq(T1,T2),beq(T1R,T2R),Out):- 
-   correct_time_arg(Stem,In,T1,T1R,B0),
-   correct_time_arg(Stem,B0,T2,T2R,Out).
-visit_time_args(Stem,In,clipped(T1,A,T2),clipped(T1R,A,T2R),Out):- 
-   correct_time_arg(Stem,In,T1,T1R,B0),
-   correct_time_arg(Stem,B0,T2,T2R,Out).
-visit_time_args(Stem,In,declipped(T1,A,T2),declipped(T1R,A,T2R),Out):- 
-   correct_time_arg(Stem,In,T1,T1R,B0),
-   correct_time_arg(Stem,B0,T2,T2R,Out).
-visit_time_args(_,In,G,G,In).
-
-correct_time_arg(_Stem,In, TN, TpN, In):- memberchk(TN=TpN,In),!.
-correct_time_arg(Stem,In, T+N, TpN, Out):- N<0, NN is abs(N),!,correct_time_arg(Stem,In, T-NN, TpN, Out).
-correct_time_arg(Stem,In, T-N, TpN, Out):- N<0, NN is abs(N),!,correct_time_arg(Stem,In, T+NN, TpN, Out).
-correct_time_arg(Stem,In, Now-N, T, Out):- N>1, NN is N-1, correct_time_arg(_Stem,In, Now+1, Tm2, Mid),
-  correct_time_arg(Stem, Mid, Tm2+NN, T, Out).
-correct_time_arg(Stem,In, Now-N, T, Out):- N<1, NN is N+1, correct_time_arg(_Stem,In, Now-1, Tm2, Mid),
-  correct_time_arg(Stem, Mid, Tm2-NN, T, Out).
-
-
-correct_time_arg(_Stem,In, T+0, T, In):-!.
-correct_time_arg(_Stem,In, T-0, T, In):-!.
-correct_time_arg(_Stem,In, T+1, TT, In):- memberchk(b(T,TT),In),!.
-correct_time_arg(_Stem,In, T-1, TT, In):- memberchk(b(TT,T),In),!.
-correct_time_arg(_Stem,In, T-1, TT, [b(TT,T)|In]):- next_t(TT,T),!.
-correct_time_arg(_Stem,In, T+1, TT, [b(T,TT)|In]):- next_t(T,TT),!.
-correct_time_arg(_Stem,In, T+N, TpN, [b(T,TpN),ignore(T+N=TpN)|In]):- atom_concat(T,N,TpN).
-correct_time_arg(_Stem,In, T-N, TpN, [b(TpN,T),ignore(T-N=TpN)|In]):- atomic_list_concat([T,N],minus,TpN).
-correct_time_arg(Stem,In, TN, TpN, Out):- number(TN), !, correct_time_arg(Stem,In, Stem+TN, TpN, Out).
-correct_time_arg(_Stem,In, TN, TN, In):- atom(TN),!.
-correct_time_arg(_Stem,In, TN, TN, In).
-
-next_t(t,start).
-next_t(start,now).
-next_t(now,aft).
-next_t(aft,Aft_1):- var(Aft_1),!,gensym(aft_,Aft_1).
-
-
-fix_time_args1(T,G,Gs):- 
-  visit_time_args(T,[],G,Gs,_Mid).
-
-
-
-make_falling_edges_v2(_Stem,LastTime,[],[],LastTime):-!.
-make_falling_edges_v2(Stem,LastTime,
-              [happens(Event,When1)|HapsList],
-              [before(LastTime,ThisTime),happens(Event,ThisTime,NextTime)|Befores],Out):- 
-   atom_concat_gs(Stem, When1, ThisTime),
-   atom_concat_gs(Stem, When1, NextTime),
-  make_falling_edges_v2(Stem, NextTime, HapsList,Befores,Out).
-make_falling_edges_v2(Stem,LastTime,
-              [happens(Event,When1,When2)|HapsList],
-              [before(LastTime,ThisTime),happens(Event,ThisTime,NextTime)|Befores],Out):- 
-   atom_concat_gs(Stem, When1, ThisTime),
-   atom_concat_gs(Stem, When2, NextTime),
-  make_falling_edges_v2(Stem, NextTime, HapsList,Befores,Out).
-
-atom_concat_gs(Stem, When1, ThisTime):- atom_concat(Stem, When1, Lose1),gensym(Lose1,ThisTime).
-
-make_falling_edges(_Stem,LastTime,[],[],LastTime):-!.
-make_falling_edges(Stem, LastTime,
-              [happens(Event, When1)|HapsList],
-              [before(LastTime, ThisTime),holds_at(has_occured(Event),ThisTime)|Befores],Out):- 
-   atom_concat_gs(Stem, When1, ThisTime),
-  make_falling_edges(Stem,ThisTime, HapsList,Befores,Out).
-make_falling_edges(Stem,LastTime,
-              [happens(Event,When1,When2)|HapsList],
-              [before(LastTime,ThisTime),holds_at(has_occured(Event),ThisTime)|Befores],Out):- 
-   atom_concat_gs(Stem, When1, ThisTime),
-   atom_concat_gs(Stem, When2, NextTime),
-  make_falling_edges(Stem, NextTime, HapsList,Befores,Out).
-
-
-already_good(happens, 2).
-already_good(happens, 3).
-already_good(holds_at, 2).
-already_good(b, 2).
-already_good(is, 2).
-already_good(diff, 2).
-already_good(dif, 2).
-already_good(terms_or_rels,3).
-already_good(F,A):- functor(P,F,A),clause(abducible(PP),_),compound(PP),PP=P.
-already_good(F,A):- functor(P,F,A),clause(abducible(PP),_),compound(PP),PP=P.
-
-:- if((prolog_load_context(file,F),prolog_load_context(source,F))).
+%:- if((prolog_load_context(file,F),prolog_load_context(source,F))).
 :- style_check(-singleton).
 
 /*
@@ -385,7 +151,8 @@ abdemo_top(Gs,R1,R3,N1,N3,D) :-
 abdemo_cont([[HA,TC],RB],[[HA,TC],RB],N,N) :- all_executable(HA), !.
 
 abdemo_cont([[HA,HC],[BA,BC]],R2,N1,N3) :-
-     write('Abstract plan: '), write(HA), writenl(BA), nl,
+     %write('Abstract plan: '), write(HA), writenl(BA), nl,
+     dbginfo('Abstract plan:'=[HA,BA]),
      refine([[HA,HC],[BA,BC]],N1,Gs,R1,N2), action_count([[HA,HC],[BA,BC]],D),
      abdemo_top(Gs,R1,R2,N2,N3,D).
 
@@ -418,12 +185,15 @@ all_executable([happens(A,T1,T2)|R]) :- executable(A), all_executable(R).
 
 */
 
-abdemo(Gs,[[HA,TC1],[BA,TC2]],R,N1,N2,D) :-
-     trace(on), write('Goals: '), writenl(Gs),
-     write('Happens: '), writenl(HA),
-     write('Befores: '), writenl(BA),
-     write('Nafs: '), writenl(N1), nl, nl, fail.
 
+
+abdemo(Gs,[[HA,TC1],[BA,TC2]],R,N1,N2,D) :- N1 \= [],
+     Gs == [],
+     %is_dbginfo(trace=on), 
+     dbginfo('Goals'=Gs),
+     dbginfo('Happens'=HA),
+     dbginfo('Befores'=BA),
+     dbginfo('Nafs'=N1),nl,nl,fail.
 abdemo([],R,R,N,N,D).
 abdemo([G|Gs],R1,R2,N1,N2,D):-
   abdemo_cons(G,Gs,R1,R2,N1,N2,D).
@@ -532,7 +302,7 @@ abdemo_cons(happens(A,T),Gs,R1,R4,N1,N3,D) :-
 */
 
 abdemo_cons(expand([happens(A,T1,T2)|Bs]),Gs1,R1,R8,N1,N8,D) :-
-     !, axiom(happens(A,T1,T2),Gs2),
+     !, current_axiom(happens(A,T1,T2),Gs2),
      add_sub_actions(Gs2,R1,R2,N1,N2,D,Hs),
      solve_befores(Bs,R2,R3,N2,N3,D),
      abdemo_holds_ats(Gs2,R3,R4,N3,N4,D),
@@ -676,13 +446,13 @@ check_clipping([G|Gs],R1,R2,N1,N2,D) :-
    if a happens fact has been added to the residue.
 */
 
-abresolve(terms_or_rels(A,F,T),R,Gs,R,false) :- axiom(releases(A,F,T),Gs).
+abresolve(terms_or_rels(A,F,T),R,Gs,R,false) :- current_axiom(releases(A,F,T),Gs).
 
-abresolve(terms_or_rels(A,F,T),R,Gs,R,false) :- !, axiom(terminates(A,F,T),Gs).
+abresolve(terms_or_rels(A,F,T),R,Gs,R,false) :- !, current_axiom(terminates(A,F,T),Gs).
 
-abresolve(inits_or_rels(A,F,T),R,Gs,R,false) :- axiom(releases(A,F,T),Gs).
+abresolve(inits_or_rels(A,F,T),R,Gs,R,false) :- current_axiom(releases(A,F,T),Gs).
 
-abresolve(inits_or_rels(A,F,T),R,Gs,R,false) :- !, axiom(initiates(A,F,T),Gs).
+abresolve(inits_or_rels(A,F,T),R,Gs,R,false) :- !, current_axiom(initiates(A,F,T),Gs).
 
 /*
    happens goals get checked to see if they are already in the residue.
@@ -733,7 +503,7 @@ abresolve(is(X,Y),R,[],R,false) :- !, X is Y.
 
 abresolve(G,R,[],[G|R],false) :- abducible(G).
 
-abresolve(G,R,Gs,R,false) :- axiom(G,Gs).
+abresolve(G,R,Gs,R,false) :- current_axiom(G,Gs).
 
 
 /* ABDEMO_NAFS and CHECK_NAFS */
@@ -1219,8 +989,7 @@ opposite(neg(F),F) :- !.
 opposite(F,neg(F)).
 
 
-trace(off).
+%trace(off).
 
 
-
-:- endif.
+%:- endif.
