@@ -134,11 +134,12 @@ e_io(Why, Ins):-
 :- op(900, fx, ecread:'!').
 :- op(1000, xfy, ecread:'&').
 :- op(1050, xfy, ecread:'->').
-:- op(1050, xfy, ecread:'<->').
+:- op(1150, xfy, ecread:'<->').
 :- op(1100, xfy, ecread:'|').
 :- op(1150, xfy, ecread:'quantz').
 :- op(1025, xfy, ecread:'thereExists').
 
+:- op(1150, xfx, '<->').
 
 
 removed_one_ws(S):-
@@ -463,41 +464,42 @@ do_ec_load(SS):-
   do_convert_e(SS).
 
 do_convert_e(load(F)):- mention_s_l, exists_file(F), ec_load(F),!.
-
 %do_convert_e(load(F)):- exists_file(F),!,e_to_pl(do_convert_e, current_output, F).
 do_convert_e(SS):- 
    must(pretty_numbervars(SS, SS1)), 
    flush_output, format('~N'),
     with_op_cleanup(1200,xfx,(<->),
      with_op_cleanup(1200,xfx,(->),
-       ansi_format([fg(yellow)], '~@~n~n', [ecread:pprint_e(SS1)]))), 
+       ansi_format([fg(yellow)], '~@~n~n', [ec_reader:pprint_sf(SS1)]))), 
     flush_output, !.
 
-/*
-ecread:pprint_sf(T):-
-  format(string(S0), '~@', [ecread:pprint_e(T)]),
-  always_string_replace(S0,'->','->\n  ',S1),
-  always_string_replace(S1,',(',',\n (',S2),
-  always_string_replace(S2,',holds',',\n  holds',S3),
-  always_string_replace(S3,',not',',\n not',S4),
-  always_string_replace(S4," ','",',\n  ',S5),  
-  always_string_replace(S5,");",');\n  ',S6),  
-  always_string_replace(S6,")),",')),\n  ',S),  
+
+pprint_sf(T):-
+  format(string(S0), '~@', [ec_reader:pprint_e(T)]),
+  always_string_replace(S0,'<->','<->\n  ',S1),
+  always_string_replace(S1,':-','<->',S2),
+  always_string_replace(S2,'-->','->',S),
   format('~s',[S]).
 
 always_string_replace(I,F,R,O):- if_string_replace(I,F,R,O),!.
 always_string_replace(I,_,_,I).
-*/
+
 
 has_operators(T):- \+ compound(T),!, fail.
 has_operators(T):- compound_name_arity(T, _, 0), !, fail.
 has_operators(T):- functor(T,F,_),(current_op(_,_,F);F=( '<->' )).
 has_operators(T):- arg(_,T,F), has_operators(F).
 
-ecread:pprint_e(T):- % has_operators(T),
+
+pprint_e(T):- 
+   subst(T,('<->'),(':-'),T0),
+   subst(T0,('->'),('-->'),TT),
+   prolog_listing:portray_clause(TT),!.
+
+pprint_e(T):- % has_operators(T),
    prolog_listing:portray_clause(T),!.
-ecread:pprint_e(SS1):- format('~p',[SS1]),!.
-ecread:pprint_e(SS1):- 
+pprint_e(SS1):- format('~p',[SS1]),!.
+pprint_e(SS1):- 
         prolog_pretty_print:print_term(SS1, 
              [  % left_margin(1),
                                 write_options([numbervars(true),
