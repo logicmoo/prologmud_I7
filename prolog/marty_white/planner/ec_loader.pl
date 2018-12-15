@@ -1,3 +1,38 @@
+:- export(ect/0).
+ect:- ec_load('examples/FrankEtAl2003/Story1.e').
+
+
+
+%predicate, option range load fluent event noninertial xor completion
+verbatum_functor(function). verbatum_functor(event). 
+verbatum_functor(predicate). verbatum_functor(fluent).
+
+builtin_pred_ef(initiates).
+builtin_pred_ef(terminates).
+builtin_pred_ef(releases).
+
+builtin_pred(EF):- builtin_pred_ef(EF).
+builtin_pred(holds_at).
+builtin_pred(happens).
+builtin_pred(declipped).
+builtin_pred(clipped).
+builtin_pred(before).
+builtin_pred(after).
+builtin_pred(sort).
+builtin_pred(initially).
+
+%special_directive('!').
+%special_directive('neg').
+
+decl_arg_sorts(fluent).
+decl_arg_sorts(event).
+decl_arg_sorts(predicate).
+decl_arg_sorts(function).
+
+% builtin_pred(releasedAt).
+
+verbatum_functor(executable).
+decl_arg_sorts(executable).
 
 
 %process_ec(X):- ec_to_ax(X,Y),X\=@=Y,process_ec(Y).

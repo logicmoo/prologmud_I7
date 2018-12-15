@@ -14,7 +14,16 @@
 % Main file.
 %
 */
-:- module(e_reader,[process_e/1,load_e/1,convert_e/1]).
+
+/*
+  
+ ec_reader:   
+    Converts Eric Muellers DEC Reasoner files  (IBM ".e" files)
+    To a Prolog readable ".e.pl" which may be maintained by hand
+    
+
+*/
+:- module(ec_reader,[process_e/2,ec_load/1,convert_e/1]).
 
 :- meta_predicate e_to_pl(1,+,+), e_in_to_pl(1,+,+).
 :- meta_predicate map_callables(2,*,*).
@@ -37,32 +46,28 @@
 %:- meta_predicate each_doing(1, ?).
 %:- meta_predicate doing(1, *).
   
-%:- use_module(library(logicmoo_startup)).
-:- use_module(library(file_utils/filestreams)).
 
-:- export(ect/0).
-ect:- e_load('examples/FrankEtAl2003/Story1.e').
+:- use_module(library(logicmoo_common)).
+%:- use_module(library(file_utils/filestreams)).
 
 :- export(e_reader_testf/0).
-e_reader_testf :- e_convert(outf, 'ectest/*.e').
+e_reader_testf :- convert_e(outf, 'ectest/*.e').
 
 :- export(e_reader_test/0).
-e_reader_test :- e_convert(user_output, 'ectest/*.e').
+e_reader_test :- convert_e(user_output, 'ectest/*.e'),  
+  convert_e(user_output, 'examples/AkmanEtAl2004/ZooWorld.e'),
+  convert_e(user_output, 'examples/Mueller2006/Chapter11/HungryCat.e').
 %:- initialization(e_reader_test, main).
 
-:- export(e_load/1).
-e_load(F):-  
+:- export(ec_load/1).
+ec_load(F):-  
   \+ etmp:e_option(load(F), _),
-  asserta(etmp:e_option(load(F), e_load)),
-  e_to_pl(do_e_load, current_output, F).
+  asserta(etmp:e_option(load(F), ec_load)),
+  e_to_pl(do_ec_load, current_output, F).
 
-:- export(e_convert/1).
-e_convert(F):- e_convert(outf, F).
-e_convert(Out, F):- e_to_pl(do_e_convert, Out, F).
-
-
-
-:- thread_local(t_l:e_options/2).
+:- export(convert_e/1).
+convert_e(F):- convert_e(outf, F).
+convert_e(Out, F):- e_to_pl(do_convert_e, Out, F).
 
 
 e_to_pl(Why, Out, F):- dmsg(e_to_pl(Why, Out, F)), fail.
@@ -131,6 +136,8 @@ e_io(Why, Ins):-
 :- op(1050, xfy, ecread:'->').
 :- op(1050, xfy, ecread:'<->').
 :- op(1100, xfy, ecread:'|').
+:- op(1150, xfy, ecread:'quantz').
+:- op(1025, xfy, ecread:'thereExists').
 
 
 
@@ -144,11 +151,17 @@ trim_off_whitepace(S):- repeat, \+ removed_one_ws(S).
 
 %process_stream_peeked213(S, " ;"):- !, till_eol(S).
 
-read_n_save_vars(Codes):- read_n_save_vars(Codes, _).
-read_n_save_vars(Codes, Vars):- e_read3(Codes, VarNames), 
-  ((VarNames={A}, atom(A)) -> Vars=[A]; Vars = VarNames), 
-  asserta(etmp:temp_varnames(Vars)).
 
+read_n_save_vars(Type, Codes):- read_some_vars(Codes, Vars),
+  asserta(etmp:temp_varnames(Type, Vars)).
+
+read_some_vars(Codes, Vars):-
+  must(e_read3(Codes, VarNames)), !, 
+  varnames_as_list(VarNames, Vars).
+
+varnames_as_list({A},[A]):- atom(A),!.
+varnames_as_list({A,B},Vars):- !,varnames_as_list({A},Vars1),varnames_as_list({B},Vars2),append(Vars1,Vars2,Vars).
+varnames_as_list(VarNames,Vars):- assertion(is_list(VarNames)), !, VarNames=Vars.
 
 upcased_functors(G):- 
  notrace((allow_variable_name_as_functor = N, 
@@ -164,8 +177,8 @@ upcased_functors(G):-
 %
 process_stream_comment(S) :- (peek_string(S, 2, W);peek_string(S, 1, W)), clause(process_stream_peeked213(S, W),Body),!,call(Body).
 process_stream_peeked213(S, ";"):- !, read_line_to_string(S, Comment), echo_format('~N% ~s~n', [Comment]).
-process_stream_peeked213(S, "["):- mention_s_l, write('% '), !, read_stream_until(S, [], `]`, Codes), read_n_save_vars(Codes).
-process_stream_peeked213(S, "{"):- !, read_stream_until(S, [], `}`, Codes), read_n_save_vars(Codes), echo_format('~N% ~s~n', [Codes]).
+process_stream_peeked213(S, "["):- mention_s_l, write('% '), !, read_stream_until(S, [], `]`, Codes), read_n_save_vars(universal, Codes).
+process_stream_peeked213(S, "{"):- mention_s_l, write('% '), !, read_stream_until(S, [], `}`, Codes), read_n_save_vars(existential, Codes).
 process_stream_peeked213(S, "#!"):- !, till_eol(S).
 
 
@@ -175,7 +188,7 @@ process_e_stream(_, S) :- removed_one_ws(S), !.
 process_e_stream(_, S):- process_stream_comment(S), !.
 
 process_e_stream(Why, S):- maybe_mention_s_l,    
-   OR = [to_lower('.'), to_lower('('), end_of_line, space, to_lower(':')], 
+   OR = [to_lower('.'), to_lower('('), end_of_line, to_lower('='),to_lower('>'), space, to_lower(':')], 
    write('% '),
    read_stream_until_true(S, [], char_type_inverse(Was, or(OR)), Text), 
    unpad_codes(Text, Codes), must(continue_process_e_stream(Why, S, Codes, Was)), !.
@@ -221,7 +234,7 @@ e_read3(String, Term):-
   maplist(ignore, Vars).
 
 :- use_module(library(hybrid_db/portray_vars)).
-:- dynamic(etmp:temp_varnames/1).
+:- dynamic(etmp:temp_varnames/2).
 :- dynamic(etmp:e_option/2).
 
 
@@ -235,18 +248,13 @@ insert1_var(Term0, V, VV, Term1):-
   debug_var(V, VV), 
   subst(Term0, V, VV, Term1).
 
-special_directive(manualrelease).
-special_directive(completion).
-special_directive(ignore).
-special_directive('!').
-special_directive('neg').
-
 
 map_callables(_, Term0, Term):- \+ callable(Term0), !, Term0=Term.
 map_callables(_, Term0, Term):- []== Term0, !, Term =[].
 map_callables(Call, Term0, Term):- atom(Term0), !, call(Call, Term0, Term).
 map_callables(_Call, Term0, Term):- \+ compound(Term0), !, Term0=Term.
-map_callables(Call, Compound=Value, Term):- compound(Compound), append_term(Compound, Value, Term0), map_callables(Call, Term0, Term).
+map_callables(Call, Compound=Value, Term):- fail, compound(Compound), 
+  append_term(Compound, Value, Term0), map_callables(Call, Term0, Term).
 map_callables(_, '$VAR'(HT), '$VAR'(HT)):-!.
 map_callables(Call, [H|T], [HTerm|TTerm]):- !, map_callables(Call, H, HTerm), map_callables(Call, T, TTerm), !.
 map_callables(Call, '$'(F, A), '$'(FF, AA)):- A==[], [] = AA, !, call(Call, F, FF).
@@ -257,95 +265,158 @@ map_callables(Call, HT, HTTerm):- !,
  map_callables(Call, '$'(F, L), '$'(FF, LL)), 
  compound_name_arguments(HTTerm, FF, LL).
 
-fix_predname(~, neg).
-fix_predname(!, neg).
+
+
+fix_predname(!, not).
 fix_predname('|', ';').
 fix_predname('&', ',').
+%fix_predname('|', 'or').
+%fix_predname('&', '&').
 fix_predname(F, not):- downcase_atom(F, not).
 fix_predname(F, holds_at):- downcase_atom(F, holdsat).
 fix_predname(F, Happens):- builtin_pred(Happens), downcase_atom(F, Happens), !.
 
+
+builtin_pred(initiates).
+builtin_pred(terminates).
+builtin_pred(releases).
+builtin_pred(holds_at).
+builtin_pred(happens).
+builtin_pred(declipped).
+builtin_pred(clipped).
+builtin_pred(before).
+builtin_pred(after).
+builtin_pred(sort).
+builtin_pred(initially).
+
 my_unCamelcase(X, Y):- atom(X), fix_predname(X, Y), !.
-my_unCamelcase(X, Y):- upcase_atom(X, X), !, downcase_atom(X, Y).
-my_unCamelcase(X, Y):- unCamelcase(X, Y).
+my_unCamelcase(X, Y):- atom(X), upcase_atom(X, X), !, downcase_atom(X, Y).
+my_unCamelcase(X, Y):- unCamelcase(X, Y), !.
+
+verbatum_functor(function). verbatum_functor(event). 
+verbatum_functor(predicate). verbatum_functor(fluent).
+
+is_non_sort(P):- verbatum_functor(P).
+is_non_sort(range).
+is_non_sort(mutex).
+is_non_sort(ignore).
+is_non_sort(reified_sort).
+is_non_sort(noninertial).
+is_non_sort(sort).
+is_non_sort(option).
+is_non_sort(reified).
+is_non_sort(load).
+is_non_sort(completion).
+is_non_sort(xor).
+is_non_sort(manualrelease).
+is_non_sort(completion).
+is_non_sort(ignore).
+
+is_quantifier_type(thereExists,exists).
+is_quantifier_type(forAll,all).
 
 e_to_ec(C, C):- \+ callable(C), !.
 e_to_ec('$VAR'(HT), '$VAR'(HT)):-!.
-e_to_ec(X, Y):- \+ compound(X), !, my_unCamelcase(X, Y).
+e_to_ec(X, Y):- \+ compound(X), !, must(my_unCamelcase(X, Y)).
+e_to_ec(X, Y):- compound_name_arity(X, F, 0), !, my_unCamelcase(F, FF), compound_name_arity(Y, FF, 0).
+e_to_ec(not(Term),not(O)):- !, e_to_ec(Term, O).
+e_to_ec(Prop,O):- 
+  Prop =.. [ThereExists,not(Vars),Term0],
+  is_quantifier_type(ThereExists,_Exists),
+  nonvar(Vars),!,
+  QProp =.. [ThereExists,Vars,Term0], 
+  e_to_ec(not(QProp),O).
+e_to_ec(Prop,O):- 
+  Prop =.. [ThereExists,Vars,Term0], 
+  is_quantifier_type(ThereExists,Exists),
+  is_list(Vars), forall(member(E,Vars),ground(E)),
+  QProp =.. [Exists,Vars,Term0],
+  insert_vars(QProp, Vars, Term, _Has),
+  e_to_ec(Term,O),!.
 %e_to_ec(X, Y):- e_to_ax(X, Y),X\=@=Y,!,e_to_ec(X, Y).
-e_to_ec(neg(holds_at(N,V)),O):-e_to_ec((holds_at(neg(N),V)),O).
+%e_to_ec(neg(C),O):-e_to_ec(holds_at(neg(N),V),O):- compound(C),holds_at(N,V)=C,
+%e_to_ec(neg(holds_at(N,V)),O):-e_to_ec((holds_at(neg(N),V)),O).
 e_to_ec(t(X, [Y]), O):- nonvar(Y), !, e_to_ec(t(X, Y), O).
 e_to_ec(load(X), load(X)).
 e_to_ec(option([N, V]), O):- !, e_to_ec(option(N, V), O).
 e_to_ec(range([N, V, H]), O):- !, e_to_ec(range(N, V, H), O).
-% e_to_ec(t(X, Y), O):- atom(X), is_list(Y), is_special_macro(X), SS=..[X|Y], e_to_ec(SS, O).
-e_to_ec(t(X, Y), O):- atom(X), SS=..[X, Y], e_to_ec(SS, O).
+
+e_to_ec(t(X, Y), O):- atom(X), is_non_sort(X), !, SS=..[X, Y], e_to_ec(SS, O).
+e_to_ec(t(X, Y), O):- atom(X), is_list(Y), is_non_sort(X), SS=..[X|Y], e_to_ec(SS, O).
+e_to_ec(t(X, Y), O):- atom(X), is_list(Y), SS=..[X, Y], e_to_ec(SS, O).
 e_to_ec(sort(col([S1, S2])), O):- !, e_to_ec(subsort(S1, S2), O).
 e_to_ec(function(F, [M]), O):- e_to_ec(function(F, M), O).
-e_to_ec(Compound=Value, equals(Compound,Value)).
+%e_to_ec(Compound=Value, equals(Compound,Value)).
+/*
 e_to_ec(Term1, Term):- 
-  map_callables(my_unCamelcase, Term1, HTTermO),
-  Term1\=@=HTTermO,!,
-  e_to_ec(HTTermO, Term).
+%  map_callables(my_unCamelcase, Term1, HTTermO),
+%  Term1\=@=HTTermO,!,
+%  e_to_ec(HTTermO, Term). 
+*/
 e_to_ec(HT, HTTermO):- !, 
  compound_name_arguments(HT, F, L), 
  maplist(e_to_ec,L,LL),
  compound_name_arguments(HTTerm, F, LL),
  map_callables(my_unCamelcase, HTTerm, HTTermO).
 
-verbatum_functor(function). verbatum_functor(event). 
-verbatum_functor(predicate). verbatum_functor(fluent).
-verbatum_functor(executable).
 
 vars_verbatum(Term):- \+ compound(Term), !.
 vars_verbatum(Term):- compound_name_arity(Term, F, A), (verbatum_functor(F);verbatum_functor(F/A)), !.
 
-add_e_vars(Term0, Term, Vs):- vars_verbatum(Term0), !, Term0=Term, Vs=[].
-add_e_vars(Term0, Term, Vs):- 
-  findall(E, (etmp:temp_varnames(L), member(E, L)), LL), 
-  sort(LL, LLS), 
-  insert_vars(Term0, LLS, Term, Vs), !.
+add_ec_vars(Term0, Term, Vs):- vars_verbatum(Term0), !, Term0=Term, Vs=[].
+add_ec_vars(Term0, Term, Vs):- 
+  get_vars(universal, UniVars),
+  get_vars(existential,ExtVars),
+  insert_vars(Term0, UniVars, Term1, VsA),!,  
+  add_ext_vars(VsA, ExtVars, Term1, Term, Vs), !.
 
-fix_e_read(Term0, Term, Vs):- 
-  add_e_vars(Term0, Term1, Vs), 
-  % pretty_numbervars(Term1, Term2), 
-  e_to_ec(Term1, Term), !, 
-  retractall(etmp:temp_varnames(_)).
+add_ext_vars(Vs, [], Term, Term, Vs):- !.
+add_ext_vars(VsA, LLS, Term0, Term, Vs):-  
+  insert_vars(exists(LLS, Term0), LLS, Term, VsB), !,
+  append(VsA,VsB,Vs),!.
+
+
+get_vars(Type,LLS):- findall(E, (etmp:temp_varnames(Type,L), member(E, L)), LL), sort(LL, LLS),!.
 
 
 e_read1(String, Term, Vs):- 
    e_read2(String, Term0), !, 
-   fix_e_read(Term0, Term, Vs).
-   
+   add_ec_vars(Term0, Term1, Vs), !,
+   retractall(etmp:temp_varnames(_,_)),
+   e_to_ec(Term1, Term), !.
 
-e_read2(T, exists(Vs, Term)):- 
-   cleanout(T, '{', '}', S3, SSS), !, read_n_save_vars(S3, Vs), 
-   e_read2(SSS, Term).
-e_read2(T, all(Vs, Term)):- 
-   cleanout(T, '[', ']', S3, SSS), !, read_n_save_vars(S3, Vs), 
-   e_read2(SSS, Term).
-e_read2(Txt, Term):- 
-   text_to_string(Txt, T), 
-   atomics_to_string(List, '!=', T), List\=[_], 
-   atomics_to_string(List, (\=), NewT), !, 
-   e_read2(NewT, Term).
+if_string_replace(T, B, A, NewT):-   
+   atomics_to_string(List, B, T), List=[_,_|_], !,
+   atomics_to_string(List, A, NewT). 
+
+
+e_read2(Txt, Term):- \+ string(Txt), text_to_string(Txt, T),!, e_read2(T, Term).
+e_read2(T, Term):- if_string_replace(T, '!=', (\=), NewT), !, e_read2(NewT, Term).
+e_read2(T, Term):- 
+  if_string_replace(T, '{', ' [ ', T1), 
+  if_string_replace(T1, '}', ' ] thereExists ', NewT),    
+  e_read2(NewT, Term).
+%e_read2(T, Term):- if_string_replace(T, '[', ' forAll( ', NewT), !, e_read2(NewT, Term).
+%e_read2(T, Term):- if_string_replace(T, ']', ') quantz ', NewT), !, e_read2(NewT, Term).
+e_read2(T, Term):- 
+   upcased_functors(read_term_from_atom(T, Term, 
+     [var_prefix(true), variable_names(Vars), module(ecread)])), !,
+  maplist(ignore, Vars).
 e_read2(T, Term):- 
    must(e_read3(T, Term)), !.
    
    
 
-
-cleanout(T, B, E, S3, SSS):-
- text_to_string(T, S1), 
- atomic_list_concat([A1, A2|Rest], B, S1), 
- atomic_list_concat(['', A2|Rest], B, S2), 
- setup_call_cleanup(
-   open_string(S2, In), 
-   ((read_stream_until(In, [], E, S3), S3\==[], 
-     read_pending_codes(In, RestCodes, []), 
-     text_to_string(RestCodes, S4))), 
-     close(In)), !, 
- atomic_list_concat([A1, S4], '', SSS).
+cleanout(Orig, B, E, MidChunk, RealRemainder):-
+ text_to_string(Orig, Str), 
+ AfterFirstB=[_|_],
+ atomic_list_concat([BeforeB|AfterFirstB], B, Str), 
+         atomics_to_string(  AfterFirstB, B, AfterB),
+ Remainder=[_|_],
+ atomic_list_concat([Mid|Remainder], E, AfterB),
+ atomics_to_string( Remainder, E, AfterE),
+ atomics_to_string( [BeforeB,' ', AfterE], RealRemainder),
+ atomics_to_string( [B, Mid, E], MidChunk).
 
 
 read_one_e_compound(S, Term):- 
@@ -367,43 +438,6 @@ cont_one_e_compound(S, InCodes, WasLast, Term):-
    unpad_codes(Text, Codes), last(Codes, Last), 
    cont_one_e_compound(S, Codes, Last, Term).
 
-is_special_macro(range).
-is_special_macro(mutex).
-is_special_macro(ignore).
-is_special_macro(reified_sort).
-is_special_macro(noninertial).
-is_special_macro(sort).
-is_special_macro(option).
-is_special_macro(reified).
-is_special_macro(load).
-is_special_macro(completion).
-is_special_macro(xor).
-%predicate, option range load fluent event noninertial xor completion
-
-
-builtin_pred_ef(initiates).
-builtin_pred_ef(terminates).
-builtin_pred_ef(releases).
-
-builtin_pred(EF):- builtin_pred_ef(EF).
-builtin_pred(holds_at).
-builtin_pred(happens).
-builtin_pred(declipped).
-builtin_pred(clipped).
-builtin_pred(before).
-builtin_pred(after).
-builtin_pred(sort).
-builtin_pred(initially).
-
-
-decl_arg_sorts(fluent).
-decl_arg_sorts(event).
-decl_arg_sorts(executable).
-decl_arg_sorts(predicate).
-decl_arg_sorts(function).
-
-% builtin_pred(releasedAt).
-
 
 %s_l(F,L):- source_location(F,L),!.
 
@@ -421,31 +455,86 @@ s_l(F,L):-
   ignore(L=999),!.
 
 
-% process_e(Why, load(SS)):- !, e_to_pl(Why, Out, file(SS), current_output).
 process_e(Why, SL):- e_to_ec(SL, SO) -> SL\=@=SO, !, process_e(Why, SO).
-process_e(Why, S):- must(glean_data(Why, S)), must(call(Why, S2)), !.
+process_e(Why, S):- must(glean_data(Why, S)), must(call(Why, S)), !.
 
-uses_isa(C):- atom(C), \+ decl_arg_sorts(C).
-
-do_e_load(SS):- 
-  do_e_convert(SS),
-  process_ec(SS).
   
+do_ec_load(SS):- 
+  do_convert_e(SS).
 
-do_e_convert(load(F)):- mention_s_l, exists_file(F), e_load(F),!.
+do_convert_e(load(F)):- mention_s_l, exists_file(F), ec_load(F),!.
 
-%do_e_convert(load(F)):- exists_file(F),!,e_to_pl(do_e_convert, current_output, F).
+%do_convert_e(load(F)):- exists_file(F),!,e_to_pl(do_convert_e, current_output, F).
+do_convert_e(SS):- 
+   must(pretty_numbervars(SS, SS1)), 
+   flush_output, format('~N'),
+    with_op_cleanup(1200,xfx,(<->),
+     with_op_cleanup(1200,xfx,(->),
+       ansi_format([fg(yellow)], '~@~n~n', [ecread:pprint_e(SS1)]))), 
+    flush_output, !.
 
-do_e_convert(SS):- must(pretty_numbervars(SS, SS1)), 
-   flush_output, format('~N'), ansi_format([fg(yellow)], '~p.~n~n', [(SS1)]), flush_output, !.
-   %maybe_mention_s_l.
-do_e_convert(Data):- wdmsg(do_e_convert(Data)).
+/*
+ecread:pprint_sf(T):-
+  format(string(S0), '~@', [ecread:pprint_e(T)]),
+  always_string_replace(S0,'->','->\n  ',S1),
+  always_string_replace(S1,',(',',\n (',S2),
+  always_string_replace(S2,',holds',',\n  holds',S3),
+  always_string_replace(S3,',not',',\n not',S4),
+  always_string_replace(S4," ','",',\n  ',S5),  
+  always_string_replace(S5,");",');\n  ',S6),  
+  always_string_replace(S6,")),",')),\n  ',S),  
+  format('~s',[S]).
 
+always_string_replace(I,F,R,O):- if_string_replace(I,F,R,O),!.
+always_string_replace(I,_,_,I).
+*/
+
+has_operators(T):- \+ compound(T),!, fail.
+has_operators(T):- compound_name_arity(T, _, 0), !, fail.
+has_operators(T):- functor(T,F,_),(current_op(_,_,F);F=( '<->' )).
+has_operators(T):- arg(_,T,F), has_operators(F).
+
+ecread:pprint_e(T):- % has_operators(T),
+   prolog_listing:portray_clause(T),!.
+ecread:pprint_e(SS1):- format('~p',[SS1]),!.
+ecread:pprint_e(SS1):- 
+        prolog_pretty_print:print_term(SS1, 
+             [  % left_margin(1),
+                                write_options([numbervars(true),
+                                   quoted(true),
+                                  portray(true)]),
+                             %   max_length(120),
+                 % indent_arguments(auto),
+                  output(current_output)]),
+                  flush_output.
+
+get_op_restore(OP,Restore):- 
+   findall(op(E,YF,OP),(member(YF,[xfx,xfy,yfx,fy,fx,xf,yf]),current_op(E,YF,OP)),List),
+   Restore = maplist(call,List).
+get_op_zero(OP,Zero):- 
+   findall(op(0,YF,OP),(member(YF,[xfx,xfy,yfx,fy,fx,xf,yf])),List),
+   Zero = maplist(call,List).
+
+with_op_cleanup(_NewP,_YF,_OP,Goal):- !, Goal.
+with_op_cleanup(NewP,YF,OP,Goal):-
+   (current_op(OldP,YF,OP);OldP=0) -> 
+   get_op_restore(OP,Restore),
+   get_op_zero(OP,Zero),
+   Setup = (Zero,op(NewP,YF,OP)),
+   Cleanup = (op(OldP,YF,OP),Restore),
+   scce_orig(Setup,Goal,Cleanup).
+
+/*ec_portray('$VAR'(Atomic)):-  atom(Atomic), write(Atomic),!.
+ec_portray(','):-write(',').
+user:portray(Nonvar):- nonvar(Nonvar), ec_portray(Nonvar).
+*/
 glean_data(Why, SL):- \+ compound(SL), !, dmsg(warn(glean_data(Why, SL))).
 glean_data(Why, subsort(S1, S2)):- !, glean_data(Why, sort(S1)), glean_data(Why, sort(S2)), assert_gleaned(Why, subsort(S1, S2)).
 glean_data(Why, sort(S)):- !, assert_gleaned(Why, sort(S)).
 glean_data(Why, isa(E, S)):- !, assert_gleaned(Why, isa(E, S)).
-glean_data(Why, SL):- SL=..[S, L], \+ is_special_macro(S), is_list(L), !, glean_data(Why, sort(S)), 
+glean_data(Why, SL):- SL=..[S, L], 
+  \+ is_non_sort(S), is_list(L), !, 
+  glean_data(Why, sort(S)), 
   maplist(glean_data(Why, hasInstance(S)), L).
 glean_data(_, _).
 
@@ -472,7 +561,7 @@ process_e_stream_token(Why, reified, S):- !, read_stream_until(S, [], ` `, Text)
    text_to_string(Text, St), atom_concat('reified_', St, Type), !, process_e_stream_token(Why, Type, S).
 process_e_stream_token(Why, Type, S):- read_line_to_string_echo(S, String), process_e_token_with_string(Why, Type, String).
 
-process_e_token_with_string(Why, Type, String):- \+ is_special_macro(Type), atomics_to_string(VList, ',', String), VList \= [_], !, 
+process_e_token_with_string(Why, Type, String):- \+ is_non_sort(Type), atomics_to_string(VList, ',', String), VList \= [_], !, 
   maplist(process_e_token_with_string(Why, Type), VList).
 process_e_token_with_string(_, _, ""):-!.
 process_e_token_with_string(Why, Type, String):- token_stringsss(String, Out), process_e(Why, t(Type, Out)).
@@ -532,7 +621,8 @@ char_type_inverse(Type, [Spec|List], Code):- !, char_type_inverse(_, Spec, Code)
 char_type_inverse(Type, Spec, Code):- char_type(Code, Spec), Type=Spec.
 
 read_stream_until_true(S, Buffer, Pred, Buffer):- at_end_of_stream(S), !, ignore(call(Pred, 10)).
-read_stream_until_true(S, Buffer, Pred, Codes):- get_code(S, Char), put_code(Char),
+read_stream_until_true(S, Buffer, Pred, Codes):- get_code(S, Char), 
+  (nb_current(e_echo,nil) -> true; put(Char)),
   (call(Pred, Char) -> notrace(append(Buffer, [Char], Codes)) ; 
   (notrace(append(Buffer, [Char], NextBuffer)), read_stream_until_true(S, NextBuffer, Pred, Codes))).
   
