@@ -12,7 +12,7 @@
 
 */
 
-:- include(abdemo_incl).
+:- include(ec_common).
 
 /*
 

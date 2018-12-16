@@ -1,5 +1,5 @@
 
-:- include(abdemo_test).
+:- include('../ec_test_incl').
 
 /*
    Test queries:

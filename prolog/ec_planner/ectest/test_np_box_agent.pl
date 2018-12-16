@@ -6,10 +6,10 @@
 % ec_in_to_pl(do_ec_load, current_output, <stream>(0x55638dfa3da0)).
 % ec_io(do_ec_load, <stream>(0x55638dfa3da0)).
 % ectest/TestBoxRoom.e:1
-:- include('../abdemo_test').
+:- include('../ec_test_incl').
 
 
-do_test_gen(What) :- current_plan_domain(fluent(P)),functor(P,F,A),functor(What,F,A).
+do_test_gen(What) :- ec_current_domain(fluent(P)),functor(P,F,A),functor(What,F,A).
 
 local_demo(L,R):-  dbginfo('L'=L),abdemo_special(depth(0,10),L,R),!.
 local_demo(L,R):-  dm('FAILED:',(L:-R)),trace,!,abdemo_special(depth(0,10),L,R).
@@ -57,7 +57,7 @@ do_test(happend2r) :- fail, local_demo(
 do_test(test_np_box_occurs) :- test_np_box_occurs.
 
 test_np_box_occurs:- 
- findall(E, (current_axiom(E,[]),functor(E,happens,_)), UHapsList),
+ findall(E, (ec_axiom(E,[]),functor(E,happens,_)), UHapsList),
  predsort(sort_on_times_arg,UHapsList,HapsList),
  dbginfo('HapsList'=HapsList), 
  /* 

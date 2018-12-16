@@ -23,15 +23,54 @@
     
 
 */
-:- module(ec_reader,[process_e/2,ec_load/1,convert_e/1]).
+:- module(ec_reader,[convert_e/1, set_ec_option/2, verbatum_functor/1, builtin_pred/1, e_to_pl/3 ]).
 
-:- ensure_loaded('./ec_config').
+
+set_ec_option(N,V):- retractall(etmp:ec_option(N,_)),asserta(etmp:ec_option(N,V)).
+
+
+% used by ec_reader
+verbatum_functor(function). verbatum_functor(event). 
+verbatum_functor(predicate). verbatum_functor(fluent).
+
+is_non_sort(P):- verbatum_functor(P).
+is_non_sort(range).
+is_non_sort(mutex).
+is_non_sort(ignore).
+is_non_sort(reified_sort).
+is_non_sort(noninertial).
+is_non_sort(sort).
+is_non_sort(option).
+is_non_sort(reified).
+is_non_sort(load).
+is_non_sort(completion).
+is_non_sort(xor).
+is_non_sort(manualrelease).
+is_non_sort(completion).
+is_non_sort(ignore).
+
+builtin_pred(initiates).
+builtin_pred(terminates).
+builtin_pred(releases).
+builtin_pred(holds_at).
+builtin_pred(happens).
+builtin_pred(declipped).
+builtin_pred(clipped).
+builtin_pred(before).
+builtin_pred(after).
+builtin_pred(sort).
+builtin_pred(initially).
+
+is_quantifier_type(thereExists,exists).
+is_quantifier_type(forAll,all).
+
+% used by ec_loader
 
 :- meta_predicate e_to_pl(1,+,+), e_to_pl(1,+,+).
 :- meta_predicate map_callables(2,*,*).
 :- meta_predicate in_space_cmt(0).
 :- meta_predicate process_e_stream(1,*).
-:- meta_predicate process_e(1,*).
+:- meta_predicate ec_on_read(1,*).
 :- meta_predicate e_io(1,*).
 :- meta_predicate upcased_functors(0).
 :- meta_predicate read_stream_until_true(*,*,1,*).
@@ -66,16 +105,11 @@ e_reader_testout(Out) :- convert_e(Out, 'ectest/*.e'),
 raise_translation_event(Why,What,OutputName):- call(Why,translate(What,OutputName)).
 
 
-:- export(ec_load/1).
-ec_load(F):-  
-  \+ etmp:ec_option(load(F), _),
-  asserta(etmp:ec_option(load(F), ec_load)),
-  e_to_pl(do_ec_load, current_output, F).
-
 :- export(convert_e/1).
 convert_e(F):- convert_e(outdir('.'), F).
 convert_e(Out, F):- e_to_pl(do_convert_e, Out, F).
 
+:- export(is_filename/1).
 is_filename(F):- atom(F), \+ is_stream(F),
   (exists_file(F);is_absolute_file_name(F)).
 
@@ -240,13 +274,13 @@ continue_process_e_stream_too(Why, _S, Codes, to_lower(':')):-
   append(Delta, [_], Codes), 
   text_to_string(Delta,DeltaS),
   normalize_space(atom(Term),DeltaS),
-  process_e(Why, directive(Term)),!.
+  ec_on_read(Why, directive(Term)),!.
 continue_process_e_stream_too(Why, S, Codes, space):- last(Codes, Last), 
    once([Last]=`!`;char_type(Last, alpha)), !, 
    trim_off_whitepace(S), !, 
    atom_codes(Token, Codes), process_e_stream_token(Why, Token, S), !.
 continue_process_e_stream_too(Why, S, NextCodes, _CanBe ):-  !, 
-   last(NextCodes, Last), cont_one_e_compound(S, NextCodes, Last, Term), process_e(Why, Term).
+   last(NextCodes, Last), cont_one_e_compound(S, NextCodes, Last, Term), ec_on_read(Why, Term).
 
 unpad_codes(Text, Codes):- text_to_string(Text, String), normalize_space(codes(Codes), String).
   
@@ -302,44 +336,11 @@ fix_predname(F, not):- downcase_atom(F, not).
 fix_predname(F, holds_at):- downcase_atom(F, holdsat).
 fix_predname(F, Happens):- builtin_pred(Happens), downcase_atom(F, Happens), !.
 
-
-builtin_pred(initiates).
-builtin_pred(terminates).
-builtin_pred(releases).
-builtin_pred(holds_at).
-builtin_pred(happens).
-builtin_pred(declipped).
-builtin_pred(clipped).
-builtin_pred(before).
-builtin_pred(after).
-builtin_pred(sort).
-builtin_pred(initially).
-
+
 my_unCamelcase(X, Y):- atom(X), fix_predname(X, Y), !.
 my_unCamelcase(X, Y):- atom(X), upcase_atom(X, X), !, downcase_atom(X, Y).
 my_unCamelcase(X, Y):- unCamelcase(X, Y), !.
 
-verbatum_functor(function). verbatum_functor(event). 
-verbatum_functor(predicate). verbatum_functor(fluent).
-
-is_non_sort(P):- verbatum_functor(P).
-is_non_sort(range).
-is_non_sort(mutex).
-is_non_sort(ignore).
-is_non_sort(reified_sort).
-is_non_sort(noninertial).
-is_non_sort(sort).
-is_non_sort(option).
-is_non_sort(reified).
-is_non_sort(load).
-is_non_sort(completion).
-is_non_sort(xor).
-is_non_sort(manualrelease).
-is_non_sort(completion).
-is_non_sort(ignore).
-
-is_quantifier_type(thereExists,exists).
-is_quantifier_type(forAll,all).
 
 e_to_ec(C, C):- \+ callable(C), !.
 e_to_ec('$VAR'(HT), '$VAR'(HT)):-!.
@@ -475,6 +476,7 @@ mention_s_l:-  must_det_l((flush_output, format('~N'),
   s_l(B,L), ansi_format([fg(green)], '% ~w~n', [B:L]), flush_output)),
   retractall(last_s_l(B,_)),asserta(last_s_l(B,L)).
 
+:- export(s_l/2).
 s_l(F,L):- source_location(F,L), !.
 s_l(F,L):- any_stream(F,S), any_line_count(S,L),any_line_count(_,L), !.
 s_l(unknown,0).
@@ -489,13 +491,14 @@ any_line_count(S,L):- line_or_char_count(S, L).
 any_line_count(S,L):- stream_property(S, line_or_char_count(L)).
 any_line_count(_,0).
 
+%ec_on_read(S):- ec_on_read(do_ec_load, S).
 
-process_e(Why, SL):- e_to_ec(SL, SO) -> SL\=@=SO, !, process_e(Why, SO).
-process_e(Why, S):- must(glean_data(Why, S)), must(call(Why, S)), !.
+ec_on_read(Why, SL):- e_to_ec(SL, SO) -> SL\=@=SO, !, ec_on_read(Why, SO).
+ec_on_read(Why, S):- must(glean_data(Why, S)), must(call(Why, S)), !.
 
 
 do_ec_load(translate(Event, Outfile)):- !, mention_s_l, format('~N% translate: ~w  File: ~w ~n',[Event, Outfile]).
-do_ec_load(load(SS)):- exists_file(SS), !, format('~N% '), e_print(loading(SS)), ec_load(SS), !.
+do_ec_load(load(SS)):- exists_file(SS), !, format('~N% '), e_print(loading(SS)), call(call,ec_load,SS), !.
 do_ec_load(SS):- flush_output, format('~N'), e_print(SS).
 
 do_convert_e(translate(Event, Outfile)):- !, mention_s_l, format('~N% translate: ~w  File: ~w ~n',[Event, Outfile]).
@@ -593,10 +596,10 @@ process_e_stream_token(Why, function, S):- !, read_stream_until(S, [], `:`, Text
   append(TextL, [_], Text), 
   e_read1(TextL, Value, _), 
   token_stringsss(String, Type), 
-   process_e(Why, (function(Value, Type))).
+   ec_on_read(Why, (function(Value, Type))).
 
 process_e_stream_token(Why, Type, S):- downcase_atom(Type, Event), memberchk(Event, [fluent, predicate, event]), !, 
-   read_one_e_compound(S, Value), process_e(Why, t(Event, Value)).
+   read_one_e_compound(S, Value), ec_on_read(Why, t(Event, Value)).
 process_e_stream_token(Why, reified, S):- !, read_stream_until(S, [], ` `, Text), 
    text_to_string(Text, St), atom_concat('reified_', St, Type), !, process_e_stream_token(Why, Type, S).
 process_e_stream_token(Why, Type, S):- read_line_to_string_echo(S, String), process_e_token_with_string(Why, Type, String).
@@ -604,7 +607,7 @@ process_e_stream_token(Why, Type, S):- read_line_to_string_echo(S, String), proc
 process_e_token_with_string(Why, Type, String):- \+ is_non_sort(Type), atomics_to_string(VList, ',', String), VList \= [_], !, 
   maplist(process_e_token_with_string(Why, Type), VList).
 process_e_token_with_string(_, _, ""):-!.
-process_e_token_with_string(Why, Type, String):- token_stringsss(String, Out), process_e(Why, t(Type, Out)).
+process_e_token_with_string(Why, Type, String):- token_stringsss(String, Out), ec_on_read(Why, t(Type, Out)).
 
 token_stringsss("", []):-!.
 token_stringsss(String, Out):- normalize_space(string(S), String), S\==String, !, token_stringsss(S, Out).
@@ -619,8 +622,8 @@ remove_blanks([E|I], O):- string(E), normalize_space(string(EE), E), E\==EE, !, 
 remove_blanks([E|I], O):- atom(E), normalize_space(atom(EE), E), E\==EE, !, remove_blanks([EE|I], O).
 remove_blanks([E|I], O):- to_atomic_value(E, EE), E\==EE, !, remove_blanks([EE|I], O).
 remove_blanks([E|I], [E|O]):- remove_blanks(I, O).
-%process_e_stream_token(Why, Sort, S):- read_tokens_til_eol(S, ' ', Value), process_e(Why, t(Sort, Value)).
-%process_e_stream_token(Why, reified, " sort", S):- read_tokens_til_eol(S, Value), process_e(Why, reified_sort(Value)).
+%process_e_stream_token(Why, Sort, S):- read_tokens_til_eol(S, ' ', Value), ec_on_read(Why, t(Sort, Value)).
+%process_e_stream_token(Why, reified, " sort", S):- read_tokens_til_eol(S, Value), ec_on_read(Why, reified_sort(Value)).
 
 /*
 */
@@ -638,7 +641,7 @@ subsplit([A|B], String, Value):-
 
 subsplit(SS, Splitter, Value):- 
    atomic_list_concat(ValueA, Splitter, SS), 
-   maplist(to_atomic_value, ValueA, Value).%, process_e(Why, option(List)).
+   maplist(to_atomic_value, ValueA, Value).%, ec_on_read(Why, option(List)).
    %atomics_to_string(['[', SS, ']'], ' ', NewList), e_from_atom(NewList, Value).
 
 to_atomic_value(A, N):- number(A), !, N=A.

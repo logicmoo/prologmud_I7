@@ -11,6 +11,9 @@
 
 */
 
+:- include(ec_common).
+
+
 abdemo(Gs,R) :- init_gensym(t), abdemo(Gs,[[],[]],R,[],N).
 
 

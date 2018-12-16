@@ -11,8 +11,8 @@ sortPlan(Plan, SortedPlan) :- breakup(Plan,SortedPlan),
 	!.
 
 breakup([ Plan, Ordering], CorrectlyOrderedPlan) :- 
-	writeYesln('plan:'),writeYesln(Plan),
-	writeYesln('orderings:'),writeYesln(Ordering),
+	writeln('plan:'),writeNoln(Plan),
+	writeln('orderings:'),writeNoln(Ordering),
 	!,sortTimepoints(Plan,Ordering, BackwardsPlan, t, 0),!,
 	
 	%The plan will be backwards as it starts at t the goal timepoint

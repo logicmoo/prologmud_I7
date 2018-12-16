@@ -1,5 +1,9 @@
 
-%:- use_module(library(logicmoo_common)).
+:- use_module(library(debug)).
+:- use_module(library(listing)).
+:- use_module(library(prolog_clause)).
+:- use_module(library(logicmoo_common)).
+
 
 %writenl(P):- write(P),nl. 
 %writeln(P):- write(P),nl. 

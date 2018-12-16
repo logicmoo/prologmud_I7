@@ -1,3 +1,4 @@
+:- include('../ec_test_incl').
 % ectest/Example3.e:1
 % translate: begining  File: ectest/Example3.e.pro 
 % ;
