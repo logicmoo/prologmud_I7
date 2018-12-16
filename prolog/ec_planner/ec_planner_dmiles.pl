@@ -108,10 +108,11 @@ next_d(D1, D2):- D1<5,!,D2 is D1+1.
 next_d(D1, D2):- next_d(D2),D2>D1,!.
 
 */
-last_d(D):- nb_current(last_d,D)->true;D=inf.
+last_d(D):- nb_current(last_d,D)->true; D = 3000.
+
 next_d(D1, _):- last_d(D), D1>D, !, fail.
 next_d(D1, D2):- D1<9,!,D2 is D1+3.
-next_d(D1, D2):- D1<90,!,D2 is D1+30.
+next_d(D1, D2):- D1<90,!,D2 is D1+60.
 next_d(D1, D2):- D2 is D1+300.
 
 % abdemo_special(long,Gs,R):-abdemo_timed(Gs,R).

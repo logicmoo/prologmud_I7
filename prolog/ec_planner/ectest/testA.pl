@@ -89,6 +89,23 @@ do_test(benchtest+16+long) :-
           holds_at(have(o15),t), holds_at(have(o16),t)], R).
 
 
+make_test_n(Max,Haves):-
+  findall(holds_at(have(O),t),
+    (between(1,Max,N),atom_concat(o,N,O)),Haves).
+   
+do_test(benchtest+19+long) :-
+     testing_msg('Test 19'),
+     make_test_n(19, Haves),
+     dbginfo(haves=Haves),!,
+     abdemo_special(long, Haves, R).
+
+do_test(benchtest+20+long) :-
+     testing_msg('Test 20'),
+     make_test_n(20, Haves),
+     dbginfo(haves=Haves),!,
+     abdemo_special(long, Haves, R).
+
+
 
 :- use_module(library(ec_planner/ec_loader)).
 
@@ -108,7 +125,7 @@ initiates(buy(X), have(X)) <- sells(Y, X), at(Y).
 
 
 :- 
-  forall((between(1, 16, N), 
+  forall((between(1, 64, N), 
         atom_concat(s,N,S),atom_concat(o,N,O)),
     process_ec(sells(S,O))).
 
