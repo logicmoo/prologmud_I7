@@ -1,4 +1,5 @@
 % ectest/ec_reader_test_foundations.e:1
+% translate: begining  File: ectest/ec_reader_test_foundations.e.pro 
 % 
 % 
 % 
@@ -472,3 +473,5 @@ happens(Event, Time), terminates(Event, Fluent, Time), 0<Offset, antiTrajectory(
 % 
 % 
 % ; End of file.
+% ectest/ec_reader_test_foundations.e:264
+% translate: ending  File: ectest/ec_reader_test_foundations.e.pro 

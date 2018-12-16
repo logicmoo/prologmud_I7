@@ -1,4 +1,5 @@
 % ectest/ec_reader_test_ecnet.e:1
+% translate: begining  File: ectest/ec_reader_test_ecnet.e.pro 
 % 
 % 
 % 
@@ -4622,141 +4623,31 @@ option(renaming, off).
 % 
 % ectest/ec_reader_test_ecnet.e:2489
 % load foundations/Root.e
-% ectest/ec_reader_test_ecnet.e:2490
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_ecnet.e:2490
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_ecnet.e:2491
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_ecnet.e:2491
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % load answers/Mueller2003/Ontology.e
-% ectest/ec_reader_test_ecnet.e:2492
 load('answers/Mueller2003/Ontology.e').
 
 
 % load answers/Mueller2004c/RTSpaceM.e
-% ectest/ec_reader_test_ecnet.e:2493
 load('answers/Mueller2004c/RTSpaceM.e').
 
 
 % load answers/Mueller2004c/OTSpaceM.e
-% ectest/ec_reader_test_ecnet.e:2494
 load('answers/Mueller2004c/OTSpaceM.e').
 
 
 % load answers/Mueller2004c/Cognition.e
-% ectest/ec_reader_test_ecnet.e:2495
 load('answers/Mueller2004c/Cognition.e').
 
 
+% ectest/ec_reader_test_ecnet.e:2495
 % load answers/Mueller2003/Sleep.e
-% ectest/ec_reader_test_ecnet.e:2496
 load('answers/Mueller2003/Sleep.e').
 
 
@@ -4771,11 +4662,11 @@ t(room, room0).
 
 
 % 
+% ectest/ec_reader_test_ecnet.e:2501
 % room Room1
 t(room, room1).
 
 
-% ectest/ec_reader_test_ecnet.e:2502
 % 
 % Side1(Door1)=Room0.
 side1(door1)=room0.
@@ -4792,8 +4683,8 @@ side2(door1)=room1.
 t(agent, sleeper1).
 
 
+% ectest/ec_reader_test_ecnet.e:2507
 % 
-% ectest/ec_reader_test_ecnet.e:2508
 % bed Bed1
 t(bed, bed1).
 
@@ -4976,126 +4867,19 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_ecnet.e:2573
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_ecnet.e:2573
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_ecnet.e:2574
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_ecnet.e:2574
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % load answers/Mueller2003/Ontology.e
-% ectest/ec_reader_test_ecnet.e:2575
 load('answers/Mueller2003/Ontology.e').
 
 
 % load answers/MuellerInPress/RepRest.e
-% ectest/ec_reader_test_ecnet.e:2576
 load('answers/MuellerInPress/RepRest.e').
 
 
@@ -5106,6 +4890,7 @@ t(door, mainEntrance1).
 
 % 
 % ; room-scale topological space
+% ectest/ec_reader_test_ecnet.e:2580
 % outside Street1
 t(outside, street1).
 
@@ -5114,7 +4899,6 @@ t(outside, street1).
 t(room, diningRoom1).
 
 
-% ectest/ec_reader_test_ecnet.e:2582
 % door KitchenDoor1
 t(door, kitchenDoor1).
 
@@ -5133,6 +4917,7 @@ side2(mainEntrance1)=diningRoom1.
 
 
 % 
+% ectest/ec_reader_test_ecnet.e:2586
 % Side1(KitchenDoor1)=DiningRoom1.
 side1(kitchenDoor1)=diningRoom1.
 
@@ -5143,7 +4928,6 @@ side2(kitchenDoor1)=kitchen1.
 
 
 % 
-% ectest/ec_reader_test_ecnet.e:2588
 % 
 % agent Customer1
 t(agent, customer1).
@@ -5157,6 +4941,7 @@ t(menu, menu1).
 t(chair, chair1).
 
 
+% ectest/ec_reader_test_ecnet.e:2592
 % food Food1
 t(food, food1).
 
@@ -5166,7 +4951,6 @@ holds_at(at(customer1, street1), 0).
 
 
 % 
-% ectest/ec_reader_test_ecnet.e:2594
 % HoldsAt(Hungry(Customer1),0).
 holds_at(hungry(customer1), 0).
 
@@ -5187,13 +4971,13 @@ holds_at(on(menu1, table1), 0).
 
 
 % 
+% ectest/ec_reader_test_ecnet.e:2598
 % HoldsAt(At(Food1,Kitchen1),0).
 holds_at(at(food1, kitchen1), 0).
 
 
 % 
 % 
-% ectest/ec_reader_test_ecnet.e:2600
 % waiter Waiter1
 t(waiter, waiter1).
 
@@ -5204,6 +4988,7 @@ t(cook, cook1).
 
 % 
 % ; props
+% ectest/ec_reader_test_ecnet.e:2604
 % table Table1
 t(table, table1).
 
@@ -5212,7 +4997,6 @@ t(table, table1).
 t(bill, bill1).
 
 
-% ectest/ec_reader_test_ecnet.e:2606
 % 
 % ; restaurant
 % restaurant Restaurant1
@@ -5224,6 +5008,7 @@ cookOf(restaurant1)=cook1.
 
 
 % 
+% ectest/ec_reader_test_ecnet.e:2610
 % TableOf(Restaurant1)=Table1.
 tableOf(restaurant1)=table1.
 
@@ -5234,7 +5019,6 @@ waiterOf(restaurant1)=waiter1.
 
 
 % 
-% ectest/ec_reader_test_ecnet.e:2612
 % KitchenDoorOf(Restaurant1)=KitchenDoor1.
 kitchenDoorOf(restaurant1)=kitchenDoor1.
 
@@ -5247,6 +5031,7 @@ billOf(restaurant1)=bill1.
 % 
 % 
 % ; prune
+% ectest/ec_reader_test_ecnet.e:2616
 % sort ona, onb
 sort([ona, onb]).
 
@@ -5255,7 +5040,6 @@ sort([ona, onb]).
 fluent(on(ona, onb)).
 
 
-% ectest/ec_reader_test_ecnet.e:2618
 % event! PlaceOn(agent,ona,onb)
 event(placeOn(agent, ona, onb)).
 
@@ -5269,6 +5053,7 @@ event(takeOffOf(agent, ona, onb)).
 sort([ordera, orderb, orderc]).
 
 
+% ectest/ec_reader_test_ecnet.e:2622
 % event! Order(ordera,orderb,orderc)
 event(order(ordera, orderb, orderc)).
 
@@ -5277,7 +5062,6 @@ event(order(ordera, orderb, orderc)).
 fluent(knowOrder(orderb, ordera, orderc)).
 
 
-% ectest/ec_reader_test_ecnet.e:2624
 % 
 % sort requesta, requestb, requestc
 sort([requesta, requestb, requestc]).
@@ -5291,12 +5075,12 @@ event(request(requesta, requestb, requestc)).
 fluent(knowRequest(requestb, requesta, requestc)).
 
 
+% ectest/ec_reader_test_ecnet.e:2628
 % 
 % sort holda, holdb, holdc
 sort([holda, holdb, holdc]).
 
 
-% ectest/ec_reader_test_ecnet.e:2630
 % event! TakeOffOf(holda,holdb,holdc)
 event(takeOffOf(holda, holdb, holdc)).
 
@@ -5313,12 +5097,12 @@ event(letGoOf(holda, holdb)).
 event(hold(holda, holdb)).
 
 
+% ectest/ec_reader_test_ecnet.e:2634
 % fluent! Holding(holda,holdb)
 fluent(holding(holda, holdb)).
 
 
 % 
-% ectest/ec_reader_test_ecnet.e:2636
 % sort sita, sitb
 sort([sita, sitb]).
 
@@ -5335,6 +5119,7 @@ event(sitOn(sita, sitb)).
 event(riseFrom(sita, sitb)).
 
 
+% ectest/ec_reader_test_ecnet.e:2640
 % fluent! LyingOn(sita,sitb)
 fluent(lyingOn(sita, sitb)).
 
@@ -5343,7 +5128,6 @@ fluent(lyingOn(sita, sitb)).
 fluent(sittingOn(sita, sitb)).
 
 
-% ectest/ec_reader_test_ecnet.e:2642
 % 
 % sort greeta, greetb
 sort([greeta, greetb]).
@@ -5354,6 +5138,7 @@ event(greet(greeta, greetb)).
 
 
 % 
+% ectest/ec_reader_test_ecnet.e:2646
 % ona! Menu1, Food1, Bill1
 t(ona, menu1).
 
@@ -5368,7 +5153,6 @@ t(ona, bill1).
 t(onb, table1).
 
 
-% ectest/ec_reader_test_ecnet.e:2648
 % ordera! Customer1, Waiter1
 t(ordera, customer1).
 
@@ -5391,6 +5175,7 @@ t(orderc, food1).
 t(requesta, customer1).
 
 
+% ectest/ec_reader_test_ecnet.e:2652
 % requestb! Waiter1
 t(requestb, waiter1).
 
@@ -5399,7 +5184,6 @@ t(requestb, waiter1).
 t(requestc, bill1).
 
 
-% ectest/ec_reader_test_ecnet.e:2654
 % holda! Customer1, Waiter1
 t(holda, customer1).
 
@@ -5425,6 +5209,7 @@ t(holdc, table1).
 t(sita, customer1).
 
 
+% ectest/ec_reader_test_ecnet.e:2658
 % sitb! Chair1
 t(sitb, chair1).
 
@@ -5436,7 +5221,6 @@ t(greeta, customer1).
 t(greeta, waiter1).
 
 
-% ectest/ec_reader_test_ecnet.e:2660
 % greetb! Customer1, Waiter1
 t(greetb, customer1).
 
@@ -5451,6 +5235,7 @@ holds_at(at(waiter1, diningRoom1), 0).
 
 
 % 
+% ectest/ec_reader_test_ecnet.e:2664
 % HoldsAt(At(Cook1,Kitchen1),0).
 holds_at(at(cook1, kitchen1), 0).
 
@@ -5461,7 +5246,6 @@ holds_at(at(table1, diningRoom1), 0).
 
 
 % 
-% ectest/ec_reader_test_ecnet.e:2666
 % !HoldsAt(On(Bill1,Table1),0).
 not(holds_at(on(bill1, table1), 0)).
 
@@ -9739,159 +9523,47 @@ ignore([sayPleaseToMeet, move]).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_ecnet.e:4499
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_ecnet.e:4499
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_ecnet.e:4500
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_ecnet.e:4500
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % load answers/Mueller2003/Ontology.e
-% ectest/ec_reader_test_ecnet.e:4501
 load('answers/Mueller2003/Ontology.e').
 
 
 % load answers/Mueller2004c/RTSpaceM.e
-% ectest/ec_reader_test_ecnet.e:4502
 load('answers/Mueller2004c/RTSpaceM.e').
 
 
+% ectest/ec_reader_test_ecnet.e:4502
 % load answers/Mueller2004c/OTSpaceM.e
-% ectest/ec_reader_test_ecnet.e:4503
 load('answers/Mueller2004c/OTSpaceM.e').
 
 
 % load answers/Mueller2004c/HungerNeed.e
-% ectest/ec_reader_test_ecnet.e:4504
 load('answers/Mueller2004c/HungerNeed.e').
 
 
 % load answers/Mueller2004c/Restaurant.e
-% ectest/ec_reader_test_ecnet.e:4505
 load('answers/Mueller2004c/Restaurant.e').
 
 
 % load answers/Mueller2003/Sleep.e
-% ectest/ec_reader_test_ecnet.e:4506
 load('answers/Mueller2003/Sleep.e').
 
 
 % load answers/Mueller2003/SpeechAct.e
-% ectest/ec_reader_test_ecnet.e:4507
 load('answers/Mueller2003/SpeechAct.e').
 
 
 % load answers/Mueller2004c/Dress.e
-% ectest/ec_reader_test_ecnet.e:4508
 load('answers/Mueller2004c/Dress.e').
 
 
+% ectest/ec_reader_test_ecnet.e:4508
 % 
 % room Upstairs1
 t(room, upstairs1).
@@ -10388,3 +10060,5 @@ completion(happens).
 
 % 
 % ; End of file.
+% ectest/ec_reader_test_ecnet.e:4641
+% translate: ending  File: ectest/ec_reader_test_ecnet.e.pro 

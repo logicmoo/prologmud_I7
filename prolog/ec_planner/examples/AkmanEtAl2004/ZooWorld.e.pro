@@ -1,4 +1,5 @@
 % examples/AkmanEtAl2004/ZooWorld.e:1
+% translate: begining  File: examples/AkmanEtAl2004/ZooWorld.e.pro 
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -1164,3 +1165,5 @@ side2(gateAO)=7.
 % 
 % 
 % ; End of file.
+% examples/AkmanEtAl2004/ZooWorld.e:440
+% translate: ending  File: examples/AkmanEtAl2004/ZooWorld.e.pro 

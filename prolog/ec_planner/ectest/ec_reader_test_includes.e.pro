@@ -1,4 +1,5 @@
 % ectest/ec_reader_test_includes.e:1
+% translate: begining  File: ectest/ec_reader_test_includes.e.pro 
 % 
 % 
 % 
@@ -612,3 +613,5 @@ t(action, get).
 
 
 % 
+% ectest/ec_reader_test_includes.e:257
+% translate: ending  File: ectest/ec_reader_test_includes.e.pro 

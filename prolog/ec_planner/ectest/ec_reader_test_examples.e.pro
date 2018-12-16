@@ -1,4 +1,5 @@
 % ectest/ec_reader_test_examples.e:1
+% translate: begining  File: ectest/ec_reader_test_examples.e.pro 
 % 
 % 
 % 
@@ -33,120 +34,15 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:31
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:31
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:32
-% load('foundations/EC.e').
-
-
-% ectest/ec_reader_test_examples.e:32
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
+load('foundations/EC.e').
 
 
 % 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
-% 
+% ectest/ec_reader_test_examples.e:33
 % sort person
 sort(person).
 
@@ -164,8 +60,8 @@ event(hold(person, object)).
 fluent(holding(person, object)).
 
 
-% ectest/ec_reader_test_examples.e:38
 % 
+% ectest/ec_reader_test_examples.e:39
 % person P1
 t(person, p1).
 
@@ -247,120 +143,15 @@ option(trajectory, on).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:86
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:86
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:87
-% load('foundations/EC.e').
-
-
-% ectest/ec_reader_test_examples.e:87
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
+load('foundations/EC.e').
 
 
 % 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
-% 
+% ectest/ec_reader_test_examples.e:88
 % sort object
 sort(object).
 
@@ -378,11 +169,11 @@ fluent(height(object, height)).
 fluent(falling(object)).
 
 
-% ectest/ec_reader_test_examples.e:93
 % event StartFalling(object)
 event(startFalling(object)).
 
 
+% ectest/ec_reader_test_examples.e:94
 % event HitsGround(object)
 event(hitsGround(object)).
 
@@ -795,377 +586,23 @@ happens(move(Grid, Object, Xcoord1, Ycoord1, Xcoord2, Ycoord2), Time) ->
 % ectest/ec_reader_test_examples.e:289
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:291
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:291
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:292
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:292
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % load examples/Cassimatis2002/PolySpace.e
-% ectest/ec_reader_test_examples.e:293
-% load('examples/Cassimatis2002/PolySpace.e').
+load('examples/Cassimatis2002/PolySpace.e').
 
 
-% ectest/ec_reader_test_examples.e:293
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; @phdthesis{Cassimatis:2002,
-% ;   author = "Nicholas L. Cassimatis",
-% ;   year = "2002",
-% ;   title = "Polyscheme: A Cognitive Architecture for Integrating Multiple Representation and Inference Schemes",
-% ;   address = "Cambridge, MA",
-% ;   school = "Program in Media Arts and Sciences, School of Architecture and Planning, Massachusetts Institute of Technology",
-% ; }
-% ;
-% 
-% ; sorts
-% sort object
-sort(object).
-
-
-% sort xcoord: integer
-subsort(xcoord, integer).
-
-
-% sort ycoord: integer
-subsort(ycoord, integer).
-
-
-% sort grid
-sort(grid).
-
-
-% sort shape
-sort(shape).
-
-
-% sort color
-sort(color).
-
-
-% 
-% ; constants
-% shape Round,Square
-t(shape, round).
-
-
-t(shape, square).
-
-
-% color Red,Green
-t(color, red).
-
-
-t(color, green).
-
-
-% 
-% ; predicates, fluents, and events
-% predicate Equal(object,object)
-predicate(equal(object, object)).
-
-
-% predicate Shape(object,shape)
-predicate(shape(object, shape)).
-
-
-% predicate Color(object,color)
-predicate(color(object, color)).
-
-
-% fluent Location(grid,object,xcoord,ycoord)
-fluent(location(grid, object, xcoord, ycoord)).
-
-
-% event Move(grid,object,xcoord,ycoord,xcoord,ycoord)
-event(move(grid, object, xcoord, ycoord, xcoord, ycoord)).
-
-
-% 
-% ; axioms
-% 
-% ectest/ec_reader_test_examples.e:293
-% [object1,object2] % Equal(object1,object2) -> Equal(object2,object1).
-equal(Object1, Object2) ->
-	equal(Object2, Object1).
-
-
-% 
-% 
-% ; objects have unique shape
-% ectest/ec_reader_test_examples.e:293
-% [object,shape1,shape2]% 
-% Shape(object,shape1) & Shape(object,shape2) ->
-% shape1=shape2.
-shape(Object, Shape1), shape(Object, Shape2) ->
-	Shape1=Shape2.
-
-
-% 
-% 
-% ; objects have unique color
-% ectest/ec_reader_test_examples.e:293
-% [object,color1,color2]% 
-% Color(object,color1) & Color(object,color2) ->
-% color1=color2.
-color(Object, Color1), color(Object, Color2) ->
-	Color1=Color2.
-
-
-% 
-% 
-% ; if objects are the same, they have the same shape
-% ectest/ec_reader_test_examples.e:293
-% [object1,object2]% 
-% Equal(object1,object2) ->
-% ({shape} Shape(object1,shape) & Shape(object2,shape)).
-equal(Object1, Object2) ->
-	exists([Shape],
-	       (shape(Object1, Shape), shape(Object2, Shape))).
-
-
-% 
-% 
-% ; if objects are the same, they have the same color
-% ectest/ec_reader_test_examples.e:293
-% [object1,object2]% 
-% Equal(object1,object2) ->
-% ({color} Color(object1,color) & Color(object2,color)).
-equal(Object1, Object2) ->
-	exists([Color],
-	       (color(Object1, Color), color(Object2, Color))).
-
-
-% 
-% 
-% ; if objects are the same, they have the same location
-% ectest/ec_reader_test_examples.e:293
-% [grid,object1,object2,xcoord1,ycoord1,xcoord2,ycoord2,time]% 
-% Equal(object1,object2) ->
-% (HoldsAt(Location(grid,object1,xcoord1,ycoord1),time) &
-%  HoldsAt(Location(grid,object2,xcoord2,ycoord2),time) ->
-%  xcoord1=xcoord2 & ycoord1=ycoord2).
-equal(Object1, Object2) ->
-	( holds_at(location(Grid, Object1, Xcoord1, Ycoord1), Time), holds_at(location(Grid, Object2, Xcoord2, Ycoord2), Time)->Xcoord1=Xcoord2, Ycoord1=Ycoord2
-	).
-
-
-% 
-% 
-% ; object in one location at a time
-% ectest/ec_reader_test_examples.e:293
-% [grid,object,xcoord1,ycoord1,xcoord2,ycoord2,time]% 
-% HoldsAt(Location(grid,object,xcoord1,ycoord1),time) &
-% HoldsAt(Location(grid,object,xcoord2,ycoord2),time) ->
-% xcoord1=xcoord2 & ycoord1=ycoord2.
-holds_at(location(Grid, Object, Xcoord1, Ycoord1), Time), holds_at(location(Grid, Object, Xcoord2, Ycoord2), Time) ->
-	Xcoord1=Xcoord2,
-	Ycoord1=Ycoord2.
-
-
-% 
-% 
-% ; objects have locations
-% ectest/ec_reader_test_examples.e:293
-% [grid,object,time]% 
-% (
-% ectest/ec_reader_test_examples.e:293
-% {xcoord,ycoord} HoldsAt(Location(grid,object,xcoord,ycoord),time)).
-exists([Xcoord, Ycoord], holds_at(location(Grid, Object, Xcoord, Ycoord), Time)).
-
-
-% 
-% 
-% ; different objects are not at same location
-% ectest/ec_reader_test_examples.e:293
-% [grid,object1,object2,xcoord1,ycoord1,time]% 
-% HoldsAt(Location(grid,object1,xcoord1,ycoord1),time) &
-% HoldsAt(Location(grid,object2,xcoord1,ycoord1),time) ->
-% Equal(object1,object2).
-holds_at(location(Grid, Object1, Xcoord1, Ycoord1), Time), holds_at(location(Grid, Object2, Xcoord1, Ycoord1), Time) ->
-	equal(Object1, Object2).
-
-
-% 
-% 
-% ; moving to a location causes an object to be at that location
-% ectest/ec_reader_test_examples.e:293
-% [grid,object,xcoord1,ycoord1,xcoord2,ycoord2,time]% 
-% Initiates(Move(grid,object,xcoord1,ycoord1,xcoord2,ycoord2),
-%           Location(grid,object,xcoord2,ycoord2),
-%           time).
-initiates(move(Grid, Object, Xcoord1, Ycoord1, Xcoord2, Ycoord2), location(Grid, Object, Xcoord2, Ycoord2), Time).
-
-
-% 
-% 
-% ; moving to a location causes the object no longer to be at its previous
-% ; location
-% ectest/ec_reader_test_examples.e:293
-% [grid,object,xcoord1,ycoord1,xcoord2,ycoord2,time]% 
-% Terminates(Move(grid,object,xcoord1,ycoord1,xcoord2,ycoord2),
-%            Location(grid,object,xcoord1,ycoord1),
-%            time).
-terminates(move(Grid, Object, Xcoord1, Ycoord1, Xcoord2, Ycoord2), location(Grid, Object, Xcoord1, Ycoord1), Time).
-
-
-% 
-% 
-% ;; allow diagonal movements
-% ;[grid,object,xcoord1,ycoord1,xcoord2,ycoord2,time]
-% ;Happens(Move(grid,object,xcoord1,ycoord1,xcoord2,ycoord2),time) ->
-% ;HoldsAt(Location(grid,object,xcoord1,ycoord1),time) &
-% ;(xcoord1=xcoord2 |
-% ; xcoord1=xcoord2+1 |
-% ; xcoord1=xcoord2-1) &
-% ;(ycoord1=ycoord2 |
-% ; ycoord1=ycoord2+1 |
-% ; ycoord1=ycoord2-1).
-% 
-% ; only allow right angle movements
-% ectest/ec_reader_test_examples.e:293
-% [grid,object,xcoord1,ycoord1,xcoord2,ycoord2,time]% 
-% Happens(Move(grid,object,xcoord1,ycoord1,xcoord2,ycoord2),time) ->
-% HoldsAt(Location(grid,object,xcoord1,ycoord1),time) &
-% ((xcoord1=xcoord2 & (ycoord1=ycoord2+1 | ycoord1=ycoord2-1)) |
-%  (ycoord1=ycoord2 & (xcoord1=xcoord2+1 | xcoord1=xcoord2-1))).
-happens(move(Grid, Object, Xcoord1, Ycoord1, Xcoord2, Ycoord2), Time) ->
-	holds_at(location(Grid, Object, Xcoord1, Ycoord1),
-		 Time),
-	(   Xcoord1=Xcoord2,
-	    (   Ycoord1=Ycoord2+1
-	    ;   Ycoord1=Ycoord2-1
-	    )
-	;   Ycoord1=Ycoord2,
-	    (   Xcoord1=Xcoord2+1
-	    ;   Xcoord1=Xcoord2-1
-	    )
-	).
-
-
-% 
-% 
-% ; End of file.
 % 
 % grid G1
 t(grid, g1).
 
 
+% ectest/ec_reader_test_examples.e:295
 % object X,Y,Screen1,Screen2
 t(object, x).
 
@@ -1186,7 +623,6 @@ shape(x, round).
 
 
 % 
-% ectest/ec_reader_test_examples.e:299
 % Color(X,Red).
 color(x, red).
 
@@ -1197,6 +633,7 @@ shape(y, round).
 
 
 % 
+% ectest/ec_reader_test_examples.e:301
 % Color(Y,Red).
 color(y, red).
 
@@ -1217,7 +654,6 @@ shape(screen2, square).
 
 
 % 
-% ectest/ec_reader_test_examples.e:305
 % Color(Screen2,Green).
 color(screen2, green).
 
@@ -1325,377 +761,23 @@ range(offset, 0, 0).
 % ectest/ec_reader_test_examples.e:351
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:353
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:353
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:354
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:354
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % load examples/Cassimatis2002/PolySpace.e
-% ectest/ec_reader_test_examples.e:355
-% load('examples/Cassimatis2002/PolySpace.e').
+load('examples/Cassimatis2002/PolySpace.e').
 
 
-% ectest/ec_reader_test_examples.e:355
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; @phdthesis{Cassimatis:2002,
-% ;   author = "Nicholas L. Cassimatis",
-% ;   year = "2002",
-% ;   title = "Polyscheme: A Cognitive Architecture for Integrating Multiple Representation and Inference Schemes",
-% ;   address = "Cambridge, MA",
-% ;   school = "Program in Media Arts and Sciences, School of Architecture and Planning, Massachusetts Institute of Technology",
-% ; }
-% ;
-% 
-% ; sorts
-% sort object
-sort(object).
-
-
-% sort xcoord: integer
-subsort(xcoord, integer).
-
-
-% sort ycoord: integer
-subsort(ycoord, integer).
-
-
-% sort grid
-sort(grid).
-
-
-% sort shape
-sort(shape).
-
-
-% sort color
-sort(color).
-
-
-% 
-% ; constants
-% shape Round,Square
-t(shape, round).
-
-
-t(shape, square).
-
-
-% color Red,Green
-t(color, red).
-
-
-t(color, green).
-
-
-% 
-% ; predicates, fluents, and events
-% predicate Equal(object,object)
-predicate(equal(object, object)).
-
-
-% predicate Shape(object,shape)
-predicate(shape(object, shape)).
-
-
-% predicate Color(object,color)
-predicate(color(object, color)).
-
-
-% fluent Location(grid,object,xcoord,ycoord)
-fluent(location(grid, object, xcoord, ycoord)).
-
-
-% event Move(grid,object,xcoord,ycoord,xcoord,ycoord)
-event(move(grid, object, xcoord, ycoord, xcoord, ycoord)).
-
-
-% 
-% ; axioms
-% 
-% ectest/ec_reader_test_examples.e:355
-% [object1,object2] % Equal(object1,object2) -> Equal(object2,object1).
-equal(Object1, Object2) ->
-	equal(Object2, Object1).
-
-
-% 
-% 
-% ; objects have unique shape
-% ectest/ec_reader_test_examples.e:355
-% [object,shape1,shape2]% 
-% Shape(object,shape1) & Shape(object,shape2) ->
-% shape1=shape2.
-shape(Object, Shape1), shape(Object, Shape2) ->
-	Shape1=Shape2.
-
-
-% 
-% 
-% ; objects have unique color
-% ectest/ec_reader_test_examples.e:355
-% [object,color1,color2]% 
-% Color(object,color1) & Color(object,color2) ->
-% color1=color2.
-color(Object, Color1), color(Object, Color2) ->
-	Color1=Color2.
-
-
-% 
-% 
-% ; if objects are the same, they have the same shape
-% ectest/ec_reader_test_examples.e:355
-% [object1,object2]% 
-% Equal(object1,object2) ->
-% ({shape} Shape(object1,shape) & Shape(object2,shape)).
-equal(Object1, Object2) ->
-	exists([Shape],
-	       (shape(Object1, Shape), shape(Object2, Shape))).
-
-
-% 
-% 
-% ; if objects are the same, they have the same color
-% ectest/ec_reader_test_examples.e:355
-% [object1,object2]% 
-% Equal(object1,object2) ->
-% ({color} Color(object1,color) & Color(object2,color)).
-equal(Object1, Object2) ->
-	exists([Color],
-	       (color(Object1, Color), color(Object2, Color))).
-
-
-% 
-% 
-% ; if objects are the same, they have the same location
-% ectest/ec_reader_test_examples.e:355
-% [grid,object1,object2,xcoord1,ycoord1,xcoord2,ycoord2,time]% 
-% Equal(object1,object2) ->
-% (HoldsAt(Location(grid,object1,xcoord1,ycoord1),time) &
-%  HoldsAt(Location(grid,object2,xcoord2,ycoord2),time) ->
-%  xcoord1=xcoord2 & ycoord1=ycoord2).
-equal(Object1, Object2) ->
-	( holds_at(location(Grid, Object1, Xcoord1, Ycoord1), Time), holds_at(location(Grid, Object2, Xcoord2, Ycoord2), Time)->Xcoord1=Xcoord2, Ycoord1=Ycoord2
-	).
-
-
-% 
-% 
-% ; object in one location at a time
-% ectest/ec_reader_test_examples.e:355
-% [grid,object,xcoord1,ycoord1,xcoord2,ycoord2,time]% 
-% HoldsAt(Location(grid,object,xcoord1,ycoord1),time) &
-% HoldsAt(Location(grid,object,xcoord2,ycoord2),time) ->
-% xcoord1=xcoord2 & ycoord1=ycoord2.
-holds_at(location(Grid, Object, Xcoord1, Ycoord1), Time), holds_at(location(Grid, Object, Xcoord2, Ycoord2), Time) ->
-	Xcoord1=Xcoord2,
-	Ycoord1=Ycoord2.
-
-
-% 
-% 
-% ; objects have locations
-% ectest/ec_reader_test_examples.e:355
-% [grid,object,time]% 
-% (
-% ectest/ec_reader_test_examples.e:355
-% {xcoord,ycoord} HoldsAt(Location(grid,object,xcoord,ycoord),time)).
-exists([Xcoord, Ycoord], holds_at(location(Grid, Object, Xcoord, Ycoord), Time)).
-
-
-% 
-% 
-% ; different objects are not at same location
-% ectest/ec_reader_test_examples.e:355
-% [grid,object1,object2,xcoord1,ycoord1,time]% 
-% HoldsAt(Location(grid,object1,xcoord1,ycoord1),time) &
-% HoldsAt(Location(grid,object2,xcoord1,ycoord1),time) ->
-% Equal(object1,object2).
-holds_at(location(Grid, Object1, Xcoord1, Ycoord1), Time), holds_at(location(Grid, Object2, Xcoord1, Ycoord1), Time) ->
-	equal(Object1, Object2).
-
-
-% 
-% 
-% ; moving to a location causes an object to be at that location
-% ectest/ec_reader_test_examples.e:355
-% [grid,object,xcoord1,ycoord1,xcoord2,ycoord2,time]% 
-% Initiates(Move(grid,object,xcoord1,ycoord1,xcoord2,ycoord2),
-%           Location(grid,object,xcoord2,ycoord2),
-%           time).
-initiates(move(Grid, Object, Xcoord1, Ycoord1, Xcoord2, Ycoord2), location(Grid, Object, Xcoord2, Ycoord2), Time).
-
-
-% 
-% 
-% ; moving to a location causes the object no longer to be at its previous
-% ; location
-% ectest/ec_reader_test_examples.e:355
-% [grid,object,xcoord1,ycoord1,xcoord2,ycoord2,time]% 
-% Terminates(Move(grid,object,xcoord1,ycoord1,xcoord2,ycoord2),
-%            Location(grid,object,xcoord1,ycoord1),
-%            time).
-terminates(move(Grid, Object, Xcoord1, Ycoord1, Xcoord2, Ycoord2), location(Grid, Object, Xcoord1, Ycoord1), Time).
-
-
-% 
-% 
-% ;; allow diagonal movements
-% ;[grid,object,xcoord1,ycoord1,xcoord2,ycoord2,time]
-% ;Happens(Move(grid,object,xcoord1,ycoord1,xcoord2,ycoord2),time) ->
-% ;HoldsAt(Location(grid,object,xcoord1,ycoord1),time) &
-% ;(xcoord1=xcoord2 |
-% ; xcoord1=xcoord2+1 |
-% ; xcoord1=xcoord2-1) &
-% ;(ycoord1=ycoord2 |
-% ; ycoord1=ycoord2+1 |
-% ; ycoord1=ycoord2-1).
-% 
-% ; only allow right angle movements
-% ectest/ec_reader_test_examples.e:355
-% [grid,object,xcoord1,ycoord1,xcoord2,ycoord2,time]% 
-% Happens(Move(grid,object,xcoord1,ycoord1,xcoord2,ycoord2),time) ->
-% HoldsAt(Location(grid,object,xcoord1,ycoord1),time) &
-% ((xcoord1=xcoord2 & (ycoord1=ycoord2+1 | ycoord1=ycoord2-1)) |
-%  (ycoord1=ycoord2 & (xcoord1=xcoord2+1 | xcoord1=xcoord2-1))).
-happens(move(Grid, Object, Xcoord1, Ycoord1, Xcoord2, Ycoord2), Time) ->
-	holds_at(location(Grid, Object, Xcoord1, Ycoord1),
-		 Time),
-	(   Xcoord1=Xcoord2,
-	    (   Ycoord1=Ycoord2+1
-	    ;   Ycoord1=Ycoord2-1
-	    )
-	;   Ycoord1=Ycoord2,
-	    (   Xcoord1=Xcoord2+1
-	    ;   Xcoord1=Xcoord2-1
-	    )
-	).
-
-
-% 
-% 
-% ; End of file.
 % 
 % grid G1
 t(grid, g1).
 
 
+% ectest/ec_reader_test_examples.e:357
 % object X,Y,Screen
 t(object, x).
 
@@ -1713,7 +795,6 @@ shape(x, round).
 
 
 % 
-% ectest/ec_reader_test_examples.e:361
 % Color(X,Red).
 color(x, red).
 
@@ -1724,6 +805,7 @@ shape(y, round).
 
 
 % 
+% ectest/ec_reader_test_examples.e:363
 % Color(Y,Red).
 color(y, red).
 
@@ -1838,119 +920,13 @@ range(offset, 0, 0).
 % ectest/ec_reader_test_examples.e:413
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:415
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:415
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:416
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:416
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort x
 sort(x).
@@ -1960,6 +936,7 @@ sort(x).
 t(x, person).
 
 
+% ectest/ec_reader_test_examples.e:419
 % 
 % predicate LikesWine(x)
 predicate(likesWine(x)).
@@ -1969,7 +946,6 @@ predicate(likesWine(x)).
 predicate(italian(x)).
 
 
-% ectest/ec_reader_test_examples.e:422
 % predicate French(x)
 predicate(french(x)).
 
@@ -1982,6 +958,7 @@ predicate(ab1(x)).
 predicate(ab2(x)).
 
 
+% ectest/ec_reader_test_examples.e:425
 % 
 % ectest/ec_reader_test_examples.e:426
 % [x] % Italian(x) & !Ab1(x) -> LikesWine(x).
@@ -2085,120 +1062,15 @@ option(showpred, off).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:486
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:486
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:487
-% load('foundations/EC.e').
-
-
-% ectest/ec_reader_test_examples.e:487
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
+load('foundations/EC.e').
 
 
 % 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
-% 
+% ectest/ec_reader_test_examples.e:488
 % event Load()
 event(load()).
 
@@ -2219,7 +1091,6 @@ fluent(loaded()).
 fluent(alive()).
 
 
-% ectest/ec_reader_test_examples.e:493
 % 
 % ectest/ec_reader_test_examples.e:494
 % [time] % Initiates(Load(),Loaded(),time).
@@ -2331,119 +1202,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:554
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:556
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:556
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:557
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:557
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % event Close1()
 event(close1()).
@@ -2453,6 +1218,7 @@ event(close1()).
 event(close2()).
 
 
+% ectest/ec_reader_test_examples.e:560
 % event Start()
 event(start()).
 
@@ -2465,7 +1231,6 @@ fluent(blocked1()).
 fluent(blocked2()).
 
 
-% ectest/ec_reader_test_examples.e:563
 % fluent Stuffy()
 fluent(stuffy()).
 
@@ -2593,119 +1358,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:627
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:629
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:629
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:630
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:630
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % fluent HasTicket()
 fluent(hasTicket()).
@@ -2715,6 +1374,7 @@ fluent(hasTicket()).
 fluent(onRed()).
 
 
+% ectest/ec_reader_test_examples.e:633
 % fluent OnYellow()
 fluent(onYellow()).
 
@@ -2727,7 +1387,6 @@ event(buy()).
 event(board()).
 
 
-% ectest/ec_reader_test_examples.e:636
 % event BoardRed()
 event(boardRed()).
 
@@ -2867,119 +1526,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:695
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:697
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:697
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:698
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:698
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % event Load()
 event(load()).
@@ -2989,6 +1542,7 @@ event(load()).
 event(shoot()).
 
 
+% ectest/ec_reader_test_examples.e:701
 % event Sneeze()
 event(sneeze()).
 
@@ -3001,7 +1555,6 @@ fluent(loaded()).
 fluent(alive()).
 
 
-% ectest/ec_reader_test_examples.e:704
 % fluent Dead()
 fluent(dead()).
 
@@ -3133,119 +1686,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:773
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:775
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:775
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:776
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:776
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % event Push()
 event(push()).
@@ -3255,6 +1702,7 @@ event(push()).
 event(pull()).
 
 
+% ectest/ec_reader_test_examples.e:779
 % fluent Forwards()
 fluent(forwards()).
 
@@ -3267,7 +1715,6 @@ fluent(backwards()).
 fluent(spinning()).
 
 
-% ectest/ec_reader_test_examples.e:782
 % 
 % ectest/ec_reader_test_examples.e:783
 % [time]% 
@@ -3459,119 +1906,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:876
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:878
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:878
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:879
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:879
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % event Park()
 event(park()).
@@ -3581,6 +1922,7 @@ event(park()).
 event(steal()).
 
 
+% ectest/ec_reader_test_examples.e:882
 % fluent CarParked()
 fluent(carParked()).
 
@@ -3662,119 +2004,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:927
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:929
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:929
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:930
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:930
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % event LiftLeft()
 event(liftLeft()).
@@ -3784,6 +2020,7 @@ event(liftLeft()).
 event(liftRight()).
 
 
+% ectest/ec_reader_test_examples.e:933
 % fluent Spilt()
 fluent(spilt()).
 
@@ -3905,125 +2142,20 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1000
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:1002
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:1002
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:1003
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:1003
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort x
 sort(x).
 
 
 % 
+% ectest/ec_reader_test_examples.e:1006
 % predicate Republican(x)
 predicate(republican(x)).
 
@@ -4036,7 +2168,6 @@ predicate(quaker(x)).
 predicate(pacifist(x)).
 
 
-% ectest/ec_reader_test_examples.e:1009
 % predicate Ab1(x)
 predicate(ab1(x)).
 
@@ -4046,6 +2177,7 @@ predicate(ab2(x)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:1012
 % x John
 t(x, john).
 
@@ -4056,7 +2188,6 @@ republican(john).
 
 
 % 
-% ectest/ec_reader_test_examples.e:1015
 % Quaker(John).
 quaker(john).
 
@@ -4150,125 +2281,20 @@ completion([theta, ab2]).
 % ectest/ec_reader_test_examples.e:1076
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:1078
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:1078
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:1079
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:1079
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort x
 sort(x).
 
 
 % 
+% ectest/ec_reader_test_examples.e:1082
 % predicate Republican(x)
 predicate(republican(x)).
 
@@ -4281,7 +2307,6 @@ predicate(quaker(x)).
 predicate(pacifist(x)).
 
 
-% ectest/ec_reader_test_examples.e:1085
 % predicate Ab1(x)
 predicate(ab1(x)).
 
@@ -4291,6 +2316,7 @@ predicate(ab2(x)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:1088
 % x John
 t(x, john).
 
@@ -4301,7 +2327,6 @@ republican(john).
 
 
 % 
-% ectest/ec_reader_test_examples.e:1091
 % Quaker(John).
 quaker(john).
 
@@ -4382,125 +2407,20 @@ completion([theta, ab2]).
 % ectest/ec_reader_test_examples.e:1128
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:1130
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:1130
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:1131
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:1131
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
 
 
 % 
+% ectest/ec_reader_test_examples.e:1134
 % agent Nathan
 t(agent, nathan).
 
@@ -4510,7 +2430,6 @@ t(agent, nathan).
 fluent(awake(agent)).
 
 
-% ectest/ec_reader_test_examples.e:1137
 % 
 % event WakeUp(agent)
 event(wakeUp(agent)).
@@ -4520,6 +2439,7 @@ event(wakeUp(agent)).
 event(fallAsleep(agent)).
 
 
+% ectest/ec_reader_test_examples.e:1140
 % 
 % ; Sigma
 % 
@@ -4591,125 +2511,20 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1182
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:1184
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:1184
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:1185
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:1185
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
 
 
 % 
+% ectest/ec_reader_test_examples.e:1188
 % agent Nathan
 t(agent, nathan).
 
@@ -4719,7 +2534,6 @@ t(agent, nathan).
 fluent(awake(agent)).
 
 
-% ectest/ec_reader_test_examples.e:1191
 % 
 % event WakeUp(agent)
 event(wakeUp(agent)).
@@ -4729,6 +2543,7 @@ event(wakeUp(agent)).
 event(fallAsleep(agent)).
 
 
+% ectest/ec_reader_test_examples.e:1194
 % 
 % ; Sigma
 % 
@@ -4809,125 +2624,20 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1241
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:1243
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:1243
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:1244
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:1244
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
 
 
 % 
+% ectest/ec_reader_test_examples.e:1247
 % agent Nathan
 t(agent, nathan).
 
@@ -4937,7 +2647,6 @@ t(agent, nathan).
 fluent(awake(agent)).
 
 
-% ectest/ec_reader_test_examples.e:1250
 % 
 % event WakeUp(agent)
 event(wakeUp(agent)).
@@ -4947,6 +2656,7 @@ event(wakeUp(agent)).
 event(fallAsleep(agent)).
 
 
+% ectest/ec_reader_test_examples.e:1253
 % 
 % ; Sigma
 % 
@@ -5037,120 +2747,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1304
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:1306
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:1307
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:1307
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort object
 sort(object).
@@ -5160,13 +2763,13 @@ sort(object).
 t(object, o1).
 
 
+% ectest/ec_reader_test_examples.e:1310
 % 
 % fluent F(object)
 fluent(f(object)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:1313
 % event E(object)
 event(e(object)).
 
@@ -5229,126 +2832,20 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1348
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:1350
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:1351
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:1351
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
 
 
 % 
+% ectest/ec_reader_test_examples.e:1354
 % agent Nathan
 t(agent, nathan).
 
@@ -5358,7 +2855,6 @@ t(agent, nathan).
 fluent(awake(agent)).
 
 
-% ectest/ec_reader_test_examples.e:1357
 % 
 % event WakeUp(agent)
 event(wakeUp(agent)).
@@ -5368,6 +2864,7 @@ event(wakeUp(agent)).
 event(fallAsleep(agent)).
 
 
+% ectest/ec_reader_test_examples.e:1360
 % 
 % ; Sigma
 % 
@@ -5439,120 +2936,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1403
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:1405
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:1406
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:1406
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort object
 sort(object).
@@ -5562,13 +2952,13 @@ sort(object).
 t(object, o1).
 
 
+% ectest/ec_reader_test_examples.e:1409
 % 
 % event E(object)
 event(e(object)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:1412
 % fluent F1(object)
 fluent(f1(object)).
 
@@ -5645,120 +3035,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1452
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:1454
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:1455
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:1455
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort object
 sort(object).
@@ -5768,13 +3051,13 @@ sort(object).
 t(object, o1).
 
 
+% ectest/ec_reader_test_examples.e:1458
 % 
 % fluent F(object)
 fluent(f(object)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:1461
 % event E(object)
 event(e(object)).
 
@@ -5837,119 +3120,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1496
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:1498
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:1498
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:1499
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:1499
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort object
 sort(object).
@@ -5959,13 +3136,13 @@ sort(object).
 t(object, o1).
 
 
+% ectest/ec_reader_test_examples.e:1502
 % 
 % fluent F(object)
 fluent(f(object)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:1505
 % event E(object)
 event(e(object)).
 
@@ -6028,125 +3205,20 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1540
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:1542
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:1542
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:1543
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:1543
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort camera
 sort(camera).
 
 
 % 
+% ectest/ec_reader_test_examples.e:1546
 % camera Camera1
 t(camera, camera1).
 
@@ -6156,7 +3228,6 @@ t(camera, camera1).
 fluent(properlyExposedPicture(camera)).
 
 
-% ectest/ec_reader_test_examples.e:1549
 % fluent ImproperlyExposedPicture(camera)
 fluent(improperlyExposedPicture(camera)).
 
@@ -6166,13 +3237,13 @@ fluent(improperlyExposedPicture(camera)).
 event(releaseShutter(camera)).
 
 
+% ectest/ec_reader_test_examples.e:1552
 % event TriggerFlash(camera)
 event(triggerFlash(camera)).
 
 
 % 
 % ; Sigma
-% ectest/ec_reader_test_examples.e:1555
 % 
 % ectest/ec_reader_test_examples.e:1556
 % [camera,time]% 
@@ -6302,120 +3373,15 @@ option(renaming, off).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:1619
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:1619
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:1620
-% load('foundations/EC.e').
-
-
-% ectest/ec_reader_test_examples.e:1620
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
+load('foundations/EC.e').
 
 
 % 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
-% 
+% ectest/ec_reader_test_examples.e:1621
 % sort coord: integer
 subsort(coord, integer).
 
@@ -6427,11 +3393,11 @@ subsort(direction, integer).
 
 % ; 0 -> 0, 1 -> 90, 2 -> 180, 3 -> 370
 % 
-% ectest/ec_reader_test_examples.e:1626
 % sort robot
 sort(robot).
 
 
+% ectest/ec_reader_test_examples.e:1627
 % 
 % robot Robot1
 t(robot, robot1).
@@ -6446,8 +3412,8 @@ function(sin(direction), coord).
 function(cos(direction), coord).
 
 
-% ectest/ec_reader_test_examples.e:1632
 % 
+% ectest/ec_reader_test_examples.e:1633
 % Sin(0)=0.
 sin(0)=0.
 
@@ -6469,12 +3435,12 @@ sin(3)=3.
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:1638
 % Cos(0)=1.
 cos(0)=1.
 
 
 % 
+% ectest/ec_reader_test_examples.e:1639
 % Cos(1)=2.
 cos(1)=2.
 
@@ -6495,11 +3461,11 @@ cos(3)=4.
 fluent(direction(robot, direction)).
 
 
-% ectest/ec_reader_test_examples.e:1644
 % fluent Location(robot,coord,coord)
 fluent(location(robot, coord, coord)).
 
 
+% ectest/ec_reader_test_examples.e:1645
 % 
 % event MoveLeftWheel(robot)
 event(moveLeftWheel(robot)).
@@ -6511,7 +3477,6 @@ event(moveRightWheel(robot)).
 
 % 
 % ; Sigma
-% ectest/ec_reader_test_examples.e:1650
 % 
 % ectest/ec_reader_test_examples.e:1651
 % [robot,direction1,direction2,time]% 
@@ -6714,125 +3679,20 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1747
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:1749
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:1749
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:1750
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:1750
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
 
 
 % 
+% ectest/ec_reader_test_examples.e:1753
 % event PatHead(agent)
 event(patHead(agent)).
 
@@ -6842,13 +3702,13 @@ event(rubStomach(agent)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:1756
 % agent Nathan
 t(agent, nathan).
 
 
 % 
 % ; Delta
+% ectest/ec_reader_test_examples.e:1759
 % 
 % ectest/ec_reader_test_examples.e:1760
 % [agent,time]% 
@@ -6906,120 +3766,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1794
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:1796
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:1797
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:1797
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort object
 sort(object).
@@ -7029,6 +3782,7 @@ sort(object).
 subsort(agent, object).
 
 
+% ectest/ec_reader_test_examples.e:1800
 % sort physobj: object
 subsort(physobj, object).
 
@@ -7038,7 +3792,6 @@ subsort(room, object).
 
 
 % 
-% ectest/ec_reader_test_examples.e:1803
 % fluent IN(object,object)
 fluent(in(object, object)).
 
@@ -7051,13 +3804,13 @@ fluent(inroom(object, room)).
 noninertial(inroom).
 
 
+% ectest/ec_reader_test_examples.e:1806
 % 
 % event MOVE(agent,object,object,object)
 event(move(agent, object, object, object)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:1809
 % agent Lisa
 t(agent, lisa).
 
@@ -7076,6 +3829,7 @@ t(room, kitchen).
 t(room, livingRoom).
 
 
+% ectest/ec_reader_test_examples.e:1812
 % 
 % ; Sigma
 % 
@@ -7417,119 +4171,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1973
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:1975
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:1975
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:1976
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:1976
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort object
 sort(object).
@@ -7539,6 +4187,7 @@ sort(object).
 sort(location).
 
 
+% ectest/ec_reader_test_examples.e:1979
 % 
 % object O1, O2
 t(object, o1).
@@ -7563,7 +4212,6 @@ t(location, l4).
 t(location, l5).
 
 
-% ectest/ec_reader_test_examples.e:1982
 % 
 % predicate Adjacent(location,location)
 predicate(adjacent(location, location)).
@@ -7573,6 +4221,7 @@ predicate(adjacent(location, location)).
 predicate(equal(object, object)).
 
 
+% ectest/ec_reader_test_examples.e:1985
 % 
 % fluent At(object,location)
 fluent(at(object, location)).
@@ -7582,7 +4231,6 @@ fluent(at(object, location)).
 event(move(object, location, location)).
 
 
-% ectest/ec_reader_test_examples.e:1988
 % 
 % ; Sigma
 % 
@@ -7807,123 +4455,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:2094
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:2096
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:2097
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% foundations/EC.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% foundations/EC.e:26
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% foundations/EC.e:32
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% foundations/EC.e:38
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort object
 sort(object).
@@ -7933,6 +4471,7 @@ sort(object).
 sort(location).
 
 
+% ectest/ec_reader_test_examples.e:2100
 % 
 % object O1, O2
 t(object, o1).
@@ -7951,7 +4490,6 @@ t(location, l2).
 t(location, l3).
 
 
-% ectest/ec_reader_test_examples.e:2103
 % 
 % predicate Adjacent(location,location)
 predicate(adjacent(location, location)).
@@ -7961,6 +4499,7 @@ predicate(adjacent(location, location)).
 predicate(equal(object, object)).
 
 
+% ectest/ec_reader_test_examples.e:2106
 % 
 % fluent At(object,location)
 fluent(at(object, location)).
@@ -7970,7 +4509,6 @@ fluent(at(object, location)).
 event(move(object, location, location)).
 
 
-% ectest/ec_reader_test_examples.e:2109
 % 
 % ; Sigma
 % 
@@ -8178,119 +4716,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:2202
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:2204
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:2204
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:2205
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:2205
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
@@ -8300,6 +4732,7 @@ sort(agent).
 sort(location).
 
 
+% ectest/ec_reader_test_examples.e:2208
 % 
 % agent James
 t(agent, james).
@@ -8309,13 +4742,13 @@ t(agent, james).
 t(location, bookstore).
 
 
-% ectest/ec_reader_test_examples.e:2211
 % 
 % fluent Tired(agent)
 fluent(tired(agent)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:2214
 % event Go(agent,location)
 event(go(agent, location)).
 
@@ -8328,7 +4761,6 @@ event(run(agent, location)).
 event(drive(agent, location)).
 
 
-% ectest/ec_reader_test_examples.e:2217
 % 
 % ectest/ec_reader_test_examples.e:2218
 % [agent,location,time]% 
@@ -8414,120 +4846,15 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:2262
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:2262
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:2263
-% load('foundations/EC.e').
-
-
-% ectest/ec_reader_test_examples.e:2263
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
+load('foundations/EC.e').
 
 
 % 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
-% 
+% ectest/ec_reader_test_examples.e:2264
 % sort dealer
 sort(dealer).
 
@@ -8545,11 +4872,11 @@ subsort(value, integer).
 t(wheel, wheel1).
 
 
-% ectest/ec_reader_test_examples.e:2269
 % dealer Dealer1
 t(dealer, dealer1).
 
 
+% ectest/ec_reader_test_examples.e:2270
 % 
 % fluent WheelNumberDeterminer(wheel,value)
 fluent(wheelNumberDeterminer(wheel, value)).
@@ -8564,11 +4891,11 @@ noninertial(wheelNumberDeterminer).
 
 
 % 
-% ectest/ec_reader_test_examples.e:2275
 % event Spin(dealer,wheel)
 event(spin(dealer, wheel)).
 
 
+% ectest/ec_reader_test_examples.e:2276
 % event Reset(dealer,wheel)
 event(reset(dealer, wheel)).
 
@@ -8725,120 +5052,15 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:2359
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:2359
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:2360
-% load('foundations/EC.e').
-
-
-% ectest/ec_reader_test_examples.e:2360
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
+load('foundations/EC.e').
 
 
 % 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
-% 
+% ectest/ec_reader_test_examples.e:2361
 % sort agent
 sort(agent).
 
@@ -8859,8 +5081,8 @@ sort(product).
 t(product, britneyCD).
 
 
-% ectest/ec_reader_test_examples.e:2366
 % 
+% ectest/ec_reader_test_examples.e:2367
 % sort f
 sort(f).
 
@@ -8878,11 +5100,11 @@ t(f, ePOSentJenMusicStore1).
 
 
 % 
-% ectest/ec_reader_test_examples.e:2372
 % sort amount: integer
 subsort(amount, integer).
 
 
+% ectest/ec_reader_test_examples.e:2373
 % 
 % fluent C(agent,agent,f)
 fluent(c(agent, agent, f)).
@@ -8897,11 +5119,11 @@ fluent(cc(agent, agent, f, f)).
 event(createC(agent, agent, f)).
 
 
-% ectest/ec_reader_test_examples.e:2378
 % event CreateCC(agent,agent,f,f)
 event(createCC(agent, agent, f, f)).
 
 
+% ectest/ec_reader_test_examples.e:2379
 % event DischargeC(agent,agent,f)
 event(dischargeC(agent, agent, f)).
 
@@ -8919,11 +5141,11 @@ fluent(quoteSent(agent, agent, product, amount)).
 fluent(purchaseRequested(agent, agent, product, amount)).
 
 
-% ectest/ec_reader_test_examples.e:2384
 % fluent Delivered(agent,agent,product)
 fluent(delivered(agent, agent, product)).
 
 
+% ectest/ec_reader_test_examples.e:2385
 % fluent EPOSent(agent,agent,amount)
 fluent(ePOSent(agent, agent, amount)).
 
@@ -8941,11 +5163,11 @@ event(requestPurchase(agent, agent, product, amount)).
 event(deliver(agent, agent, product)).
 
 
-% ectest/ec_reader_test_examples.e:2390
 % event SendEPO(agent,agent,amount)
 event(sendEPO(agent, agent, amount)).
 
 
+% ectest/ec_reader_test_examples.e:2391
 % 
 % ; Sigma
 % 
@@ -9328,120 +5550,15 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:2552
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:2552
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:2553
-% load('foundations/EC.e').
-
-
-% ectest/ec_reader_test_examples.e:2553
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
+load('foundations/EC.e').
 
 
 % 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
-% 
+% ectest/ec_reader_test_examples.e:2554
 % sort agent
 sort(agent).
 
@@ -9462,8 +5579,8 @@ sort(product).
 t(product, britneyCD).
 
 
-% ectest/ec_reader_test_examples.e:2559
 % 
+% ectest/ec_reader_test_examples.e:2560
 % sort f
 sort(f).
 
@@ -9481,11 +5598,11 @@ t(f, ePOSentJenMusicStore1).
 
 
 % 
-% ectest/ec_reader_test_examples.e:2565
 % sort amount: integer
 subsort(amount, integer).
 
 
+% ectest/ec_reader_test_examples.e:2566
 % 
 % fluent C(agent,agent,f)
 fluent(c(agent, agent, f)).
@@ -9500,11 +5617,11 @@ fluent(cc(agent, agent, f, f)).
 event(createC(agent, agent, f)).
 
 
-% ectest/ec_reader_test_examples.e:2571
 % event CreateCC(agent,agent,f,f)
 event(createCC(agent, agent, f, f)).
 
 
+% ectest/ec_reader_test_examples.e:2572
 % event DischargeC(agent,agent,f)
 event(dischargeC(agent, agent, f)).
 
@@ -9522,11 +5639,11 @@ fluent(quoteSent(agent, agent, product, amount)).
 fluent(purchaseRequested(agent, agent, product, amount)).
 
 
-% ectest/ec_reader_test_examples.e:2577
 % fluent Delivered(agent,agent,product)
 fluent(delivered(agent, agent, product)).
 
 
+% ectest/ec_reader_test_examples.e:2578
 % fluent EPOSent(agent,agent,amount)
 fluent(ePOSent(agent, agent, amount)).
 
@@ -9544,11 +5661,11 @@ event(requestPurchase(agent, agent, product, amount)).
 event(deliver(agent, agent, product)).
 
 
-% ectest/ec_reader_test_examples.e:2583
 % event SendEPO(agent,agent,amount)
 event(sendEPO(agent, agent, amount)).
 
 
+% ectest/ec_reader_test_examples.e:2584
 % 
 % ; Sigma
 % 
@@ -9913,120 +6030,15 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:2743
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:2743
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:2744
-% load('foundations/EC.e').
-
-
-% ectest/ec_reader_test_examples.e:2744
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
+load('foundations/EC.e').
 
 
 % 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
-% 
+% ectest/ec_reader_test_examples.e:2745
 % sort agent
 sort(agent).
 
@@ -10047,8 +6059,8 @@ sort(product).
 t(product, britneyCD).
 
 
-% ectest/ec_reader_test_examples.e:2750
 % 
+% ectest/ec_reader_test_examples.e:2751
 % sort f
 sort(f).
 
@@ -10066,11 +6078,11 @@ t(f, ePOSentJenMusicStore1).
 
 
 % 
-% ectest/ec_reader_test_examples.e:2756
 % sort amount: integer
 subsort(amount, integer).
 
 
+% ectest/ec_reader_test_examples.e:2757
 % 
 % fluent C(agent,agent,f)
 fluent(c(agent, agent, f)).
@@ -10085,11 +6097,11 @@ fluent(cc(agent, agent, f, f)).
 event(createC(agent, agent, f)).
 
 
-% ectest/ec_reader_test_examples.e:2762
 % event CreateCC(agent,agent,f,f)
 event(createCC(agent, agent, f, f)).
 
 
+% ectest/ec_reader_test_examples.e:2763
 % event DischargeC(agent,agent,f)
 event(dischargeC(agent, agent, f)).
 
@@ -10107,11 +6119,11 @@ fluent(quoteSent(agent, agent, product, amount)).
 fluent(purchaseRequested(agent, agent, product, amount)).
 
 
-% ectest/ec_reader_test_examples.e:2768
 % fluent Delivered(agent,agent,product)
 fluent(delivered(agent, agent, product)).
 
 
+% ectest/ec_reader_test_examples.e:2769
 % fluent EPOSent(agent,agent,amount)
 fluent(ePOSent(agent, agent, amount)).
 
@@ -10129,11 +6141,11 @@ event(requestPurchase(agent, agent, product, amount)).
 event(deliver(agent, agent, product)).
 
 
-% ectest/ec_reader_test_examples.e:2774
 % event SendEPO(agent,agent,amount)
 event(sendEPO(agent, agent, amount)).
 
 
+% ectest/ec_reader_test_examples.e:2775
 % 
 % ; Sigma
 % 
@@ -10507,120 +6519,15 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:2935
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:2935
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:2936
-% load('foundations/EC.e').
-
-
-% ectest/ec_reader_test_examples.e:2936
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
+load('foundations/EC.e').
 
 
 % 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
-% 
+% ectest/ec_reader_test_examples.e:2937
 % sort object
 sort(object).
 
@@ -10638,7 +6545,6 @@ sort(aspect).
 t(object, object1).
 
 
-% ectest/ec_reader_test_examples.e:2942
 % aspect Aspect1, Aspect2, Aspect3
 t(aspect, aspect1).
 
@@ -10649,6 +6555,7 @@ t(aspect, aspect2).
 t(aspect, aspect3).
 
 
+% ectest/ec_reader_test_examples.e:2943
 % shape Shape1, Shape2
 t(shape, shape1).
 
@@ -10669,11 +6576,11 @@ predicate(arc(shape, aspect, aspect)).
 fluent(aspect(object, aspect)).
 
 
-% ectest/ec_reader_test_examples.e:2948
 % event Change(object,aspect,aspect)
 event(change(object, aspect, aspect)).
 
 
+% ectest/ec_reader_test_examples.e:2949
 % 
 % ; Sigma
 % 
@@ -10863,121 +6770,15 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:3057
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:3058
-% load('foundations/EC.e').
-
-
-% ectest/ec_reader_test_examples.e:3058
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
+load('foundations/EC.e').
 
 
 % 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
-% 
+% ectest/ec_reader_test_examples.e:3059
 % sort activity
 sort(activity).
 
@@ -11034,11 +6835,11 @@ t(condition, fc).
 
 
 % 
-% ectest/ec_reader_test_examples.e:3064
 % fluent Active(activity)
 fluent(active(activity)).
 
 
+% ectest/ec_reader_test_examples.e:3065
 % fluent Completed(activity)
 fluent(completed(activity)).
 
@@ -11056,11 +6857,11 @@ noninertial(condition).
 event(start(activity)).
 
 
-% ectest/ec_reader_test_examples.e:3070
 % event End(activity)
 event(end(activity)).
 
 
+% ectest/ec_reader_test_examples.e:3071
 % 
 % ; Sigma
 % 
@@ -11499,226 +7300,23 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:3229
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:3231
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:3231
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:3232
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:3232
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % load foundations/ECCausal.e
-% ectest/ec_reader_test_examples.e:3233
-% load('foundations/ECCausal.e').
+load('foundations/ECCausal.e').
 
 
-% ectest/ec_reader_test_examples.e:3233
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Causal Constraints
-% ;
-% ; @inproceedings{Shanahan:1999a,
-% ;   author = "Murray Shanahan",
-% ;   year = "1999",
-% ;   title = "The ramification problem in the event calculus",
-% ;   booktitle = "\uppercase{P}roceedings of the \uppercase{S}ixteenth \uppercase{I}nternational \uppercase{J}oint \uppercase{C}onference on \uppercase{A}rtificial \uppercase{I}ntelligence",
-% ;   pages = "140--146",
-% ;   address = "San Mateo, CA",
-% ;   publisher = "Morgan Kaufmann",
-% ; }
-% ;
-% 
-% predicate Started(fluent,time)
-predicate(started(fluent, time)).
-
-
-% predicate Stopped(fluent,time)
-predicate(stopped(fluent, time)).
-
-
-% 
-% ectest/ec_reader_test_examples.e:3233
-% [fluent,time]% 
-% Started(fluent,time) <->
-% (HoldsAt(fluent,time) |
-%  ({event} Happens(event,time) & Initiates(event,fluent,time))).
-started(Fluent, Time) <->
-	(   holds_at(Fluent, Time)
-	;   exists([Event],
-		   (happens(Event, Time), initiates(Event, Fluent, Time)))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:3233
-% [fluent,time]% 
-% Stopped(fluent,time) <->
-% (!HoldsAt(fluent,time) |
-%  ({event} Happens(event,time) & Terminates(event,fluent,time))).
-stopped(Fluent, Time) <->
-	(   not(holds_at(Fluent, Time))
-	;   exists([Event],
-		   (happens(Event, Time), terminates(Event, Fluent, Time)))
-	).
-
-
-% 
-% 
-% predicate Initiated(fluent,time)
-predicate(initiated(fluent, time)).
-
-
-% predicate Terminated(fluent,time)
-predicate(terminated(fluent, time)).
-
-
-% 
-% ectest/ec_reader_test_examples.e:3233
-% [fluent,time]% 
-% Initiated(fluent,time) <->
-% (Started(fluent,time) &
-%  !({event} Happens(event,time) & Terminates(event,fluent,time))).
-initiated(Fluent, Time) <->
-	started(Fluent, Time),
-	not(exists([Event],
-		   (happens(Event, Time), terminates(Event, Fluent, Time)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:3233
-% [fluent,time]% 
-% Terminated(fluent,time) <->
-% (Stopped(fluent,time) &
-%  !({event} Happens(event,time) & Initiates(event,fluent,time))).
-terminated(Fluent, Time) <->
-	stopped(Fluent, Time),
-	not(exists([Event],
-		   (happens(Event, Time), initiates(Event, Fluent, Time)))).
-
-
-% 
-% 
-% ; End of file.
 % 
 % sort switch
 sort(switch).
 
 
+% ectest/ec_reader_test_examples.e:3235
 % sort relay
 sort(relay).
 
@@ -11738,7 +7336,6 @@ t(switch, s2).
 t(switch, s3).
 
 
-% ectest/ec_reader_test_examples.e:3239
 % relay R
 t(relay, r).
 
@@ -11747,6 +7344,7 @@ t(relay, r).
 t(light, l).
 
 
+% ectest/ec_reader_test_examples.e:3241
 % 
 % event Light(light)
 event(light(light)).
@@ -11760,12 +7358,12 @@ event(close(switch)).
 event(open(switch)).
 
 
-% ectest/ec_reader_test_examples.e:3245
 % event Activate(relay)
 event(activate(relay)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:3247
 % fluent Lit(light)
 fluent(lit(light)).
 
@@ -11924,121 +7522,15 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:3318
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:3319
-% load('foundations/EC.e').
-
-
-% ectest/ec_reader_test_examples.e:3319
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
+load('foundations/EC.e').
 
 
 % 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
-% 
+% ectest/ec_reader_test_examples.e:3320
 % sort object
 sort(object).
 
@@ -12056,11 +7548,11 @@ sort(room).
 t(object, book).
 
 
-% ectest/ec_reader_test_examples.e:3325
 % agent Nathan
 t(agent, nathan).
 
 
+% ectest/ec_reader_test_examples.e:3326
 % room LivingRoom, Kitchen
 t(room, livingRoom).
 
@@ -12081,8 +7573,8 @@ event(pickUp(agent, object)).
 event(walk(agent, room, room)).
 
 
-% ectest/ec_reader_test_examples.e:3331
 % 
+% ectest/ec_reader_test_examples.e:3332
 % fluent InRoom(object,room)
 fluent(inRoom(object, room)).
 
@@ -12270,119 +7762,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:3422
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:3424
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:3424
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:3425
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:3425
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort switch
 sort(switch).
@@ -12392,6 +7778,7 @@ sort(switch).
 sort(relay).
 
 
+% ectest/ec_reader_test_examples.e:3428
 % sort light
 sort(light).
 
@@ -12407,7 +7794,6 @@ t(switch, s2).
 t(switch, s3).
 
 
-% ectest/ec_reader_test_examples.e:3431
 % relay R
 t(relay, r).
 
@@ -12417,6 +7803,7 @@ t(light, l).
 
 
 % 
+% ectest/ec_reader_test_examples.e:3434
 % event Light(light)
 event(light(light)).
 
@@ -12429,7 +7816,6 @@ event(unlight(light)).
 event(close(switch)).
 
 
-% ectest/ec_reader_test_examples.e:3437
 % event Open(switch)
 event(open(switch)).
 
@@ -12439,6 +7825,7 @@ event(activate(relay)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:3440
 % fluent Lit(light)
 fluent(lit(light)).
 
@@ -12451,7 +7838,6 @@ fluent(closed(switch)).
 fluent(activated(relay)).
 
 
-% ectest/ec_reader_test_examples.e:3443
 % 
 % ectest/ec_reader_test_examples.e:3444
 % [time]% 
@@ -12617,120 +8003,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:3520
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:3522
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:3523
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:3523
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort switch
 sort(switch).
@@ -12740,6 +8019,7 @@ sort(switch).
 sort(relay).
 
 
+% ectest/ec_reader_test_examples.e:3526
 % sort light
 sort(light).
 
@@ -12755,7 +8035,6 @@ t(switch, s2).
 t(switch, s3).
 
 
-% ectest/ec_reader_test_examples.e:3529
 % relay R
 t(relay, r).
 
@@ -12765,6 +8044,7 @@ t(light, l).
 
 
 % 
+% ectest/ec_reader_test_examples.e:3532
 % event Light(light)
 event(light(light)).
 
@@ -12777,7 +8057,6 @@ event(unlight(light)).
 event(close(switch)).
 
 
-% ectest/ec_reader_test_examples.e:3535
 % event Open(switch)
 event(open(switch)).
 
@@ -12790,6 +8069,7 @@ event(activate(relay)).
 event(deactivate(relay)).
 
 
+% ectest/ec_reader_test_examples.e:3538
 % 
 % fluent Lit(light)
 fluent(lit(light)).
@@ -12799,7 +8079,6 @@ fluent(lit(light)).
 fluent(closed(switch)).
 
 
-% ectest/ec_reader_test_examples.e:3541
 % fluent Activated(relay)
 fluent(activated(relay)).
 
@@ -12983,123 +8262,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:3620
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:3622
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:3623
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% foundations/EC.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% foundations/EC.e:26
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% foundations/EC.e:32
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% foundations/EC.e:38
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort object
 sort(object).
@@ -13109,6 +8278,7 @@ sort(object).
 subsort(agent, object).
 
 
+% ectest/ec_reader_test_examples.e:3626
 % sort room
 sort(room).
 
@@ -13118,7 +8288,6 @@ sort(room).
 t(object, book).
 
 
-% ectest/ec_reader_test_examples.e:3629
 % agent Nathan
 t(agent, nathan).
 
@@ -13131,6 +8300,7 @@ t(room, kitchen).
 
 
 % 
+% ectest/ec_reader_test_examples.e:3632
 % event LetGoOf(agent,object)
 event(letGoOf(agent, object)).
 
@@ -13143,7 +8313,6 @@ event(pickUp(agent, object)).
 event(walk(agent, room, room)).
 
 
-% ectest/ec_reader_test_examples.e:3635
 % 
 % fluent InRoom(object,room)
 fluent(inRoom(object, room)).
@@ -13153,6 +8322,7 @@ fluent(inRoom(object, room)).
 fluent(holding(agent, object)).
 
 
+% ectest/ec_reader_test_examples.e:3638
 % 
 % ; Sigma
 % 
@@ -13347,119 +8517,14 @@ option(trajectory, on).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:3734
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:3734
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:3735
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:3735
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort balloon
 sort(balloon).
@@ -13655,119 +8720,13 @@ range(offset, 1, 2).
 % ectest/ec_reader_test_examples.e:3820
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:3822
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:3822
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:3823
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:3823
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort object
 sort(object).
@@ -13777,6 +8736,7 @@ sort(object).
 sort(agent).
 
 
+% ectest/ec_reader_test_examples.e:3826
 % sort height: integer
 subsort(height, integer).
 
@@ -13786,7 +8746,6 @@ subsort(height, integer).
 t(agent, nathan).
 
 
-% ectest/ec_reader_test_examples.e:3829
 % object Apple
 t(object, apple).
 
@@ -13796,6 +8755,7 @@ t(object, apple).
 fluent(falling(object)).
 
 
+% ectest/ec_reader_test_examples.e:3832
 % fluent Height(object,height)
 fluent(height(object, height)).
 
@@ -13805,13 +8765,13 @@ fluent(height(object, height)).
 event(drop(agent, object)).
 
 
-% ectest/ec_reader_test_examples.e:3835
 % event HitGround(object)
 event(hitGround(object)).
 
 
 % 
 % ; Sigma
+% ectest/ec_reader_test_examples.e:3838
 % 
 % ectest/ec_reader_test_examples.e:3839
 % [agent,object,time]% 
@@ -13980,123 +8940,14 @@ option(trajectory, on).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:3916
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
+load('foundations/EC.e').
+
+
 % ectest/ec_reader_test_examples.e:3917
-% load('foundations/EC.e').
-
-
-% foundations/EC.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% foundations/EC.e:26
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% foundations/EC.e:32
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% foundations/EC.e:38
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort object
 sort(object).
@@ -14296,119 +9147,13 @@ range(offset, 1, 3).
 % ectest/ec_reader_test_examples.e:4003
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:4005
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:4005
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:4006
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:4006
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
@@ -14418,6 +9163,7 @@ sort(agent).
 sort(phone).
 
 
+% ectest/ec_reader_test_examples.e:4009
 % 
 % agent Agent1, Agent2
 t(agent, agent1).
@@ -14433,7 +9179,6 @@ t(phone, phone1).
 t(phone, phone2).
 
 
-% ectest/ec_reader_test_examples.e:4012
 % 
 % fluent Ringing(phone,phone)
 fluent(ringing(phone, phone)).
@@ -14443,6 +9188,7 @@ fluent(ringing(phone, phone)).
 fluent(dialTone(phone)).
 
 
+% ectest/ec_reader_test_examples.e:4015
 % fluent BusySignal(phone)
 fluent(busySignal(phone)).
 
@@ -14455,7 +9201,6 @@ fluent(idle(phone)).
 fluent(connected(phone, phone)).
 
 
-% ectest/ec_reader_test_examples.e:4018
 % fluent Disconnected(phone)
 fluent(disconnected(phone)).
 
@@ -14465,6 +9210,7 @@ fluent(disconnected(phone)).
 event(pickUp(agent, phone)).
 
 
+% ectest/ec_reader_test_examples.e:4021
 % event SetDown(agent,phone)
 event(setDown(agent, phone)).
 
@@ -14475,7 +9221,6 @@ event(dial(agent, phone, phone)).
 
 % 
 % ; Sigma
-% ectest/ec_reader_test_examples.e:4025
 % 
 % ectest/ec_reader_test_examples.e:4026
 % [agent,phone,time]% 
@@ -14902,122 +9647,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:4194
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:4196
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:4196
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:4197
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% foundations/EC.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% foundations/EC.e:26
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% foundations/EC.e:32
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% foundations/EC.e:38
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
@@ -15027,6 +9663,7 @@ sort(agent).
 sort(phone).
 
 
+% ectest/ec_reader_test_examples.e:4200
 % 
 % agent Agent1, Agent2
 t(agent, agent1).
@@ -15042,7 +9679,6 @@ t(phone, phone1).
 t(phone, phone2).
 
 
-% ectest/ec_reader_test_examples.e:4203
 % 
 % fluent Ringing(phone,phone)
 fluent(ringing(phone, phone)).
@@ -15052,6 +9688,7 @@ fluent(ringing(phone, phone)).
 fluent(dialTone(phone)).
 
 
+% ectest/ec_reader_test_examples.e:4206
 % fluent BusySignal(phone)
 fluent(busySignal(phone)).
 
@@ -15064,7 +9701,6 @@ fluent(idle(phone)).
 fluent(connected(phone, phone)).
 
 
-% ectest/ec_reader_test_examples.e:4209
 % fluent Disconnected(phone)
 fluent(disconnected(phone)).
 
@@ -15074,6 +9710,7 @@ fluent(disconnected(phone)).
 event(pickUp(agent, phone)).
 
 
+% ectest/ec_reader_test_examples.e:4212
 % event SetDown(agent,phone)
 event(setDown(agent, phone)).
 
@@ -15084,7 +9721,6 @@ event(dial(agent, phone, phone)).
 
 % 
 % ; Sigma
-% ectest/ec_reader_test_examples.e:4216
 % 
 % ectest/ec_reader_test_examples.e:4217
 % [agent,phone,time]% 
@@ -15492,122 +10128,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:4363
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:4365
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:4365
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:4366
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% foundations/EC.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% foundations/EC.e:26
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% foundations/EC.e:32
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% foundations/EC.e:38
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort object
 sort(object).
@@ -15617,6 +10144,7 @@ sort(object).
 subsort(agent, object).
 
 
+% ectest/ec_reader_test_examples.e:4369
 % sort device: object
 subsort(device, object).
 
@@ -15629,7 +10157,6 @@ subsort(tv, device).
 sort(room).
 
 
-% ectest/ec_reader_test_examples.e:4372
 % 
 % agent Nathan
 t(agent, nathan).
@@ -15639,6 +10166,7 @@ t(agent, nathan).
 t(tv, tv).
 
 
+% ectest/ec_reader_test_examples.e:4375
 % room LivingRoom, Kitchen
 t(room, livingRoom).
 
@@ -15651,7 +10179,6 @@ t(room, kitchen).
 event(turnOn(agent, device)).
 
 
-% ectest/ec_reader_test_examples.e:4378
 % event Walk(agent,room,room)
 event(walk(agent, room, room)).
 
@@ -15661,6 +10188,7 @@ event(walk(agent, room, room)).
 fluent(inRoom(object, room)).
 
 
+% ectest/ec_reader_test_examples.e:4381
 % fluent On(device)
 fluent(on(device)).
 
@@ -15673,7 +10201,6 @@ fluent(pluggedIn(device)).
 fluent(brokenSwitch(device)).
 
 
-% ectest/ec_reader_test_examples.e:4384
 % 
 % predicate Ab1(device,time)
 predicate(ab1(device, time)).
@@ -15683,6 +10210,7 @@ predicate(ab1(device, time)).
 predicate(ab2(room, time)).
 
 
+% ectest/ec_reader_test_examples.e:4387
 % 
 % ; Sigma
 % 
@@ -15894,119 +10422,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:4481
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:4483
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:4483
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:4484
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:4484
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
@@ -16016,6 +10438,7 @@ sort(agent).
 sort(device).
 
 
+% ectest/ec_reader_test_examples.e:4487
 % 
 % agent Nathan
 t(agent, nathan).
@@ -16028,13 +10451,13 @@ t(device, device1).
 t(device, antiqueDevice1).
 
 
-% ectest/ec_reader_test_examples.e:4490
 % 
 % predicate Ab1(device,time)
 predicate(ab1(device, time)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:4493
 % fluent On(device)
 fluent(on(device)).
 
@@ -16047,7 +10470,6 @@ fluent(pluggedIn(device)).
 fluent(brokenSwitch(device)).
 
 
-% ectest/ec_reader_test_examples.e:4496
 % 
 % event TurnOn(agent,device)
 event(turnOn(agent, device)).
@@ -16055,6 +10477,7 @@ event(turnOn(agent, device)).
 
 % 
 % ; Sigma
+% ectest/ec_reader_test_examples.e:4500
 % 
 % ectest/ec_reader_test_examples.e:4501
 % [agent,device,time]% 
@@ -16199,119 +10622,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:4559
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:4561
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:4561
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:4562
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:4562
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
@@ -16321,6 +10638,7 @@ sort(agent).
 sort(device).
 
 
+% ectest/ec_reader_test_examples.e:4565
 % 
 % agent Nathan
 t(agent, nathan).
@@ -16330,13 +10648,13 @@ t(agent, nathan).
 t(device, device1).
 
 
-% ectest/ec_reader_test_examples.e:4568
 % 
 % predicate Ab1(device,time)
 predicate(ab1(device, time)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:4571
 % fluent On(device)
 fluent(on(device)).
 
@@ -16349,7 +10667,6 @@ fluent(pluggedIn(device)).
 fluent(brokenSwitch(device)).
 
 
-% ectest/ec_reader_test_examples.e:4574
 % fluent Erratic(device)
 fluent(erratic(device)).
 
@@ -16359,6 +10676,7 @@ fluent(erratic(device)).
 fluent(determiningFluent(device)).
 
 
+% ectest/ec_reader_test_examples.e:4577
 % noninertial DeterminingFluent
 noninertial(determiningFluent).
 
@@ -16368,7 +10686,6 @@ noninertial(determiningFluent).
 event(turnOn(agent, device)).
 
 
-% ectest/ec_reader_test_examples.e:4580
 % 
 % ; Sigma
 % 
@@ -16520,121 +10837,15 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:4646
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:4647
-% load('foundations/EC.e').
-
-
-% ectest/ec_reader_test_examples.e:4647
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
+load('foundations/EC.e').
 
 
 % 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
-% 
+% ectest/ec_reader_test_examples.e:4648
 % sort agent
 sort(agent).
 
@@ -16652,11 +10863,11 @@ fluent(beeping(clock)).
 fluent(alarmTime(clock, time)).
 
 
-% ectest/ec_reader_test_examples.e:4653
 % fluent AlarmOn(clock)
 fluent(alarmOn(clock)).
 
 
+% ectest/ec_reader_test_examples.e:4654
 % 
 % event SetAlarmTime(agent,clock,time)
 event(setAlarmTime(agent, clock, time)).
@@ -16674,8 +10885,8 @@ event(turnOnAlarm(agent, clock)).
 event(turnOffAlarm(agent, clock)).
 
 
-% ectest/ec_reader_test_examples.e:4659
 % 
+% ectest/ec_reader_test_examples.e:4660
 % predicate Ab1(clock,time)
 predicate(ab1(clock, time)).
 
@@ -16859,127 +11070,20 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:4746
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:4748
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:4748
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:4749
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% foundations/EC.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% foundations/EC.e:26
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% foundations/EC.e:32
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort object
 sort(object).
 
 
 % 
+% ectest/ec_reader_test_examples.e:4752
 % object A,B
 t(object, a).
 
@@ -16992,7 +11096,6 @@ t(object, b).
 fluent(p(object)).
 
 
-% ectest/ec_reader_test_examples.e:4755
 % fluent Q(object)
 fluent(q(object)).
 
@@ -17002,6 +11105,7 @@ fluent(r(object)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:4758
 % predicate Ab1(object,time)
 predicate(ab1(object, time)).
 
@@ -17119,122 +11223,13 @@ completion([theta, ab2]).
 % ectest/ec_reader_test_examples.e:4811
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:4813
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:4813
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:4814
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% foundations/EC.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% foundations/EC.e:26
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% foundations/EC.e:32
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% foundations/EC.e:38
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
@@ -17244,6 +11239,7 @@ sort(agent).
 sort(device).
 
 
+% ectest/ec_reader_test_examples.e:4817
 % 
 % agent Nathan
 t(agent, nathan).
@@ -17253,13 +11249,13 @@ t(agent, nathan).
 t(device, device1).
 
 
-% ectest/ec_reader_test_examples.e:4820
 % 
 % predicate Ab1(device,time)
 predicate(ab1(device, time)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:4823
 % fluent On(device)
 fluent(on(device)).
 
@@ -17272,7 +11268,6 @@ fluent(pluggedIn(device)).
 fluent(brokenSwitch(device)).
 
 
-% ectest/ec_reader_test_examples.e:4826
 % 
 % event TurnOn(agent,device)
 event(turnOn(agent, device)).
@@ -17280,6 +11275,7 @@ event(turnOn(agent, device)).
 
 % 
 % ; Sigma
+% ectest/ec_reader_test_examples.e:4830
 % 
 % ectest/ec_reader_test_examples.e:4831
 % [agent,device,time]% 
@@ -17403,126 +11399,20 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:4888
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:4890
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:4891
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:4891
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort object
 sort(object).
 
 
 % 
+% ectest/ec_reader_test_examples.e:4894
 % object A,B
 t(object, a).
 
@@ -17535,7 +11425,6 @@ t(object, b).
 fluent(p(object)).
 
 
-% ectest/ec_reader_test_examples.e:4897
 % fluent Q(object)
 fluent(q(object)).
 
@@ -17620,125 +11509,20 @@ completion([theta, ab]).
 % ectest/ec_reader_test_examples.e:4939
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:4941
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:4941
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:4942
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:4942
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
 
 
 % 
+% ectest/ec_reader_test_examples.e:4945
 % fluent Awake(agent)
 fluent(awake(agent)).
 
@@ -17803,125 +11587,20 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:4979
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:4981
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:4981
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:4982
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:4982
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
 
 
 % 
+% ectest/ec_reader_test_examples.e:4985
 % fluent Awake(agent)
 fluent(awake(agent)).
 
@@ -18011,123 +11690,15 @@ option(timediff, off).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:5027
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:5027
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:5028
-% load('foundations/EC.e').
-
-
-% foundations/EC.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% foundations/EC.e:26
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
+load('foundations/EC.e').
 
 
 % 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% foundations/EC.e:32
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% foundations/EC.e:38
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
-% 
+% ectest/ec_reader_test_examples.e:5029
 % sort agent
 sort(agent).
 
@@ -18210,125 +11781,20 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:5068
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:5070
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:5070
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:5071
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:5071
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
 
 
 % 
+% ectest/ec_reader_test_examples.e:5074
 % fluent Awake(agent)
 fluent(awake(agent)).
 
@@ -18406,125 +11872,20 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:5111
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:5113
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:5113
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:5114
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:5114
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
 
 
 % 
+% ectest/ec_reader_test_examples.e:5117
 % fluent Awake(agent)
 fluent(awake(agent)).
 
@@ -18592,120 +11953,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:5152
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:5154
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:5155
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:5155
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
@@ -18715,6 +11969,7 @@ sort(agent).
 sort(clock).
 
 
+% ectest/ec_reader_test_examples.e:5158
 % 
 % fluent Beeping(clock)
 fluent(beeping(clock)).
@@ -18724,7 +11979,6 @@ fluent(beeping(clock)).
 fluent(alarmTime(clock, time)).
 
 
-% ectest/ec_reader_test_examples.e:5161
 % fluent AlarmOn(clock)
 fluent(alarmOn(clock)).
 
@@ -18734,6 +11988,7 @@ fluent(alarmOn(clock)).
 event(setAlarmTime(agent, clock, time)).
 
 
+% ectest/ec_reader_test_examples.e:5164
 % event StartBeeping(clock)
 event(startBeeping(clock)).
 
@@ -18746,7 +12001,6 @@ event(turnOnAlarm(agent, clock)).
 event(turnOffAlarm(agent, clock)).
 
 
-% ectest/ec_reader_test_examples.e:5167
 % 
 % agent Nathan
 t(agent, nathan).
@@ -18756,6 +12010,7 @@ t(agent, nathan).
 t(clock, clock).
 
 
+% ectest/ec_reader_test_examples.e:5170
 % 
 % ; Sigma
 % 
@@ -18923,122 +12178,15 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:5252
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:5252
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:5253
-% load('foundations/EC.e').
-
-
-% foundations/EC.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% foundations/EC.e:26
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
+load('foundations/EC.e').
 
 
 % 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% foundations/EC.e:32
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
-% 
+% ectest/ec_reader_test_examples.e:5254
 % sort account
 sort(account).
 
@@ -19056,11 +12204,11 @@ t(account, account2).
 
 
 % 
-% ectest/ec_reader_test_examples.e:5259
 % predicate EndOfMonth(time)
 predicate(endOfMonth(time)).
 
 
+% ectest/ec_reader_test_examples.e:5260
 % function ServiceFee(account): value
 function(serviceFee(account), value).
 
@@ -19078,8 +12226,8 @@ fluent(serviceFeeCharged(account)).
 fluent(balance(account, value)).
 
 
-% ectest/ec_reader_test_examples.e:5265
 % 
+% ectest/ec_reader_test_examples.e:5266
 % event Transfer(account,account,value)
 event(transfer(account, account, value)).
 
@@ -19094,7 +12242,6 @@ event(chargeServiceFee(account)).
 
 % 
 % ; Sigma
-% ectest/ec_reader_test_examples.e:5271
 % 
 % ectest/ec_reader_test_examples.e:5272
 % [account1,account2,value1,value2,value3,value4,time]% 
@@ -19362,119 +12509,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:5393
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:5395
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:5395
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:5396
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:5396
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort counter
 sort(counter).
@@ -19484,6 +12525,7 @@ sort(counter).
 t(counter, counter1).
 
 
+% ectest/ec_reader_test_examples.e:5399
 % 
 % event FalseToTrue(counter)
 event(falseToTrue(counter)).
@@ -19493,7 +12535,6 @@ event(falseToTrue(counter)).
 event(trueToFalse(counter)).
 
 
-% ectest/ec_reader_test_examples.e:5402
 % 
 % fluent Count(counter,integer)
 fluent(count(counter, integer)).
@@ -19503,6 +12544,7 @@ fluent(count(counter, integer)).
 fluent(true(counter)).
 
 
+% ectest/ec_reader_test_examples.e:5405
 % fluent InputLine(counter)
 fluent(inputLine(counter)).
 
@@ -19512,7 +12554,6 @@ noninertial(inputLine).
 
 
 % 
-% ectest/ec_reader_test_examples.e:5408
 % Delta:
 directive(delta).
 
@@ -19712,120 +12753,15 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:5485
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:5485
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:5486
-% load('foundations/EC.e').
-
-
-% ectest/ec_reader_test_examples.e:5486
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
+load('foundations/EC.e').
 
 
 % 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
-% 
+% ectest/ec_reader_test_examples.e:5487
 % sort agent
 sort(agent).
 
@@ -19846,7 +12782,6 @@ t(agent, teacher).
 t(agent, student).
 
 
-% ectest/ec_reader_test_examples.e:5492
 % room Kitchen, Classroom
 t(room, kitchen).
 
@@ -19854,6 +12789,7 @@ t(room, kitchen).
 t(room, classroom).
 
 
+% ectest/ec_reader_test_examples.e:5493
 % fact Fact1, Fact2
 t(fact, fact1).
 
@@ -19874,8 +12810,8 @@ fluent(listeningTo(agent, agent)).
 fluent(know(agent, fact)).
 
 
-% ectest/ec_reader_test_examples.e:5498
 % 
+% ectest/ec_reader_test_examples.e:5499
 % event Tell(agent,agent,fact)
 event(tell(agent, agent, fact)).
 
@@ -19983,120 +12919,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:5556
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:5558
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:5558
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:5559
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:5559
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% foundations/EC.e:38
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort palette
 sort(palette).
@@ -20106,6 +12935,7 @@ sort(palette).
 sort(color).
 
 
+% ectest/ec_reader_test_examples.e:5562
 % 
 % palette Palette1
 t(palette, palette1).
@@ -20124,7 +12954,6 @@ t(color, blue).
 t(color, green).
 
 
-% ectest/ec_reader_test_examples.e:5565
 % 
 % event PlaceOnPalette(palette,color)
 event(placeOnPalette(palette, color)).
@@ -20134,6 +12963,7 @@ event(placeOnPalette(palette, color)).
 fluent(onPalette(palette, color)).
 
 
+% ectest/ec_reader_test_examples.e:5568
 % 
 % ectest/ec_reader_test_examples.e:5569
 % [palette,color,time]% 
@@ -20337,120 +13167,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:5651
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:5653
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:5654
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:5654
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
@@ -20460,6 +13183,7 @@ sort(agent).
 sort(clock).
 
 
+% ectest/ec_reader_test_examples.e:5657
 % 
 % fluent Beeping(clock)
 fluent(beeping(clock)).
@@ -20469,7 +13193,6 @@ fluent(beeping(clock)).
 fluent(alarmTime(clock, time)).
 
 
-% ectest/ec_reader_test_examples.e:5660
 % fluent AlarmOn(clock)
 fluent(alarmOn(clock)).
 
@@ -20479,6 +13202,7 @@ fluent(alarmOn(clock)).
 event(setAlarmTime(agent, clock, time)).
 
 
+% ectest/ec_reader_test_examples.e:5663
 % event StartBeeping(clock)
 event(startBeeping(clock)).
 
@@ -20491,13 +13215,13 @@ event(turnOnAlarm(agent, clock)).
 event(turnOffAlarm(agent, clock)).
 
 
-% ectest/ec_reader_test_examples.e:5666
 % 
 % event PressSnooze(agent,clock)
 event(pressSnooze(agent, clock)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:5669
 % agent Nathan
 t(agent, nathan).
 
@@ -20508,7 +13232,6 @@ t(clock, clock).
 
 % 
 % ; Sigma
-% ectest/ec_reader_test_examples.e:5673
 % 
 % ectest/ec_reader_test_examples.e:5674
 % [agent,clock,time1,time2,time]% 
@@ -20715,119 +13438,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:5769
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:5771
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:5771
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:5772
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:5772
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
@@ -20837,6 +13454,7 @@ sort(agent).
 sort(phone).
 
 
+% ectest/ec_reader_test_examples.e:5775
 % 
 % agent Agent1, Agent2
 t(agent, agent1).
@@ -20852,7 +13470,6 @@ t(phone, phone1).
 t(phone, phone2).
 
 
-% ectest/ec_reader_test_examples.e:5778
 % 
 % fluent Ringing(phone,phone)
 fluent(ringing(phone, phone)).
@@ -20862,6 +13479,7 @@ fluent(ringing(phone, phone)).
 fluent(dialTone(phone)).
 
 
+% ectest/ec_reader_test_examples.e:5781
 % fluent BusySignal(phone)
 fluent(busySignal(phone)).
 
@@ -20874,7 +13492,6 @@ fluent(idle(phone)).
 fluent(connected(phone, phone)).
 
 
-% ectest/ec_reader_test_examples.e:5784
 % fluent Disconnected(phone)
 fluent(disconnected(phone)).
 
@@ -20884,6 +13501,7 @@ fluent(disconnected(phone)).
 event(pickUp(agent, phone)).
 
 
+% ectest/ec_reader_test_examples.e:5787
 % event SetDown(agent,phone)
 event(setDown(agent, phone)).
 
@@ -20894,7 +13512,6 @@ event(dial(agent, phone, phone)).
 
 % 
 % ; Sigma
-% ectest/ec_reader_test_examples.e:5791
 % 
 % ectest/ec_reader_test_examples.e:5792
 % [agent,phone,time]% 
@@ -21387,119 +14004,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:5992
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:5994
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:5994
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:5995
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:5995
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort object
 sort(object).
@@ -21509,6 +14020,7 @@ sort(object).
 subsort(agent, object).
 
 
+% ectest/ec_reader_test_examples.e:5998
 % sort food: object
 subsort(food, object).
 
@@ -21521,13 +14033,13 @@ sort(surface).
 sort(plan).
 
 
-% ectest/ec_reader_test_examples.e:6001
 % 
 % reified sort belief
 reified_sort(belief).
 
 
 % 
+% ectest/ec_reader_test_examples.e:6004
 % agent Cat
 t(agent, cat).
 
@@ -21552,7 +14064,6 @@ t(food, food1).
 t(food, food2).
 
 
-% ectest/ec_reader_test_examples.e:6007
 % plan P1, P1a, P1b, P2, P2a
 t(plan, p1).
 
@@ -21574,6 +14085,7 @@ t(plan, p2a).
 predicate(selectedPlan(agent, belief, plan, time)).
 
 
+% ectest/ec_reader_test_examples.e:6010
 % predicate SoundPlan(agent,belief,plan,time)
 predicate(soundPlan(agent, belief, plan, time)).
 
@@ -21583,7 +14095,6 @@ predicate(soundPlan(agent, belief, plan, time)).
 fluent(on(object, surface)).
 
 
-% ectest/ec_reader_test_examples.e:6013
 % fluent Goal(agent,belief)
 fluent(goal(agent, belief)).
 
@@ -21596,6 +14107,7 @@ fluent(canJump(surface, surface)).
 fluent(plan(agent, belief, plan)).
 
 
+% ectest/ec_reader_test_examples.e:6016
 % fluent Satiated(agent)
 fluent(satiated(agent)).
 
@@ -21605,7 +14117,6 @@ fluent(believe(agent, belief)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:6019
 % event AddPlan(agent,belief,plan)
 event(addPlan(agent, belief, plan)).
 
@@ -21618,6 +14129,7 @@ event(dropPlan(agent, belief, plan)).
 event(jump(agent, surface, surface)).
 
 
+% ectest/ec_reader_test_examples.e:6022
 % event Move(surface,surface,surface)
 event(move(surface, surface, surface)).
 
@@ -21630,7 +14142,6 @@ event(eat(agent, food)).
 event(wait(agent)).
 
 
-% ectest/ec_reader_test_examples.e:6025
 % 
 % belief BSatiated(agent)
 t(belief, 'bSatiated(agent)').
@@ -21643,6 +14154,7 @@ t(belief, 'bCanJump(surface').
 t(belief, 'surface)').
 
 
+% ectest/ec_reader_test_examples.e:6028
 % belief BOn(object,surface)
 t(belief, 'bOn(object').
 
@@ -21652,7 +14164,6 @@ t(belief, 'surface)').
 
 % 
 % ; Sigma
-% ectest/ec_reader_test_examples.e:6031
 % 
 % ; A5
 % ectest/ec_reader_test_examples.e:6033
@@ -22182,120 +14693,15 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:6283
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:6283
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:6284
-% load('foundations/EC.e').
-
-
-% ectest/ec_reader_test_examples.e:6284
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
+load('foundations/EC.e').
 
 
 % 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
-% 
+% ectest/ec_reader_test_examples.e:6285
 % sort agent
 sort(agent).
 
@@ -22316,7 +14722,6 @@ t(agent, kate).
 t(agent, lisa).
 
 
-% ectest/ec_reader_test_examples.e:6290
 % aboutevent WinLotteryKate, WinLotteryLisa
 t(aboutevent, winLotteryKate).
 
@@ -22324,6 +14729,7 @@ t(aboutevent, winLotteryKate).
 t(aboutevent, winLotteryLisa).
 
 
+% ectest/ec_reader_test_examples.e:6291
 % 
 % fluent Joy(agent,aboutevent)
 fluent(joy(agent, aboutevent)).
@@ -22341,11 +14747,11 @@ fluent(believe(agent, aboutevent)).
 fluent(like(agent, agent)).
 
 
-% ectest/ec_reader_test_examples.e:6296
 % fluent HappyFor(agent,agent,aboutevent)
 fluent(happyFor(agent, agent, aboutevent)).
 
 
+% ectest/ec_reader_test_examples.e:6297
 % 
 % event WinLottery(agent)
 event(winLottery(agent)).
@@ -22589,123 +14995,15 @@ option(timediff, off).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:6392
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:6392
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:6393
-% load('foundations/EC.e').
-
-
-% foundations/EC.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% foundations/EC.e:26
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
+load('foundations/EC.e').
 
 
 % 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% foundations/EC.e:32
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% foundations/EC.e:38
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
-% 
+% ectest/ec_reader_test_examples.e:6394
 % sort agent
 sort(agent).
 
@@ -22781,125 +15079,20 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:6426
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:6428
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:6428
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:6429
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:6429
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
 
 
 % 
+% ectest/ec_reader_test_examples.e:6432
 % fluent Awake(agent)
 fluent(awake(agent)).
 
@@ -22968,119 +15161,13 @@ range(offset, 1, 1).
 % ;
 % ectest/ec_reader_test_examples.e:6461
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:6462
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:6462
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:6463
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:6463
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
@@ -23091,6 +15178,7 @@ sort(agent).
 fluent(awake(agent)).
 
 
+% ectest/ec_reader_test_examples.e:6467
 % event WakeUp(agent)
 event(wakeUp(agent)).
 
@@ -23160,119 +15248,13 @@ range(offset, 1, 1).
 % ;
 % ectest/ec_reader_test_examples.e:6495
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:6496
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:6496
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:6497
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:6497
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
@@ -23283,6 +15265,7 @@ sort(agent).
 fluent(awake(agent)).
 
 
+% ectest/ec_reader_test_examples.e:6501
 % event WakeUp(agent)
 event(wakeUp(agent)).
 
@@ -23340,119 +15323,13 @@ range(offset, 1, 1).
 % ;
 % ectest/ec_reader_test_examples.e:6527
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:6528
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:6528
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:6529
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:6529
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
@@ -23463,6 +15340,7 @@ sort(agent).
 fluent(awake(agent)).
 
 
+% ectest/ec_reader_test_examples.e:6533
 % event WakeUp(agent)
 event(wakeUp(agent)).
 
@@ -23529,125 +15407,20 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:6570
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:6572
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:6572
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:6573
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:6573
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
 
 
 % 
+% ectest/ec_reader_test_examples.e:6576
 % fluent Tired(agent)
 fluent(tired(agent)).
 
@@ -23657,7 +15430,6 @@ fluent(tired(agent)).
 event(move(agent)).
 
 
-% ectest/ec_reader_test_examples.e:6579
 % event Run(agent)
 event(run(agent)).
 
@@ -23749,119 +15521,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:6626
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:6628
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:6628
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:6629
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:6629
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
@@ -23871,6 +15537,7 @@ sort(agent).
 sort(switch).
 
 
+% ectest/ec_reader_test_examples.e:6632
 % 
 % fluent On(switch)
 fluent(on(switch)).
@@ -23880,7 +15547,6 @@ fluent(on(switch)).
 fluent(off(switch)).
 
 
-% ectest/ec_reader_test_examples.e:6635
 % event TurnOn(agent,switch)
 event(turnOn(agent, switch)).
 
@@ -23890,6 +15556,7 @@ event(turnOff(agent, switch)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:6638
 % noninertial Off
 noninertial(off).
 
@@ -23978,122 +15645,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:6682
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:6684
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:6684
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:6685
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% foundations/EC.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% foundations/EC.e:26
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% foundations/EC.e:32
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% foundations/EC.e:38
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
@@ -24103,6 +15661,7 @@ sort(agent).
 sort(switch).
 
 
+% ectest/ec_reader_test_examples.e:6688
 % sort tv
 sort(tv).
 
@@ -24112,7 +15671,6 @@ sort(tv).
 function(tVOf(switch), tv).
 
 
-% ectest/ec_reader_test_examples.e:6691
 % fluent SwitchOn(switch)
 fluent(switchOn(switch)).
 
@@ -24125,6 +15683,7 @@ fluent(tVOn(tv)).
 fluent(pluggedIn(tv)).
 
 
+% ectest/ec_reader_test_examples.e:6694
 % event TurnOn(agent,switch)
 event(turnOn(agent, switch)).
 
@@ -24235,125 +15794,20 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:6746
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:6748
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:6748
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:6749
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:6749
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
 
 
 % 
+% ectest/ec_reader_test_examples.e:6752
 % event ApproveOf(agent,agent)
 event(approveOf(agent, agent)).
 
@@ -24366,7 +15820,6 @@ event(disapproveOf(agent, agent)).
 fluent(happy(agent)).
 
 
-% ectest/ec_reader_test_examples.e:6755
 % fluent Confused(agent)
 fluent(confused(agent)).
 
@@ -24487,121 +15940,15 @@ option(trajectory, on).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:6813
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:6814
-% load('foundations/EC.e').
-
-
-% ectest/ec_reader_test_examples.e:6814
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
+load('foundations/EC.e').
 
 
 % 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
-% 
+% ectest/ec_reader_test_examples.e:6815
 % sort object
 sort(object).
 
@@ -24619,11 +15966,11 @@ fluent(height(object, height)).
 fluent(falling(object)).
 
 
-% ectest/ec_reader_test_examples.e:6820
 % event StartFalling(object)
 event(startFalling(object)).
 
 
+% ectest/ec_reader_test_examples.e:6821
 % event HitsGround(object)
 event(hitsGround(object)).
 
@@ -24780,125 +16127,20 @@ range(height, 0, 4).
 % ectest/ec_reader_test_examples.e:6896
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:6898
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:6898
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:6899
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:6899
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
 
 
 % 
+% ectest/ec_reader_test_examples.e:6902
 % fluent Tired(agent)
 fluent(tired(agent)).
 
@@ -24908,7 +16150,6 @@ fluent(tired(agent)).
 event(move(agent)).
 
 
-% ectest/ec_reader_test_examples.e:6905
 % event Run(agent)
 event(run(agent)).
 
@@ -25005,119 +16246,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:6953
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:6955
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:6955
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:6956
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:6956
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort agent
 sort(agent).
@@ -25127,6 +16262,7 @@ sort(agent).
 sort(switch).
 
 
+% ectest/ec_reader_test_examples.e:6959
 % sort tv
 sort(tv).
 
@@ -25136,7 +16272,6 @@ sort(tv).
 function(tVOf(switch), tv).
 
 
-% ectest/ec_reader_test_examples.e:6962
 % fluent SwitchOn(switch)
 fluent(switchOn(switch)).
 
@@ -25149,6 +16284,7 @@ fluent(tVOn(tv)).
 fluent(pluggedIn(tv)).
 
 
+% ectest/ec_reader_test_examples.e:6965
 % event TurnOn(agent,switch)
 event(turnOn(agent, switch)).
 
@@ -25257,119 +16393,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:7015
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:7017
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:7017
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:7018
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:7018
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort wheel
 sort(wheel).
@@ -25379,6 +16409,7 @@ sort(wheel).
 subsort(value, integer).
 
 
+% ectest/ec_reader_test_examples.e:7021
 % 
 % fluent WheelValueDeterminingFluent(wheel,value)
 fluent(wheelValueDeterminingFluent(wheel, value)).
@@ -25388,7 +16419,6 @@ fluent(wheelValueDeterminingFluent(wheel, value)).
 fluent(wheelValue(wheel, value)).
 
 
-% ectest/ec_reader_test_examples.e:7024
 % noninertial WheelValueDeterminingFluent
 noninertial(wheelValueDeterminingFluent).
 
@@ -25527,119 +16557,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:7090
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:7092
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:7092
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:7093
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:7093
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort object
 sort(object).
@@ -25649,6 +16573,7 @@ sort(object).
 subsort(agent, object).
 
 
+% ectest/ec_reader_test_examples.e:7096
 % sort physobj: object
 subsort(physobj, object).
 
@@ -25658,7 +16583,6 @@ sort(location).
 
 
 % 
-% ectest/ec_reader_test_examples.e:7099
 % fluent At(object,location)
 fluent(at(object, location)).
 
@@ -25671,6 +16595,7 @@ fluent(holding(agent, physobj)).
 event(pickUp(agent, physobj)).
 
 
+% ectest/ec_reader_test_examples.e:7102
 % event SetDown(agent,physobj)
 event(setDown(agent, physobj)).
 
@@ -25681,7 +16606,6 @@ event(move(agent, location, location)).
 
 % 
 % ; state constraints
-% ectest/ec_reader_test_examples.e:7106
 % 
 % ectest/ec_reader_test_examples.e:7107
 % [agent,location,physobj,time]% 
@@ -25926,349 +16850,24 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:7208
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:7209
-% load('foundations/EC.e').
-
-
-% ectest/ec_reader_test_examples.e:7209
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
+load('foundations/EC.e').
 
 
 % 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
-% 
+% ectest/ec_reader_test_examples.e:7210
 % sort agent
 sort(agent).
 
 
 % 
 % load examples/FrankEtAl2003/FrankEtAl.e
-% ectest/ec_reader_test_examples.e:7213
-% load('examples/FrankEtAl2003/FrankEtAl.e').
+load('examples/FrankEtAl2003/FrankEtAl.e').
 
 
-% examples/FrankEtAl2003/FrankEtAl.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; @article{FrankEtAl:2003,
-% ;   author = "Stefan L. Frank and Mathieu Koppen and Leo G. M. Noordman and Wietske Vonk",
-% ;   year = "2003",
-% ;   title = "Modeling knowledge-based inferences in story comprehension",
-% ;   journal = "Cognitive Science",
-% ;   volume = "27",
-% ;   pages = "875--910",
-% ; }
-% ;
-% examples/FrankEtAl2003/FrankEtAl.e:20
-% 
-% fluent SunShining()
-fluent(sunShining()).
-
-
-% fluent Raining()
-fluent(raining()).
-
-
-% fluent Outside(agent)
-fluent(outside(agent)).
-
-
-% fluent PlaySoccer(agent)
-fluent(playSoccer(agent)).
-
-
-% fluent PlayHideAndSeek(agent)
-fluent(playHideAndSeek(agent)).
-
-
-% examples/FrankEtAl2003/FrankEtAl.e:26
-% fluent PlayComputerGame(agent)
-fluent(playComputerGame(agent)).
-
-
-% fluent PlayWithDog(agent)
-fluent(playWithDog(agent)).
-
-
-% fluent Win(agent)
-fluent(win(agent)).
-
-
-% 
-% noninertial Outside, PlaySoccer, PlayHideAndSeek, PlayComputerGame
-noninertial([outside, playSoccer, playHideAndSeek, playComputerGame]).
-
-
-% noninertial PlayWithDog, Win
-noninertial([playWithDog, win]).
-
-
-% examples/FrankEtAl2003/FrankEtAl.e:32
-% 
-% xor PlaySoccer, PlayHideAndSeek, PlayComputerGame, PlayWithDog
-xor([playSoccer, playHideAndSeek, playComputerGame, playWithDog]).
-
-
-% 
-% examples/FrankEtAl2003/FrankEtAl.e:35
-% [agent,time]% 
-% HoldsAt(PlaySoccer(agent),time) ->
-% HoldsAt(Outside(agent),time).
-holds_at(playSoccer(Agent), Time) ->
-	holds_at(outside(Agent), Time).
-
-
-% 
-% 
-% examples/FrankEtAl2003/FrankEtAl.e:39
-% [agent,time]% 
-% HoldsAt(PlaySoccer(agent),time) ->
-% ({agent1} agent1!=agent & HoldsAt(PlaySoccer(agent1),time)).
-holds_at(playSoccer(Agent), Time) ->
-	exists([Agent1],
-	       (Agent1\=Agent, holds_at(playSoccer(Agent1), Time))).
-
-
-% 
-% 
-% examples/FrankEtAl2003/FrankEtAl.e:43
-% [agent,time]% 
-% HoldsAt(PlayHideAndSeek(agent),time) ->
-% ({agent1} agent1!=agent & HoldsAt(PlayHideAndSeek(agent1),time)).
-holds_at(playHideAndSeek(Agent), Time) ->
-	exists([Agent1],
-	       (Agent1\=Agent, holds_at(playHideAndSeek(Agent1), Time))).
-
-
-% 
-% 
-% examples/FrankEtAl2003/FrankEtAl.e:47
-% [agent,time]% 
-% HoldsAt(PlayComputerGame(agent),time) ->
-% !HoldsAt(Outside(agent),time).
-holds_at(playComputerGame(Agent), Time) ->
-	not(holds_at(outside(Agent), Time)).
-
-
-% 
-% 
-% examples/FrankEtAl2003/FrankEtAl.e:51
-% [agent,time]% 
-% HoldsAt(Win(agent),time) ->
-% (HoldsAt(PlaySoccer(agent),time) |
-%  HoldsAt(PlayHideAndSeek(agent),time) |
-%  (HoldsAt(PlayComputerGame(agent),time) &
-%   ({agent1} agent1!=agent & HoldsAt(PlayComputerGame(agent1),time)))).
-holds_at(win(Agent), Time) ->
-	(   holds_at(playSoccer(Agent), Time)
-	;   holds_at(playHideAndSeek(Agent), Time)
-	;   holds_at(playComputerGame(Agent), Time),
-	    exists([Agent1],
-		   (Agent1\=Agent, holds_at(playComputerGame(Agent1), Time)))
-	).
-
-
-% 
-% examples/FrankEtAl2003/FrankEtAl.e:57
-% 
-% examples/FrankEtAl2003/FrankEtAl.e:58
-% [agent,time]% 
-% HoldsAt(PlaySoccer(agent),time) &
-% HoldsAt(Win(agent),time) ->
-% !HoldsAt(PlaySoccer(agent),time+1).
-holds_at(playSoccer(Agent), Time), holds_at(win(Agent), Time) ->
-	not(holds_at(playSoccer(Agent), Time+1)).
-
-
-% 
-% 
-% examples/FrankEtAl2003/FrankEtAl.e:63
-% [agent,time]% 
-% HoldsAt(PlayHideAndSeek(agent),time) &
-% HoldsAt(Win(agent),time) ->
-% !HoldsAt(PlayHideAndSeek(agent),time+1).
-holds_at(playHideAndSeek(Agent), Time), holds_at(win(Agent), Time) ->
-	not(holds_at(playHideAndSeek(Agent), Time+1)).
-
-
-% 
-% 
-% examples/FrankEtAl2003/FrankEtAl.e:68
-% [agent,time]% 
-% HoldsAt(PlayComputerGame(agent),time) &
-% HoldsAt(Win(agent),time) ->
-% !HoldsAt(PlayComputerGame(agent),time+1).
-holds_at(playComputerGame(Agent), Time), holds_at(win(Agent), Time) ->
-	not(holds_at(playComputerGame(Agent), Time+1)).
-
-
-% 
-% 
-% examples/FrankEtAl2003/FrankEtAl.e:73
-% [agent,time]% 
-% HoldsAt(Win(agent),time) ->
-% HoldsAt(PlaySoccer(agent),time-1) |
-% HoldsAt(PlayHideAndSeek(agent),time-1) |
-% HoldsAt(PlayComputerGame(agent),time-1).
-(   ( holds_at(win(Agent), Time)->holds_at(playSoccer(Agent), Time-1)
-    )
-;   holds_at(playHideAndSeek(Agent), Time-1)
-;   holds_at(playComputerGame(Agent), Time-1)
-).
-
-
-% 
-% 
-% examples/FrankEtAl2003/FrankEtAl.e:79
-% [agent,time]% 
-% HoldsAt(PlaySoccer(agent),time) ->
-% !HoldsAt(Raining(),time).
-holds_at(playSoccer(Agent), Time) ->
-	not(holds_at(raining(), Time)).
-
-
-% 
-% 
-% examples/FrankEtAl2003/FrankEtAl.e:83
-% [agent,time]% 
-% HoldsAt(Win(agent),time) ->
-% !({agent1} agent1!=agent & HoldsAt(Win(agent1),time)).
-holds_at(win(Agent), Time) ->
-	not(exists([Agent1],
-		   (Agent1\=Agent, holds_at(win(Agent1), Time)))).
-
-
-% 
-% 
-% examples/FrankEtAl2003/FrankEtAl.e:87
-% [agent1,agent2,time]% 
-% HoldsAt(PlayHideAndSeek(agent1),time) &
-% HoldsAt(PlayHideAndSeek(agent2),time) ->
-% ((HoldsAt(Outside(agent1),time) & HoldsAt(Outside(agent2),time)) |
-%  (!HoldsAt(Outside(agent1),time) & !HoldsAt(Outside(agent2),time))).
-holds_at(playHideAndSeek(Agent1), Time), holds_at(playHideAndSeek(Agent2), Time) ->
-	(   holds_at(outside(Agent1), Time),
-	    holds_at(outside(Agent2), Time)
-	;   not(holds_at(outside(Agent1), Time)),
-	    not(holds_at(outside(Agent2), Time))
-	).
-
-
-% 
-% 
-% ; End of file.
 % 
 % agent Bob, Jilly
 t(agent, bob).
@@ -26278,6 +16877,7 @@ t(agent, jilly).
 
 
 % 
+% ectest/ec_reader_test_examples.e:7216
 % !HoldsAt(Raining(),0).
 not(holds_at(raining(), 0)).
 
@@ -26289,7 +16889,6 @@ not(holds_at(sunShining(), 0)).
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:7219
 % (HoldsAt(PlaySoccer(Bob),1) & HoldsAt(PlaySoccer(Jilly),1)) |
 % (HoldsAt(PlayHideAndSeek(Bob),1) & HoldsAt(PlayHideAndSeek(Jilly),1)) |
 % (HoldsAt(PlayComputerGame(Bob),1) & HoldsAt(PlayComputerGame(Jilly),1)).
@@ -26303,6 +16902,7 @@ not(holds_at(sunShining(), 0)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:7222
 % 
 % HoldsAt(Win(Bob),1) | HoldsAt(Win(Jilly),1).
 (   holds_at(win(bob), 1)
@@ -26312,7 +16912,6 @@ not(holds_at(sunShining(), 0)).
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:7225
 % range time 0 1
 range(time, 0, 1).
 
@@ -26323,9 +16922,9 @@ range(offset, 0, 0).
 
 % 
 % ; End of file.
+% ectest/ec_reader_test_examples.e:7229
 % 
 % 
-% ectest/ec_reader_test_examples.e:7231
 % 
 % ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 % ; FILE: examples/FrankEtAl2003/FrankEtAl.e
@@ -26578,392 +17177,18 @@ holds_at(playHideAndSeek(Agent1), Time), holds_at(playHideAndSeek(Agent2), Time)
 % ; deduction
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:7357
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:7358
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:7358
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % load examples/GiunchigliaEtAl2004/MonkeyBananas.e
-% ectest/ec_reader_test_examples.e:7359
-% load('examples/GiunchigliaEtAl2004/MonkeyBananas.e').
+load('examples/GiunchigliaEtAl2004/MonkeyBananas.e').
 
 
 % ectest/ec_reader_test_examples.e:7359
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; @article{Giunchiglia:2004,
-% ;   author = "Enrico Giunchiglia and Joohyung Lee and Vladimir Lifschitz and Norman C. McCain and Hudson Turner",
-% ;   year = "2004",
-% ;   title = "Nonmonotonic causal theories",
-% ;   journal = "Artificial Intelligence",
-% ;   volume = "153",
-% ;   pages = "49--104",
-% ; }
-% ;
-% 
-% sort object
-sort(object).
-
-
-% sort location
-sort(location).
-
-
-% 
-% object Monkey, Bananas, Box
-t(object, monkey).
-
-
-t(object, bananas).
-
-
-t(object, box).
-
-
-% location L1, L2, L3
-t(location, l1).
-
-
-t(location, l2).
-
-
-t(location, l3).
-
-
-% 
-% fluent At(object,location)
-fluent(at(object, location)).
-
-
-% fluent OnBox()
-fluent(onBox()).
-
-
-% fluent HasBananas()
-fluent(hasBananas()).
-
-
-% 
-% event Walk(location)
-event(walk(location)).
-
-
-% event PushBox(location)
-event(pushBox(location)).
-
-
-% event ClimbOn()
-event(climbOn()).
-
-
-% event ClimbOff()
-event(climbOff()).
-
-
-% event GraspBananas()
-event(graspBananas()).
-
-
-% 
-% ectest/ec_reader_test_examples.e:7359
-% [object,location1,location2,time]% 
-% HoldsAt(At(object,location1),time) &
-% HoldsAt(At(object,location2),time) ->
-% location1=location2.
-holds_at(at(Object, Location1), Time), holds_at(at(Object, Location2), Time) ->
-	Location1=Location2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7359
-% [object,location,time]% 
-% object=% Monkey ->
-% Initiates(Walk(location),At(object,location),time).
-Object=monkey ->
-	initiates(walk(Location),
-		  at(Object, Location),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7359
-% [object,location1,location2,time]% 
-% object=% Monkey &
-% HoldsAt(At(object,location1),time) ->
-% Terminates(Walk(location2),At(object,location1),time).
-Object=monkey, holds_at(at(Object, Location1), Time) ->
-	terminates(walk(Location2),
-		   at(Object, Location1),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7359
-% [location,time]% 
-% Happens(Walk(location),time) ->
-% !HoldsAt(At(Monkey,location),time) &
-% !HoldsAt(OnBox(),time).
-happens(walk(Location), Time) ->
-	not(holds_at(at(monkey, Location), Time)),
-	not(holds_at(onBox(), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7359
-% [location,time]% 
-% HoldsAt(HasBananas(),time) &
-% HoldsAt(At(Monkey,location),time) ->
-% HoldsAt(At(Bananas,location),time).
-holds_at(hasBananas(), Time), holds_at(at(monkey, Location), Time) ->
-	holds_at(at(bananas, Location), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7359
-% [object,location,time]% 
-% object=% Box | object=Monkey ->
-% Initiates(PushBox(location),At(object,location),time).
-(   Object=box
-;   (   (   Object=box
-;   Object=monkey
-->  initiates(pushBox(Location),
-	      at(Object, Location),
-	      Time)
-).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7359
-% [object,location1,location2,time]% 
-% (object=Box | object=Monkey) &
-% HoldsAt(At(object,location1),time) ->
-% Terminates(PushBox(location2),At(object,location1),time).
-(Object=box;Object=monkey), holds_at(at(Object, Location1), Time) ->
-	terminates(pushBox(Location2),
-		   at(Object, Location1),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7359
-% [location,time]% 
-% Happens(PushBox(location),time) ->
-% ({location1}
-%   HoldsAt(At(Box,location1),time) &
-%   HoldsAt(At(Monkey,location1),time)) &
-% !HoldsAt(At(Monkey,location),time) &
-% !HoldsAt(OnBox(),time).
-happens(pushBox(Location), Time) ->
-	exists([Location1],
-	       (holds_at(at(box, Location1), Time), holds_at(at(monkey, Location1), Time))),
-	not(holds_at(at(monkey, Location), Time)),
-	not(holds_at(onBox(), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7359
-% [time] % Initiates(ClimbOn(),OnBox(),time).
-initiates(climbOn(), onBox(), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7359
-% [time]% 
-% Happens(ClimbOn(),time) ->
-% !HoldsAt(OnBox(),time).
-happens(climbOn(), Time) ->
-	not(holds_at(onBox(), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7359
-% [time] % Terminates(ClimbOff(),OnBox(),time).
-terminates(climbOff(), onBox(), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7359
-% [time]% 
-% Happens(ClimbOff(),time) ->
-% HoldsAt(OnBox(),time).
-happens(climbOff(), Time) ->
-	holds_at(onBox(), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7359
-% [time] % Initiates(GraspBananas(),HasBananas(),time).
-initiates(graspBananas(), hasBananas(), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7359
-% [object,location,time]% 
-% object=% Bananas ->
-% Releases(GraspBananas(),At(object,location),time).
-Object=bananas ->
-	releases(graspBananas(), at(Object, Location), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7359
-% [time]% 
-% Happens(GraspBananas(),time) ->
-% ({location1}
-%   HoldsAt(At(Bananas,location1),time) &
-%   HoldsAt(At(Monkey,location1),time)) &
-% HoldsAt(OnBox(),time).
-happens(graspBananas(), Time) ->
-	exists([Location1],
-	       (holds_at(at(bananas, Location1), Time), holds_at(at(monkey, Location1), Time))),
-	holds_at(onBox(), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7359
-% [time]% 
-% HoldsAt(OnBox(),time) ->
-% ectest/ec_reader_test_examples.e:7359
-% {location1}%  HoldsAt(At(Box,location1),time) &
-%             HoldsAt(At(Monkey,location1),time).
-exists([Location1],  (holds_at(onBox(), Time)->holds_at(at(box, Location1), Time), holds_at(at(monkey, Location1), Time))).
-
-
-% 
-% 
-% ; End of file.
 % 
 % HoldsAt(At(Monkey,L1),0).
 holds_at(at(monkey, l1), 0).
@@ -27038,391 +17263,18 @@ range(offset, 0, 0).
 % ; planning
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:7401
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:7401
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:7402
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:7402
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % load examples/GiunchigliaEtAl2004/MonkeyBananas.e
-% ectest/ec_reader_test_examples.e:7403
-% load('examples/GiunchigliaEtAl2004/MonkeyBananas.e').
+load('examples/GiunchigliaEtAl2004/MonkeyBananas.e').
 
 
 % ectest/ec_reader_test_examples.e:7403
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; @article{Giunchiglia:2004,
-% ;   author = "Enrico Giunchiglia and Joohyung Lee and Vladimir Lifschitz and Norman C. McCain and Hudson Turner",
-% ;   year = "2004",
-% ;   title = "Nonmonotonic causal theories",
-% ;   journal = "Artificial Intelligence",
-% ;   volume = "153",
-% ;   pages = "49--104",
-% ; }
-% ;
-% 
-% sort object
-sort(object).
-
-
-% sort location
-sort(location).
-
-
-% 
-% object Monkey, Bananas, Box
-t(object, monkey).
-
-
-t(object, bananas).
-
-
-t(object, box).
-
-
-% location L1, L2, L3
-t(location, l1).
-
-
-t(location, l2).
-
-
-t(location, l3).
-
-
-% 
-% fluent At(object,location)
-fluent(at(object, location)).
-
-
-% fluent OnBox()
-fluent(onBox()).
-
-
-% fluent HasBananas()
-fluent(hasBananas()).
-
-
-% 
-% event Walk(location)
-event(walk(location)).
-
-
-% event PushBox(location)
-event(pushBox(location)).
-
-
-% event ClimbOn()
-event(climbOn()).
-
-
-% event ClimbOff()
-event(climbOff()).
-
-
-% event GraspBananas()
-event(graspBananas()).
-
-
-% 
-% ectest/ec_reader_test_examples.e:7403
-% [object,location1,location2,time]% 
-% HoldsAt(At(object,location1),time) &
-% HoldsAt(At(object,location2),time) ->
-% location1=location2.
-holds_at(at(Object, Location1), Time), holds_at(at(Object, Location2), Time) ->
-	Location1=Location2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7403
-% [object,location,time]% 
-% object=% Monkey ->
-% Initiates(Walk(location),At(object,location),time).
-Object=monkey ->
-	initiates(walk(Location),
-		  at(Object, Location),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7403
-% [object,location1,location2,time]% 
-% object=% Monkey &
-% HoldsAt(At(object,location1),time) ->
-% Terminates(Walk(location2),At(object,location1),time).
-Object=monkey, holds_at(at(Object, Location1), Time) ->
-	terminates(walk(Location2),
-		   at(Object, Location1),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7403
-% [location,time]% 
-% Happens(Walk(location),time) ->
-% !HoldsAt(At(Monkey,location),time) &
-% !HoldsAt(OnBox(),time).
-happens(walk(Location), Time) ->
-	not(holds_at(at(monkey, Location), Time)),
-	not(holds_at(onBox(), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7403
-% [location,time]% 
-% HoldsAt(HasBananas(),time) &
-% HoldsAt(At(Monkey,location),time) ->
-% HoldsAt(At(Bananas,location),time).
-holds_at(hasBananas(), Time), holds_at(at(monkey, Location), Time) ->
-	holds_at(at(bananas, Location), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7403
-% [object,location,time]% 
-% object=% Box | object=Monkey ->
-% Initiates(PushBox(location),At(object,location),time).
-(   Object=box
-;   (   (   Object=box
-;   Object=monkey
-->  initiates(pushBox(Location),
-	      at(Object, Location),
-	      Time)
-).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7403
-% [object,location1,location2,time]% 
-% (object=Box | object=Monkey) &
-% HoldsAt(At(object,location1),time) ->
-% Terminates(PushBox(location2),At(object,location1),time).
-(Object=box;Object=monkey), holds_at(at(Object, Location1), Time) ->
-	terminates(pushBox(Location2),
-		   at(Object, Location1),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7403
-% [location,time]% 
-% Happens(PushBox(location),time) ->
-% ({location1}
-%   HoldsAt(At(Box,location1),time) &
-%   HoldsAt(At(Monkey,location1),time)) &
-% !HoldsAt(At(Monkey,location),time) &
-% !HoldsAt(OnBox(),time).
-happens(pushBox(Location), Time) ->
-	exists([Location1],
-	       (holds_at(at(box, Location1), Time), holds_at(at(monkey, Location1), Time))),
-	not(holds_at(at(monkey, Location), Time)),
-	not(holds_at(onBox(), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7403
-% [time] % Initiates(ClimbOn(),OnBox(),time).
-initiates(climbOn(), onBox(), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7403
-% [time]% 
-% Happens(ClimbOn(),time) ->
-% !HoldsAt(OnBox(),time).
-happens(climbOn(), Time) ->
-	not(holds_at(onBox(), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7403
-% [time] % Terminates(ClimbOff(),OnBox(),time).
-terminates(climbOff(), onBox(), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7403
-% [time]% 
-% Happens(ClimbOff(),time) ->
-% HoldsAt(OnBox(),time).
-happens(climbOff(), Time) ->
-	holds_at(onBox(), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7403
-% [time] % Initiates(GraspBananas(),HasBananas(),time).
-initiates(graspBananas(), hasBananas(), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7403
-% [object,location,time]% 
-% object=% Bananas ->
-% Releases(GraspBananas(),At(object,location),time).
-Object=bananas ->
-	releases(graspBananas(), at(Object, Location), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7403
-% [time]% 
-% Happens(GraspBananas(),time) ->
-% ({location1}
-%   HoldsAt(At(Bananas,location1),time) &
-%   HoldsAt(At(Monkey,location1),time)) &
-% HoldsAt(OnBox(),time).
-happens(graspBananas(), Time) ->
-	exists([Location1],
-	       (holds_at(at(bananas, Location1), Time), holds_at(at(monkey, Location1), Time))),
-	holds_at(onBox(), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7403
-% [time]% 
-% HoldsAt(OnBox(),time) ->
-% ectest/ec_reader_test_examples.e:7403
-% {location1}%  HoldsAt(At(Box,location1),time) &
-%             HoldsAt(At(Monkey,location1),time).
-exists([Location1],  (holds_at(onBox(), Time)->holds_at(at(box, Location1), Time), holds_at(at(monkey, Location1), Time))).
-
-
-% 
-% 
-% ; End of file.
 % 
 % HoldsAt(At(Monkey,L1),0).
 holds_at(at(monkey, l1), 0).
@@ -27502,392 +17354,18 @@ range(offset, 0, 0).
 % ; postdiction
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:7451
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:7452
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:7452
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % load examples/GiunchigliaEtAl2004/MonkeyBananas.e
-% ectest/ec_reader_test_examples.e:7453
-% load('examples/GiunchigliaEtAl2004/MonkeyBananas.e').
+load('examples/GiunchigliaEtAl2004/MonkeyBananas.e').
 
 
 % ectest/ec_reader_test_examples.e:7453
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; @article{Giunchiglia:2004,
-% ;   author = "Enrico Giunchiglia and Joohyung Lee and Vladimir Lifschitz and Norman C. McCain and Hudson Turner",
-% ;   year = "2004",
-% ;   title = "Nonmonotonic causal theories",
-% ;   journal = "Artificial Intelligence",
-% ;   volume = "153",
-% ;   pages = "49--104",
-% ; }
-% ;
-% 
-% sort object
-sort(object).
-
-
-% sort location
-sort(location).
-
-
-% 
-% object Monkey, Bananas, Box
-t(object, monkey).
-
-
-t(object, bananas).
-
-
-t(object, box).
-
-
-% location L1, L2, L3
-t(location, l1).
-
-
-t(location, l2).
-
-
-t(location, l3).
-
-
-% 
-% fluent At(object,location)
-fluent(at(object, location)).
-
-
-% fluent OnBox()
-fluent(onBox()).
-
-
-% fluent HasBananas()
-fluent(hasBananas()).
-
-
-% 
-% event Walk(location)
-event(walk(location)).
-
-
-% event PushBox(location)
-event(pushBox(location)).
-
-
-% event ClimbOn()
-event(climbOn()).
-
-
-% event ClimbOff()
-event(climbOff()).
-
-
-% event GraspBananas()
-event(graspBananas()).
-
-
-% 
-% ectest/ec_reader_test_examples.e:7453
-% [object,location1,location2,time]% 
-% HoldsAt(At(object,location1),time) &
-% HoldsAt(At(object,location2),time) ->
-% location1=location2.
-holds_at(at(Object, Location1), Time), holds_at(at(Object, Location2), Time) ->
-	Location1=Location2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7453
-% [object,location,time]% 
-% object=% Monkey ->
-% Initiates(Walk(location),At(object,location),time).
-Object=monkey ->
-	initiates(walk(Location),
-		  at(Object, Location),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7453
-% [object,location1,location2,time]% 
-% object=% Monkey &
-% HoldsAt(At(object,location1),time) ->
-% Terminates(Walk(location2),At(object,location1),time).
-Object=monkey, holds_at(at(Object, Location1), Time) ->
-	terminates(walk(Location2),
-		   at(Object, Location1),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7453
-% [location,time]% 
-% Happens(Walk(location),time) ->
-% !HoldsAt(At(Monkey,location),time) &
-% !HoldsAt(OnBox(),time).
-happens(walk(Location), Time) ->
-	not(holds_at(at(monkey, Location), Time)),
-	not(holds_at(onBox(), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7453
-% [location,time]% 
-% HoldsAt(HasBananas(),time) &
-% HoldsAt(At(Monkey,location),time) ->
-% HoldsAt(At(Bananas,location),time).
-holds_at(hasBananas(), Time), holds_at(at(monkey, Location), Time) ->
-	holds_at(at(bananas, Location), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7453
-% [object,location,time]% 
-% object=% Box | object=Monkey ->
-% Initiates(PushBox(location),At(object,location),time).
-(   Object=box
-;   (   (   Object=box
-;   Object=monkey
-->  initiates(pushBox(Location),
-	      at(Object, Location),
-	      Time)
-).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7453
-% [object,location1,location2,time]% 
-% (object=Box | object=Monkey) &
-% HoldsAt(At(object,location1),time) ->
-% Terminates(PushBox(location2),At(object,location1),time).
-(Object=box;Object=monkey), holds_at(at(Object, Location1), Time) ->
-	terminates(pushBox(Location2),
-		   at(Object, Location1),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7453
-% [location,time]% 
-% Happens(PushBox(location),time) ->
-% ({location1}
-%   HoldsAt(At(Box,location1),time) &
-%   HoldsAt(At(Monkey,location1),time)) &
-% !HoldsAt(At(Monkey,location),time) &
-% !HoldsAt(OnBox(),time).
-happens(pushBox(Location), Time) ->
-	exists([Location1],
-	       (holds_at(at(box, Location1), Time), holds_at(at(monkey, Location1), Time))),
-	not(holds_at(at(monkey, Location), Time)),
-	not(holds_at(onBox(), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7453
-% [time] % Initiates(ClimbOn(),OnBox(),time).
-initiates(climbOn(), onBox(), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7453
-% [time]% 
-% Happens(ClimbOn(),time) ->
-% !HoldsAt(OnBox(),time).
-happens(climbOn(), Time) ->
-	not(holds_at(onBox(), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7453
-% [time] % Terminates(ClimbOff(),OnBox(),time).
-terminates(climbOff(), onBox(), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7453
-% [time]% 
-% Happens(ClimbOff(),time) ->
-% HoldsAt(OnBox(),time).
-happens(climbOff(), Time) ->
-	holds_at(onBox(), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7453
-% [time] % Initiates(GraspBananas(),HasBananas(),time).
-initiates(graspBananas(), hasBananas(), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7453
-% [object,location,time]% 
-% object=% Bananas ->
-% Releases(GraspBananas(),At(object,location),time).
-Object=bananas ->
-	releases(graspBananas(), at(Object, Location), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7453
-% [time]% 
-% Happens(GraspBananas(),time) ->
-% ({location1}
-%   HoldsAt(At(Bananas,location1),time) &
-%   HoldsAt(At(Monkey,location1),time)) &
-% HoldsAt(OnBox(),time).
-happens(graspBananas(), Time) ->
-	exists([Location1],
-	       (holds_at(at(bananas, Location1), Time), holds_at(at(monkey, Location1), Time))),
-	holds_at(onBox(), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7453
-% [time]% 
-% HoldsAt(OnBox(),time) ->
-% ectest/ec_reader_test_examples.e:7453
-% {location1}%  HoldsAt(At(Box,location1),time) &
-%             HoldsAt(At(Monkey,location1),time).
-exists([Location1],  (holds_at(onBox(), Time)->holds_at(at(box, Location1), Time), holds_at(at(monkey, Location1), Time))).
-
-
-% 
-% 
-% ; End of file.
 % 
 % HoldsAt(At(Monkey,L1),0).
 holds_at(at(monkey, l1), 0).
@@ -28235,125 +17713,20 @@ exists([Location1],  (holds_at(onBox(), Time)->holds_at(at(box, Location1), Time
 % ectest/ec_reader_test_examples.e:7606
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:7608
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:7608
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:7609
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:7609
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort x
 sort(x).
 
 
 % 
+% ectest/ec_reader_test_examples.e:7612
 % predicate Adult(x)
 predicate(adult(x)).
 
@@ -28366,7 +17739,6 @@ predicate(student(x)).
 predicate(employed(x)).
 
 
-% ectest/ec_reader_test_examples.e:7615
 % predicate Ab1(x)
 predicate(ab1(x)).
 
@@ -28376,6 +17748,7 @@ predicate(ab2(x)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:7618
 % x Mary
 t(x, mary).
 
@@ -28386,7 +17759,6 @@ student(mary).
 
 
 % 
-% ectest/ec_reader_test_examples.e:7621
 % 
 % ectest/ec_reader_test_examples.e:7622
 % [x] % Adult(x) & !Ab1(x) -> Employed(x).
@@ -28473,126 +17845,20 @@ completion([theta, ab2]).
 % ectest/ec_reader_test_examples.e:7662
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:7664
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:7665
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:7665
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort x
 sort(x).
 
 
 % 
+% ectest/ec_reader_test_examples.e:7668
 % predicate Dropout(x)
 predicate(dropout(x)).
 
@@ -28605,7 +17871,6 @@ predicate(adult(x)).
 predicate(employed(x)).
 
 
-% ectest/ec_reader_test_examples.e:7671
 % predicate Ab1(x)
 predicate(ab1(x)).
 
@@ -28615,6 +17880,7 @@ predicate(ab2(x)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:7674
 % x Bill
 t(x, bill).
 
@@ -28625,7 +17891,6 @@ dropout(bill).
 
 
 % 
-% ectest/ec_reader_test_examples.e:7677
 % 
 % ectest/ec_reader_test_examples.e:7678
 % [x] % Dropout(x) & !Ab1(x) -> Adult(x).
@@ -28701,120 +17966,13 @@ completion([theta, ab2]).
 % ectest/ec_reader_test_examples.e:7724
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:7726
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:7726
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:7727
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% foundations/EC.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% foundations/EC.e:26
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % sort person
 sort(person).
@@ -28824,6 +17982,7 @@ sort(person).
 event(feed(person)).
 
 
+% ectest/ec_reader_test_examples.e:7730
 % event Clothe(person)
 event(clothe(person)).
 
@@ -28836,7 +17995,6 @@ fluent(happy(person)).
 fluent(hungry(person)).
 
 
-% ectest/ec_reader_test_examples.e:7733
 % fluent Cold(person)
 fluent(cold(person)).
 
@@ -28958,230 +18116,23 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:7802
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:7804
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:7805
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% foundations/EC.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% foundations/EC.e:26
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% foundations/EC.e:32
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% foundations/EC.e:38
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % load foundations/ECCausal.e
-% ectest/ec_reader_test_examples.e:7806
-% load('foundations/ECCausal.e').
+load('foundations/ECCausal.e').
 
 
-% ectest/ec_reader_test_examples.e:7806
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Causal Constraints
-% ;
-% ; @inproceedings{Shanahan:1999a,
-% ;   author = "Murray Shanahan",
-% ;   year = "1999",
-% ;   title = "The ramification problem in the event calculus",
-% ;   booktitle = "\uppercase{P}roceedings of the \uppercase{S}ixteenth \uppercase{I}nternational \uppercase{J}oint \uppercase{C}onference on \uppercase{A}rtificial \uppercase{I}ntelligence",
-% ;   pages = "140--146",
-% ;   address = "San Mateo, CA",
-% ;   publisher = "Morgan Kaufmann",
-% ; }
-% ;
-% 
-% predicate Started(fluent,time)
-predicate(started(fluent, time)).
-
-
-% predicate Stopped(fluent,time)
-predicate(stopped(fluent, time)).
-
-
-% 
-% ectest/ec_reader_test_examples.e:7806
-% [fluent,time]% 
-% Started(fluent,time) <->
-% (HoldsAt(fluent,time) |
-%  ({event} Happens(event,time) & Initiates(event,fluent,time))).
-started(Fluent, Time) <->
-	(   holds_at(Fluent, Time)
-	;   exists([Event],
-		   (happens(Event, Time), initiates(Event, Fluent, Time)))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7806
-% [fluent,time]% 
-% Stopped(fluent,time) <->
-% (!HoldsAt(fluent,time) |
-%  ({event} Happens(event,time) & Terminates(event,fluent,time))).
-stopped(Fluent, Time) <->
-	(   not(holds_at(Fluent, Time))
-	;   exists([Event],
-		   (happens(Event, Time), terminates(Event, Fluent, Time)))
-	).
-
-
-% 
-% 
-% predicate Initiated(fluent,time)
-predicate(initiated(fluent, time)).
-
-
-% predicate Terminated(fluent,time)
-predicate(terminated(fluent, time)).
-
-
-% 
-% ectest/ec_reader_test_examples.e:7806
-% [fluent,time]% 
-% Initiated(fluent,time) <->
-% (Started(fluent,time) &
-%  !({event} Happens(event,time) & Terminates(event,fluent,time))).
-initiated(Fluent, Time) <->
-	started(Fluent, Time),
-	not(exists([Event],
-		   (happens(Event, Time), terminates(Event, Fluent, Time)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:7806
-% [fluent,time]% 
-% Terminated(fluent,time) <->
-% (Stopped(fluent,time) &
-%  !({event} Happens(event,time) & Initiates(event,fluent,time))).
-terminated(Fluent, Time) <->
-	stopped(Fluent, Time),
-	not(exists([Event],
-		   (happens(Event, Time), initiates(Event, Fluent, Time)))).
-
-
-% 
-% 
-% ; End of file.
 % 
 % event LightOn()
 event(lightOn()).
 
 
+% ectest/ec_reader_test_examples.e:7808
 % event Close1()
 event(close1()).
 
@@ -29195,7 +18146,6 @@ event(closeRelay()).
 
 
 % 
-% ectest/ec_reader_test_examples.e:7812
 % fluent Light()
 fluent(light()).
 
@@ -29204,6 +18154,7 @@ fluent(light()).
 fluent(switch1()).
 
 
+% ectest/ec_reader_test_examples.e:7814
 % fluent Switch2()
 fluent(switch2()).
 
@@ -29379,119 +18330,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:7903
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:7905
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:7905
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:7906
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:7906
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % event Toss()
 event(toss()).
@@ -29501,6 +18346,7 @@ event(toss()).
 fluent(itsHeads()).
 
 
+% ectest/ec_reader_test_examples.e:7909
 % fluent Heads()
 fluent(heads()).
 
@@ -29628,122 +18474,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:7979
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:7981
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:7981
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:7982
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% foundations/EC.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% foundations/EC.e:26
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% foundations/EC.e:32
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% foundations/EC.e:38
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % event Throw()
 event(throw()).
@@ -29753,6 +18490,7 @@ event(throw()).
 fluent(itsBlack()).
 
 
+% ectest/ec_reader_test_examples.e:7985
 % fluent ItsWhite()
 fluent(itsWhite()).
 
@@ -29765,7 +18503,6 @@ fluent(onBlack()).
 fluent(onWhite()).
 
 
-% ectest/ec_reader_test_examples.e:7988
 % noninertial ItsBlack, ItsWhite
 noninertial([itsBlack, itsWhite]).
 
@@ -29905,120 +18642,13 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:8062
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:8064
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:8065
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:8065
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % 
 % event Load()
 event(load()).
@@ -30028,6 +18658,7 @@ event(load()).
 event(shoot()).
 
 
+% ectest/ec_reader_test_examples.e:8068
 % event Spin()
 event(spin()).
 
@@ -30040,7 +18671,6 @@ fluent(loaded()).
 fluent(alive()).
 
 
-% ectest/ec_reader_test_examples.e:8071
 % 
 % ectest/ec_reader_test_examples.e:8072
 % [time] % Initiates(Load(),Loaded(),time).
@@ -30144,1266 +18774,18 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:8118
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:8118
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:8119
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:8119
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % load examples/AkmanEtAl2004/ZooWorld.e
-% ectest/ec_reader_test_examples.e:8120
-% load('examples/AkmanEtAl2004/ZooWorld.e').
-
-
-% ectest/ec_reader_test_examples.e:8120
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; @article{Akman:2004,
-% ;   author = "Varol Akman and Selim T. Erdogan and Joohyung Lee and Vladimir Lifschitz and Hudson Turner",
-% ;   year = "2004",
-% ;   title = "Representing the zoo world and the traffic world in the language of the causal calculator",
-% ;   journal = "Artificial Intelligence",
-% ;   volume = "153",
-% ;   pages = "105--140",
-% ; }
-% ;
-% 
-% sort position: integer
-subsort(position, integer).
-
-
-% sort location
-sort(location).
-
-
-% sort cage: location
-subsort(cage, location).
-
-
-% sort gate
-sort(gate).
-
-
-% sort animal
-sort(animal).
-
-
-% sort elephant: animal
-subsort(elephant, animal).
-
-
-% sort horse: animal
-subsort(horse, animal).
-
-
-% sort dog: animal
-subsort(dog, animal).
-
-
-% sort human: animal
-subsort(human, animal).
-
-
-% sort species
-sort(species).
-
-
-% 
-% function Loc(position): location
-function(loc(position), location).
-
-
-% function Side1(gate): position
-function(side1(gate), position).
-
-
-% function Side2(gate): position
-function(side2(gate), position).
-
-
-% function Species(animal): species
-function(species(animal), species).
-
-
-% 
-% predicate Accessible(position,position,time)
-predicate(accessible(position, position, time)).
-
-
-% predicate Adult(animal)
-predicate(adult(animal)).
-
-
-% predicate Large(animal)
-predicate(large(animal)).
-
-
-% predicate LargeSpecies(species)
-predicate(largeSpecies(species)).
-
-
-% predicate Neighbor(position,position)
-predicate(neighbor(position, position)).
-
-
-% predicate Sides(position,position,gate)
-predicate(sides(position, position, gate)).
-
-
-% 
-% event Close(human,gate)
-event(close(human, gate)).
-
-
-% event GetOff(human,animal)
-event(getOff(human, animal)).
-
-
-% event Mount(human,animal)
-event(mount(human, animal)).
-
-
-% event Move(animal,position)
-event(move(animal, position)).
-
-
-% event Open(human,gate)
-event(open(human, gate)).
-
-
-% event ThrowOff(animal,human)
-event(throwOff(animal, human)).
-
-
-% 
-% fluent AbnormalEncroachment(human)
-fluent(abnormalEncroachment(human)).
-
-
-% noninertial AbnormalEncroachment
-noninertial(abnormalEncroachment).
-
-
-% fluent DoneBy(event,animal)
-fluent(doneBy(event, animal)).
-
-
-% noninertial DoneBy
-noninertial(doneBy).
-
-
-% fluent Mounted(human,animal)
-fluent(mounted(human, animal)).
-
-
-% fluent MountFails(human)
-fluent(mountFails(human)).
-
-
-% noninertial MountFails
-noninertial(mountFails).
-
-
-% fluent Moves(animal)
-fluent(moves(animal)).
-
-
-% noninertial Moves
-noninertial(moves).
-
-
-% fluent Opened(gate)
-fluent(opened(gate)).
-
-
-% fluent Pos(animal,position)
-fluent(pos(animal, position)).
-
-
-% fluent PosDeterminingFluent(human,position)
-fluent(posDeterminingFluent(human, position)).
-
-
-% noninertial PosDeterminingFluent
-noninertial(posDeterminingFluent).
-
-
-% fluent ThrowOffFails(animal,human)
-fluent(throwOffFails(animal, human)).
-
-
-% noninertial ThrowOffFails
-noninertial(throwOffFails).
-
-
-% 
-% species HumanSpecies, ElephantSpecies, HorseSpecies, DogSpecies
-t(species, humanSpecies).
-
-
-t(species, elephantSpecies).
-
-
-t(species, horseSpecies).
-
-
-t(species, dogSpecies).
-
-
-% location Outside
-t(location, outside).
-
-
-% 
-% LargeSpecies(HumanSpecies).
-largeSpecies(humanSpecies).
-
-
-% 
-% LargeSpecies(ElephantSpecies).
-largeSpecies(elephantSpecies).
-
-
-% 
-% LargeSpecies(HorseSpecies).
-largeSpecies(horseSpecies).
-
-
-% 
-% !LargeSpecies(DogSpecies).
-not(largeSpecies(dogSpecies)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [event,animal,time]% 
-% HoldsAt(DoneBy(event,animal),time) <->
-% (Happens(event,time) &
-%  (({gate} event=Close(animal,gate)) |
-%   ({animal1} event=GetOff(animal,animal1))|
-%   ({animal1} event=Mount(animal,animal1))|
-%   ({position} event=Move(animal,position))|
-%   ({gate} event=Open(animal,gate)) |
-%   ({human1} event=ThrowOff(animal,human1)))).
-holds_at(doneBy(Event, Animal), Time) <->
-	happens(Event, Time),
-	(   exists([Gate], Event=close(Animal, Gate))
-	;   exists([Animal1],
-		   Event=getOff(Animal, Animal1))
-	;   exists([Animal15],
-		   Event=mount(Animal, Animal15))
-	;   exists([Position],
-		   Event=move(Animal, Position))
-	;   exists([Gate7], Event=open(Animal, Gate7))
-	;   exists([Human1],
-		   Event=throwOff(Animal, Human1))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [event1,event2,animal,time]% 
-% HoldsAt(DoneBy(event1,animal),time) &
-% HoldsAt(DoneBy(event2,animal),time) ->
-% event1=event2.
-holds_at(doneBy(Event1, Animal), Time), holds_at(doneBy(Event2, Animal), Time) ->
-	Event1=Event2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [animal] % Large(animal) <-> (Adult(animal) & LargeSpecies(Species(animal))).
-large(Animal) <->
-	adult(Animal),
-	largeSpecies(species(Animal)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [position] 
-% ectest/ec_reader_test_examples.e:8120
-% {position1} % position1!=% position & Neighbor(position,position1).
-exists([Position1],  (Position1\=Position, neighbor(Position, Position1))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [position] % !Neighbor(position,position).
-not(neighbor(Position, Position)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [position1,position2]% 
-% Neighbor(position1,position2) ->
-% Neighbor(position2,position1).
-neighbor(Position1, Position2) ->
-	neighbor(Position2, Position1).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [cage] % cage!=% Outside.
-Cage\=outside.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [position1,position2,gate]% 
-% Sides(position1,position2,gate) <->
-% ((Side1(gate)=position1 &
-%   Side2(gate)=position2) |
-%  (Side2(gate)=position1 &
-%   Side1(gate)=position2)).
-sides(Position1, Position2, Gate) <->
-	(   side1(Gate)=Position1,
-	    side2(Gate)=Position2
-	;   side2(Gate)=Position1,
-	    side1(Gate)=Position2
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [gate] % Loc(Side1(gate))!=Loc(Side2(gate)).
-loc(side1(Gate))\=loc(side2(Gate)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [position1,position2,gate1,gate2]% 
-% Sides(position1,position2,gate1) &
-% Sides(position1,position2,gate2) ->
-% gate1=gate2.
-sides(Position1, Position2, Gate1), sides(Position1, Position2, Gate2) ->
-	Gate1=Gate2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [position1,position2,gate]% 
-% Sides(position1,position2,gate) ->
-% Neighbor(position1,position2).
-sides(Position1, Position2, Gate) ->
-	neighbor(Position1, Position2).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [position1,position2]% 
-% Loc(position1) != Loc(position2) &
-% Neighbor(position1,position2) ->
-% ectest/ec_reader_test_examples.e:8120
-% {gate}%  Sides(position1,position2,gate).
-exists([Gate],  (loc(Position1)\=loc(Position2), neighbor(Position1, Position2)->sides(Position1, Position2, Gate))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [animal,position1,position2,time]% 
-% HoldsAt(Pos(animal,position1),time) &
-% HoldsAt(Pos(animal,position2),time) ->
-% position1=position2.
-holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time) ->
-	Position1=Position2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [animal,time]% 
-% ectest/ec_reader_test_examples.e:8120
-% {position} % HoldsAt(Pos(animal,position),time).
-exists([Position], holds_at(pos(Animal, Position), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [animal1,animal2,position,time]% 
-% (animal1!=animal2 &
-%  Large(animal1) &
-%  Large(animal2) &
-%  HoldsAt(Pos(animal1,position),time) &
-%  HoldsAt(Pos(animal2,position),time)) ->
-% (({human} human=animal1 & HoldsAt(Mounted(human,animal2),time)) |
-%  ({human} human=animal2 & HoldsAt(Mounted(human,animal1),time))).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position), Time), holds_at(pos(Animal2, Position), Time) ->
-	(   exists([Human],
-		   (Human=Animal1, holds_at(mounted(Human, Animal2), Time)))
-	;   exists([Human5],
-		   (Human5=Animal2, holds_at(mounted(Human5, Animal1), Time)))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,position1,position2,time]% 
-% HoldsAt(PosDeterminingFluent(human,position1),time) &
-% HoldsAt(PosDeterminingFluent(human,position2),time) ->
-% position1=position2.
-holds_at(posDeterminingFluent(Human, Position1), Time), holds_at(posDeterminingFluent(Human, Position2), Time) ->
-	Position1=Position2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [animal,position,time]% 
-% Initiates(Move(animal,position),Pos(animal,position),time).
-initiates(move(Animal, Position), pos(Animal, Position), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [animal,position1,position2,time]% 
-% HoldsAt(Pos(animal,position1),time) ->
-% Terminates(Move(animal,position2),Pos(animal,position1),time).
-holds_at(pos(Animal, Position1), Time) ->
-	terminates(move(Animal, Position2),
-		   pos(Animal, Position1),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [animal,position,time]% 
-% Happens(Move(animal,position),time) ->
-% !HoldsAt(Pos(animal,position),time).
-happens(move(Animal, Position), Time) ->
-	not(holds_at(pos(Animal, Position), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,position,time]% 
-% Happens(Move(human,position),time) ->
-% !{animal} HoldsAt(Mounted(human,animal),time).
-happens(move(Human, Position), Time) ->
-	not(exists([Animal],
-		   holds_at(mounted(Human, Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,gate,time]% 
-% Initiates(Open(human,gate),Opened(gate),time).
-initiates(open(Human, Gate), opened(Gate), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,gate,time]% 
-% Happens(Open(human,gate),time) ->
-% !HoldsAt(Opened(gate),time) &
-% (!{animal} HoldsAt(Mounted(human,animal),time)) &
-% ({position}
-%  (Side1(gate)=position | Side2(gate)=position) &
-%  HoldsAt(Pos(human,position),time)).
-happens(open(Human, Gate), Time) ->
-	not(holds_at(opened(Gate), Time)),
-	not(exists([Animal],
-		   holds_at(mounted(Human, Animal), Time))),
-	exists([Position],
-	       ((side1(Gate)=Position;side2(Gate)=Position), holds_at(pos(Human, Position), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,gate,time]% 
-% Terminates(Close(human,gate),Opened(gate),time).
-terminates(close(Human, Gate), opened(Gate), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,gate,time]% 
-% Happens(Close(human,gate),time) ->
-% HoldsAt(Opened(gate),time) &
-% (!{animal} HoldsAt(Mounted(human,animal),time)) &
-% ectest/ec_reader_test_examples.e:8120
-% {position}% 
-% (Side1(gate)=position | Side2(gate)=position) &
-% HoldsAt(Pos(human,position),time).
-exists([Position],  (happens(close(Human, Gate), Time)->holds_at(opened(Gate), Time), not(exists([Animal], holds_at(mounted(Human, Animal), Time))), (side1(Gate)=Position;side2(Gate)=Position), holds_at(pos(Human, Position), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,animal,position,time]% 
-% HoldsAt(Mounted(human,animal),time) &
-% HoldsAt(Pos(animal,position),time) ->
-% HoldsAt(Pos(human,position),time).
-holds_at(mounted(Human, Animal), Time), holds_at(pos(Animal, Position), Time) ->
-	holds_at(pos(Human, Position), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [animal,time]% 
-% HoldsAt(Moves(animal),time) <->
-% ({position}
-%  HoldsAt(Pos(animal,position),time) &
-%  !HoldsAt(Pos(animal,position),time+1)).
-holds_at(moves(Animal), Time) <->
-	exists([Position],
-	       (holds_at(pos(Animal, Position), Time), not(holds_at(pos(Animal, Position), Time+1)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,time]% 
-% HoldsAt(MountFails(human),time) <->
-% ({animal}
-%   Happens(Mount(human,animal),time) &
-%   HoldsAt(Moves(animal),time)).
-holds_at(mountFails(Human), Time) <->
-	exists([Animal],
-	       (happens(mount(Human, Animal), Time), holds_at(moves(Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Releases(Mount(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)) ->
-	releases(mount(Human, Animal),
-		 pos(Human, Position),
-		 Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,animal,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Initiates(Mount(human,animal),Mounted(human,animal),time).
-not(holds_at(moves(Animal), Time)) ->
-	initiates(mount(Human, Animal),
-		  mounted(Human, Animal),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,animal,position,time]% 
-% HoldsAt(Pos(animal,position),time) &
-% HoldsAt(Moves(animal),time) ->
-% Initiates(Mount(human,animal),Pos(human,position),time).
-holds_at(pos(Animal, Position), Time), holds_at(moves(Animal), Time) ->
-	initiates(mount(Human, Animal),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,animal,position,time]% 
-% HoldsAt(Pos(human,position),time) &
-% HoldsAt(Moves(animal),time) ->
-% Terminates(Mount(human,animal),Pos(human,position),time).
-holds_at(pos(Human, Position), Time), holds_at(moves(Animal), Time) ->
-	terminates(mount(Human, Animal),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% Large(animal).
-happens(mount(Human, Animal), Time) ->
-	large(Animal).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,animal,time]% 
-% HoldsAt(Mounted(human,animal),time) ->
-% Large(animal).
-holds_at(mounted(Human, Animal), Time) ->
-	large(Animal).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human1,human2,time]% 
-% Happens(Mount(human1,human2),time) ->
-% !Large(human1).
-happens(mount(Human1, Human2), Time) ->
-	not(large(Human1)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human1,human2,time]% 
-% HoldsAt(Mounted(human1,human2),time) ->
-% !Large(human1).
-holds_at(mounted(Human1, Human2), Time) ->
-	not(large(Human1)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{human1} human1!=human & HoldsAt(Mounted(human1,animal),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Human1],
-		   (Human1\=Human, holds_at(mounted(Human1, Animal), Time)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human1,human2,animal,time]% 
-% HoldsAt(Mounted(human1,animal),time) &
-% HoldsAt(Mounted(human2,animal),time) ->
-% human1=human2.
-holds_at(mounted(Human1, Animal), Time), holds_at(mounted(Human2, Animal), Time) ->
-	Human1=Human2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{human1} human1!=human & HoldsAt(Mounted(human1,human),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Human1],
-		   (Human1\=Human, holds_at(mounted(Human1, Human), Time)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human1,human2,time]% 
-% Happens(Mount(human1,human2),time) ->
-% ectest/ec_reader_test_examples.e:8120
-% {animal}%  HoldsAt(Mounted(human2,animal),time).
-exists([Animal],  (happens(mount(Human1, Human2), Time)->holds_at(mounted(Human2, Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human1,human2,time]% 
-% HoldsAt(Mounted(human1,human2),time) ->
-% !{animal} HoldsAt(Mounted(human2,animal),time).
-holds_at(mounted(Human1, Human2), Time) ->
-	not(exists([Animal],
-		   holds_at(mounted(Human2, Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{animal1} HoldsAt(Mounted(human,animal1),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Animal1],
-		   holds_at(mounted(Human, Animal1), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,animal,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Terminates(GetOff(human,animal),Mounted(human,animal),time).
-not(holds_at(moves(Animal), Time)) ->
-	terminates(getOff(Human, Animal),
-		   mounted(Human, Animal),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(PosDeterminingFluent(human,position),time) ->
-% Initiates(GetOff(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)), holds_at(posDeterminingFluent(Human, Position), Time) ->
-	initiates(getOff(Human, Animal),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(Pos(human,position),time) ->
-% Terminates(GetOff(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position), Time) ->
-	terminates(getOff(Human, Animal),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,animal,position1,position2,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(Pos(human,position1),time) &
-% position1!=position2 ->
-% Terminates(GetOff(human,animal),Pos(human,position2),time).
-not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position1), Time), Position1\=Position2 ->
-	terminates(getOff(Human, Animal),
-		   pos(Human, Position2),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,animal,time]% 
-% Happens(GetOff(human,animal),time) ->
-% HoldsAt(Mounted(human,animal),time).
-happens(getOff(Human, Animal), Time) ->
-	holds_at(mounted(Human, Animal), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [animal1,human,time]% 
-% HoldsAt(ThrowOffFails(animal1,human),time) <->
-% ({position,animal2}
-%  animal2!=human &
-%  HoldsAt(PosDeterminingFluent(human,position),time) &
-%  Large(animal2) &
-%  HoldsAt(Pos(animal2,position),time+1)).
-holds_at(throwOffFails(Animal1, Human), Time) <->
-	exists([Position, Animal2],
-	       (Animal2\=Human, holds_at(posDeterminingFluent(Human, Position), Time), large(Animal2), holds_at(pos(Animal2, Position), Time+1))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [animal,human,position,time]% 
-% HoldsAt(PosDeterminingFluent(human,position),time) &
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Initiates(ThrowOff(animal,human),Pos(human,position),time).
-holds_at(posDeterminingFluent(Human, Position), Time), not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	initiates(throwOff(Animal, Human),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [animal,human,position,time]% 
-% HoldsAt(Pos(human,position),time) &
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Terminates(ThrowOff(animal,human),Pos(human,position),time).
-holds_at(pos(Human, Position), Time), not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	terminates(throwOff(Animal, Human),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [animal,human,position1,position2,time]% 
-% !HoldsAt(ThrowOffFails(animal,human),time) &
-% HoldsAt(Pos(human,position1),time) &
-% !HoldsAt(PosDeterminingFluent(human,position2),time) &
-% position1!=position2 ->
-% Terminates(ThrowOff(animal,human),Pos(human,position2),time).
-not(holds_at(throwOffFails(Animal, Human), Time)), holds_at(pos(Human, Position1), Time), not(holds_at(posDeterminingFluent(Human, Position2), Time)), Position1\=Position2 ->
-	terminates(throwOff(Animal, Human),
-		   pos(Human, Position2),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,time]% 
-% (!{animal} Happens(ThrowOff(animal,human),time) |
-%            Happens(GetOff(human,animal),time)) ->
-% HoldsAt(PosDeterminingFluent(human,1),time).
-not(exists([Animal], happens(throwOff(Animal, Human), Time)));happens(getOff(Human, animal), Time) ->
-	holds_at(posDeterminingFluent(Human, 1), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,position,animal1,animal2,time]% 
-% HoldsAt(PosDeterminingFluent(human,position),time) &
-% HoldsAt(ThrowOffFails(animal1,human),time) &
-% HoldsAt(Pos(animal2,position),time) ->
-% Initiates(ThrowOff(animal1,human),Mounted(human,animal2),time).
-holds_at(posDeterminingFluent(Human, Position), Time), holds_at(throwOffFails(Animal1, Human), Time), holds_at(pos(Animal2, Position), Time) ->
-	initiates(throwOff(Animal1, Human),
-		  mounted(Human, Animal2),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [human,animal,time]% 
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Terminates(ThrowOff(animal,human),Mounted(human,animal),time).
-not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	terminates(throwOff(Animal, Human),
-		   mounted(Human, Animal),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [animal,human,time]% 
-% Happens(ThrowOff(animal,human),time) ->
-% HoldsAt(Mounted(human,animal),time).
-happens(throwOff(Animal, Human), Time) ->
-	holds_at(mounted(Human, Animal), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [animal,human,time]% 
-% Happens(ThrowOff(animal,human),time) ->
-% !Happens(GetOff(human,animal),time).
-happens(throwOff(Animal, Human), Time) ->
-	not(happens(getOff(Human, Animal), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [animal,human,time]% 
-% Happens(GetOff(human,animal),time) ->
-% !Happens(ThrowOff(animal,human),time).
-happens(getOff(Human, Animal), Time) ->
-	not(happens(throwOff(Animal, Human), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [position1,position2,time]% 
-% Accessible(position1,position2,time) <->
-% (Neighbor(position1,position2) &
-%  !{gate} Sides(position1,position2,gate) &
-%          !HoldsAt(Opened(gate),time)).
-accessible(Position1, Position2, Time) <->
-	thereExists((neighbor(Position1, Position2), not([gate])),
-		    (sides(Position1, Position2, gate), not(holds_at(opened(gate), Time)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [animal,position1,position2,time]% 
-% (position1!=position2 &
-%  HoldsAt(Pos(animal,position1),time) &
-%  HoldsAt(Pos(animal,position2),time+1)) ->
-% Accessible(position1,position2,time).
-Position1\=Position2, holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time+1) ->
-	accessible(Position1, Position2, Time).
+load('examples/AkmanEtAl2004/ZooWorld.e').
 
 
-% 
-% 
 % ectest/ec_reader_test_examples.e:8120
-% [human,time]% 
-% HoldsAt(AbnormalEncroachment(human),time) <->
-% (HoldsAt(MountFails(human),time) |
-%  ({position,animal1,animal2}
-%    HoldsAt(PosDeterminingFluent(human,position),time) &
-%    !HoldsAt(ThrowOffFails(animal2,human),time) &
-%    Happens(ThrowOff(animal2,human),time) &
-%    animal1!=human &
-%    Large(animal1) &
-%    HoldsAt(Pos(animal1,position),time) &
-%    !HoldsAt(Pos(animal1,position),time+1))).
-holds_at(abnormalEncroachment(Human), Time) <->
-	(   holds_at(mountFails(Human), Time)
-	;   exists([Position, Animal1, Animal2],
-		   (holds_at(posDeterminingFluent(Human, Position), Time), not(holds_at(throwOffFails(Animal2, Human), Time)), happens(throwOff(Animal2, Human), Time), Animal1\=Human, large(Animal1), holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Time+1))))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [animal1,animal2,position,time]% 
-% HoldsAt(Pos(animal1,position),time) &
-% !HoldsAt(Pos(animal1,position),time+1) &
-% !HoldsAt(Pos(animal2,position),time) &
-% HoldsAt(Pos(animal2,position),time+1) ->
-% (!Large(animal1) |
-%  !Large(animal2) |
-%  ({human} human=animal2 & HoldsAt(AbnormalEncroachment(human),time))).
-holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Time+1)), not(holds_at(pos(Animal2, Position), Time)), holds_at(pos(Animal2, Position), Time+1) ->
-	(   not(large(Animal1))
-	;   not(large(Animal2))
-	;   exists([Human],
-		   (Human=Animal2, holds_at(abnormalEncroachment(Human), Time)))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [animal1,animal2,position1,position2,time]% 
-% animal1!=% animal2 &
-% Large(animal1) & Large(animal2) &
-% HoldsAt(Pos(animal1,position1),time) &
-% HoldsAt(Pos(animal1,position2),time+1) &
-% HoldsAt(Pos(animal2,position1),time) &
-% HoldsAt(Pos(animal2,position2),time+1) ->
-% !{gate} Sides(position1,position2,gate).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position1), Time), holds_at(pos(Animal1, Position2), Time+1), holds_at(pos(Animal2, Position1), Time), holds_at(pos(Animal2, Position2), Time+1) ->
-	not(exists([Gate],
-		   sides(Position1, Position2, Gate))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [animal1,animal2,position1,position2,time]% 
-% animal1!=% animal2 &
-% Large(animal1) & Large(animal2) &
-% HoldsAt(Pos(animal1,position1),time) &
-% HoldsAt(Pos(animal1,position2),time+1) &
-% HoldsAt(Pos(animal2,position2),time) &
-% HoldsAt(Pos(animal2,position1),time+1) ->
-% !{gate} Sides(position1,position2,gate).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position1), Time), holds_at(pos(Animal1, Position2), Time+1), holds_at(pos(Animal2, Position2), Time), holds_at(pos(Animal2, Position1), Time+1) ->
-	not(exists([Gate],
-		   sides(Position1, Position2, Gate))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [gate,position1,position2,time]% 
-% HoldsAt(Opened(gate),time) &
-% !HoldsAt(Opened(gate),time+1) &
-% Sides(position1,position2,gate) ->
-% !{animal}
-% HoldsAt(Pos(animal,position1),time) &
-% HoldsAt(Pos(animal,position2),time+1).
-holds_at(opened(Gate), Time), not(holds_at(opened(Gate), Time+1)), sides(Position1, Position2, Gate) ->
-	not(exists([Animal],
-		   (holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time+1)))).
-
-
-% 
-% 
-% gate GateAO
-t(gate, gateAO).
-
-
-% cage CageA
-t(cage, cageA).
-
-
-% 
-% Loc(1)=CageA.
-loc(1)=cageA.
-
-
-% 
-% Loc(2)=CageA.
-loc(2)=cageA.
-
-
-% 
-% Loc(3)=CageA.
-loc(3)=cageA.
-
-
-% 
-% Loc(4)=CageA.
-loc(4)=cageA.
-
-
-% 
-% Loc(5)=Outside.
-loc(5)=outside.
-
-
-% 
-% Loc(6)=Outside.
-loc(6)=outside.
-
-
-% 
-% Loc(7)=Outside.
-loc(7)=outside.
-
-
-% 
-% Loc(8)=Outside.
-loc(8)=outside.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8120
-% [position1,position2]% 
-% Neighbor(position1,position2) <->
-% ((position1=1 & position2=2) |
-%  (position1=1 & position2=3) |
-%  (position1=1 & position2=4) |
-%  (position1=2 & position2=3) |
-%  (position1=2 & position2=4) |
-%  (position1=3 & position2=4) |
-%  (position1=5 & position2=6) |
-%  (position1=5 & position2=7) |
-%  (position1=5 & position2=8) |
-%  (position1=6 & position2=7) |
-%  (position1=6 & position2=8) |
-%  (position1=7 & position2=8) |
-%  (position2=1 & position1=2) |
-%  (position2=1 & position1=3) |
-%  (position2=1 & position1=4) |
-%  (position2=2 & position1=3) |
-%  (position2=2 & position1=4) |
-%  (position2=3 & position1=4) |
-%  (position2=5 & position1=6) |
-%  (position2=5 & position1=7) |
-%  (position2=5 & position1=8) |
-%  (position2=6 & position1=7) |
-%  (position2=6 & position1=8) |
-%  (position2=7 & position1=8) |
-%  (position1=4 & position2=7) |
-%  (position2=4 & position1=7)).
-neighbor(Position1, Position2) <->
-	(   Position1=1,
-	    Position2=2
-	;   Position1=1,
-	    Position2=3
-	;   Position1=1,
-	    Position2=4
-	;   Position1=2,
-	    Position2=3
-	;   Position1=2,
-	    Position2=4
-	;   Position1=3,
-	    Position2=4
-	;   Position1=5,
-	    Position2=6
-	;   Position1=5,
-	    Position2=7
-	;   Position1=5,
-	    Position2=8
-	;   Position1=6,
-	    Position2=7
-	;   Position1=6,
-	    Position2=8
-	;   Position1=7,
-	    Position2=8
-	;   Position2=1,
-	    Position1=2
-	;   Position2=1,
-	    Position1=3
-	;   Position2=1,
-	    Position1=4
-	;   Position2=2,
-	    Position1=3
-	;   Position2=2,
-	    Position1=4
-	;   Position2=3,
-	    Position1=4
-	;   Position2=5,
-	    Position1=6
-	;   Position2=5,
-	    Position1=7
-	;   Position2=5,
-	    Position1=8
-	;   Position2=6,
-	    Position1=7
-	;   Position2=6,
-	    Position1=8
-	;   Position2=7,
-	    Position1=8
-	;   Position1=4,
-	    Position2=7
-	;   Position2=4,
-	    Position1=7
-	).
-
-
-% 
-% 
-% Side1(GateAO)=4.
-side1(gateAO)=4.
-
-
-% 
-% Side2(GateAO)=7.
-side2(gateAO)=7.
-
-
-% 
-% 
-% ; End of file.
 % 
 % human Homer
 t(human, homer).
@@ -31556,1290 +18938,18 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:8192
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:8192
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:8193
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:8193
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % load examples/AkmanEtAl2004/ZooWorld.e
+load('examples/AkmanEtAl2004/ZooWorld.e').
+
+
 % ectest/ec_reader_test_examples.e:8194
-% load('examples/AkmanEtAl2004/ZooWorld.e').
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; @article{Akman:2004,
-% ;   author = "Varol Akman and Selim T. Erdogan and Joohyung Lee and Vladimir Lifschitz and Hudson Turner",
-% ;   year = "2004",
-% ;   title = "Representing the zoo world and the traffic world in the language of the causal calculator",
-% ;   journal = "Artificial Intelligence",
-% ;   volume = "153",
-% ;   pages = "105--140",
-% ; }
-% ;
-% examples/AkmanEtAl2004/ZooWorld.e:20
-% 
-% sort position: integer
-subsort(position, integer).
-
-
-% sort location
-sort(location).
-
-
-% sort cage: location
-subsort(cage, location).
-
-
-% sort gate
-sort(gate).
-
-
-% sort animal
-sort(animal).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:26
-% sort elephant: animal
-subsort(elephant, animal).
-
-
-% sort horse: animal
-subsort(horse, animal).
-
-
-% sort dog: animal
-subsort(dog, animal).
-
-
-% sort human: animal
-subsort(human, animal).
-
-
-% sort species
-sort(species).
-
-
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:32
-% function Loc(position): location
-function(loc(position), location).
-
-
-% function Side1(gate): position
-function(side1(gate), position).
-
-
-% function Side2(gate): position
-function(side2(gate), position).
-
-
-% function Species(animal): species
-function(species(animal), species).
-
-
-% 
-% predicate Accessible(position,position,time)
-predicate(accessible(position, position, time)).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:38
-% predicate Adult(animal)
-predicate(adult(animal)).
-
-
-% predicate Large(animal)
-predicate(large(animal)).
-
-
-% predicate LargeSpecies(species)
-predicate(largeSpecies(species)).
-
-
-% predicate Neighbor(position,position)
-predicate(neighbor(position, position)).
-
-
-% predicate Sides(position,position,gate)
-predicate(sides(position, position, gate)).
-
-
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:44
-% event Close(human,gate)
-event(close(human, gate)).
-
-
-% event GetOff(human,animal)
-event(getOff(human, animal)).
-
-
-% event Mount(human,animal)
-event(mount(human, animal)).
-
-
-% event Move(animal,position)
-event(move(animal, position)).
-
-
-% event Open(human,gate)
-event(open(human, gate)).
-
-
-% event ThrowOff(animal,human)
-event(throwOff(animal, human)).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:50
-% 
-% fluent AbnormalEncroachment(human)
-fluent(abnormalEncroachment(human)).
-
-
-% noninertial AbnormalEncroachment
-noninertial(abnormalEncroachment).
-
-
-% fluent DoneBy(event,animal)
-fluent(doneBy(event, animal)).
-
-
-% noninertial DoneBy
-noninertial(doneBy).
-
-
-% fluent Mounted(human,animal)
-fluent(mounted(human, animal)).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:56
-% fluent MountFails(human)
-fluent(mountFails(human)).
-
-
-% noninertial MountFails
-noninertial(mountFails).
-
-
-% fluent Moves(animal)
-fluent(moves(animal)).
-
-
-% noninertial Moves
-noninertial(moves).
-
-
-% fluent Opened(gate)
-fluent(opened(gate)).
-
-
-% fluent Pos(animal,position)
-fluent(pos(animal, position)).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:62
-% fluent PosDeterminingFluent(human,position)
-fluent(posDeterminingFluent(human, position)).
-
-
-% noninertial PosDeterminingFluent
-noninertial(posDeterminingFluent).
-
-
-% fluent ThrowOffFails(animal,human)
-fluent(throwOffFails(animal, human)).
-
-
-% noninertial ThrowOffFails
-noninertial(throwOffFails).
-
-
-% 
-% species HumanSpecies, ElephantSpecies, HorseSpecies, DogSpecies
-t(species, humanSpecies).
-
-
-t(species, elephantSpecies).
-
-
-t(species, horseSpecies).
-
-
-t(species, dogSpecies).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:68
-% location Outside
-t(location, outside).
-
-
-% 
-% LargeSpecies(HumanSpecies).
-largeSpecies(humanSpecies).
-
-
-% 
-% LargeSpecies(ElephantSpecies).
-largeSpecies(elephantSpecies).
-
-
-% 
-% LargeSpecies(HorseSpecies).
-largeSpecies(horseSpecies).
-
-
-% 
-% !LargeSpecies(DogSpecies).
-not(largeSpecies(dogSpecies)).
-
-
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:74
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:75
-% [event,animal,time]% 
-% HoldsAt(DoneBy(event,animal),time) <->
-% (Happens(event,time) &
-%  (({gate} event=Close(animal,gate)) |
-%   ({animal1} event=GetOff(animal,animal1))|
-%   ({animal1} event=Mount(animal,animal1))|
-%   ({position} event=Move(animal,position))|
-%   ({gate} event=Open(animal,gate)) |
-%   ({human1} event=ThrowOff(animal,human1)))).
-holds_at(doneBy(Event, Animal), Time) <->
-	happens(Event, Time),
-	(   exists([Gate], Event=close(Animal, Gate))
-	;   exists([Animal1],
-		   Event=getOff(Animal, Animal1))
-	;   exists([Animal15],
-		   Event=mount(Animal, Animal15))
-	;   exists([Position],
-		   Event=move(Animal, Position))
-	;   exists([Gate7], Event=open(Animal, Gate7))
-	;   exists([Human1],
-		   Event=throwOff(Animal, Human1))
-	).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:83
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:85
-% [event1,event2,animal,time]% 
-% HoldsAt(DoneBy(event1,animal),time) &
-% HoldsAt(DoneBy(event2,animal),time) ->
-% event1=event2.
-holds_at(doneBy(Event1, Animal), Time), holds_at(doneBy(Event2, Animal), Time) ->
-	Event1=Event2.
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:90
-% [animal] % Large(animal) <-> (Adult(animal) & LargeSpecies(Species(animal))).
-large(Animal) <->
-	adult(Animal),
-	largeSpecies(species(Animal)).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:92
-% [position] 
-% examples/AkmanEtAl2004/ZooWorld.e:92
-% {position1} % position1!=% position & Neighbor(position,position1).
-exists([Position1],  (Position1\=Position, neighbor(Position, Position1))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:94
-% [position] % !Neighbor(position,position).
-not(neighbor(Position, Position)).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:96
-% [position1,position2]% 
-% Neighbor(position1,position2) ->
-% Neighbor(position2,position1).
-neighbor(Position1, Position2) ->
-	neighbor(Position2, Position1).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:100
-% [cage] % cage!=% Outside.
-Cage\=outside.
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:102
-% [position1,position2,gate]% 
-% Sides(position1,position2,gate) <->
-% ((Side1(gate)=position1 &
-%   Side2(gate)=position2) |
-%  (Side2(gate)=position1 &
-%   Side1(gate)=position2)).
-sides(Position1, Position2, Gate) <->
-	(   side1(Gate)=Position1,
-	    side2(Gate)=Position2
-	;   side2(Gate)=Position1,
-	    side1(Gate)=Position2
-	).
-
-
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:108
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:109
-% [gate] % Loc(Side1(gate))!=Loc(Side2(gate)).
-loc(side1(Gate))\=loc(side2(Gate)).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:111
-% [position1,position2,gate1,gate2]% 
-% Sides(position1,position2,gate1) &
-% Sides(position1,position2,gate2) ->
-% gate1=gate2.
-sides(Position1, Position2, Gate1), sides(Position1, Position2, Gate2) ->
-	Gate1=Gate2.
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:116
-% [position1,position2,gate]% 
-% Sides(position1,position2,gate) ->
-% Neighbor(position1,position2).
-sides(Position1, Position2, Gate) ->
-	neighbor(Position1, Position2).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:120
-% [position1,position2]% 
-% Loc(position1) != Loc(position2) &
-% Neighbor(position1,position2) ->
-% examples/AkmanEtAl2004/ZooWorld.e:123
-% {gate}%  Sides(position1,position2,gate).
-exists([Gate],  (loc(Position1)\=loc(Position2), neighbor(Position1, Position2)->sides(Position1, Position2, Gate))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:125
-% [animal,position1,position2,time]% 
-% HoldsAt(Pos(animal,position1),time) &
-% HoldsAt(Pos(animal,position2),time) ->
-% position1=position2.
-holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time) ->
-	Position1=Position2.
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:130
-% [animal,time]% 
-% examples/AkmanEtAl2004/ZooWorld.e:131
-% {position} % HoldsAt(Pos(animal,position),time).
-exists([Position], holds_at(pos(Animal, Position), Time)).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:133
-% [animal1,animal2,position,time]% 
-% (animal1!=animal2 &
-%  Large(animal1) &
-%  Large(animal2) &
-%  HoldsAt(Pos(animal1,position),time) &
-%  HoldsAt(Pos(animal2,position),time)) ->
-% (({human} human=animal1 & HoldsAt(Mounted(human,animal2),time)) |
-%  ({human} human=animal2 & HoldsAt(Mounted(human,animal1),time))).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position), Time), holds_at(pos(Animal2, Position), Time) ->
-	(   exists([Human],
-		   (Human=Animal1, holds_at(mounted(Human, Animal2), Time)))
-	;   exists([Human5],
-		   (Human5=Animal2, holds_at(mounted(Human5, Animal1), Time)))
-	).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:140
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:142
-% [human,position1,position2,time]% 
-% HoldsAt(PosDeterminingFluent(human,position1),time) &
-% HoldsAt(PosDeterminingFluent(human,position2),time) ->
-% position1=position2.
-holds_at(posDeterminingFluent(Human, Position1), Time), holds_at(posDeterminingFluent(Human, Position2), Time) ->
-	Position1=Position2.
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:147
-% [animal,position,time]% 
-% Initiates(Move(animal,position),Pos(animal,position),time).
-initiates(move(Animal, Position), pos(Animal, Position), Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:150
-% [animal,position1,position2,time]% 
-% HoldsAt(Pos(animal,position1),time) ->
-% Terminates(Move(animal,position2),Pos(animal,position1),time).
-holds_at(pos(Animal, Position1), Time) ->
-	terminates(move(Animal, Position2),
-		   pos(Animal, Position1),
-		   Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:154
-% [animal,position,time]% 
-% Happens(Move(animal,position),time) ->
-% !HoldsAt(Pos(animal,position),time).
-happens(move(Animal, Position), Time) ->
-	not(holds_at(pos(Animal, Position), Time)).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:158
-% [human,position,time]% 
-% Happens(Move(human,position),time) ->
-% !{animal} HoldsAt(Mounted(human,animal),time).
-happens(move(Human, Position), Time) ->
-	not(exists([Animal],
-		   holds_at(mounted(Human, Animal), Time))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:162
-% [human,gate,time]% 
-% Initiates(Open(human,gate),Opened(gate),time).
-initiates(open(Human, Gate), opened(Gate), Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:165
-% [human,gate,time]% 
-% Happens(Open(human,gate),time) ->
-% !HoldsAt(Opened(gate),time) &
-% (!{animal} HoldsAt(Mounted(human,animal),time)) &
-% ({position}
-%  (Side1(gate)=position | Side2(gate)=position) &
-%  HoldsAt(Pos(human,position),time)).
-happens(open(Human, Gate), Time) ->
-	not(holds_at(opened(Gate), Time)),
-	not(exists([Animal],
-		   holds_at(mounted(Human, Animal), Time))),
-	exists([Position],
-	       ((side1(Gate)=Position;side2(Gate)=Position), holds_at(pos(Human, Position), Time))).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:171
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:173
-% [human,gate,time]% 
-% Terminates(Close(human,gate),Opened(gate),time).
-terminates(close(Human, Gate), opened(Gate), Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:176
-% [human,gate,time]% 
-% Happens(Close(human,gate),time) ->
-% HoldsAt(Opened(gate),time) &
-% (!{animal} HoldsAt(Mounted(human,animal),time)) &
-% examples/AkmanEtAl2004/ZooWorld.e:180
-% {position}% 
-% (Side1(gate)=position | Side2(gate)=position) &
-% HoldsAt(Pos(human,position),time).
-exists([Position],  (happens(close(Human, Gate), Time)->holds_at(opened(Gate), Time), not(exists([Animal], holds_at(mounted(Human, Animal), Time))), (side1(Gate)=Position;side2(Gate)=Position), holds_at(pos(Human, Position), Time))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:184
-% [human,animal,position,time]% 
-% HoldsAt(Mounted(human,animal),time) &
-% HoldsAt(Pos(animal,position),time) ->
-% HoldsAt(Pos(human,position),time).
-holds_at(mounted(Human, Animal), Time), holds_at(pos(Animal, Position), Time) ->
-	holds_at(pos(Human, Position), Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:189
-% [animal,time]% 
-% HoldsAt(Moves(animal),time) <->
-% ({position}
-%  HoldsAt(Pos(animal,position),time) &
-%  !HoldsAt(Pos(animal,position),time+1)).
-holds_at(moves(Animal), Time) <->
-	exists([Position],
-	       (holds_at(pos(Animal, Position), Time), not(holds_at(pos(Animal, Position), Time+1)))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:195
-% [human,time]% 
-% HoldsAt(MountFails(human),time) <->
-% ({animal}
-%   Happens(Mount(human,animal),time) &
-%   HoldsAt(Moves(animal),time)).
-holds_at(mountFails(Human), Time) <->
-	exists([Animal],
-	       (happens(mount(Human, Animal), Time), holds_at(moves(Animal), Time))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:201
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Releases(Mount(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)) ->
-	releases(mount(Human, Animal),
-		 pos(Human, Position),
-		 Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:205
-% [human,animal,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Initiates(Mount(human,animal),Mounted(human,animal),time).
-not(holds_at(moves(Animal), Time)) ->
-	initiates(mount(Human, Animal),
-		  mounted(Human, Animal),
-		  Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:209
-% [human,animal,position,time]% 
-% HoldsAt(Pos(animal,position),time) &
-% HoldsAt(Moves(animal),time) ->
-% Initiates(Mount(human,animal),Pos(human,position),time).
-holds_at(pos(Animal, Position), Time), holds_at(moves(Animal), Time) ->
-	initiates(mount(Human, Animal),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:214
-% [human,animal,position,time]% 
-% HoldsAt(Pos(human,position),time) &
-% HoldsAt(Moves(animal),time) ->
-% Terminates(Mount(human,animal),Pos(human,position),time).
-holds_at(pos(Human, Position), Time), holds_at(moves(Animal), Time) ->
-	terminates(mount(Human, Animal),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:219
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% Large(animal).
-happens(mount(Human, Animal), Time) ->
-	large(Animal).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:223
-% [human,animal,time]% 
-% HoldsAt(Mounted(human,animal),time) ->
-% Large(animal).
-holds_at(mounted(Human, Animal), Time) ->
-	large(Animal).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:227
-% [human1,human2,time]% 
-% Happens(Mount(human1,human2),time) ->
-% !Large(human1).
-happens(mount(Human1, Human2), Time) ->
-	not(large(Human1)).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:231
-% [human1,human2,time]% 
-% HoldsAt(Mounted(human1,human2),time) ->
-% !Large(human1).
-holds_at(mounted(Human1, Human2), Time) ->
-	not(large(Human1)).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:235
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{human1} human1!=human & HoldsAt(Mounted(human1,animal),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Human1],
-		   (Human1\=Human, holds_at(mounted(Human1, Animal), Time)))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:239
-% [human1,human2,animal,time]% 
-% HoldsAt(Mounted(human1,animal),time) &
-% HoldsAt(Mounted(human2,animal),time) ->
-% human1=human2.
-holds_at(mounted(Human1, Animal), Time), holds_at(mounted(Human2, Animal), Time) ->
-	Human1=Human2.
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:244
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{human1} human1!=human & HoldsAt(Mounted(human1,human),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Human1],
-		   (Human1\=Human, holds_at(mounted(Human1, Human), Time)))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:248
-% [human1,human2,time]% 
-% Happens(Mount(human1,human2),time) ->
-% examples/AkmanEtAl2004/ZooWorld.e:250
-% {animal}%  HoldsAt(Mounted(human2,animal),time).
-exists([Animal],  (happens(mount(Human1, Human2), Time)->holds_at(mounted(Human2, Animal), Time))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:252
-% [human1,human2,time]% 
-% HoldsAt(Mounted(human1,human2),time) ->
-% !{animal} HoldsAt(Mounted(human2,animal),time).
-holds_at(mounted(Human1, Human2), Time) ->
-	not(exists([Animal],
-		   holds_at(mounted(Human2, Animal), Time))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:256
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{animal1} HoldsAt(Mounted(human,animal1),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Animal1],
-		   holds_at(mounted(Human, Animal1), Time))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:260
-% [human,animal,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Terminates(GetOff(human,animal),Mounted(human,animal),time).
-not(holds_at(moves(Animal), Time)) ->
-	terminates(getOff(Human, Animal),
-		   mounted(Human, Animal),
-		   Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:264
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(PosDeterminingFluent(human,position),time) ->
-% Initiates(GetOff(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)), holds_at(posDeterminingFluent(Human, Position), Time) ->
-	initiates(getOff(Human, Animal),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:269
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(Pos(human,position),time) ->
-% Terminates(GetOff(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position), Time) ->
-	terminates(getOff(Human, Animal),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:274
-% [human,animal,position1,position2,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(Pos(human,position1),time) &
-% position1!=position2 ->
-% Terminates(GetOff(human,animal),Pos(human,position2),time).
-not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position1), Time), Position1\=Position2 ->
-	terminates(getOff(Human, Animal),
-		   pos(Human, Position2),
-		   Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:280
-% [human,animal,time]% 
-% Happens(GetOff(human,animal),time) ->
-% HoldsAt(Mounted(human,animal),time).
-happens(getOff(Human, Animal), Time) ->
-	holds_at(mounted(Human, Animal), Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:284
-% [animal1,human,time]% 
-% HoldsAt(ThrowOffFails(animal1,human),time) <->
-% ({position,animal2}
-%  animal2!=human &
-%  HoldsAt(PosDeterminingFluent(human,position),time) &
-%  Large(animal2) &
-%  HoldsAt(Pos(animal2,position),time+1)).
-holds_at(throwOffFails(Animal1, Human), Time) <->
-	exists([Position, Animal2],
-	       (Animal2\=Human, holds_at(posDeterminingFluent(Human, Position), Time), large(Animal2), holds_at(pos(Animal2, Position), Time+1))).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:290
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:292
-% [animal,human,position,time]% 
-% HoldsAt(PosDeterminingFluent(human,position),time) &
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Initiates(ThrowOff(animal,human),Pos(human,position),time).
-holds_at(posDeterminingFluent(Human, Position), Time), not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	initiates(throwOff(Animal, Human),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:297
-% [animal,human,position,time]% 
-% HoldsAt(Pos(human,position),time) &
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Terminates(ThrowOff(animal,human),Pos(human,position),time).
-holds_at(pos(Human, Position), Time), not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	terminates(throwOff(Animal, Human),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:302
-% [animal,human,position1,position2,time]% 
-% !HoldsAt(ThrowOffFails(animal,human),time) &
-% HoldsAt(Pos(human,position1),time) &
-% !HoldsAt(PosDeterminingFluent(human,position2),time) &
-% position1!=position2 ->
-% Terminates(ThrowOff(animal,human),Pos(human,position2),time).
-not(holds_at(throwOffFails(Animal, Human), Time)), holds_at(pos(Human, Position1), Time), not(holds_at(posDeterminingFluent(Human, Position2), Time)), Position1\=Position2 ->
-	terminates(throwOff(Animal, Human),
-		   pos(Human, Position2),
-		   Time).
-
-
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:308
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:309
-% [human,time]% 
-% (!{animal} Happens(ThrowOff(animal,human),time) |
-%            Happens(GetOff(human,animal),time)) ->
-% HoldsAt(PosDeterminingFluent(human,1),time).
-not(exists([Animal], happens(throwOff(Animal, Human), Time)));happens(getOff(Human, animal), Time) ->
-	holds_at(posDeterminingFluent(Human, 1), Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:314
-% [human,position,animal1,animal2,time]% 
-% HoldsAt(PosDeterminingFluent(human,position),time) &
-% HoldsAt(ThrowOffFails(animal1,human),time) &
-% HoldsAt(Pos(animal2,position),time) ->
-% Initiates(ThrowOff(animal1,human),Mounted(human,animal2),time).
-holds_at(posDeterminingFluent(Human, Position), Time), holds_at(throwOffFails(Animal1, Human), Time), holds_at(pos(Animal2, Position), Time) ->
-	initiates(throwOff(Animal1, Human),
-		  mounted(Human, Animal2),
-		  Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:320
-% [human,animal,time]% 
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Terminates(ThrowOff(animal,human),Mounted(human,animal),time).
-not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	terminates(throwOff(Animal, Human),
-		   mounted(Human, Animal),
-		   Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:324
-% [animal,human,time]% 
-% Happens(ThrowOff(animal,human),time) ->
-% HoldsAt(Mounted(human,animal),time).
-happens(throwOff(Animal, Human), Time) ->
-	holds_at(mounted(Human, Animal), Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:328
-% [animal,human,time]% 
-% Happens(ThrowOff(animal,human),time) ->
-% !Happens(GetOff(human,animal),time).
-happens(throwOff(Animal, Human), Time) ->
-	not(happens(getOff(Human, Animal), Time)).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:332
-% [animal,human,time]% 
-% Happens(GetOff(human,animal),time) ->
-% !Happens(ThrowOff(animal,human),time).
-happens(getOff(Human, Animal), Time) ->
-	not(happens(throwOff(Animal, Human), Time)).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:336
-% [position1,position2,time]% 
-% Accessible(position1,position2,time) <->
-% (Neighbor(position1,position2) &
-%  !{gate} Sides(position1,position2,gate) &
-%          !HoldsAt(Opened(gate),time)).
-accessible(Position1, Position2, Time) <->
-	thereExists((neighbor(Position1, Position2), not([gate])),
-		    (sides(Position1, Position2, gate), not(holds_at(opened(gate), Time)))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:342
-% [animal,position1,position2,time]% 
-% (position1!=position2 &
-%  HoldsAt(Pos(animal,position1),time) &
-%  HoldsAt(Pos(animal,position2),time+1)) ->
-% Accessible(position1,position2,time).
-Position1\=Position2, holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time+1) ->
-	accessible(Position1, Position2, Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:348
-% [human,time]% 
-% HoldsAt(AbnormalEncroachment(human),time) <->
-% (HoldsAt(MountFails(human),time) |
-%  ({position,animal1,animal2}
-%    HoldsAt(PosDeterminingFluent(human,position),time) &
-%    !HoldsAt(ThrowOffFails(animal2,human),time) &
-%    Happens(ThrowOff(animal2,human),time) &
-%    animal1!=human &
-%    Large(animal1) &
-%    HoldsAt(Pos(animal1,position),time) &
-%    !HoldsAt(Pos(animal1,position),time+1))).
-holds_at(abnormalEncroachment(Human), Time) <->
-	(   holds_at(mountFails(Human), Time)
-	;   exists([Position, Animal1, Animal2],
-		   (holds_at(posDeterminingFluent(Human, Position), Time), not(holds_at(throwOffFails(Animal2, Human), Time)), happens(throwOff(Animal2, Human), Time), Animal1\=Human, large(Animal1), holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Time+1))))
-	).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:358
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:360
-% [animal1,animal2,position,time]% 
-% HoldsAt(Pos(animal1,position),time) &
-% !HoldsAt(Pos(animal1,position),time+1) &
-% !HoldsAt(Pos(animal2,position),time) &
-% HoldsAt(Pos(animal2,position),time+1) ->
-% (!Large(animal1) |
-%  !Large(animal2) |
-%  ({human} human=animal2 & HoldsAt(AbnormalEncroachment(human),time))).
-holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Time+1)), not(holds_at(pos(Animal2, Position), Time)), holds_at(pos(Animal2, Position), Time+1) ->
-	(   not(large(Animal1))
-	;   not(large(Animal2))
-	;   exists([Human],
-		   (Human=Animal2, holds_at(abnormalEncroachment(Human), Time)))
-	).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:367
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:369
-% [animal1,animal2,position1,position2,time]% 
-% animal1!=% animal2 &
-% Large(animal1) & Large(animal2) &
-% HoldsAt(Pos(animal1,position1),time) &
-% HoldsAt(Pos(animal1,position2),time+1) &
-% HoldsAt(Pos(animal2,position1),time) &
-% HoldsAt(Pos(animal2,position2),time+1) ->
-% !{gate} Sides(position1,position2,gate).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position1), Time), holds_at(pos(Animal1, Position2), Time+1), holds_at(pos(Animal2, Position1), Time), holds_at(pos(Animal2, Position2), Time+1) ->
-	not(exists([Gate],
-		   sides(Position1, Position2, Gate))).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:376
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:378
-% [animal1,animal2,position1,position2,time]% 
-% animal1!=% animal2 &
-% Large(animal1) & Large(animal2) &
-% HoldsAt(Pos(animal1,position1),time) &
-% HoldsAt(Pos(animal1,position2),time+1) &
-% HoldsAt(Pos(animal2,position2),time) &
-% HoldsAt(Pos(animal2,position1),time+1) ->
-% !{gate} Sides(position1,position2,gate).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position1), Time), holds_at(pos(Animal1, Position2), Time+1), holds_at(pos(Animal2, Position2), Time), holds_at(pos(Animal2, Position1), Time+1) ->
-	not(exists([Gate],
-		   sides(Position1, Position2, Gate))).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:385
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:387
-% [gate,position1,position2,time]% 
-% HoldsAt(Opened(gate),time) &
-% !HoldsAt(Opened(gate),time+1) &
-% Sides(position1,position2,gate) ->
-% !{animal}
-% HoldsAt(Pos(animal,position1),time) &
-% HoldsAt(Pos(animal,position2),time+1).
-holds_at(opened(Gate), Time), not(holds_at(opened(Gate), Time+1)), sides(Position1, Position2, Gate) ->
-	not(exists([Animal],
-		   (holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time+1)))).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:393
-% 
-% 
-% gate GateAO
-t(gate, gateAO).
-
-
-% cage CageA
-t(cage, cageA).
-
-
-% 
-% Loc(1)=CageA.
-loc(1)=cageA.
-
-
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:399
-% Loc(2)=CageA.
-loc(2)=cageA.
-
-
-% 
-% Loc(3)=CageA.
-loc(3)=cageA.
-
-
-% 
-% Loc(4)=CageA.
-loc(4)=cageA.
-
-
-% 
-% Loc(5)=Outside.
-loc(5)=outside.
-
-
-% 
-% Loc(6)=Outside.
-loc(6)=outside.
-
-
-% 
-% Loc(7)=Outside.
-loc(7)=outside.
-
-
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:405
-% Loc(8)=Outside.
-loc(8)=outside.
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:407
-% [position1,position2]% 
-% Neighbor(position1,position2) <->
-% ((position1=1 & position2=2) |
-%  (position1=1 & position2=3) |
-%  (position1=1 & position2=4) |
-%  (position1=2 & position2=3) |
-%  (position1=2 & position2=4) |
-%  (position1=3 & position2=4) |
-%  (position1=5 & position2=6) |
-%  (position1=5 & position2=7) |
-%  (position1=5 & position2=8) |
-%  (position1=6 & position2=7) |
-%  (position1=6 & position2=8) |
-%  (position1=7 & position2=8) |
-%  (position2=1 & position1=2) |
-%  (position2=1 & position1=3) |
-%  (position2=1 & position1=4) |
-%  (position2=2 & position1=3) |
-%  (position2=2 & position1=4) |
-%  (position2=3 & position1=4) |
-%  (position2=5 & position1=6) |
-%  (position2=5 & position1=7) |
-%  (position2=5 & position1=8) |
-%  (position2=6 & position1=7) |
-%  (position2=6 & position1=8) |
-%  (position2=7 & position1=8) |
-%  (position1=4 & position2=7) |
-%  (position2=4 & position1=7)).
-neighbor(Position1, Position2) <->
-	(   Position1=1,
-	    Position2=2
-	;   Position1=1,
-	    Position2=3
-	;   Position1=1,
-	    Position2=4
-	;   Position1=2,
-	    Position2=3
-	;   Position1=2,
-	    Position2=4
-	;   Position1=3,
-	    Position2=4
-	;   Position1=5,
-	    Position2=6
-	;   Position1=5,
-	    Position2=7
-	;   Position1=5,
-	    Position2=8
-	;   Position1=6,
-	    Position2=7
-	;   Position1=6,
-	    Position2=8
-	;   Position1=7,
-	    Position2=8
-	;   Position2=1,
-	    Position1=2
-	;   Position2=1,
-	    Position1=3
-	;   Position2=1,
-	    Position1=4
-	;   Position2=2,
-	    Position1=3
-	;   Position2=2,
-	    Position1=4
-	;   Position2=3,
-	    Position1=4
-	;   Position2=5,
-	    Position1=6
-	;   Position2=5,
-	    Position1=7
-	;   Position2=5,
-	    Position1=8
-	;   Position2=6,
-	    Position1=7
-	;   Position2=6,
-	    Position1=8
-	;   Position2=7,
-	    Position1=8
-	;   Position1=4,
-	    Position2=7
-	;   Position2=4,
-	    Position1=7
-	).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:434
-% 
-% 
-% Side1(GateAO)=4.
-side1(gateAO)=4.
-
-
-% 
-% Side2(GateAO)=7.
-side2(gateAO)=7.
-
-
-% 
-% 
-% ; End of file.
 % 
 % human Homer
 t(human, homer).
@@ -33008,1267 +19118,18 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:8265
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:8266
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:8266
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % load examples/AkmanEtAl2004/ZooWorld.e
-% ectest/ec_reader_test_examples.e:8267
-% load('examples/AkmanEtAl2004/ZooWorld.e').
-
-
-% ectest/ec_reader_test_examples.e:8267
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; @article{Akman:2004,
-% ;   author = "Varol Akman and Selim T. Erdogan and Joohyung Lee and Vladimir Lifschitz and Hudson Turner",
-% ;   year = "2004",
-% ;   title = "Representing the zoo world and the traffic world in the language of the causal calculator",
-% ;   journal = "Artificial Intelligence",
-% ;   volume = "153",
-% ;   pages = "105--140",
-% ; }
-% ;
-% 
-% sort position: integer
-subsort(position, integer).
-
-
-% sort location
-sort(location).
-
-
-% sort cage: location
-subsort(cage, location).
-
-
-% sort gate
-sort(gate).
-
-
-% sort animal
-sort(animal).
-
-
-% sort elephant: animal
-subsort(elephant, animal).
-
-
-% sort horse: animal
-subsort(horse, animal).
-
-
-% sort dog: animal
-subsort(dog, animal).
-
-
-% sort human: animal
-subsort(human, animal).
-
-
-% sort species
-sort(species).
-
-
-% 
-% function Loc(position): location
-function(loc(position), location).
-
-
-% function Side1(gate): position
-function(side1(gate), position).
-
-
-% function Side2(gate): position
-function(side2(gate), position).
-
-
-% function Species(animal): species
-function(species(animal), species).
-
-
-% 
-% predicate Accessible(position,position,time)
-predicate(accessible(position, position, time)).
-
-
-% predicate Adult(animal)
-predicate(adult(animal)).
-
-
-% predicate Large(animal)
-predicate(large(animal)).
-
-
-% predicate LargeSpecies(species)
-predicate(largeSpecies(species)).
-
-
-% predicate Neighbor(position,position)
-predicate(neighbor(position, position)).
-
-
-% predicate Sides(position,position,gate)
-predicate(sides(position, position, gate)).
-
-
-% 
-% event Close(human,gate)
-event(close(human, gate)).
-
-
-% event GetOff(human,animal)
-event(getOff(human, animal)).
-
-
-% event Mount(human,animal)
-event(mount(human, animal)).
-
-
-% event Move(animal,position)
-event(move(animal, position)).
-
-
-% event Open(human,gate)
-event(open(human, gate)).
-
-
-% event ThrowOff(animal,human)
-event(throwOff(animal, human)).
-
-
-% 
-% fluent AbnormalEncroachment(human)
-fluent(abnormalEncroachment(human)).
-
-
-% noninertial AbnormalEncroachment
-noninertial(abnormalEncroachment).
-
-
-% fluent DoneBy(event,animal)
-fluent(doneBy(event, animal)).
-
-
-% noninertial DoneBy
-noninertial(doneBy).
-
-
-% fluent Mounted(human,animal)
-fluent(mounted(human, animal)).
-
-
-% fluent MountFails(human)
-fluent(mountFails(human)).
-
-
-% noninertial MountFails
-noninertial(mountFails).
-
-
-% fluent Moves(animal)
-fluent(moves(animal)).
-
-
-% noninertial Moves
-noninertial(moves).
-
-
-% fluent Opened(gate)
-fluent(opened(gate)).
-
-
-% fluent Pos(animal,position)
-fluent(pos(animal, position)).
-
-
-% fluent PosDeterminingFluent(human,position)
-fluent(posDeterminingFluent(human, position)).
-
-
-% noninertial PosDeterminingFluent
-noninertial(posDeterminingFluent).
-
-
-% fluent ThrowOffFails(animal,human)
-fluent(throwOffFails(animal, human)).
-
-
-% noninertial ThrowOffFails
-noninertial(throwOffFails).
-
-
-% 
-% species HumanSpecies, ElephantSpecies, HorseSpecies, DogSpecies
-t(species, humanSpecies).
-
-
-t(species, elephantSpecies).
-
-
-t(species, horseSpecies).
-
-
-t(species, dogSpecies).
-
-
-% location Outside
-t(location, outside).
-
-
-% 
-% LargeSpecies(HumanSpecies).
-largeSpecies(humanSpecies).
-
-
-% 
-% LargeSpecies(ElephantSpecies).
-largeSpecies(elephantSpecies).
-
-
-% 
-% LargeSpecies(HorseSpecies).
-largeSpecies(horseSpecies).
-
-
-% 
-% !LargeSpecies(DogSpecies).
-not(largeSpecies(dogSpecies)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [event,animal,time]% 
-% HoldsAt(DoneBy(event,animal),time) <->
-% (Happens(event,time) &
-%  (({gate} event=Close(animal,gate)) |
-%   ({animal1} event=GetOff(animal,animal1))|
-%   ({animal1} event=Mount(animal,animal1))|
-%   ({position} event=Move(animal,position))|
-%   ({gate} event=Open(animal,gate)) |
-%   ({human1} event=ThrowOff(animal,human1)))).
-holds_at(doneBy(Event, Animal), Time) <->
-	happens(Event, Time),
-	(   exists([Gate], Event=close(Animal, Gate))
-	;   exists([Animal1],
-		   Event=getOff(Animal, Animal1))
-	;   exists([Animal15],
-		   Event=mount(Animal, Animal15))
-	;   exists([Position],
-		   Event=move(Animal, Position))
-	;   exists([Gate7], Event=open(Animal, Gate7))
-	;   exists([Human1],
-		   Event=throwOff(Animal, Human1))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [event1,event2,animal,time]% 
-% HoldsAt(DoneBy(event1,animal),time) &
-% HoldsAt(DoneBy(event2,animal),time) ->
-% event1=event2.
-holds_at(doneBy(Event1, Animal), Time), holds_at(doneBy(Event2, Animal), Time) ->
-	Event1=Event2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [animal] % Large(animal) <-> (Adult(animal) & LargeSpecies(Species(animal))).
-large(Animal) <->
-	adult(Animal),
-	largeSpecies(species(Animal)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [position] 
-% ectest/ec_reader_test_examples.e:8267
-% {position1} % position1!=% position & Neighbor(position,position1).
-exists([Position1],  (Position1\=Position, neighbor(Position, Position1))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [position] % !Neighbor(position,position).
-not(neighbor(Position, Position)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [position1,position2]% 
-% Neighbor(position1,position2) ->
-% Neighbor(position2,position1).
-neighbor(Position1, Position2) ->
-	neighbor(Position2, Position1).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [cage] % cage!=% Outside.
-Cage\=outside.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [position1,position2,gate]% 
-% Sides(position1,position2,gate) <->
-% ((Side1(gate)=position1 &
-%   Side2(gate)=position2) |
-%  (Side2(gate)=position1 &
-%   Side1(gate)=position2)).
-sides(Position1, Position2, Gate) <->
-	(   side1(Gate)=Position1,
-	    side2(Gate)=Position2
-	;   side2(Gate)=Position1,
-	    side1(Gate)=Position2
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [gate] % Loc(Side1(gate))!=Loc(Side2(gate)).
-loc(side1(Gate))\=loc(side2(Gate)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [position1,position2,gate1,gate2]% 
-% Sides(position1,position2,gate1) &
-% Sides(position1,position2,gate2) ->
-% gate1=gate2.
-sides(Position1, Position2, Gate1), sides(Position1, Position2, Gate2) ->
-	Gate1=Gate2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [position1,position2,gate]% 
-% Sides(position1,position2,gate) ->
-% Neighbor(position1,position2).
-sides(Position1, Position2, Gate) ->
-	neighbor(Position1, Position2).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [position1,position2]% 
-% Loc(position1) != Loc(position2) &
-% Neighbor(position1,position2) ->
-% ectest/ec_reader_test_examples.e:8267
-% {gate}%  Sides(position1,position2,gate).
-exists([Gate],  (loc(Position1)\=loc(Position2), neighbor(Position1, Position2)->sides(Position1, Position2, Gate))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [animal,position1,position2,time]% 
-% HoldsAt(Pos(animal,position1),time) &
-% HoldsAt(Pos(animal,position2),time) ->
-% position1=position2.
-holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time) ->
-	Position1=Position2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [animal,time]% 
-% ectest/ec_reader_test_examples.e:8267
-% {position} % HoldsAt(Pos(animal,position),time).
-exists([Position], holds_at(pos(Animal, Position), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [animal1,animal2,position,time]% 
-% (animal1!=animal2 &
-%  Large(animal1) &
-%  Large(animal2) &
-%  HoldsAt(Pos(animal1,position),time) &
-%  HoldsAt(Pos(animal2,position),time)) ->
-% (({human} human=animal1 & HoldsAt(Mounted(human,animal2),time)) |
-%  ({human} human=animal2 & HoldsAt(Mounted(human,animal1),time))).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position), Time), holds_at(pos(Animal2, Position), Time) ->
-	(   exists([Human],
-		   (Human=Animal1, holds_at(mounted(Human, Animal2), Time)))
-	;   exists([Human5],
-		   (Human5=Animal2, holds_at(mounted(Human5, Animal1), Time)))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,position1,position2,time]% 
-% HoldsAt(PosDeterminingFluent(human,position1),time) &
-% HoldsAt(PosDeterminingFluent(human,position2),time) ->
-% position1=position2.
-holds_at(posDeterminingFluent(Human, Position1), Time), holds_at(posDeterminingFluent(Human, Position2), Time) ->
-	Position1=Position2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [animal,position,time]% 
-% Initiates(Move(animal,position),Pos(animal,position),time).
-initiates(move(Animal, Position), pos(Animal, Position), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [animal,position1,position2,time]% 
-% HoldsAt(Pos(animal,position1),time) ->
-% Terminates(Move(animal,position2),Pos(animal,position1),time).
-holds_at(pos(Animal, Position1), Time) ->
-	terminates(move(Animal, Position2),
-		   pos(Animal, Position1),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [animal,position,time]% 
-% Happens(Move(animal,position),time) ->
-% !HoldsAt(Pos(animal,position),time).
-happens(move(Animal, Position), Time) ->
-	not(holds_at(pos(Animal, Position), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,position,time]% 
-% Happens(Move(human,position),time) ->
-% !{animal} HoldsAt(Mounted(human,animal),time).
-happens(move(Human, Position), Time) ->
-	not(exists([Animal],
-		   holds_at(mounted(Human, Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,gate,time]% 
-% Initiates(Open(human,gate),Opened(gate),time).
-initiates(open(Human, Gate), opened(Gate), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,gate,time]% 
-% Happens(Open(human,gate),time) ->
-% !HoldsAt(Opened(gate),time) &
-% (!{animal} HoldsAt(Mounted(human,animal),time)) &
-% ({position}
-%  (Side1(gate)=position | Side2(gate)=position) &
-%  HoldsAt(Pos(human,position),time)).
-happens(open(Human, Gate), Time) ->
-	not(holds_at(opened(Gate), Time)),
-	not(exists([Animal],
-		   holds_at(mounted(Human, Animal), Time))),
-	exists([Position],
-	       ((side1(Gate)=Position;side2(Gate)=Position), holds_at(pos(Human, Position), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,gate,time]% 
-% Terminates(Close(human,gate),Opened(gate),time).
-terminates(close(Human, Gate), opened(Gate), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,gate,time]% 
-% Happens(Close(human,gate),time) ->
-% HoldsAt(Opened(gate),time) &
-% (!{animal} HoldsAt(Mounted(human,animal),time)) &
-% ectest/ec_reader_test_examples.e:8267
-% {position}% 
-% (Side1(gate)=position | Side2(gate)=position) &
-% HoldsAt(Pos(human,position),time).
-exists([Position],  (happens(close(Human, Gate), Time)->holds_at(opened(Gate), Time), not(exists([Animal], holds_at(mounted(Human, Animal), Time))), (side1(Gate)=Position;side2(Gate)=Position), holds_at(pos(Human, Position), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,animal,position,time]% 
-% HoldsAt(Mounted(human,animal),time) &
-% HoldsAt(Pos(animal,position),time) ->
-% HoldsAt(Pos(human,position),time).
-holds_at(mounted(Human, Animal), Time), holds_at(pos(Animal, Position), Time) ->
-	holds_at(pos(Human, Position), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [animal,time]% 
-% HoldsAt(Moves(animal),time) <->
-% ({position}
-%  HoldsAt(Pos(animal,position),time) &
-%  !HoldsAt(Pos(animal,position),time+1)).
-holds_at(moves(Animal), Time) <->
-	exists([Position],
-	       (holds_at(pos(Animal, Position), Time), not(holds_at(pos(Animal, Position), Time+1)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,time]% 
-% HoldsAt(MountFails(human),time) <->
-% ({animal}
-%   Happens(Mount(human,animal),time) &
-%   HoldsAt(Moves(animal),time)).
-holds_at(mountFails(Human), Time) <->
-	exists([Animal],
-	       (happens(mount(Human, Animal), Time), holds_at(moves(Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Releases(Mount(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)) ->
-	releases(mount(Human, Animal),
-		 pos(Human, Position),
-		 Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,animal,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Initiates(Mount(human,animal),Mounted(human,animal),time).
-not(holds_at(moves(Animal), Time)) ->
-	initiates(mount(Human, Animal),
-		  mounted(Human, Animal),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,animal,position,time]% 
-% HoldsAt(Pos(animal,position),time) &
-% HoldsAt(Moves(animal),time) ->
-% Initiates(Mount(human,animal),Pos(human,position),time).
-holds_at(pos(Animal, Position), Time), holds_at(moves(Animal), Time) ->
-	initiates(mount(Human, Animal),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,animal,position,time]% 
-% HoldsAt(Pos(human,position),time) &
-% HoldsAt(Moves(animal),time) ->
-% Terminates(Mount(human,animal),Pos(human,position),time).
-holds_at(pos(Human, Position), Time), holds_at(moves(Animal), Time) ->
-	terminates(mount(Human, Animal),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% Large(animal).
-happens(mount(Human, Animal), Time) ->
-	large(Animal).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,animal,time]% 
-% HoldsAt(Mounted(human,animal),time) ->
-% Large(animal).
-holds_at(mounted(Human, Animal), Time) ->
-	large(Animal).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human1,human2,time]% 
-% Happens(Mount(human1,human2),time) ->
-% !Large(human1).
-happens(mount(Human1, Human2), Time) ->
-	not(large(Human1)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human1,human2,time]% 
-% HoldsAt(Mounted(human1,human2),time) ->
-% !Large(human1).
-holds_at(mounted(Human1, Human2), Time) ->
-	not(large(Human1)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{human1} human1!=human & HoldsAt(Mounted(human1,animal),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Human1],
-		   (Human1\=Human, holds_at(mounted(Human1, Animal), Time)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human1,human2,animal,time]% 
-% HoldsAt(Mounted(human1,animal),time) &
-% HoldsAt(Mounted(human2,animal),time) ->
-% human1=human2.
-holds_at(mounted(Human1, Animal), Time), holds_at(mounted(Human2, Animal), Time) ->
-	Human1=Human2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{human1} human1!=human & HoldsAt(Mounted(human1,human),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Human1],
-		   (Human1\=Human, holds_at(mounted(Human1, Human), Time)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human1,human2,time]% 
-% Happens(Mount(human1,human2),time) ->
-% ectest/ec_reader_test_examples.e:8267
-% {animal}%  HoldsAt(Mounted(human2,animal),time).
-exists([Animal],  (happens(mount(Human1, Human2), Time)->holds_at(mounted(Human2, Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human1,human2,time]% 
-% HoldsAt(Mounted(human1,human2),time) ->
-% !{animal} HoldsAt(Mounted(human2,animal),time).
-holds_at(mounted(Human1, Human2), Time) ->
-	not(exists([Animal],
-		   holds_at(mounted(Human2, Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{animal1} HoldsAt(Mounted(human,animal1),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Animal1],
-		   holds_at(mounted(Human, Animal1), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,animal,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Terminates(GetOff(human,animal),Mounted(human,animal),time).
-not(holds_at(moves(Animal), Time)) ->
-	terminates(getOff(Human, Animal),
-		   mounted(Human, Animal),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(PosDeterminingFluent(human,position),time) ->
-% Initiates(GetOff(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)), holds_at(posDeterminingFluent(Human, Position), Time) ->
-	initiates(getOff(Human, Animal),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(Pos(human,position),time) ->
-% Terminates(GetOff(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position), Time) ->
-	terminates(getOff(Human, Animal),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,animal,position1,position2,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(Pos(human,position1),time) &
-% position1!=position2 ->
-% Terminates(GetOff(human,animal),Pos(human,position2),time).
-not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position1), Time), Position1\=Position2 ->
-	terminates(getOff(Human, Animal),
-		   pos(Human, Position2),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,animal,time]% 
-% Happens(GetOff(human,animal),time) ->
-% HoldsAt(Mounted(human,animal),time).
-happens(getOff(Human, Animal), Time) ->
-	holds_at(mounted(Human, Animal), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [animal1,human,time]% 
-% HoldsAt(ThrowOffFails(animal1,human),time) <->
-% ({position,animal2}
-%  animal2!=human &
-%  HoldsAt(PosDeterminingFluent(human,position),time) &
-%  Large(animal2) &
-%  HoldsAt(Pos(animal2,position),time+1)).
-holds_at(throwOffFails(Animal1, Human), Time) <->
-	exists([Position, Animal2],
-	       (Animal2\=Human, holds_at(posDeterminingFluent(Human, Position), Time), large(Animal2), holds_at(pos(Animal2, Position), Time+1))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [animal,human,position,time]% 
-% HoldsAt(PosDeterminingFluent(human,position),time) &
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Initiates(ThrowOff(animal,human),Pos(human,position),time).
-holds_at(posDeterminingFluent(Human, Position), Time), not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	initiates(throwOff(Animal, Human),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [animal,human,position,time]% 
-% HoldsAt(Pos(human,position),time) &
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Terminates(ThrowOff(animal,human),Pos(human,position),time).
-holds_at(pos(Human, Position), Time), not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	terminates(throwOff(Animal, Human),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [animal,human,position1,position2,time]% 
-% !HoldsAt(ThrowOffFails(animal,human),time) &
-% HoldsAt(Pos(human,position1),time) &
-% !HoldsAt(PosDeterminingFluent(human,position2),time) &
-% position1!=position2 ->
-% Terminates(ThrowOff(animal,human),Pos(human,position2),time).
-not(holds_at(throwOffFails(Animal, Human), Time)), holds_at(pos(Human, Position1), Time), not(holds_at(posDeterminingFluent(Human, Position2), Time)), Position1\=Position2 ->
-	terminates(throwOff(Animal, Human),
-		   pos(Human, Position2),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,time]% 
-% (!{animal} Happens(ThrowOff(animal,human),time) |
-%            Happens(GetOff(human,animal),time)) ->
-% HoldsAt(PosDeterminingFluent(human,1),time).
-not(exists([Animal], happens(throwOff(Animal, Human), Time)));happens(getOff(Human, animal), Time) ->
-	holds_at(posDeterminingFluent(Human, 1), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,position,animal1,animal2,time]% 
-% HoldsAt(PosDeterminingFluent(human,position),time) &
-% HoldsAt(ThrowOffFails(animal1,human),time) &
-% HoldsAt(Pos(animal2,position),time) ->
-% Initiates(ThrowOff(animal1,human),Mounted(human,animal2),time).
-holds_at(posDeterminingFluent(Human, Position), Time), holds_at(throwOffFails(Animal1, Human), Time), holds_at(pos(Animal2, Position), Time) ->
-	initiates(throwOff(Animal1, Human),
-		  mounted(Human, Animal2),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [human,animal,time]% 
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Terminates(ThrowOff(animal,human),Mounted(human,animal),time).
-not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	terminates(throwOff(Animal, Human),
-		   mounted(Human, Animal),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [animal,human,time]% 
-% Happens(ThrowOff(animal,human),time) ->
-% HoldsAt(Mounted(human,animal),time).
-happens(throwOff(Animal, Human), Time) ->
-	holds_at(mounted(Human, Animal), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [animal,human,time]% 
-% Happens(ThrowOff(animal,human),time) ->
-% !Happens(GetOff(human,animal),time).
-happens(throwOff(Animal, Human), Time) ->
-	not(happens(getOff(Human, Animal), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [animal,human,time]% 
-% Happens(GetOff(human,animal),time) ->
-% !Happens(ThrowOff(animal,human),time).
-happens(getOff(Human, Animal), Time) ->
-	not(happens(throwOff(Animal, Human), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [position1,position2,time]% 
-% Accessible(position1,position2,time) <->
-% (Neighbor(position1,position2) &
-%  !{gate} Sides(position1,position2,gate) &
-%          !HoldsAt(Opened(gate),time)).
-accessible(Position1, Position2, Time) <->
-	thereExists((neighbor(Position1, Position2), not([gate])),
-		    (sides(Position1, Position2, gate), not(holds_at(opened(gate), Time)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [animal,position1,position2,time]% 
-% (position1!=position2 &
-%  HoldsAt(Pos(animal,position1),time) &
-%  HoldsAt(Pos(animal,position2),time+1)) ->
-% Accessible(position1,position2,time).
-Position1\=Position2, holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time+1) ->
-	accessible(Position1, Position2, Time).
+load('examples/AkmanEtAl2004/ZooWorld.e').
 
 
-% 
-% 
 % ectest/ec_reader_test_examples.e:8267
-% [human,time]% 
-% HoldsAt(AbnormalEncroachment(human),time) <->
-% (HoldsAt(MountFails(human),time) |
-%  ({position,animal1,animal2}
-%    HoldsAt(PosDeterminingFluent(human,position),time) &
-%    !HoldsAt(ThrowOffFails(animal2,human),time) &
-%    Happens(ThrowOff(animal2,human),time) &
-%    animal1!=human &
-%    Large(animal1) &
-%    HoldsAt(Pos(animal1,position),time) &
-%    !HoldsAt(Pos(animal1,position),time+1))).
-holds_at(abnormalEncroachment(Human), Time) <->
-	(   holds_at(mountFails(Human), Time)
-	;   exists([Position, Animal1, Animal2],
-		   (holds_at(posDeterminingFluent(Human, Position), Time), not(holds_at(throwOffFails(Animal2, Human), Time)), happens(throwOff(Animal2, Human), Time), Animal1\=Human, large(Animal1), holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Time+1))))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [animal1,animal2,position,time]% 
-% HoldsAt(Pos(animal1,position),time) &
-% !HoldsAt(Pos(animal1,position),time+1) &
-% !HoldsAt(Pos(animal2,position),time) &
-% HoldsAt(Pos(animal2,position),time+1) ->
-% (!Large(animal1) |
-%  !Large(animal2) |
-%  ({human} human=animal2 & HoldsAt(AbnormalEncroachment(human),time))).
-holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Time+1)), not(holds_at(pos(Animal2, Position), Time)), holds_at(pos(Animal2, Position), Time+1) ->
-	(   not(large(Animal1))
-	;   not(large(Animal2))
-	;   exists([Human],
-		   (Human=Animal2, holds_at(abnormalEncroachment(Human), Time)))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [animal1,animal2,position1,position2,time]% 
-% animal1!=% animal2 &
-% Large(animal1) & Large(animal2) &
-% HoldsAt(Pos(animal1,position1),time) &
-% HoldsAt(Pos(animal1,position2),time+1) &
-% HoldsAt(Pos(animal2,position1),time) &
-% HoldsAt(Pos(animal2,position2),time+1) ->
-% !{gate} Sides(position1,position2,gate).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position1), Time), holds_at(pos(Animal1, Position2), Time+1), holds_at(pos(Animal2, Position1), Time), holds_at(pos(Animal2, Position2), Time+1) ->
-	not(exists([Gate],
-		   sides(Position1, Position2, Gate))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [animal1,animal2,position1,position2,time]% 
-% animal1!=% animal2 &
-% Large(animal1) & Large(animal2) &
-% HoldsAt(Pos(animal1,position1),time) &
-% HoldsAt(Pos(animal1,position2),time+1) &
-% HoldsAt(Pos(animal2,position2),time) &
-% HoldsAt(Pos(animal2,position1),time+1) ->
-% !{gate} Sides(position1,position2,gate).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position1), Time), holds_at(pos(Animal1, Position2), Time+1), holds_at(pos(Animal2, Position2), Time), holds_at(pos(Animal2, Position1), Time+1) ->
-	not(exists([Gate],
-		   sides(Position1, Position2, Gate))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [gate,position1,position2,time]% 
-% HoldsAt(Opened(gate),time) &
-% !HoldsAt(Opened(gate),time+1) &
-% Sides(position1,position2,gate) ->
-% !{animal}
-% HoldsAt(Pos(animal,position1),time) &
-% HoldsAt(Pos(animal,position2),time+1).
-holds_at(opened(Gate), Time), not(holds_at(opened(Gate), Time+1)), sides(Position1, Position2, Gate) ->
-	not(exists([Animal],
-		   (holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time+1)))).
-
-
-% 
-% 
-% gate GateAO
-t(gate, gateAO).
-
-
-% cage CageA
-t(cage, cageA).
-
-
-% 
-% Loc(1)=CageA.
-loc(1)=cageA.
-
-
-% 
-% Loc(2)=CageA.
-loc(2)=cageA.
-
-
-% 
-% Loc(3)=CageA.
-loc(3)=cageA.
-
-
-% 
-% Loc(4)=CageA.
-loc(4)=cageA.
-
-
-% 
-% Loc(5)=Outside.
-loc(5)=outside.
-
-
-% 
-% Loc(6)=Outside.
-loc(6)=outside.
-
-
-% 
-% Loc(7)=Outside.
-loc(7)=outside.
-
-
-% 
-% Loc(8)=Outside.
-loc(8)=outside.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8267
-% [position1,position2]% 
-% Neighbor(position1,position2) <->
-% ((position1=1 & position2=2) |
-%  (position1=1 & position2=3) |
-%  (position1=1 & position2=4) |
-%  (position1=2 & position2=3) |
-%  (position1=2 & position2=4) |
-%  (position1=3 & position2=4) |
-%  (position1=5 & position2=6) |
-%  (position1=5 & position2=7) |
-%  (position1=5 & position2=8) |
-%  (position1=6 & position2=7) |
-%  (position1=6 & position2=8) |
-%  (position1=7 & position2=8) |
-%  (position2=1 & position1=2) |
-%  (position2=1 & position1=3) |
-%  (position2=1 & position1=4) |
-%  (position2=2 & position1=3) |
-%  (position2=2 & position1=4) |
-%  (position2=3 & position1=4) |
-%  (position2=5 & position1=6) |
-%  (position2=5 & position1=7) |
-%  (position2=5 & position1=8) |
-%  (position2=6 & position1=7) |
-%  (position2=6 & position1=8) |
-%  (position2=7 & position1=8) |
-%  (position1=4 & position2=7) |
-%  (position2=4 & position1=7)).
-neighbor(Position1, Position2) <->
-	(   Position1=1,
-	    Position2=2
-	;   Position1=1,
-	    Position2=3
-	;   Position1=1,
-	    Position2=4
-	;   Position1=2,
-	    Position2=3
-	;   Position1=2,
-	    Position2=4
-	;   Position1=3,
-	    Position2=4
-	;   Position1=5,
-	    Position2=6
-	;   Position1=5,
-	    Position2=7
-	;   Position1=5,
-	    Position2=8
-	;   Position1=6,
-	    Position2=7
-	;   Position1=6,
-	    Position2=8
-	;   Position1=7,
-	    Position2=8
-	;   Position2=1,
-	    Position1=2
-	;   Position2=1,
-	    Position1=3
-	;   Position2=1,
-	    Position1=4
-	;   Position2=2,
-	    Position1=3
-	;   Position2=2,
-	    Position1=4
-	;   Position2=3,
-	    Position1=4
-	;   Position2=5,
-	    Position1=6
-	;   Position2=5,
-	    Position1=7
-	;   Position2=5,
-	    Position1=8
-	;   Position2=6,
-	    Position1=7
-	;   Position2=6,
-	    Position1=8
-	;   Position2=7,
-	    Position1=8
-	;   Position1=4,
-	    Position2=7
-	;   Position2=4,
-	    Position1=7
-	).
-
-
-% 
-% 
-% Side1(GateAO)=4.
-side1(gateAO)=4.
-
-
-% 
-% Side2(GateAO)=7.
-side2(gateAO)=7.
-
-
-% 
-% 
-% ; End of file.
 % 
 % human Homer
 t(human, homer).
@@ -35565,1290 +20426,18 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:8765
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:8765
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:8766
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:8766
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % load examples/AkmanEtAl2004/ZooWorld.e
+load('examples/AkmanEtAl2004/ZooWorld.e').
+
+
 % ectest/ec_reader_test_examples.e:8767
-% load('examples/AkmanEtAl2004/ZooWorld.e').
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; @article{Akman:2004,
-% ;   author = "Varol Akman and Selim T. Erdogan and Joohyung Lee and Vladimir Lifschitz and Hudson Turner",
-% ;   year = "2004",
-% ;   title = "Representing the zoo world and the traffic world in the language of the causal calculator",
-% ;   journal = "Artificial Intelligence",
-% ;   volume = "153",
-% ;   pages = "105--140",
-% ; }
-% ;
-% examples/AkmanEtAl2004/ZooWorld.e:20
-% 
-% sort position: integer
-subsort(position, integer).
-
-
-% sort location
-sort(location).
-
-
-% sort cage: location
-subsort(cage, location).
-
-
-% sort gate
-sort(gate).
-
-
-% sort animal
-sort(animal).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:26
-% sort elephant: animal
-subsort(elephant, animal).
-
-
-% sort horse: animal
-subsort(horse, animal).
-
-
-% sort dog: animal
-subsort(dog, animal).
-
-
-% sort human: animal
-subsort(human, animal).
-
-
-% sort species
-sort(species).
-
-
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:32
-% function Loc(position): location
-function(loc(position), location).
-
-
-% function Side1(gate): position
-function(side1(gate), position).
-
-
-% function Side2(gate): position
-function(side2(gate), position).
-
-
-% function Species(animal): species
-function(species(animal), species).
-
-
-% 
-% predicate Accessible(position,position,time)
-predicate(accessible(position, position, time)).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:38
-% predicate Adult(animal)
-predicate(adult(animal)).
-
-
-% predicate Large(animal)
-predicate(large(animal)).
-
-
-% predicate LargeSpecies(species)
-predicate(largeSpecies(species)).
-
-
-% predicate Neighbor(position,position)
-predicate(neighbor(position, position)).
-
-
-% predicate Sides(position,position,gate)
-predicate(sides(position, position, gate)).
-
-
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:44
-% event Close(human,gate)
-event(close(human, gate)).
-
-
-% event GetOff(human,animal)
-event(getOff(human, animal)).
-
-
-% event Mount(human,animal)
-event(mount(human, animal)).
-
-
-% event Move(animal,position)
-event(move(animal, position)).
-
-
-% event Open(human,gate)
-event(open(human, gate)).
-
-
-% event ThrowOff(animal,human)
-event(throwOff(animal, human)).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:50
-% 
-% fluent AbnormalEncroachment(human)
-fluent(abnormalEncroachment(human)).
-
-
-% noninertial AbnormalEncroachment
-noninertial(abnormalEncroachment).
-
-
-% fluent DoneBy(event,animal)
-fluent(doneBy(event, animal)).
-
-
-% noninertial DoneBy
-noninertial(doneBy).
-
-
-% fluent Mounted(human,animal)
-fluent(mounted(human, animal)).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:56
-% fluent MountFails(human)
-fluent(mountFails(human)).
-
-
-% noninertial MountFails
-noninertial(mountFails).
-
-
-% fluent Moves(animal)
-fluent(moves(animal)).
-
-
-% noninertial Moves
-noninertial(moves).
-
-
-% fluent Opened(gate)
-fluent(opened(gate)).
-
-
-% fluent Pos(animal,position)
-fluent(pos(animal, position)).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:62
-% fluent PosDeterminingFluent(human,position)
-fluent(posDeterminingFluent(human, position)).
-
-
-% noninertial PosDeterminingFluent
-noninertial(posDeterminingFluent).
-
-
-% fluent ThrowOffFails(animal,human)
-fluent(throwOffFails(animal, human)).
-
-
-% noninertial ThrowOffFails
-noninertial(throwOffFails).
-
-
-% 
-% species HumanSpecies, ElephantSpecies, HorseSpecies, DogSpecies
-t(species, humanSpecies).
-
-
-t(species, elephantSpecies).
-
-
-t(species, horseSpecies).
-
-
-t(species, dogSpecies).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:68
-% location Outside
-t(location, outside).
-
-
-% 
-% LargeSpecies(HumanSpecies).
-largeSpecies(humanSpecies).
-
-
-% 
-% LargeSpecies(ElephantSpecies).
-largeSpecies(elephantSpecies).
-
-
-% 
-% LargeSpecies(HorseSpecies).
-largeSpecies(horseSpecies).
-
-
-% 
-% !LargeSpecies(DogSpecies).
-not(largeSpecies(dogSpecies)).
-
-
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:74
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:75
-% [event,animal,time]% 
-% HoldsAt(DoneBy(event,animal),time) <->
-% (Happens(event,time) &
-%  (({gate} event=Close(animal,gate)) |
-%   ({animal1} event=GetOff(animal,animal1))|
-%   ({animal1} event=Mount(animal,animal1))|
-%   ({position} event=Move(animal,position))|
-%   ({gate} event=Open(animal,gate)) |
-%   ({human1} event=ThrowOff(animal,human1)))).
-holds_at(doneBy(Event, Animal), Time) <->
-	happens(Event, Time),
-	(   exists([Gate], Event=close(Animal, Gate))
-	;   exists([Animal1],
-		   Event=getOff(Animal, Animal1))
-	;   exists([Animal15],
-		   Event=mount(Animal, Animal15))
-	;   exists([Position],
-		   Event=move(Animal, Position))
-	;   exists([Gate7], Event=open(Animal, Gate7))
-	;   exists([Human1],
-		   Event=throwOff(Animal, Human1))
-	).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:83
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:85
-% [event1,event2,animal,time]% 
-% HoldsAt(DoneBy(event1,animal),time) &
-% HoldsAt(DoneBy(event2,animal),time) ->
-% event1=event2.
-holds_at(doneBy(Event1, Animal), Time), holds_at(doneBy(Event2, Animal), Time) ->
-	Event1=Event2.
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:90
-% [animal] % Large(animal) <-> (Adult(animal) & LargeSpecies(Species(animal))).
-large(Animal) <->
-	adult(Animal),
-	largeSpecies(species(Animal)).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:92
-% [position] 
-% examples/AkmanEtAl2004/ZooWorld.e:92
-% {position1} % position1!=% position & Neighbor(position,position1).
-exists([Position1],  (Position1\=Position, neighbor(Position, Position1))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:94
-% [position] % !Neighbor(position,position).
-not(neighbor(Position, Position)).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:96
-% [position1,position2]% 
-% Neighbor(position1,position2) ->
-% Neighbor(position2,position1).
-neighbor(Position1, Position2) ->
-	neighbor(Position2, Position1).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:100
-% [cage] % cage!=% Outside.
-Cage\=outside.
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:102
-% [position1,position2,gate]% 
-% Sides(position1,position2,gate) <->
-% ((Side1(gate)=position1 &
-%   Side2(gate)=position2) |
-%  (Side2(gate)=position1 &
-%   Side1(gate)=position2)).
-sides(Position1, Position2, Gate) <->
-	(   side1(Gate)=Position1,
-	    side2(Gate)=Position2
-	;   side2(Gate)=Position1,
-	    side1(Gate)=Position2
-	).
-
-
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:108
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:109
-% [gate] % Loc(Side1(gate))!=Loc(Side2(gate)).
-loc(side1(Gate))\=loc(side2(Gate)).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:111
-% [position1,position2,gate1,gate2]% 
-% Sides(position1,position2,gate1) &
-% Sides(position1,position2,gate2) ->
-% gate1=gate2.
-sides(Position1, Position2, Gate1), sides(Position1, Position2, Gate2) ->
-	Gate1=Gate2.
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:116
-% [position1,position2,gate]% 
-% Sides(position1,position2,gate) ->
-% Neighbor(position1,position2).
-sides(Position1, Position2, Gate) ->
-	neighbor(Position1, Position2).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:120
-% [position1,position2]% 
-% Loc(position1) != Loc(position2) &
-% Neighbor(position1,position2) ->
-% examples/AkmanEtAl2004/ZooWorld.e:123
-% {gate}%  Sides(position1,position2,gate).
-exists([Gate],  (loc(Position1)\=loc(Position2), neighbor(Position1, Position2)->sides(Position1, Position2, Gate))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:125
-% [animal,position1,position2,time]% 
-% HoldsAt(Pos(animal,position1),time) &
-% HoldsAt(Pos(animal,position2),time) ->
-% position1=position2.
-holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time) ->
-	Position1=Position2.
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:130
-% [animal,time]% 
-% examples/AkmanEtAl2004/ZooWorld.e:131
-% {position} % HoldsAt(Pos(animal,position),time).
-exists([Position], holds_at(pos(Animal, Position), Time)).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:133
-% [animal1,animal2,position,time]% 
-% (animal1!=animal2 &
-%  Large(animal1) &
-%  Large(animal2) &
-%  HoldsAt(Pos(animal1,position),time) &
-%  HoldsAt(Pos(animal2,position),time)) ->
-% (({human} human=animal1 & HoldsAt(Mounted(human,animal2),time)) |
-%  ({human} human=animal2 & HoldsAt(Mounted(human,animal1),time))).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position), Time), holds_at(pos(Animal2, Position), Time) ->
-	(   exists([Human],
-		   (Human=Animal1, holds_at(mounted(Human, Animal2), Time)))
-	;   exists([Human5],
-		   (Human5=Animal2, holds_at(mounted(Human5, Animal1), Time)))
-	).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:140
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:142
-% [human,position1,position2,time]% 
-% HoldsAt(PosDeterminingFluent(human,position1),time) &
-% HoldsAt(PosDeterminingFluent(human,position2),time) ->
-% position1=position2.
-holds_at(posDeterminingFluent(Human, Position1), Time), holds_at(posDeterminingFluent(Human, Position2), Time) ->
-	Position1=Position2.
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:147
-% [animal,position,time]% 
-% Initiates(Move(animal,position),Pos(animal,position),time).
-initiates(move(Animal, Position), pos(Animal, Position), Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:150
-% [animal,position1,position2,time]% 
-% HoldsAt(Pos(animal,position1),time) ->
-% Terminates(Move(animal,position2),Pos(animal,position1),time).
-holds_at(pos(Animal, Position1), Time) ->
-	terminates(move(Animal, Position2),
-		   pos(Animal, Position1),
-		   Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:154
-% [animal,position,time]% 
-% Happens(Move(animal,position),time) ->
-% !HoldsAt(Pos(animal,position),time).
-happens(move(Animal, Position), Time) ->
-	not(holds_at(pos(Animal, Position), Time)).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:158
-% [human,position,time]% 
-% Happens(Move(human,position),time) ->
-% !{animal} HoldsAt(Mounted(human,animal),time).
-happens(move(Human, Position), Time) ->
-	not(exists([Animal],
-		   holds_at(mounted(Human, Animal), Time))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:162
-% [human,gate,time]% 
-% Initiates(Open(human,gate),Opened(gate),time).
-initiates(open(Human, Gate), opened(Gate), Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:165
-% [human,gate,time]% 
-% Happens(Open(human,gate),time) ->
-% !HoldsAt(Opened(gate),time) &
-% (!{animal} HoldsAt(Mounted(human,animal),time)) &
-% ({position}
-%  (Side1(gate)=position | Side2(gate)=position) &
-%  HoldsAt(Pos(human,position),time)).
-happens(open(Human, Gate), Time) ->
-	not(holds_at(opened(Gate), Time)),
-	not(exists([Animal],
-		   holds_at(mounted(Human, Animal), Time))),
-	exists([Position],
-	       ((side1(Gate)=Position;side2(Gate)=Position), holds_at(pos(Human, Position), Time))).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:171
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:173
-% [human,gate,time]% 
-% Terminates(Close(human,gate),Opened(gate),time).
-terminates(close(Human, Gate), opened(Gate), Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:176
-% [human,gate,time]% 
-% Happens(Close(human,gate),time) ->
-% HoldsAt(Opened(gate),time) &
-% (!{animal} HoldsAt(Mounted(human,animal),time)) &
-% examples/AkmanEtAl2004/ZooWorld.e:180
-% {position}% 
-% (Side1(gate)=position | Side2(gate)=position) &
-% HoldsAt(Pos(human,position),time).
-exists([Position],  (happens(close(Human, Gate), Time)->holds_at(opened(Gate), Time), not(exists([Animal], holds_at(mounted(Human, Animal), Time))), (side1(Gate)=Position;side2(Gate)=Position), holds_at(pos(Human, Position), Time))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:184
-% [human,animal,position,time]% 
-% HoldsAt(Mounted(human,animal),time) &
-% HoldsAt(Pos(animal,position),time) ->
-% HoldsAt(Pos(human,position),time).
-holds_at(mounted(Human, Animal), Time), holds_at(pos(Animal, Position), Time) ->
-	holds_at(pos(Human, Position), Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:189
-% [animal,time]% 
-% HoldsAt(Moves(animal),time) <->
-% ({position}
-%  HoldsAt(Pos(animal,position),time) &
-%  !HoldsAt(Pos(animal,position),time+1)).
-holds_at(moves(Animal), Time) <->
-	exists([Position],
-	       (holds_at(pos(Animal, Position), Time), not(holds_at(pos(Animal, Position), Time+1)))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:195
-% [human,time]% 
-% HoldsAt(MountFails(human),time) <->
-% ({animal}
-%   Happens(Mount(human,animal),time) &
-%   HoldsAt(Moves(animal),time)).
-holds_at(mountFails(Human), Time) <->
-	exists([Animal],
-	       (happens(mount(Human, Animal), Time), holds_at(moves(Animal), Time))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:201
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Releases(Mount(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)) ->
-	releases(mount(Human, Animal),
-		 pos(Human, Position),
-		 Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:205
-% [human,animal,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Initiates(Mount(human,animal),Mounted(human,animal),time).
-not(holds_at(moves(Animal), Time)) ->
-	initiates(mount(Human, Animal),
-		  mounted(Human, Animal),
-		  Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:209
-% [human,animal,position,time]% 
-% HoldsAt(Pos(animal,position),time) &
-% HoldsAt(Moves(animal),time) ->
-% Initiates(Mount(human,animal),Pos(human,position),time).
-holds_at(pos(Animal, Position), Time), holds_at(moves(Animal), Time) ->
-	initiates(mount(Human, Animal),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:214
-% [human,animal,position,time]% 
-% HoldsAt(Pos(human,position),time) &
-% HoldsAt(Moves(animal),time) ->
-% Terminates(Mount(human,animal),Pos(human,position),time).
-holds_at(pos(Human, Position), Time), holds_at(moves(Animal), Time) ->
-	terminates(mount(Human, Animal),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:219
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% Large(animal).
-happens(mount(Human, Animal), Time) ->
-	large(Animal).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:223
-% [human,animal,time]% 
-% HoldsAt(Mounted(human,animal),time) ->
-% Large(animal).
-holds_at(mounted(Human, Animal), Time) ->
-	large(Animal).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:227
-% [human1,human2,time]% 
-% Happens(Mount(human1,human2),time) ->
-% !Large(human1).
-happens(mount(Human1, Human2), Time) ->
-	not(large(Human1)).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:231
-% [human1,human2,time]% 
-% HoldsAt(Mounted(human1,human2),time) ->
-% !Large(human1).
-holds_at(mounted(Human1, Human2), Time) ->
-	not(large(Human1)).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:235
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{human1} human1!=human & HoldsAt(Mounted(human1,animal),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Human1],
-		   (Human1\=Human, holds_at(mounted(Human1, Animal), Time)))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:239
-% [human1,human2,animal,time]% 
-% HoldsAt(Mounted(human1,animal),time) &
-% HoldsAt(Mounted(human2,animal),time) ->
-% human1=human2.
-holds_at(mounted(Human1, Animal), Time), holds_at(mounted(Human2, Animal), Time) ->
-	Human1=Human2.
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:244
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{human1} human1!=human & HoldsAt(Mounted(human1,human),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Human1],
-		   (Human1\=Human, holds_at(mounted(Human1, Human), Time)))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:248
-% [human1,human2,time]% 
-% Happens(Mount(human1,human2),time) ->
-% examples/AkmanEtAl2004/ZooWorld.e:250
-% {animal}%  HoldsAt(Mounted(human2,animal),time).
-exists([Animal],  (happens(mount(Human1, Human2), Time)->holds_at(mounted(Human2, Animal), Time))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:252
-% [human1,human2,time]% 
-% HoldsAt(Mounted(human1,human2),time) ->
-% !{animal} HoldsAt(Mounted(human2,animal),time).
-holds_at(mounted(Human1, Human2), Time) ->
-	not(exists([Animal],
-		   holds_at(mounted(Human2, Animal), Time))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:256
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{animal1} HoldsAt(Mounted(human,animal1),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Animal1],
-		   holds_at(mounted(Human, Animal1), Time))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:260
-% [human,animal,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Terminates(GetOff(human,animal),Mounted(human,animal),time).
-not(holds_at(moves(Animal), Time)) ->
-	terminates(getOff(Human, Animal),
-		   mounted(Human, Animal),
-		   Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:264
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(PosDeterminingFluent(human,position),time) ->
-% Initiates(GetOff(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)), holds_at(posDeterminingFluent(Human, Position), Time) ->
-	initiates(getOff(Human, Animal),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:269
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(Pos(human,position),time) ->
-% Terminates(GetOff(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position), Time) ->
-	terminates(getOff(Human, Animal),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:274
-% [human,animal,position1,position2,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(Pos(human,position1),time) &
-% position1!=position2 ->
-% Terminates(GetOff(human,animal),Pos(human,position2),time).
-not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position1), Time), Position1\=Position2 ->
-	terminates(getOff(Human, Animal),
-		   pos(Human, Position2),
-		   Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:280
-% [human,animal,time]% 
-% Happens(GetOff(human,animal),time) ->
-% HoldsAt(Mounted(human,animal),time).
-happens(getOff(Human, Animal), Time) ->
-	holds_at(mounted(Human, Animal), Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:284
-% [animal1,human,time]% 
-% HoldsAt(ThrowOffFails(animal1,human),time) <->
-% ({position,animal2}
-%  animal2!=human &
-%  HoldsAt(PosDeterminingFluent(human,position),time) &
-%  Large(animal2) &
-%  HoldsAt(Pos(animal2,position),time+1)).
-holds_at(throwOffFails(Animal1, Human), Time) <->
-	exists([Position, Animal2],
-	       (Animal2\=Human, holds_at(posDeterminingFluent(Human, Position), Time), large(Animal2), holds_at(pos(Animal2, Position), Time+1))).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:290
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:292
-% [animal,human,position,time]% 
-% HoldsAt(PosDeterminingFluent(human,position),time) &
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Initiates(ThrowOff(animal,human),Pos(human,position),time).
-holds_at(posDeterminingFluent(Human, Position), Time), not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	initiates(throwOff(Animal, Human),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:297
-% [animal,human,position,time]% 
-% HoldsAt(Pos(human,position),time) &
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Terminates(ThrowOff(animal,human),Pos(human,position),time).
-holds_at(pos(Human, Position), Time), not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	terminates(throwOff(Animal, Human),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:302
-% [animal,human,position1,position2,time]% 
-% !HoldsAt(ThrowOffFails(animal,human),time) &
-% HoldsAt(Pos(human,position1),time) &
-% !HoldsAt(PosDeterminingFluent(human,position2),time) &
-% position1!=position2 ->
-% Terminates(ThrowOff(animal,human),Pos(human,position2),time).
-not(holds_at(throwOffFails(Animal, Human), Time)), holds_at(pos(Human, Position1), Time), not(holds_at(posDeterminingFluent(Human, Position2), Time)), Position1\=Position2 ->
-	terminates(throwOff(Animal, Human),
-		   pos(Human, Position2),
-		   Time).
-
-
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:308
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:309
-% [human,time]% 
-% (!{animal} Happens(ThrowOff(animal,human),time) |
-%            Happens(GetOff(human,animal),time)) ->
-% HoldsAt(PosDeterminingFluent(human,1),time).
-not(exists([Animal], happens(throwOff(Animal, Human), Time)));happens(getOff(Human, animal), Time) ->
-	holds_at(posDeterminingFluent(Human, 1), Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:314
-% [human,position,animal1,animal2,time]% 
-% HoldsAt(PosDeterminingFluent(human,position),time) &
-% HoldsAt(ThrowOffFails(animal1,human),time) &
-% HoldsAt(Pos(animal2,position),time) ->
-% Initiates(ThrowOff(animal1,human),Mounted(human,animal2),time).
-holds_at(posDeterminingFluent(Human, Position), Time), holds_at(throwOffFails(Animal1, Human), Time), holds_at(pos(Animal2, Position), Time) ->
-	initiates(throwOff(Animal1, Human),
-		  mounted(Human, Animal2),
-		  Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:320
-% [human,animal,time]% 
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Terminates(ThrowOff(animal,human),Mounted(human,animal),time).
-not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	terminates(throwOff(Animal, Human),
-		   mounted(Human, Animal),
-		   Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:324
-% [animal,human,time]% 
-% Happens(ThrowOff(animal,human),time) ->
-% HoldsAt(Mounted(human,animal),time).
-happens(throwOff(Animal, Human), Time) ->
-	holds_at(mounted(Human, Animal), Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:328
-% [animal,human,time]% 
-% Happens(ThrowOff(animal,human),time) ->
-% !Happens(GetOff(human,animal),time).
-happens(throwOff(Animal, Human), Time) ->
-	not(happens(getOff(Human, Animal), Time)).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:332
-% [animal,human,time]% 
-% Happens(GetOff(human,animal),time) ->
-% !Happens(ThrowOff(animal,human),time).
-happens(getOff(Human, Animal), Time) ->
-	not(happens(throwOff(Animal, Human), Time)).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:336
-% [position1,position2,time]% 
-% Accessible(position1,position2,time) <->
-% (Neighbor(position1,position2) &
-%  !{gate} Sides(position1,position2,gate) &
-%          !HoldsAt(Opened(gate),time)).
-accessible(Position1, Position2, Time) <->
-	thereExists((neighbor(Position1, Position2), not([gate])),
-		    (sides(Position1, Position2, gate), not(holds_at(opened(gate), Time)))).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:342
-% [animal,position1,position2,time]% 
-% (position1!=position2 &
-%  HoldsAt(Pos(animal,position1),time) &
-%  HoldsAt(Pos(animal,position2),time+1)) ->
-% Accessible(position1,position2,time).
-Position1\=Position2, holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time+1) ->
-	accessible(Position1, Position2, Time).
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:348
-% [human,time]% 
-% HoldsAt(AbnormalEncroachment(human),time) <->
-% (HoldsAt(MountFails(human),time) |
-%  ({position,animal1,animal2}
-%    HoldsAt(PosDeterminingFluent(human,position),time) &
-%    !HoldsAt(ThrowOffFails(animal2,human),time) &
-%    Happens(ThrowOff(animal2,human),time) &
-%    animal1!=human &
-%    Large(animal1) &
-%    HoldsAt(Pos(animal1,position),time) &
-%    !HoldsAt(Pos(animal1,position),time+1))).
-holds_at(abnormalEncroachment(Human), Time) <->
-	(   holds_at(mountFails(Human), Time)
-	;   exists([Position, Animal1, Animal2],
-		   (holds_at(posDeterminingFluent(Human, Position), Time), not(holds_at(throwOffFails(Animal2, Human), Time)), happens(throwOff(Animal2, Human), Time), Animal1\=Human, large(Animal1), holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Time+1))))
-	).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:358
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:360
-% [animal1,animal2,position,time]% 
-% HoldsAt(Pos(animal1,position),time) &
-% !HoldsAt(Pos(animal1,position),time+1) &
-% !HoldsAt(Pos(animal2,position),time) &
-% HoldsAt(Pos(animal2,position),time+1) ->
-% (!Large(animal1) |
-%  !Large(animal2) |
-%  ({human} human=animal2 & HoldsAt(AbnormalEncroachment(human),time))).
-holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Time+1)), not(holds_at(pos(Animal2, Position), Time)), holds_at(pos(Animal2, Position), Time+1) ->
-	(   not(large(Animal1))
-	;   not(large(Animal2))
-	;   exists([Human],
-		   (Human=Animal2, holds_at(abnormalEncroachment(Human), Time)))
-	).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:367
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:369
-% [animal1,animal2,position1,position2,time]% 
-% animal1!=% animal2 &
-% Large(animal1) & Large(animal2) &
-% HoldsAt(Pos(animal1,position1),time) &
-% HoldsAt(Pos(animal1,position2),time+1) &
-% HoldsAt(Pos(animal2,position1),time) &
-% HoldsAt(Pos(animal2,position2),time+1) ->
-% !{gate} Sides(position1,position2,gate).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position1), Time), holds_at(pos(Animal1, Position2), Time+1), holds_at(pos(Animal2, Position1), Time), holds_at(pos(Animal2, Position2), Time+1) ->
-	not(exists([Gate],
-		   sides(Position1, Position2, Gate))).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:376
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:378
-% [animal1,animal2,position1,position2,time]% 
-% animal1!=% animal2 &
-% Large(animal1) & Large(animal2) &
-% HoldsAt(Pos(animal1,position1),time) &
-% HoldsAt(Pos(animal1,position2),time+1) &
-% HoldsAt(Pos(animal2,position2),time) &
-% HoldsAt(Pos(animal2,position1),time+1) ->
-% !{gate} Sides(position1,position2,gate).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position1), Time), holds_at(pos(Animal1, Position2), Time+1), holds_at(pos(Animal2, Position2), Time), holds_at(pos(Animal2, Position1), Time+1) ->
-	not(exists([Gate],
-		   sides(Position1, Position2, Gate))).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:385
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:387
-% [gate,position1,position2,time]% 
-% HoldsAt(Opened(gate),time) &
-% !HoldsAt(Opened(gate),time+1) &
-% Sides(position1,position2,gate) ->
-% !{animal}
-% HoldsAt(Pos(animal,position1),time) &
-% HoldsAt(Pos(animal,position2),time+1).
-holds_at(opened(Gate), Time), not(holds_at(opened(Gate), Time+1)), sides(Position1, Position2, Gate) ->
-	not(exists([Animal],
-		   (holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time+1)))).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:393
-% 
-% 
-% gate GateAO
-t(gate, gateAO).
-
-
-% cage CageA
-t(cage, cageA).
-
-
-% 
-% Loc(1)=CageA.
-loc(1)=cageA.
-
-
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:399
-% Loc(2)=CageA.
-loc(2)=cageA.
-
-
-% 
-% Loc(3)=CageA.
-loc(3)=cageA.
-
-
-% 
-% Loc(4)=CageA.
-loc(4)=cageA.
-
-
-% 
-% Loc(5)=Outside.
-loc(5)=outside.
-
-
-% 
-% Loc(6)=Outside.
-loc(6)=outside.
-
-
-% 
-% Loc(7)=Outside.
-loc(7)=outside.
-
-
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:405
-% Loc(8)=Outside.
-loc(8)=outside.
-
-
-% 
-% 
-% examples/AkmanEtAl2004/ZooWorld.e:407
-% [position1,position2]% 
-% Neighbor(position1,position2) <->
-% ((position1=1 & position2=2) |
-%  (position1=1 & position2=3) |
-%  (position1=1 & position2=4) |
-%  (position1=2 & position2=3) |
-%  (position1=2 & position2=4) |
-%  (position1=3 & position2=4) |
-%  (position1=5 & position2=6) |
-%  (position1=5 & position2=7) |
-%  (position1=5 & position2=8) |
-%  (position1=6 & position2=7) |
-%  (position1=6 & position2=8) |
-%  (position1=7 & position2=8) |
-%  (position2=1 & position1=2) |
-%  (position2=1 & position1=3) |
-%  (position2=1 & position1=4) |
-%  (position2=2 & position1=3) |
-%  (position2=2 & position1=4) |
-%  (position2=3 & position1=4) |
-%  (position2=5 & position1=6) |
-%  (position2=5 & position1=7) |
-%  (position2=5 & position1=8) |
-%  (position2=6 & position1=7) |
-%  (position2=6 & position1=8) |
-%  (position2=7 & position1=8) |
-%  (position1=4 & position2=7) |
-%  (position2=4 & position1=7)).
-neighbor(Position1, Position2) <->
-	(   Position1=1,
-	    Position2=2
-	;   Position1=1,
-	    Position2=3
-	;   Position1=1,
-	    Position2=4
-	;   Position1=2,
-	    Position2=3
-	;   Position1=2,
-	    Position2=4
-	;   Position1=3,
-	    Position2=4
-	;   Position1=5,
-	    Position2=6
-	;   Position1=5,
-	    Position2=7
-	;   Position1=5,
-	    Position2=8
-	;   Position1=6,
-	    Position2=7
-	;   Position1=6,
-	    Position2=8
-	;   Position1=7,
-	    Position2=8
-	;   Position2=1,
-	    Position1=2
-	;   Position2=1,
-	    Position1=3
-	;   Position2=1,
-	    Position1=4
-	;   Position2=2,
-	    Position1=3
-	;   Position2=2,
-	    Position1=4
-	;   Position2=3,
-	    Position1=4
-	;   Position2=5,
-	    Position1=6
-	;   Position2=5,
-	    Position1=7
-	;   Position2=5,
-	    Position1=8
-	;   Position2=6,
-	    Position1=7
-	;   Position2=6,
-	    Position1=8
-	;   Position2=7,
-	    Position1=8
-	;   Position1=4,
-	    Position2=7
-	;   Position2=4,
-	    Position1=7
-	).
-
-
-% examples/AkmanEtAl2004/ZooWorld.e:434
-% 
-% 
-% Side1(GateAO)=4.
-side1(gateAO)=4.
-
-
-% 
-% Side2(GateAO)=7.
-side2(gateAO)=7.
-
-
-% 
-% 
-% ; End of file.
 % 
 % human Homer
 t(human, homer).
@@ -36985,1266 +20574,18 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:8831
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:8831
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:8832
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:8832
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % load examples/AkmanEtAl2004/ZooWorld.e
-% ectest/ec_reader_test_examples.e:8833
-% load('examples/AkmanEtAl2004/ZooWorld.e').
-
-
-% ectest/ec_reader_test_examples.e:8833
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; @article{Akman:2004,
-% ;   author = "Varol Akman and Selim T. Erdogan and Joohyung Lee and Vladimir Lifschitz and Hudson Turner",
-% ;   year = "2004",
-% ;   title = "Representing the zoo world and the traffic world in the language of the causal calculator",
-% ;   journal = "Artificial Intelligence",
-% ;   volume = "153",
-% ;   pages = "105--140",
-% ; }
-% ;
-% 
-% sort position: integer
-subsort(position, integer).
-
-
-% sort location
-sort(location).
-
-
-% sort cage: location
-subsort(cage, location).
-
-
-% sort gate
-sort(gate).
-
-
-% sort animal
-sort(animal).
-
-
-% sort elephant: animal
-subsort(elephant, animal).
-
-
-% sort horse: animal
-subsort(horse, animal).
-
-
-% sort dog: animal
-subsort(dog, animal).
-
-
-% sort human: animal
-subsort(human, animal).
-
-
-% sort species
-sort(species).
-
-
-% 
-% function Loc(position): location
-function(loc(position), location).
-
-
-% function Side1(gate): position
-function(side1(gate), position).
-
-
-% function Side2(gate): position
-function(side2(gate), position).
-
-
-% function Species(animal): species
-function(species(animal), species).
-
-
-% 
-% predicate Accessible(position,position,time)
-predicate(accessible(position, position, time)).
-
-
-% predicate Adult(animal)
-predicate(adult(animal)).
-
-
-% predicate Large(animal)
-predicate(large(animal)).
-
-
-% predicate LargeSpecies(species)
-predicate(largeSpecies(species)).
-
-
-% predicate Neighbor(position,position)
-predicate(neighbor(position, position)).
-
-
-% predicate Sides(position,position,gate)
-predicate(sides(position, position, gate)).
-
-
-% 
-% event Close(human,gate)
-event(close(human, gate)).
-
-
-% event GetOff(human,animal)
-event(getOff(human, animal)).
-
-
-% event Mount(human,animal)
-event(mount(human, animal)).
-
-
-% event Move(animal,position)
-event(move(animal, position)).
-
-
-% event Open(human,gate)
-event(open(human, gate)).
-
-
-% event ThrowOff(animal,human)
-event(throwOff(animal, human)).
-
-
-% 
-% fluent AbnormalEncroachment(human)
-fluent(abnormalEncroachment(human)).
-
-
-% noninertial AbnormalEncroachment
-noninertial(abnormalEncroachment).
-
-
-% fluent DoneBy(event,animal)
-fluent(doneBy(event, animal)).
-
-
-% noninertial DoneBy
-noninertial(doneBy).
-
-
-% fluent Mounted(human,animal)
-fluent(mounted(human, animal)).
-
-
-% fluent MountFails(human)
-fluent(mountFails(human)).
-
-
-% noninertial MountFails
-noninertial(mountFails).
-
-
-% fluent Moves(animal)
-fluent(moves(animal)).
-
-
-% noninertial Moves
-noninertial(moves).
-
-
-% fluent Opened(gate)
-fluent(opened(gate)).
-
-
-% fluent Pos(animal,position)
-fluent(pos(animal, position)).
-
-
-% fluent PosDeterminingFluent(human,position)
-fluent(posDeterminingFluent(human, position)).
-
-
-% noninertial PosDeterminingFluent
-noninertial(posDeterminingFluent).
-
-
-% fluent ThrowOffFails(animal,human)
-fluent(throwOffFails(animal, human)).
-
-
-% noninertial ThrowOffFails
-noninertial(throwOffFails).
-
-
-% 
-% species HumanSpecies, ElephantSpecies, HorseSpecies, DogSpecies
-t(species, humanSpecies).
-
-
-t(species, elephantSpecies).
-
-
-t(species, horseSpecies).
-
-
-t(species, dogSpecies).
-
-
-% location Outside
-t(location, outside).
-
-
-% 
-% LargeSpecies(HumanSpecies).
-largeSpecies(humanSpecies).
-
-
-% 
-% LargeSpecies(ElephantSpecies).
-largeSpecies(elephantSpecies).
-
-
-% 
-% LargeSpecies(HorseSpecies).
-largeSpecies(horseSpecies).
-
-
-% 
-% !LargeSpecies(DogSpecies).
-not(largeSpecies(dogSpecies)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [event,animal,time]% 
-% HoldsAt(DoneBy(event,animal),time) <->
-% (Happens(event,time) &
-%  (({gate} event=Close(animal,gate)) |
-%   ({animal1} event=GetOff(animal,animal1))|
-%   ({animal1} event=Mount(animal,animal1))|
-%   ({position} event=Move(animal,position))|
-%   ({gate} event=Open(animal,gate)) |
-%   ({human1} event=ThrowOff(animal,human1)))).
-holds_at(doneBy(Event, Animal), Time) <->
-	happens(Event, Time),
-	(   exists([Gate], Event=close(Animal, Gate))
-	;   exists([Animal1],
-		   Event=getOff(Animal, Animal1))
-	;   exists([Animal15],
-		   Event=mount(Animal, Animal15))
-	;   exists([Position],
-		   Event=move(Animal, Position))
-	;   exists([Gate7], Event=open(Animal, Gate7))
-	;   exists([Human1],
-		   Event=throwOff(Animal, Human1))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [event1,event2,animal,time]% 
-% HoldsAt(DoneBy(event1,animal),time) &
-% HoldsAt(DoneBy(event2,animal),time) ->
-% event1=event2.
-holds_at(doneBy(Event1, Animal), Time), holds_at(doneBy(Event2, Animal), Time) ->
-	Event1=Event2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [animal] % Large(animal) <-> (Adult(animal) & LargeSpecies(Species(animal))).
-large(Animal) <->
-	adult(Animal),
-	largeSpecies(species(Animal)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [position] 
-% ectest/ec_reader_test_examples.e:8833
-% {position1} % position1!=% position & Neighbor(position,position1).
-exists([Position1],  (Position1\=Position, neighbor(Position, Position1))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [position] % !Neighbor(position,position).
-not(neighbor(Position, Position)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [position1,position2]% 
-% Neighbor(position1,position2) ->
-% Neighbor(position2,position1).
-neighbor(Position1, Position2) ->
-	neighbor(Position2, Position1).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [cage] % cage!=% Outside.
-Cage\=outside.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [position1,position2,gate]% 
-% Sides(position1,position2,gate) <->
-% ((Side1(gate)=position1 &
-%   Side2(gate)=position2) |
-%  (Side2(gate)=position1 &
-%   Side1(gate)=position2)).
-sides(Position1, Position2, Gate) <->
-	(   side1(Gate)=Position1,
-	    side2(Gate)=Position2
-	;   side2(Gate)=Position1,
-	    side1(Gate)=Position2
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [gate] % Loc(Side1(gate))!=Loc(Side2(gate)).
-loc(side1(Gate))\=loc(side2(Gate)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [position1,position2,gate1,gate2]% 
-% Sides(position1,position2,gate1) &
-% Sides(position1,position2,gate2) ->
-% gate1=gate2.
-sides(Position1, Position2, Gate1), sides(Position1, Position2, Gate2) ->
-	Gate1=Gate2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [position1,position2,gate]% 
-% Sides(position1,position2,gate) ->
-% Neighbor(position1,position2).
-sides(Position1, Position2, Gate) ->
-	neighbor(Position1, Position2).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [position1,position2]% 
-% Loc(position1) != Loc(position2) &
-% Neighbor(position1,position2) ->
-% ectest/ec_reader_test_examples.e:8833
-% {gate}%  Sides(position1,position2,gate).
-exists([Gate],  (loc(Position1)\=loc(Position2), neighbor(Position1, Position2)->sides(Position1, Position2, Gate))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [animal,position1,position2,time]% 
-% HoldsAt(Pos(animal,position1),time) &
-% HoldsAt(Pos(animal,position2),time) ->
-% position1=position2.
-holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time) ->
-	Position1=Position2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [animal,time]% 
-% ectest/ec_reader_test_examples.e:8833
-% {position} % HoldsAt(Pos(animal,position),time).
-exists([Position], holds_at(pos(Animal, Position), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [animal1,animal2,position,time]% 
-% (animal1!=animal2 &
-%  Large(animal1) &
-%  Large(animal2) &
-%  HoldsAt(Pos(animal1,position),time) &
-%  HoldsAt(Pos(animal2,position),time)) ->
-% (({human} human=animal1 & HoldsAt(Mounted(human,animal2),time)) |
-%  ({human} human=animal2 & HoldsAt(Mounted(human,animal1),time))).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position), Time), holds_at(pos(Animal2, Position), Time) ->
-	(   exists([Human],
-		   (Human=Animal1, holds_at(mounted(Human, Animal2), Time)))
-	;   exists([Human5],
-		   (Human5=Animal2, holds_at(mounted(Human5, Animal1), Time)))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,position1,position2,time]% 
-% HoldsAt(PosDeterminingFluent(human,position1),time) &
-% HoldsAt(PosDeterminingFluent(human,position2),time) ->
-% position1=position2.
-holds_at(posDeterminingFluent(Human, Position1), Time), holds_at(posDeterminingFluent(Human, Position2), Time) ->
-	Position1=Position2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [animal,position,time]% 
-% Initiates(Move(animal,position),Pos(animal,position),time).
-initiates(move(Animal, Position), pos(Animal, Position), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [animal,position1,position2,time]% 
-% HoldsAt(Pos(animal,position1),time) ->
-% Terminates(Move(animal,position2),Pos(animal,position1),time).
-holds_at(pos(Animal, Position1), Time) ->
-	terminates(move(Animal, Position2),
-		   pos(Animal, Position1),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [animal,position,time]% 
-% Happens(Move(animal,position),time) ->
-% !HoldsAt(Pos(animal,position),time).
-happens(move(Animal, Position), Time) ->
-	not(holds_at(pos(Animal, Position), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,position,time]% 
-% Happens(Move(human,position),time) ->
-% !{animal} HoldsAt(Mounted(human,animal),time).
-happens(move(Human, Position), Time) ->
-	not(exists([Animal],
-		   holds_at(mounted(Human, Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,gate,time]% 
-% Initiates(Open(human,gate),Opened(gate),time).
-initiates(open(Human, Gate), opened(Gate), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,gate,time]% 
-% Happens(Open(human,gate),time) ->
-% !HoldsAt(Opened(gate),time) &
-% (!{animal} HoldsAt(Mounted(human,animal),time)) &
-% ({position}
-%  (Side1(gate)=position | Side2(gate)=position) &
-%  HoldsAt(Pos(human,position),time)).
-happens(open(Human, Gate), Time) ->
-	not(holds_at(opened(Gate), Time)),
-	not(exists([Animal],
-		   holds_at(mounted(Human, Animal), Time))),
-	exists([Position],
-	       ((side1(Gate)=Position;side2(Gate)=Position), holds_at(pos(Human, Position), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,gate,time]% 
-% Terminates(Close(human,gate),Opened(gate),time).
-terminates(close(Human, Gate), opened(Gate), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,gate,time]% 
-% Happens(Close(human,gate),time) ->
-% HoldsAt(Opened(gate),time) &
-% (!{animal} HoldsAt(Mounted(human,animal),time)) &
-% ectest/ec_reader_test_examples.e:8833
-% {position}% 
-% (Side1(gate)=position | Side2(gate)=position) &
-% HoldsAt(Pos(human,position),time).
-exists([Position],  (happens(close(Human, Gate), Time)->holds_at(opened(Gate), Time), not(exists([Animal], holds_at(mounted(Human, Animal), Time))), (side1(Gate)=Position;side2(Gate)=Position), holds_at(pos(Human, Position), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,animal,position,time]% 
-% HoldsAt(Mounted(human,animal),time) &
-% HoldsAt(Pos(animal,position),time) ->
-% HoldsAt(Pos(human,position),time).
-holds_at(mounted(Human, Animal), Time), holds_at(pos(Animal, Position), Time) ->
-	holds_at(pos(Human, Position), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [animal,time]% 
-% HoldsAt(Moves(animal),time) <->
-% ({position}
-%  HoldsAt(Pos(animal,position),time) &
-%  !HoldsAt(Pos(animal,position),time+1)).
-holds_at(moves(Animal), Time) <->
-	exists([Position],
-	       (holds_at(pos(Animal, Position), Time), not(holds_at(pos(Animal, Position), Time+1)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,time]% 
-% HoldsAt(MountFails(human),time) <->
-% ({animal}
-%   Happens(Mount(human,animal),time) &
-%   HoldsAt(Moves(animal),time)).
-holds_at(mountFails(Human), Time) <->
-	exists([Animal],
-	       (happens(mount(Human, Animal), Time), holds_at(moves(Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Releases(Mount(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)) ->
-	releases(mount(Human, Animal),
-		 pos(Human, Position),
-		 Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,animal,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Initiates(Mount(human,animal),Mounted(human,animal),time).
-not(holds_at(moves(Animal), Time)) ->
-	initiates(mount(Human, Animal),
-		  mounted(Human, Animal),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,animal,position,time]% 
-% HoldsAt(Pos(animal,position),time) &
-% HoldsAt(Moves(animal),time) ->
-% Initiates(Mount(human,animal),Pos(human,position),time).
-holds_at(pos(Animal, Position), Time), holds_at(moves(Animal), Time) ->
-	initiates(mount(Human, Animal),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,animal,position,time]% 
-% HoldsAt(Pos(human,position),time) &
-% HoldsAt(Moves(animal),time) ->
-% Terminates(Mount(human,animal),Pos(human,position),time).
-holds_at(pos(Human, Position), Time), holds_at(moves(Animal), Time) ->
-	terminates(mount(Human, Animal),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% Large(animal).
-happens(mount(Human, Animal), Time) ->
-	large(Animal).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,animal,time]% 
-% HoldsAt(Mounted(human,animal),time) ->
-% Large(animal).
-holds_at(mounted(Human, Animal), Time) ->
-	large(Animal).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human1,human2,time]% 
-% Happens(Mount(human1,human2),time) ->
-% !Large(human1).
-happens(mount(Human1, Human2), Time) ->
-	not(large(Human1)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human1,human2,time]% 
-% HoldsAt(Mounted(human1,human2),time) ->
-% !Large(human1).
-holds_at(mounted(Human1, Human2), Time) ->
-	not(large(Human1)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{human1} human1!=human & HoldsAt(Mounted(human1,animal),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Human1],
-		   (Human1\=Human, holds_at(mounted(Human1, Animal), Time)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human1,human2,animal,time]% 
-% HoldsAt(Mounted(human1,animal),time) &
-% HoldsAt(Mounted(human2,animal),time) ->
-% human1=human2.
-holds_at(mounted(Human1, Animal), Time), holds_at(mounted(Human2, Animal), Time) ->
-	Human1=Human2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{human1} human1!=human & HoldsAt(Mounted(human1,human),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Human1],
-		   (Human1\=Human, holds_at(mounted(Human1, Human), Time)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human1,human2,time]% 
-% Happens(Mount(human1,human2),time) ->
-% ectest/ec_reader_test_examples.e:8833
-% {animal}%  HoldsAt(Mounted(human2,animal),time).
-exists([Animal],  (happens(mount(Human1, Human2), Time)->holds_at(mounted(Human2, Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human1,human2,time]% 
-% HoldsAt(Mounted(human1,human2),time) ->
-% !{animal} HoldsAt(Mounted(human2,animal),time).
-holds_at(mounted(Human1, Human2), Time) ->
-	not(exists([Animal],
-		   holds_at(mounted(Human2, Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{animal1} HoldsAt(Mounted(human,animal1),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Animal1],
-		   holds_at(mounted(Human, Animal1), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,animal,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Terminates(GetOff(human,animal),Mounted(human,animal),time).
-not(holds_at(moves(Animal), Time)) ->
-	terminates(getOff(Human, Animal),
-		   mounted(Human, Animal),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(PosDeterminingFluent(human,position),time) ->
-% Initiates(GetOff(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)), holds_at(posDeterminingFluent(Human, Position), Time) ->
-	initiates(getOff(Human, Animal),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(Pos(human,position),time) ->
-% Terminates(GetOff(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position), Time) ->
-	terminates(getOff(Human, Animal),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,animal,position1,position2,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(Pos(human,position1),time) &
-% position1!=position2 ->
-% Terminates(GetOff(human,animal),Pos(human,position2),time).
-not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position1), Time), Position1\=Position2 ->
-	terminates(getOff(Human, Animal),
-		   pos(Human, Position2),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,animal,time]% 
-% Happens(GetOff(human,animal),time) ->
-% HoldsAt(Mounted(human,animal),time).
-happens(getOff(Human, Animal), Time) ->
-	holds_at(mounted(Human, Animal), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [animal1,human,time]% 
-% HoldsAt(ThrowOffFails(animal1,human),time) <->
-% ({position,animal2}
-%  animal2!=human &
-%  HoldsAt(PosDeterminingFluent(human,position),time) &
-%  Large(animal2) &
-%  HoldsAt(Pos(animal2,position),time+1)).
-holds_at(throwOffFails(Animal1, Human), Time) <->
-	exists([Position, Animal2],
-	       (Animal2\=Human, holds_at(posDeterminingFluent(Human, Position), Time), large(Animal2), holds_at(pos(Animal2, Position), Time+1))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [animal,human,position,time]% 
-% HoldsAt(PosDeterminingFluent(human,position),time) &
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Initiates(ThrowOff(animal,human),Pos(human,position),time).
-holds_at(posDeterminingFluent(Human, Position), Time), not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	initiates(throwOff(Animal, Human),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [animal,human,position,time]% 
-% HoldsAt(Pos(human,position),time) &
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Terminates(ThrowOff(animal,human),Pos(human,position),time).
-holds_at(pos(Human, Position), Time), not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	terminates(throwOff(Animal, Human),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [animal,human,position1,position2,time]% 
-% !HoldsAt(ThrowOffFails(animal,human),time) &
-% HoldsAt(Pos(human,position1),time) &
-% !HoldsAt(PosDeterminingFluent(human,position2),time) &
-% position1!=position2 ->
-% Terminates(ThrowOff(animal,human),Pos(human,position2),time).
-not(holds_at(throwOffFails(Animal, Human), Time)), holds_at(pos(Human, Position1), Time), not(holds_at(posDeterminingFluent(Human, Position2), Time)), Position1\=Position2 ->
-	terminates(throwOff(Animal, Human),
-		   pos(Human, Position2),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,time]% 
-% (!{animal} Happens(ThrowOff(animal,human),time) |
-%            Happens(GetOff(human,animal),time)) ->
-% HoldsAt(PosDeterminingFluent(human,1),time).
-not(exists([Animal], happens(throwOff(Animal, Human), Time)));happens(getOff(Human, animal), Time) ->
-	holds_at(posDeterminingFluent(Human, 1), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,position,animal1,animal2,time]% 
-% HoldsAt(PosDeterminingFluent(human,position),time) &
-% HoldsAt(ThrowOffFails(animal1,human),time) &
-% HoldsAt(Pos(animal2,position),time) ->
-% Initiates(ThrowOff(animal1,human),Mounted(human,animal2),time).
-holds_at(posDeterminingFluent(Human, Position), Time), holds_at(throwOffFails(Animal1, Human), Time), holds_at(pos(Animal2, Position), Time) ->
-	initiates(throwOff(Animal1, Human),
-		  mounted(Human, Animal2),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [human,animal,time]% 
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Terminates(ThrowOff(animal,human),Mounted(human,animal),time).
-not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	terminates(throwOff(Animal, Human),
-		   mounted(Human, Animal),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [animal,human,time]% 
-% Happens(ThrowOff(animal,human),time) ->
-% HoldsAt(Mounted(human,animal),time).
-happens(throwOff(Animal, Human), Time) ->
-	holds_at(mounted(Human, Animal), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [animal,human,time]% 
-% Happens(ThrowOff(animal,human),time) ->
-% !Happens(GetOff(human,animal),time).
-happens(throwOff(Animal, Human), Time) ->
-	not(happens(getOff(Human, Animal), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [animal,human,time]% 
-% Happens(GetOff(human,animal),time) ->
-% !Happens(ThrowOff(animal,human),time).
-happens(getOff(Human, Animal), Time) ->
-	not(happens(throwOff(Animal, Human), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [position1,position2,time]% 
-% Accessible(position1,position2,time) <->
-% (Neighbor(position1,position2) &
-%  !{gate} Sides(position1,position2,gate) &
-%          !HoldsAt(Opened(gate),time)).
-accessible(Position1, Position2, Time) <->
-	thereExists((neighbor(Position1, Position2), not([gate])),
-		    (sides(Position1, Position2, gate), not(holds_at(opened(gate), Time)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [animal,position1,position2,time]% 
-% (position1!=position2 &
-%  HoldsAt(Pos(animal,position1),time) &
-%  HoldsAt(Pos(animal,position2),time+1)) ->
-% Accessible(position1,position2,time).
-Position1\=Position2, holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time+1) ->
-	accessible(Position1, Position2, Time).
+load('examples/AkmanEtAl2004/ZooWorld.e').
 
 
-% 
-% 
 % ectest/ec_reader_test_examples.e:8833
-% [human,time]% 
-% HoldsAt(AbnormalEncroachment(human),time) <->
-% (HoldsAt(MountFails(human),time) |
-%  ({position,animal1,animal2}
-%    HoldsAt(PosDeterminingFluent(human,position),time) &
-%    !HoldsAt(ThrowOffFails(animal2,human),time) &
-%    Happens(ThrowOff(animal2,human),time) &
-%    animal1!=human &
-%    Large(animal1) &
-%    HoldsAt(Pos(animal1,position),time) &
-%    !HoldsAt(Pos(animal1,position),time+1))).
-holds_at(abnormalEncroachment(Human), Time) <->
-	(   holds_at(mountFails(Human), Time)
-	;   exists([Position, Animal1, Animal2],
-		   (holds_at(posDeterminingFluent(Human, Position), Time), not(holds_at(throwOffFails(Animal2, Human), Time)), happens(throwOff(Animal2, Human), Time), Animal1\=Human, large(Animal1), holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Time+1))))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [animal1,animal2,position,time]% 
-% HoldsAt(Pos(animal1,position),time) &
-% !HoldsAt(Pos(animal1,position),time+1) &
-% !HoldsAt(Pos(animal2,position),time) &
-% HoldsAt(Pos(animal2,position),time+1) ->
-% (!Large(animal1) |
-%  !Large(animal2) |
-%  ({human} human=animal2 & HoldsAt(AbnormalEncroachment(human),time))).
-holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Time+1)), not(holds_at(pos(Animal2, Position), Time)), holds_at(pos(Animal2, Position), Time+1) ->
-	(   not(large(Animal1))
-	;   not(large(Animal2))
-	;   exists([Human],
-		   (Human=Animal2, holds_at(abnormalEncroachment(Human), Time)))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [animal1,animal2,position1,position2,time]% 
-% animal1!=% animal2 &
-% Large(animal1) & Large(animal2) &
-% HoldsAt(Pos(animal1,position1),time) &
-% HoldsAt(Pos(animal1,position2),time+1) &
-% HoldsAt(Pos(animal2,position1),time) &
-% HoldsAt(Pos(animal2,position2),time+1) ->
-% !{gate} Sides(position1,position2,gate).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position1), Time), holds_at(pos(Animal1, Position2), Time+1), holds_at(pos(Animal2, Position1), Time), holds_at(pos(Animal2, Position2), Time+1) ->
-	not(exists([Gate],
-		   sides(Position1, Position2, Gate))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [animal1,animal2,position1,position2,time]% 
-% animal1!=% animal2 &
-% Large(animal1) & Large(animal2) &
-% HoldsAt(Pos(animal1,position1),time) &
-% HoldsAt(Pos(animal1,position2),time+1) &
-% HoldsAt(Pos(animal2,position2),time) &
-% HoldsAt(Pos(animal2,position1),time+1) ->
-% !{gate} Sides(position1,position2,gate).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position1), Time), holds_at(pos(Animal1, Position2), Time+1), holds_at(pos(Animal2, Position2), Time), holds_at(pos(Animal2, Position1), Time+1) ->
-	not(exists([Gate],
-		   sides(Position1, Position2, Gate))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [gate,position1,position2,time]% 
-% HoldsAt(Opened(gate),time) &
-% !HoldsAt(Opened(gate),time+1) &
-% Sides(position1,position2,gate) ->
-% !{animal}
-% HoldsAt(Pos(animal,position1),time) &
-% HoldsAt(Pos(animal,position2),time+1).
-holds_at(opened(Gate), Time), not(holds_at(opened(Gate), Time+1)), sides(Position1, Position2, Gate) ->
-	not(exists([Animal],
-		   (holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time+1)))).
-
-
-% 
-% 
-% gate GateAO
-t(gate, gateAO).
-
-
-% cage CageA
-t(cage, cageA).
-
-
-% 
-% Loc(1)=CageA.
-loc(1)=cageA.
-
-
-% 
-% Loc(2)=CageA.
-loc(2)=cageA.
-
-
-% 
-% Loc(3)=CageA.
-loc(3)=cageA.
-
-
-% 
-% Loc(4)=CageA.
-loc(4)=cageA.
-
-
-% 
-% Loc(5)=Outside.
-loc(5)=outside.
-
-
-% 
-% Loc(6)=Outside.
-loc(6)=outside.
-
-
-% 
-% Loc(7)=Outside.
-loc(7)=outside.
-
-
-% 
-% Loc(8)=Outside.
-loc(8)=outside.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8833
-% [position1,position2]% 
-% Neighbor(position1,position2) <->
-% ((position1=1 & position2=2) |
-%  (position1=1 & position2=3) |
-%  (position1=1 & position2=4) |
-%  (position1=2 & position2=3) |
-%  (position1=2 & position2=4) |
-%  (position1=3 & position2=4) |
-%  (position1=5 & position2=6) |
-%  (position1=5 & position2=7) |
-%  (position1=5 & position2=8) |
-%  (position1=6 & position2=7) |
-%  (position1=6 & position2=8) |
-%  (position1=7 & position2=8) |
-%  (position2=1 & position1=2) |
-%  (position2=1 & position1=3) |
-%  (position2=1 & position1=4) |
-%  (position2=2 & position1=3) |
-%  (position2=2 & position1=4) |
-%  (position2=3 & position1=4) |
-%  (position2=5 & position1=6) |
-%  (position2=5 & position1=7) |
-%  (position2=5 & position1=8) |
-%  (position2=6 & position1=7) |
-%  (position2=6 & position1=8) |
-%  (position2=7 & position1=8) |
-%  (position1=4 & position2=7) |
-%  (position2=4 & position1=7)).
-neighbor(Position1, Position2) <->
-	(   Position1=1,
-	    Position2=2
-	;   Position1=1,
-	    Position2=3
-	;   Position1=1,
-	    Position2=4
-	;   Position1=2,
-	    Position2=3
-	;   Position1=2,
-	    Position2=4
-	;   Position1=3,
-	    Position2=4
-	;   Position1=5,
-	    Position2=6
-	;   Position1=5,
-	    Position2=7
-	;   Position1=5,
-	    Position2=8
-	;   Position1=6,
-	    Position2=7
-	;   Position1=6,
-	    Position2=8
-	;   Position1=7,
-	    Position2=8
-	;   Position2=1,
-	    Position1=2
-	;   Position2=1,
-	    Position1=3
-	;   Position2=1,
-	    Position1=4
-	;   Position2=2,
-	    Position1=3
-	;   Position2=2,
-	    Position1=4
-	;   Position2=3,
-	    Position1=4
-	;   Position2=5,
-	    Position1=6
-	;   Position2=5,
-	    Position1=7
-	;   Position2=5,
-	    Position1=8
-	;   Position2=6,
-	    Position1=7
-	;   Position2=6,
-	    Position1=8
-	;   Position2=7,
-	    Position1=8
-	;   Position1=4,
-	    Position2=7
-	;   Position2=4,
-	    Position1=7
-	).
-
-
-% 
-% 
-% Side1(GateAO)=4.
-side1(gateAO)=4.
-
-
-% 
-% Side2(GateAO)=7.
-side2(gateAO)=7.
-
-
-% 
-% 
-% ; End of file.
 % 
 % human Homer
 t(human, homer).
@@ -38342,1270 +20683,18 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:8880
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:8881
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% foundations/EC.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% foundations/EC.e:26
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% foundations/EC.e:32
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% foundations/EC.e:38
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % load examples/AkmanEtAl2004/ZooWorld.e
-% ectest/ec_reader_test_examples.e:8882
-% load('examples/AkmanEtAl2004/ZooWorld.e').
-
-
-% ectest/ec_reader_test_examples.e:8882
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; @article{Akman:2004,
-% ;   author = "Varol Akman and Selim T. Erdogan and Joohyung Lee and Vladimir Lifschitz and Hudson Turner",
-% ;   year = "2004",
-% ;   title = "Representing the zoo world and the traffic world in the language of the causal calculator",
-% ;   journal = "Artificial Intelligence",
-% ;   volume = "153",
-% ;   pages = "105--140",
-% ; }
-% ;
-% 
-% sort position: integer
-subsort(position, integer).
-
-
-% sort location
-sort(location).
-
-
-% sort cage: location
-subsort(cage, location).
-
-
-% sort gate
-sort(gate).
-
-
-% sort animal
-sort(animal).
-
-
-% sort elephant: animal
-subsort(elephant, animal).
-
-
-% sort horse: animal
-subsort(horse, animal).
-
-
-% sort dog: animal
-subsort(dog, animal).
-
-
-% sort human: animal
-subsort(human, animal).
-
-
-% sort species
-sort(species).
-
-
-% 
-% function Loc(position): location
-function(loc(position), location).
-
-
-% function Side1(gate): position
-function(side1(gate), position).
-
-
-% function Side2(gate): position
-function(side2(gate), position).
-
-
-% function Species(animal): species
-function(species(animal), species).
-
-
-% 
-% predicate Accessible(position,position,time)
-predicate(accessible(position, position, time)).
-
-
-% predicate Adult(animal)
-predicate(adult(animal)).
-
-
-% predicate Large(animal)
-predicate(large(animal)).
-
-
-% predicate LargeSpecies(species)
-predicate(largeSpecies(species)).
-
-
-% predicate Neighbor(position,position)
-predicate(neighbor(position, position)).
-
-
-% predicate Sides(position,position,gate)
-predicate(sides(position, position, gate)).
-
-
-% 
-% event Close(human,gate)
-event(close(human, gate)).
-
-
-% event GetOff(human,animal)
-event(getOff(human, animal)).
-
-
-% event Mount(human,animal)
-event(mount(human, animal)).
-
-
-% event Move(animal,position)
-event(move(animal, position)).
-
-
-% event Open(human,gate)
-event(open(human, gate)).
-
-
-% event ThrowOff(animal,human)
-event(throwOff(animal, human)).
-
-
-% 
-% fluent AbnormalEncroachment(human)
-fluent(abnormalEncroachment(human)).
-
-
-% noninertial AbnormalEncroachment
-noninertial(abnormalEncroachment).
-
-
-% fluent DoneBy(event,animal)
-fluent(doneBy(event, animal)).
-
-
-% noninertial DoneBy
-noninertial(doneBy).
-
-
-% fluent Mounted(human,animal)
-fluent(mounted(human, animal)).
-
-
-% fluent MountFails(human)
-fluent(mountFails(human)).
-
-
-% noninertial MountFails
-noninertial(mountFails).
-
-
-% fluent Moves(animal)
-fluent(moves(animal)).
-
-
-% noninertial Moves
-noninertial(moves).
-
-
-% fluent Opened(gate)
-fluent(opened(gate)).
-
-
-% fluent Pos(animal,position)
-fluent(pos(animal, position)).
-
-
-% fluent PosDeterminingFluent(human,position)
-fluent(posDeterminingFluent(human, position)).
-
-
-% noninertial PosDeterminingFluent
-noninertial(posDeterminingFluent).
-
-
-% fluent ThrowOffFails(animal,human)
-fluent(throwOffFails(animal, human)).
-
-
-% noninertial ThrowOffFails
-noninertial(throwOffFails).
-
-
-% 
-% species HumanSpecies, ElephantSpecies, HorseSpecies, DogSpecies
-t(species, humanSpecies).
-
-
-t(species, elephantSpecies).
-
-
-t(species, horseSpecies).
-
-
-t(species, dogSpecies).
-
-
-% location Outside
-t(location, outside).
-
-
-% 
-% LargeSpecies(HumanSpecies).
-largeSpecies(humanSpecies).
-
-
-% 
-% LargeSpecies(ElephantSpecies).
-largeSpecies(elephantSpecies).
-
-
-% 
-% LargeSpecies(HorseSpecies).
-largeSpecies(horseSpecies).
-
-
-% 
-% !LargeSpecies(DogSpecies).
-not(largeSpecies(dogSpecies)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [event,animal,time]% 
-% HoldsAt(DoneBy(event,animal),time) <->
-% (Happens(event,time) &
-%  (({gate} event=Close(animal,gate)) |
-%   ({animal1} event=GetOff(animal,animal1))|
-%   ({animal1} event=Mount(animal,animal1))|
-%   ({position} event=Move(animal,position))|
-%   ({gate} event=Open(animal,gate)) |
-%   ({human1} event=ThrowOff(animal,human1)))).
-holds_at(doneBy(Event, Animal), Time) <->
-	happens(Event, Time),
-	(   exists([Gate], Event=close(Animal, Gate))
-	;   exists([Animal1],
-		   Event=getOff(Animal, Animal1))
-	;   exists([Animal15],
-		   Event=mount(Animal, Animal15))
-	;   exists([Position],
-		   Event=move(Animal, Position))
-	;   exists([Gate7], Event=open(Animal, Gate7))
-	;   exists([Human1],
-		   Event=throwOff(Animal, Human1))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [event1,event2,animal,time]% 
-% HoldsAt(DoneBy(event1,animal),time) &
-% HoldsAt(DoneBy(event2,animal),time) ->
-% event1=event2.
-holds_at(doneBy(Event1, Animal), Time), holds_at(doneBy(Event2, Animal), Time) ->
-	Event1=Event2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [animal] % Large(animal) <-> (Adult(animal) & LargeSpecies(Species(animal))).
-large(Animal) <->
-	adult(Animal),
-	largeSpecies(species(Animal)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [position] 
-% ectest/ec_reader_test_examples.e:8882
-% {position1} % position1!=% position & Neighbor(position,position1).
-exists([Position1],  (Position1\=Position, neighbor(Position, Position1))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [position] % !Neighbor(position,position).
-not(neighbor(Position, Position)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [position1,position2]% 
-% Neighbor(position1,position2) ->
-% Neighbor(position2,position1).
-neighbor(Position1, Position2) ->
-	neighbor(Position2, Position1).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [cage] % cage!=% Outside.
-Cage\=outside.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [position1,position2,gate]% 
-% Sides(position1,position2,gate) <->
-% ((Side1(gate)=position1 &
-%   Side2(gate)=position2) |
-%  (Side2(gate)=position1 &
-%   Side1(gate)=position2)).
-sides(Position1, Position2, Gate) <->
-	(   side1(Gate)=Position1,
-	    side2(Gate)=Position2
-	;   side2(Gate)=Position1,
-	    side1(Gate)=Position2
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [gate] % Loc(Side1(gate))!=Loc(Side2(gate)).
-loc(side1(Gate))\=loc(side2(Gate)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [position1,position2,gate1,gate2]% 
-% Sides(position1,position2,gate1) &
-% Sides(position1,position2,gate2) ->
-% gate1=gate2.
-sides(Position1, Position2, Gate1), sides(Position1, Position2, Gate2) ->
-	Gate1=Gate2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [position1,position2,gate]% 
-% Sides(position1,position2,gate) ->
-% Neighbor(position1,position2).
-sides(Position1, Position2, Gate) ->
-	neighbor(Position1, Position2).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [position1,position2]% 
-% Loc(position1) != Loc(position2) &
-% Neighbor(position1,position2) ->
-% ectest/ec_reader_test_examples.e:8882
-% {gate}%  Sides(position1,position2,gate).
-exists([Gate],  (loc(Position1)\=loc(Position2), neighbor(Position1, Position2)->sides(Position1, Position2, Gate))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [animal,position1,position2,time]% 
-% HoldsAt(Pos(animal,position1),time) &
-% HoldsAt(Pos(animal,position2),time) ->
-% position1=position2.
-holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time) ->
-	Position1=Position2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [animal,time]% 
-% ectest/ec_reader_test_examples.e:8882
-% {position} % HoldsAt(Pos(animal,position),time).
-exists([Position], holds_at(pos(Animal, Position), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [animal1,animal2,position,time]% 
-% (animal1!=animal2 &
-%  Large(animal1) &
-%  Large(animal2) &
-%  HoldsAt(Pos(animal1,position),time) &
-%  HoldsAt(Pos(animal2,position),time)) ->
-% (({human} human=animal1 & HoldsAt(Mounted(human,animal2),time)) |
-%  ({human} human=animal2 & HoldsAt(Mounted(human,animal1),time))).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position), Time), holds_at(pos(Animal2, Position), Time) ->
-	(   exists([Human],
-		   (Human=Animal1, holds_at(mounted(Human, Animal2), Time)))
-	;   exists([Human5],
-		   (Human5=Animal2, holds_at(mounted(Human5, Animal1), Time)))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,position1,position2,time]% 
-% HoldsAt(PosDeterminingFluent(human,position1),time) &
-% HoldsAt(PosDeterminingFluent(human,position2),time) ->
-% position1=position2.
-holds_at(posDeterminingFluent(Human, Position1), Time), holds_at(posDeterminingFluent(Human, Position2), Time) ->
-	Position1=Position2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [animal,position,time]% 
-% Initiates(Move(animal,position),Pos(animal,position),time).
-initiates(move(Animal, Position), pos(Animal, Position), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [animal,position1,position2,time]% 
-% HoldsAt(Pos(animal,position1),time) ->
-% Terminates(Move(animal,position2),Pos(animal,position1),time).
-holds_at(pos(Animal, Position1), Time) ->
-	terminates(move(Animal, Position2),
-		   pos(Animal, Position1),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [animal,position,time]% 
-% Happens(Move(animal,position),time) ->
-% !HoldsAt(Pos(animal,position),time).
-happens(move(Animal, Position), Time) ->
-	not(holds_at(pos(Animal, Position), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,position,time]% 
-% Happens(Move(human,position),time) ->
-% !{animal} HoldsAt(Mounted(human,animal),time).
-happens(move(Human, Position), Time) ->
-	not(exists([Animal],
-		   holds_at(mounted(Human, Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,gate,time]% 
-% Initiates(Open(human,gate),Opened(gate),time).
-initiates(open(Human, Gate), opened(Gate), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,gate,time]% 
-% Happens(Open(human,gate),time) ->
-% !HoldsAt(Opened(gate),time) &
-% (!{animal} HoldsAt(Mounted(human,animal),time)) &
-% ({position}
-%  (Side1(gate)=position | Side2(gate)=position) &
-%  HoldsAt(Pos(human,position),time)).
-happens(open(Human, Gate), Time) ->
-	not(holds_at(opened(Gate), Time)),
-	not(exists([Animal],
-		   holds_at(mounted(Human, Animal), Time))),
-	exists([Position],
-	       ((side1(Gate)=Position;side2(Gate)=Position), holds_at(pos(Human, Position), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,gate,time]% 
-% Terminates(Close(human,gate),Opened(gate),time).
-terminates(close(Human, Gate), opened(Gate), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,gate,time]% 
-% Happens(Close(human,gate),time) ->
-% HoldsAt(Opened(gate),time) &
-% (!{animal} HoldsAt(Mounted(human,animal),time)) &
-% ectest/ec_reader_test_examples.e:8882
-% {position}% 
-% (Side1(gate)=position | Side2(gate)=position) &
-% HoldsAt(Pos(human,position),time).
-exists([Position],  (happens(close(Human, Gate), Time)->holds_at(opened(Gate), Time), not(exists([Animal], holds_at(mounted(Human, Animal), Time))), (side1(Gate)=Position;side2(Gate)=Position), holds_at(pos(Human, Position), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,animal,position,time]% 
-% HoldsAt(Mounted(human,animal),time) &
-% HoldsAt(Pos(animal,position),time) ->
-% HoldsAt(Pos(human,position),time).
-holds_at(mounted(Human, Animal), Time), holds_at(pos(Animal, Position), Time) ->
-	holds_at(pos(Human, Position), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [animal,time]% 
-% HoldsAt(Moves(animal),time) <->
-% ({position}
-%  HoldsAt(Pos(animal,position),time) &
-%  !HoldsAt(Pos(animal,position),time+1)).
-holds_at(moves(Animal), Time) <->
-	exists([Position],
-	       (holds_at(pos(Animal, Position), Time), not(holds_at(pos(Animal, Position), Time+1)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,time]% 
-% HoldsAt(MountFails(human),time) <->
-% ({animal}
-%   Happens(Mount(human,animal),time) &
-%   HoldsAt(Moves(animal),time)).
-holds_at(mountFails(Human), Time) <->
-	exists([Animal],
-	       (happens(mount(Human, Animal), Time), holds_at(moves(Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Releases(Mount(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)) ->
-	releases(mount(Human, Animal),
-		 pos(Human, Position),
-		 Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,animal,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Initiates(Mount(human,animal),Mounted(human,animal),time).
-not(holds_at(moves(Animal), Time)) ->
-	initiates(mount(Human, Animal),
-		  mounted(Human, Animal),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,animal,position,time]% 
-% HoldsAt(Pos(animal,position),time) &
-% HoldsAt(Moves(animal),time) ->
-% Initiates(Mount(human,animal),Pos(human,position),time).
-holds_at(pos(Animal, Position), Time), holds_at(moves(Animal), Time) ->
-	initiates(mount(Human, Animal),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,animal,position,time]% 
-% HoldsAt(Pos(human,position),time) &
-% HoldsAt(Moves(animal),time) ->
-% Terminates(Mount(human,animal),Pos(human,position),time).
-holds_at(pos(Human, Position), Time), holds_at(moves(Animal), Time) ->
-	terminates(mount(Human, Animal),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% Large(animal).
-happens(mount(Human, Animal), Time) ->
-	large(Animal).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,animal,time]% 
-% HoldsAt(Mounted(human,animal),time) ->
-% Large(animal).
-holds_at(mounted(Human, Animal), Time) ->
-	large(Animal).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human1,human2,time]% 
-% Happens(Mount(human1,human2),time) ->
-% !Large(human1).
-happens(mount(Human1, Human2), Time) ->
-	not(large(Human1)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human1,human2,time]% 
-% HoldsAt(Mounted(human1,human2),time) ->
-% !Large(human1).
-holds_at(mounted(Human1, Human2), Time) ->
-	not(large(Human1)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{human1} human1!=human & HoldsAt(Mounted(human1,animal),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Human1],
-		   (Human1\=Human, holds_at(mounted(Human1, Animal), Time)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human1,human2,animal,time]% 
-% HoldsAt(Mounted(human1,animal),time) &
-% HoldsAt(Mounted(human2,animal),time) ->
-% human1=human2.
-holds_at(mounted(Human1, Animal), Time), holds_at(mounted(Human2, Animal), Time) ->
-	Human1=Human2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{human1} human1!=human & HoldsAt(Mounted(human1,human),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Human1],
-		   (Human1\=Human, holds_at(mounted(Human1, Human), Time)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human1,human2,time]% 
-% Happens(Mount(human1,human2),time) ->
-% ectest/ec_reader_test_examples.e:8882
-% {animal}%  HoldsAt(Mounted(human2,animal),time).
-exists([Animal],  (happens(mount(Human1, Human2), Time)->holds_at(mounted(Human2, Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human1,human2,time]% 
-% HoldsAt(Mounted(human1,human2),time) ->
-% !{animal} HoldsAt(Mounted(human2,animal),time).
-holds_at(mounted(Human1, Human2), Time) ->
-	not(exists([Animal],
-		   holds_at(mounted(Human2, Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{animal1} HoldsAt(Mounted(human,animal1),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Animal1],
-		   holds_at(mounted(Human, Animal1), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,animal,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Terminates(GetOff(human,animal),Mounted(human,animal),time).
-not(holds_at(moves(Animal), Time)) ->
-	terminates(getOff(Human, Animal),
-		   mounted(Human, Animal),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(PosDeterminingFluent(human,position),time) ->
-% Initiates(GetOff(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)), holds_at(posDeterminingFluent(Human, Position), Time) ->
-	initiates(getOff(Human, Animal),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(Pos(human,position),time) ->
-% Terminates(GetOff(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position), Time) ->
-	terminates(getOff(Human, Animal),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,animal,position1,position2,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(Pos(human,position1),time) &
-% position1!=position2 ->
-% Terminates(GetOff(human,animal),Pos(human,position2),time).
-not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position1), Time), Position1\=Position2 ->
-	terminates(getOff(Human, Animal),
-		   pos(Human, Position2),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,animal,time]% 
-% Happens(GetOff(human,animal),time) ->
-% HoldsAt(Mounted(human,animal),time).
-happens(getOff(Human, Animal), Time) ->
-	holds_at(mounted(Human, Animal), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [animal1,human,time]% 
-% HoldsAt(ThrowOffFails(animal1,human),time) <->
-% ({position,animal2}
-%  animal2!=human &
-%  HoldsAt(PosDeterminingFluent(human,position),time) &
-%  Large(animal2) &
-%  HoldsAt(Pos(animal2,position),time+1)).
-holds_at(throwOffFails(Animal1, Human), Time) <->
-	exists([Position, Animal2],
-	       (Animal2\=Human, holds_at(posDeterminingFluent(Human, Position), Time), large(Animal2), holds_at(pos(Animal2, Position), Time+1))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [animal,human,position,time]% 
-% HoldsAt(PosDeterminingFluent(human,position),time) &
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Initiates(ThrowOff(animal,human),Pos(human,position),time).
-holds_at(posDeterminingFluent(Human, Position), Time), not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	initiates(throwOff(Animal, Human),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [animal,human,position,time]% 
-% HoldsAt(Pos(human,position),time) &
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Terminates(ThrowOff(animal,human),Pos(human,position),time).
-holds_at(pos(Human, Position), Time), not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	terminates(throwOff(Animal, Human),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [animal,human,position1,position2,time]% 
-% !HoldsAt(ThrowOffFails(animal,human),time) &
-% HoldsAt(Pos(human,position1),time) &
-% !HoldsAt(PosDeterminingFluent(human,position2),time) &
-% position1!=position2 ->
-% Terminates(ThrowOff(animal,human),Pos(human,position2),time).
-not(holds_at(throwOffFails(Animal, Human), Time)), holds_at(pos(Human, Position1), Time), not(holds_at(posDeterminingFluent(Human, Position2), Time)), Position1\=Position2 ->
-	terminates(throwOff(Animal, Human),
-		   pos(Human, Position2),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,time]% 
-% (!{animal} Happens(ThrowOff(animal,human),time) |
-%            Happens(GetOff(human,animal),time)) ->
-% HoldsAt(PosDeterminingFluent(human,1),time).
-not(exists([Animal], happens(throwOff(Animal, Human), Time)));happens(getOff(Human, animal), Time) ->
-	holds_at(posDeterminingFluent(Human, 1), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,position,animal1,animal2,time]% 
-% HoldsAt(PosDeterminingFluent(human,position),time) &
-% HoldsAt(ThrowOffFails(animal1,human),time) &
-% HoldsAt(Pos(animal2,position),time) ->
-% Initiates(ThrowOff(animal1,human),Mounted(human,animal2),time).
-holds_at(posDeterminingFluent(Human, Position), Time), holds_at(throwOffFails(Animal1, Human), Time), holds_at(pos(Animal2, Position), Time) ->
-	initiates(throwOff(Animal1, Human),
-		  mounted(Human, Animal2),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [human,animal,time]% 
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Terminates(ThrowOff(animal,human),Mounted(human,animal),time).
-not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	terminates(throwOff(Animal, Human),
-		   mounted(Human, Animal),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [animal,human,time]% 
-% Happens(ThrowOff(animal,human),time) ->
-% HoldsAt(Mounted(human,animal),time).
-happens(throwOff(Animal, Human), Time) ->
-	holds_at(mounted(Human, Animal), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [animal,human,time]% 
-% Happens(ThrowOff(animal,human),time) ->
-% !Happens(GetOff(human,animal),time).
-happens(throwOff(Animal, Human), Time) ->
-	not(happens(getOff(Human, Animal), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [animal,human,time]% 
-% Happens(GetOff(human,animal),time) ->
-% !Happens(ThrowOff(animal,human),time).
-happens(getOff(Human, Animal), Time) ->
-	not(happens(throwOff(Animal, Human), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [position1,position2,time]% 
-% Accessible(position1,position2,time) <->
-% (Neighbor(position1,position2) &
-%  !{gate} Sides(position1,position2,gate) &
-%          !HoldsAt(Opened(gate),time)).
-accessible(Position1, Position2, Time) <->
-	thereExists((neighbor(Position1, Position2), not([gate])),
-		    (sides(Position1, Position2, gate), not(holds_at(opened(gate), Time)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [animal,position1,position2,time]% 
-% (position1!=position2 &
-%  HoldsAt(Pos(animal,position1),time) &
-%  HoldsAt(Pos(animal,position2),time+1)) ->
-% Accessible(position1,position2,time).
-Position1\=Position2, holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time+1) ->
-	accessible(Position1, Position2, Time).
+load('examples/AkmanEtAl2004/ZooWorld.e').
 
 
-% 
-% 
 % ectest/ec_reader_test_examples.e:8882
-% [human,time]% 
-% HoldsAt(AbnormalEncroachment(human),time) <->
-% (HoldsAt(MountFails(human),time) |
-%  ({position,animal1,animal2}
-%    HoldsAt(PosDeterminingFluent(human,position),time) &
-%    !HoldsAt(ThrowOffFails(animal2,human),time) &
-%    Happens(ThrowOff(animal2,human),time) &
-%    animal1!=human &
-%    Large(animal1) &
-%    HoldsAt(Pos(animal1,position),time) &
-%    !HoldsAt(Pos(animal1,position),time+1))).
-holds_at(abnormalEncroachment(Human), Time) <->
-	(   holds_at(mountFails(Human), Time)
-	;   exists([Position, Animal1, Animal2],
-		   (holds_at(posDeterminingFluent(Human, Position), Time), not(holds_at(throwOffFails(Animal2, Human), Time)), happens(throwOff(Animal2, Human), Time), Animal1\=Human, large(Animal1), holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Time+1))))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [animal1,animal2,position,time]% 
-% HoldsAt(Pos(animal1,position),time) &
-% !HoldsAt(Pos(animal1,position),time+1) &
-% !HoldsAt(Pos(animal2,position),time) &
-% HoldsAt(Pos(animal2,position),time+1) ->
-% (!Large(animal1) |
-%  !Large(animal2) |
-%  ({human} human=animal2 & HoldsAt(AbnormalEncroachment(human),time))).
-holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Time+1)), not(holds_at(pos(Animal2, Position), Time)), holds_at(pos(Animal2, Position), Time+1) ->
-	(   not(large(Animal1))
-	;   not(large(Animal2))
-	;   exists([Human],
-		   (Human=Animal2, holds_at(abnormalEncroachment(Human), Time)))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [animal1,animal2,position1,position2,time]% 
-% animal1!=% animal2 &
-% Large(animal1) & Large(animal2) &
-% HoldsAt(Pos(animal1,position1),time) &
-% HoldsAt(Pos(animal1,position2),time+1) &
-% HoldsAt(Pos(animal2,position1),time) &
-% HoldsAt(Pos(animal2,position2),time+1) ->
-% !{gate} Sides(position1,position2,gate).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position1), Time), holds_at(pos(Animal1, Position2), Time+1), holds_at(pos(Animal2, Position1), Time), holds_at(pos(Animal2, Position2), Time+1) ->
-	not(exists([Gate],
-		   sides(Position1, Position2, Gate))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [animal1,animal2,position1,position2,time]% 
-% animal1!=% animal2 &
-% Large(animal1) & Large(animal2) &
-% HoldsAt(Pos(animal1,position1),time) &
-% HoldsAt(Pos(animal1,position2),time+1) &
-% HoldsAt(Pos(animal2,position2),time) &
-% HoldsAt(Pos(animal2,position1),time+1) ->
-% !{gate} Sides(position1,position2,gate).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position1), Time), holds_at(pos(Animal1, Position2), Time+1), holds_at(pos(Animal2, Position2), Time), holds_at(pos(Animal2, Position1), Time+1) ->
-	not(exists([Gate],
-		   sides(Position1, Position2, Gate))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [gate,position1,position2,time]% 
-% HoldsAt(Opened(gate),time) &
-% !HoldsAt(Opened(gate),time+1) &
-% Sides(position1,position2,gate) ->
-% !{animal}
-% HoldsAt(Pos(animal,position1),time) &
-% HoldsAt(Pos(animal,position2),time+1).
-holds_at(opened(Gate), Time), not(holds_at(opened(Gate), Time+1)), sides(Position1, Position2, Gate) ->
-	not(exists([Animal],
-		   (holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time+1)))).
-
-
-% 
-% 
-% gate GateAO
-t(gate, gateAO).
-
-
-% cage CageA
-t(cage, cageA).
-
-
-% 
-% Loc(1)=CageA.
-loc(1)=cageA.
-
-
-% 
-% Loc(2)=CageA.
-loc(2)=cageA.
-
-
-% 
-% Loc(3)=CageA.
-loc(3)=cageA.
-
-
-% 
-% Loc(4)=CageA.
-loc(4)=cageA.
-
-
-% 
-% Loc(5)=Outside.
-loc(5)=outside.
-
-
-% 
-% Loc(6)=Outside.
-loc(6)=outside.
-
-
-% 
-% Loc(7)=Outside.
-loc(7)=outside.
-
-
-% 
-% Loc(8)=Outside.
-loc(8)=outside.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8882
-% [position1,position2]% 
-% Neighbor(position1,position2) <->
-% ((position1=1 & position2=2) |
-%  (position1=1 & position2=3) |
-%  (position1=1 & position2=4) |
-%  (position1=2 & position2=3) |
-%  (position1=2 & position2=4) |
-%  (position1=3 & position2=4) |
-%  (position1=5 & position2=6) |
-%  (position1=5 & position2=7) |
-%  (position1=5 & position2=8) |
-%  (position1=6 & position2=7) |
-%  (position1=6 & position2=8) |
-%  (position1=7 & position2=8) |
-%  (position2=1 & position1=2) |
-%  (position2=1 & position1=3) |
-%  (position2=1 & position1=4) |
-%  (position2=2 & position1=3) |
-%  (position2=2 & position1=4) |
-%  (position2=3 & position1=4) |
-%  (position2=5 & position1=6) |
-%  (position2=5 & position1=7) |
-%  (position2=5 & position1=8) |
-%  (position2=6 & position1=7) |
-%  (position2=6 & position1=8) |
-%  (position2=7 & position1=8) |
-%  (position1=4 & position2=7) |
-%  (position2=4 & position1=7)).
-neighbor(Position1, Position2) <->
-	(   Position1=1,
-	    Position2=2
-	;   Position1=1,
-	    Position2=3
-	;   Position1=1,
-	    Position2=4
-	;   Position1=2,
-	    Position2=3
-	;   Position1=2,
-	    Position2=4
-	;   Position1=3,
-	    Position2=4
-	;   Position1=5,
-	    Position2=6
-	;   Position1=5,
-	    Position2=7
-	;   Position1=5,
-	    Position2=8
-	;   Position1=6,
-	    Position2=7
-	;   Position1=6,
-	    Position2=8
-	;   Position1=7,
-	    Position2=8
-	;   Position2=1,
-	    Position1=2
-	;   Position2=1,
-	    Position1=3
-	;   Position2=1,
-	    Position1=4
-	;   Position2=2,
-	    Position1=3
-	;   Position2=2,
-	    Position1=4
-	;   Position2=3,
-	    Position1=4
-	;   Position2=5,
-	    Position1=6
-	;   Position2=5,
-	    Position1=7
-	;   Position2=5,
-	    Position1=8
-	;   Position2=6,
-	    Position1=7
-	;   Position2=6,
-	    Position1=8
-	;   Position2=7,
-	    Position1=8
-	;   Position1=4,
-	    Position2=7
-	;   Position2=4,
-	    Position1=7
-	).
-
-
-% 
-% 
-% Side1(GateAO)=4.
-side1(gateAO)=4.
-
-
-% 
-% Side2(GateAO)=7.
-side2(gateAO)=7.
-
-
-% 
-% 
-% ; End of file.
 % 
 % human Homer
 t(human, homer).
@@ -39745,1266 +20834,18 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:8938
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:8938
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:8939
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:8939
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % load examples/AkmanEtAl2004/ZooWorld.e
-% ectest/ec_reader_test_examples.e:8940
-% load('examples/AkmanEtAl2004/ZooWorld.e').
-
-
-% ectest/ec_reader_test_examples.e:8940
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; @article{Akman:2004,
-% ;   author = "Varol Akman and Selim T. Erdogan and Joohyung Lee and Vladimir Lifschitz and Hudson Turner",
-% ;   year = "2004",
-% ;   title = "Representing the zoo world and the traffic world in the language of the causal calculator",
-% ;   journal = "Artificial Intelligence",
-% ;   volume = "153",
-% ;   pages = "105--140",
-% ; }
-% ;
-% 
-% sort position: integer
-subsort(position, integer).
-
-
-% sort location
-sort(location).
-
-
-% sort cage: location
-subsort(cage, location).
-
-
-% sort gate
-sort(gate).
-
-
-% sort animal
-sort(animal).
-
-
-% sort elephant: animal
-subsort(elephant, animal).
-
-
-% sort horse: animal
-subsort(horse, animal).
-
-
-% sort dog: animal
-subsort(dog, animal).
-
-
-% sort human: animal
-subsort(human, animal).
-
-
-% sort species
-sort(species).
-
-
-% 
-% function Loc(position): location
-function(loc(position), location).
-
-
-% function Side1(gate): position
-function(side1(gate), position).
-
-
-% function Side2(gate): position
-function(side2(gate), position).
-
-
-% function Species(animal): species
-function(species(animal), species).
-
-
-% 
-% predicate Accessible(position,position,time)
-predicate(accessible(position, position, time)).
-
-
-% predicate Adult(animal)
-predicate(adult(animal)).
-
-
-% predicate Large(animal)
-predicate(large(animal)).
-
-
-% predicate LargeSpecies(species)
-predicate(largeSpecies(species)).
-
-
-% predicate Neighbor(position,position)
-predicate(neighbor(position, position)).
-
-
-% predicate Sides(position,position,gate)
-predicate(sides(position, position, gate)).
-
-
-% 
-% event Close(human,gate)
-event(close(human, gate)).
-
-
-% event GetOff(human,animal)
-event(getOff(human, animal)).
-
-
-% event Mount(human,animal)
-event(mount(human, animal)).
-
-
-% event Move(animal,position)
-event(move(animal, position)).
-
-
-% event Open(human,gate)
-event(open(human, gate)).
-
-
-% event ThrowOff(animal,human)
-event(throwOff(animal, human)).
-
-
-% 
-% fluent AbnormalEncroachment(human)
-fluent(abnormalEncroachment(human)).
-
-
-% noninertial AbnormalEncroachment
-noninertial(abnormalEncroachment).
-
-
-% fluent DoneBy(event,animal)
-fluent(doneBy(event, animal)).
-
-
-% noninertial DoneBy
-noninertial(doneBy).
-
-
-% fluent Mounted(human,animal)
-fluent(mounted(human, animal)).
-
-
-% fluent MountFails(human)
-fluent(mountFails(human)).
-
-
-% noninertial MountFails
-noninertial(mountFails).
-
-
-% fluent Moves(animal)
-fluent(moves(animal)).
-
-
-% noninertial Moves
-noninertial(moves).
-
-
-% fluent Opened(gate)
-fluent(opened(gate)).
-
-
-% fluent Pos(animal,position)
-fluent(pos(animal, position)).
-
-
-% fluent PosDeterminingFluent(human,position)
-fluent(posDeterminingFluent(human, position)).
-
-
-% noninertial PosDeterminingFluent
-noninertial(posDeterminingFluent).
-
-
-% fluent ThrowOffFails(animal,human)
-fluent(throwOffFails(animal, human)).
-
-
-% noninertial ThrowOffFails
-noninertial(throwOffFails).
-
-
-% 
-% species HumanSpecies, ElephantSpecies, HorseSpecies, DogSpecies
-t(species, humanSpecies).
-
-
-t(species, elephantSpecies).
-
-
-t(species, horseSpecies).
-
-
-t(species, dogSpecies).
-
-
-% location Outside
-t(location, outside).
-
-
-% 
-% LargeSpecies(HumanSpecies).
-largeSpecies(humanSpecies).
-
-
-% 
-% LargeSpecies(ElephantSpecies).
-largeSpecies(elephantSpecies).
-
-
-% 
-% LargeSpecies(HorseSpecies).
-largeSpecies(horseSpecies).
-
-
-% 
-% !LargeSpecies(DogSpecies).
-not(largeSpecies(dogSpecies)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [event,animal,time]% 
-% HoldsAt(DoneBy(event,animal),time) <->
-% (Happens(event,time) &
-%  (({gate} event=Close(animal,gate)) |
-%   ({animal1} event=GetOff(animal,animal1))|
-%   ({animal1} event=Mount(animal,animal1))|
-%   ({position} event=Move(animal,position))|
-%   ({gate} event=Open(animal,gate)) |
-%   ({human1} event=ThrowOff(animal,human1)))).
-holds_at(doneBy(Event, Animal), Time) <->
-	happens(Event, Time),
-	(   exists([Gate], Event=close(Animal, Gate))
-	;   exists([Animal1],
-		   Event=getOff(Animal, Animal1))
-	;   exists([Animal15],
-		   Event=mount(Animal, Animal15))
-	;   exists([Position],
-		   Event=move(Animal, Position))
-	;   exists([Gate7], Event=open(Animal, Gate7))
-	;   exists([Human1],
-		   Event=throwOff(Animal, Human1))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [event1,event2,animal,time]% 
-% HoldsAt(DoneBy(event1,animal),time) &
-% HoldsAt(DoneBy(event2,animal),time) ->
-% event1=event2.
-holds_at(doneBy(Event1, Animal), Time), holds_at(doneBy(Event2, Animal), Time) ->
-	Event1=Event2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [animal] % Large(animal) <-> (Adult(animal) & LargeSpecies(Species(animal))).
-large(Animal) <->
-	adult(Animal),
-	largeSpecies(species(Animal)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [position] 
-% ectest/ec_reader_test_examples.e:8940
-% {position1} % position1!=% position & Neighbor(position,position1).
-exists([Position1],  (Position1\=Position, neighbor(Position, Position1))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [position] % !Neighbor(position,position).
-not(neighbor(Position, Position)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [position1,position2]% 
-% Neighbor(position1,position2) ->
-% Neighbor(position2,position1).
-neighbor(Position1, Position2) ->
-	neighbor(Position2, Position1).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [cage] % cage!=% Outside.
-Cage\=outside.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [position1,position2,gate]% 
-% Sides(position1,position2,gate) <->
-% ((Side1(gate)=position1 &
-%   Side2(gate)=position2) |
-%  (Side2(gate)=position1 &
-%   Side1(gate)=position2)).
-sides(Position1, Position2, Gate) <->
-	(   side1(Gate)=Position1,
-	    side2(Gate)=Position2
-	;   side2(Gate)=Position1,
-	    side1(Gate)=Position2
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [gate] % Loc(Side1(gate))!=Loc(Side2(gate)).
-loc(side1(Gate))\=loc(side2(Gate)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [position1,position2,gate1,gate2]% 
-% Sides(position1,position2,gate1) &
-% Sides(position1,position2,gate2) ->
-% gate1=gate2.
-sides(Position1, Position2, Gate1), sides(Position1, Position2, Gate2) ->
-	Gate1=Gate2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [position1,position2,gate]% 
-% Sides(position1,position2,gate) ->
-% Neighbor(position1,position2).
-sides(Position1, Position2, Gate) ->
-	neighbor(Position1, Position2).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [position1,position2]% 
-% Loc(position1) != Loc(position2) &
-% Neighbor(position1,position2) ->
-% ectest/ec_reader_test_examples.e:8940
-% {gate}%  Sides(position1,position2,gate).
-exists([Gate],  (loc(Position1)\=loc(Position2), neighbor(Position1, Position2)->sides(Position1, Position2, Gate))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [animal,position1,position2,time]% 
-% HoldsAt(Pos(animal,position1),time) &
-% HoldsAt(Pos(animal,position2),time) ->
-% position1=position2.
-holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time) ->
-	Position1=Position2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [animal,time]% 
-% ectest/ec_reader_test_examples.e:8940
-% {position} % HoldsAt(Pos(animal,position),time).
-exists([Position], holds_at(pos(Animal, Position), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [animal1,animal2,position,time]% 
-% (animal1!=animal2 &
-%  Large(animal1) &
-%  Large(animal2) &
-%  HoldsAt(Pos(animal1,position),time) &
-%  HoldsAt(Pos(animal2,position),time)) ->
-% (({human} human=animal1 & HoldsAt(Mounted(human,animal2),time)) |
-%  ({human} human=animal2 & HoldsAt(Mounted(human,animal1),time))).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position), Time), holds_at(pos(Animal2, Position), Time) ->
-	(   exists([Human],
-		   (Human=Animal1, holds_at(mounted(Human, Animal2), Time)))
-	;   exists([Human5],
-		   (Human5=Animal2, holds_at(mounted(Human5, Animal1), Time)))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,position1,position2,time]% 
-% HoldsAt(PosDeterminingFluent(human,position1),time) &
-% HoldsAt(PosDeterminingFluent(human,position2),time) ->
-% position1=position2.
-holds_at(posDeterminingFluent(Human, Position1), Time), holds_at(posDeterminingFluent(Human, Position2), Time) ->
-	Position1=Position2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [animal,position,time]% 
-% Initiates(Move(animal,position),Pos(animal,position),time).
-initiates(move(Animal, Position), pos(Animal, Position), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [animal,position1,position2,time]% 
-% HoldsAt(Pos(animal,position1),time) ->
-% Terminates(Move(animal,position2),Pos(animal,position1),time).
-holds_at(pos(Animal, Position1), Time) ->
-	terminates(move(Animal, Position2),
-		   pos(Animal, Position1),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [animal,position,time]% 
-% Happens(Move(animal,position),time) ->
-% !HoldsAt(Pos(animal,position),time).
-happens(move(Animal, Position), Time) ->
-	not(holds_at(pos(Animal, Position), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,position,time]% 
-% Happens(Move(human,position),time) ->
-% !{animal} HoldsAt(Mounted(human,animal),time).
-happens(move(Human, Position), Time) ->
-	not(exists([Animal],
-		   holds_at(mounted(Human, Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,gate,time]% 
-% Initiates(Open(human,gate),Opened(gate),time).
-initiates(open(Human, Gate), opened(Gate), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,gate,time]% 
-% Happens(Open(human,gate),time) ->
-% !HoldsAt(Opened(gate),time) &
-% (!{animal} HoldsAt(Mounted(human,animal),time)) &
-% ({position}
-%  (Side1(gate)=position | Side2(gate)=position) &
-%  HoldsAt(Pos(human,position),time)).
-happens(open(Human, Gate), Time) ->
-	not(holds_at(opened(Gate), Time)),
-	not(exists([Animal],
-		   holds_at(mounted(Human, Animal), Time))),
-	exists([Position],
-	       ((side1(Gate)=Position;side2(Gate)=Position), holds_at(pos(Human, Position), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,gate,time]% 
-% Terminates(Close(human,gate),Opened(gate),time).
-terminates(close(Human, Gate), opened(Gate), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,gate,time]% 
-% Happens(Close(human,gate),time) ->
-% HoldsAt(Opened(gate),time) &
-% (!{animal} HoldsAt(Mounted(human,animal),time)) &
-% ectest/ec_reader_test_examples.e:8940
-% {position}% 
-% (Side1(gate)=position | Side2(gate)=position) &
-% HoldsAt(Pos(human,position),time).
-exists([Position],  (happens(close(Human, Gate), Time)->holds_at(opened(Gate), Time), not(exists([Animal], holds_at(mounted(Human, Animal), Time))), (side1(Gate)=Position;side2(Gate)=Position), holds_at(pos(Human, Position), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,animal,position,time]% 
-% HoldsAt(Mounted(human,animal),time) &
-% HoldsAt(Pos(animal,position),time) ->
-% HoldsAt(Pos(human,position),time).
-holds_at(mounted(Human, Animal), Time), holds_at(pos(Animal, Position), Time) ->
-	holds_at(pos(Human, Position), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [animal,time]% 
-% HoldsAt(Moves(animal),time) <->
-% ({position}
-%  HoldsAt(Pos(animal,position),time) &
-%  !HoldsAt(Pos(animal,position),time+1)).
-holds_at(moves(Animal), Time) <->
-	exists([Position],
-	       (holds_at(pos(Animal, Position), Time), not(holds_at(pos(Animal, Position), Time+1)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,time]% 
-% HoldsAt(MountFails(human),time) <->
-% ({animal}
-%   Happens(Mount(human,animal),time) &
-%   HoldsAt(Moves(animal),time)).
-holds_at(mountFails(Human), Time) <->
-	exists([Animal],
-	       (happens(mount(Human, Animal), Time), holds_at(moves(Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Releases(Mount(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)) ->
-	releases(mount(Human, Animal),
-		 pos(Human, Position),
-		 Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,animal,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Initiates(Mount(human,animal),Mounted(human,animal),time).
-not(holds_at(moves(Animal), Time)) ->
-	initiates(mount(Human, Animal),
-		  mounted(Human, Animal),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,animal,position,time]% 
-% HoldsAt(Pos(animal,position),time) &
-% HoldsAt(Moves(animal),time) ->
-% Initiates(Mount(human,animal),Pos(human,position),time).
-holds_at(pos(Animal, Position), Time), holds_at(moves(Animal), Time) ->
-	initiates(mount(Human, Animal),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,animal,position,time]% 
-% HoldsAt(Pos(human,position),time) &
-% HoldsAt(Moves(animal),time) ->
-% Terminates(Mount(human,animal),Pos(human,position),time).
-holds_at(pos(Human, Position), Time), holds_at(moves(Animal), Time) ->
-	terminates(mount(Human, Animal),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% Large(animal).
-happens(mount(Human, Animal), Time) ->
-	large(Animal).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,animal,time]% 
-% HoldsAt(Mounted(human,animal),time) ->
-% Large(animal).
-holds_at(mounted(Human, Animal), Time) ->
-	large(Animal).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human1,human2,time]% 
-% Happens(Mount(human1,human2),time) ->
-% !Large(human1).
-happens(mount(Human1, Human2), Time) ->
-	not(large(Human1)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human1,human2,time]% 
-% HoldsAt(Mounted(human1,human2),time) ->
-% !Large(human1).
-holds_at(mounted(Human1, Human2), Time) ->
-	not(large(Human1)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{human1} human1!=human & HoldsAt(Mounted(human1,animal),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Human1],
-		   (Human1\=Human, holds_at(mounted(Human1, Animal), Time)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human1,human2,animal,time]% 
-% HoldsAt(Mounted(human1,animal),time) &
-% HoldsAt(Mounted(human2,animal),time) ->
-% human1=human2.
-holds_at(mounted(Human1, Animal), Time), holds_at(mounted(Human2, Animal), Time) ->
-	Human1=Human2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{human1} human1!=human & HoldsAt(Mounted(human1,human),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Human1],
-		   (Human1\=Human, holds_at(mounted(Human1, Human), Time)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human1,human2,time]% 
-% Happens(Mount(human1,human2),time) ->
-% ectest/ec_reader_test_examples.e:8940
-% {animal}%  HoldsAt(Mounted(human2,animal),time).
-exists([Animal],  (happens(mount(Human1, Human2), Time)->holds_at(mounted(Human2, Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human1,human2,time]% 
-% HoldsAt(Mounted(human1,human2),time) ->
-% !{animal} HoldsAt(Mounted(human2,animal),time).
-holds_at(mounted(Human1, Human2), Time) ->
-	not(exists([Animal],
-		   holds_at(mounted(Human2, Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{animal1} HoldsAt(Mounted(human,animal1),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Animal1],
-		   holds_at(mounted(Human, Animal1), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,animal,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Terminates(GetOff(human,animal),Mounted(human,animal),time).
-not(holds_at(moves(Animal), Time)) ->
-	terminates(getOff(Human, Animal),
-		   mounted(Human, Animal),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(PosDeterminingFluent(human,position),time) ->
-% Initiates(GetOff(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)), holds_at(posDeterminingFluent(Human, Position), Time) ->
-	initiates(getOff(Human, Animal),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(Pos(human,position),time) ->
-% Terminates(GetOff(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position), Time) ->
-	terminates(getOff(Human, Animal),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,animal,position1,position2,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(Pos(human,position1),time) &
-% position1!=position2 ->
-% Terminates(GetOff(human,animal),Pos(human,position2),time).
-not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position1), Time), Position1\=Position2 ->
-	terminates(getOff(Human, Animal),
-		   pos(Human, Position2),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,animal,time]% 
-% Happens(GetOff(human,animal),time) ->
-% HoldsAt(Mounted(human,animal),time).
-happens(getOff(Human, Animal), Time) ->
-	holds_at(mounted(Human, Animal), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [animal1,human,time]% 
-% HoldsAt(ThrowOffFails(animal1,human),time) <->
-% ({position,animal2}
-%  animal2!=human &
-%  HoldsAt(PosDeterminingFluent(human,position),time) &
-%  Large(animal2) &
-%  HoldsAt(Pos(animal2,position),time+1)).
-holds_at(throwOffFails(Animal1, Human), Time) <->
-	exists([Position, Animal2],
-	       (Animal2\=Human, holds_at(posDeterminingFluent(Human, Position), Time), large(Animal2), holds_at(pos(Animal2, Position), Time+1))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [animal,human,position,time]% 
-% HoldsAt(PosDeterminingFluent(human,position),time) &
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Initiates(ThrowOff(animal,human),Pos(human,position),time).
-holds_at(posDeterminingFluent(Human, Position), Time), not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	initiates(throwOff(Animal, Human),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [animal,human,position,time]% 
-% HoldsAt(Pos(human,position),time) &
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Terminates(ThrowOff(animal,human),Pos(human,position),time).
-holds_at(pos(Human, Position), Time), not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	terminates(throwOff(Animal, Human),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [animal,human,position1,position2,time]% 
-% !HoldsAt(ThrowOffFails(animal,human),time) &
-% HoldsAt(Pos(human,position1),time) &
-% !HoldsAt(PosDeterminingFluent(human,position2),time) &
-% position1!=position2 ->
-% Terminates(ThrowOff(animal,human),Pos(human,position2),time).
-not(holds_at(throwOffFails(Animal, Human), Time)), holds_at(pos(Human, Position1), Time), not(holds_at(posDeterminingFluent(Human, Position2), Time)), Position1\=Position2 ->
-	terminates(throwOff(Animal, Human),
-		   pos(Human, Position2),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,time]% 
-% (!{animal} Happens(ThrowOff(animal,human),time) |
-%            Happens(GetOff(human,animal),time)) ->
-% HoldsAt(PosDeterminingFluent(human,1),time).
-not(exists([Animal], happens(throwOff(Animal, Human), Time)));happens(getOff(Human, animal), Time) ->
-	holds_at(posDeterminingFluent(Human, 1), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,position,animal1,animal2,time]% 
-% HoldsAt(PosDeterminingFluent(human,position),time) &
-% HoldsAt(ThrowOffFails(animal1,human),time) &
-% HoldsAt(Pos(animal2,position),time) ->
-% Initiates(ThrowOff(animal1,human),Mounted(human,animal2),time).
-holds_at(posDeterminingFluent(Human, Position), Time), holds_at(throwOffFails(Animal1, Human), Time), holds_at(pos(Animal2, Position), Time) ->
-	initiates(throwOff(Animal1, Human),
-		  mounted(Human, Animal2),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [human,animal,time]% 
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Terminates(ThrowOff(animal,human),Mounted(human,animal),time).
-not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	terminates(throwOff(Animal, Human),
-		   mounted(Human, Animal),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [animal,human,time]% 
-% Happens(ThrowOff(animal,human),time) ->
-% HoldsAt(Mounted(human,animal),time).
-happens(throwOff(Animal, Human), Time) ->
-	holds_at(mounted(Human, Animal), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [animal,human,time]% 
-% Happens(ThrowOff(animal,human),time) ->
-% !Happens(GetOff(human,animal),time).
-happens(throwOff(Animal, Human), Time) ->
-	not(happens(getOff(Human, Animal), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [animal,human,time]% 
-% Happens(GetOff(human,animal),time) ->
-% !Happens(ThrowOff(animal,human),time).
-happens(getOff(Human, Animal), Time) ->
-	not(happens(throwOff(Animal, Human), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [position1,position2,time]% 
-% Accessible(position1,position2,time) <->
-% (Neighbor(position1,position2) &
-%  !{gate} Sides(position1,position2,gate) &
-%          !HoldsAt(Opened(gate),time)).
-accessible(Position1, Position2, Time) <->
-	thereExists((neighbor(Position1, Position2), not([gate])),
-		    (sides(Position1, Position2, gate), not(holds_at(opened(gate), Time)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [animal,position1,position2,time]% 
-% (position1!=position2 &
-%  HoldsAt(Pos(animal,position1),time) &
-%  HoldsAt(Pos(animal,position2),time+1)) ->
-% Accessible(position1,position2,time).
-Position1\=Position2, holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time+1) ->
-	accessible(Position1, Position2, Time).
+load('examples/AkmanEtAl2004/ZooWorld.e').
 
 
-% 
-% 
 % ectest/ec_reader_test_examples.e:8940
-% [human,time]% 
-% HoldsAt(AbnormalEncroachment(human),time) <->
-% (HoldsAt(MountFails(human),time) |
-%  ({position,animal1,animal2}
-%    HoldsAt(PosDeterminingFluent(human,position),time) &
-%    !HoldsAt(ThrowOffFails(animal2,human),time) &
-%    Happens(ThrowOff(animal2,human),time) &
-%    animal1!=human &
-%    Large(animal1) &
-%    HoldsAt(Pos(animal1,position),time) &
-%    !HoldsAt(Pos(animal1,position),time+1))).
-holds_at(abnormalEncroachment(Human), Time) <->
-	(   holds_at(mountFails(Human), Time)
-	;   exists([Position, Animal1, Animal2],
-		   (holds_at(posDeterminingFluent(Human, Position), Time), not(holds_at(throwOffFails(Animal2, Human), Time)), happens(throwOff(Animal2, Human), Time), Animal1\=Human, large(Animal1), holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Time+1))))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [animal1,animal2,position,time]% 
-% HoldsAt(Pos(animal1,position),time) &
-% !HoldsAt(Pos(animal1,position),time+1) &
-% !HoldsAt(Pos(animal2,position),time) &
-% HoldsAt(Pos(animal2,position),time+1) ->
-% (!Large(animal1) |
-%  !Large(animal2) |
-%  ({human} human=animal2 & HoldsAt(AbnormalEncroachment(human),time))).
-holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Time+1)), not(holds_at(pos(Animal2, Position), Time)), holds_at(pos(Animal2, Position), Time+1) ->
-	(   not(large(Animal1))
-	;   not(large(Animal2))
-	;   exists([Human],
-		   (Human=Animal2, holds_at(abnormalEncroachment(Human), Time)))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [animal1,animal2,position1,position2,time]% 
-% animal1!=% animal2 &
-% Large(animal1) & Large(animal2) &
-% HoldsAt(Pos(animal1,position1),time) &
-% HoldsAt(Pos(animal1,position2),time+1) &
-% HoldsAt(Pos(animal2,position1),time) &
-% HoldsAt(Pos(animal2,position2),time+1) ->
-% !{gate} Sides(position1,position2,gate).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position1), Time), holds_at(pos(Animal1, Position2), Time+1), holds_at(pos(Animal2, Position1), Time), holds_at(pos(Animal2, Position2), Time+1) ->
-	not(exists([Gate],
-		   sides(Position1, Position2, Gate))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [animal1,animal2,position1,position2,time]% 
-% animal1!=% animal2 &
-% Large(animal1) & Large(animal2) &
-% HoldsAt(Pos(animal1,position1),time) &
-% HoldsAt(Pos(animal1,position2),time+1) &
-% HoldsAt(Pos(animal2,position2),time) &
-% HoldsAt(Pos(animal2,position1),time+1) ->
-% !{gate} Sides(position1,position2,gate).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position1), Time), holds_at(pos(Animal1, Position2), Time+1), holds_at(pos(Animal2, Position2), Time), holds_at(pos(Animal2, Position1), Time+1) ->
-	not(exists([Gate],
-		   sides(Position1, Position2, Gate))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [gate,position1,position2,time]% 
-% HoldsAt(Opened(gate),time) &
-% !HoldsAt(Opened(gate),time+1) &
-% Sides(position1,position2,gate) ->
-% !{animal}
-% HoldsAt(Pos(animal,position1),time) &
-% HoldsAt(Pos(animal,position2),time+1).
-holds_at(opened(Gate), Time), not(holds_at(opened(Gate), Time+1)), sides(Position1, Position2, Gate) ->
-	not(exists([Animal],
-		   (holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time+1)))).
-
-
-% 
-% 
-% gate GateAO
-t(gate, gateAO).
-
-
-% cage CageA
-t(cage, cageA).
-
-
-% 
-% Loc(1)=CageA.
-loc(1)=cageA.
-
-
-% 
-% Loc(2)=CageA.
-loc(2)=cageA.
-
-
-% 
-% Loc(3)=CageA.
-loc(3)=cageA.
-
-
-% 
-% Loc(4)=CageA.
-loc(4)=cageA.
-
-
-% 
-% Loc(5)=Outside.
-loc(5)=outside.
-
-
-% 
-% Loc(6)=Outside.
-loc(6)=outside.
-
-
-% 
-% Loc(7)=Outside.
-loc(7)=outside.
-
-
-% 
-% Loc(8)=Outside.
-loc(8)=outside.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:8940
-% [position1,position2]% 
-% Neighbor(position1,position2) <->
-% ((position1=1 & position2=2) |
-%  (position1=1 & position2=3) |
-%  (position1=1 & position2=4) |
-%  (position1=2 & position2=3) |
-%  (position1=2 & position2=4) |
-%  (position1=3 & position2=4) |
-%  (position1=5 & position2=6) |
-%  (position1=5 & position2=7) |
-%  (position1=5 & position2=8) |
-%  (position1=6 & position2=7) |
-%  (position1=6 & position2=8) |
-%  (position1=7 & position2=8) |
-%  (position2=1 & position1=2) |
-%  (position2=1 & position1=3) |
-%  (position2=1 & position1=4) |
-%  (position2=2 & position1=3) |
-%  (position2=2 & position1=4) |
-%  (position2=3 & position1=4) |
-%  (position2=5 & position1=6) |
-%  (position2=5 & position1=7) |
-%  (position2=5 & position1=8) |
-%  (position2=6 & position1=7) |
-%  (position2=6 & position1=8) |
-%  (position2=7 & position1=8) |
-%  (position1=4 & position2=7) |
-%  (position2=4 & position1=7)).
-neighbor(Position1, Position2) <->
-	(   Position1=1,
-	    Position2=2
-	;   Position1=1,
-	    Position2=3
-	;   Position1=1,
-	    Position2=4
-	;   Position1=2,
-	    Position2=3
-	;   Position1=2,
-	    Position2=4
-	;   Position1=3,
-	    Position2=4
-	;   Position1=5,
-	    Position2=6
-	;   Position1=5,
-	    Position2=7
-	;   Position1=5,
-	    Position2=8
-	;   Position1=6,
-	    Position2=7
-	;   Position1=6,
-	    Position2=8
-	;   Position1=7,
-	    Position2=8
-	;   Position2=1,
-	    Position1=2
-	;   Position2=1,
-	    Position1=3
-	;   Position2=1,
-	    Position1=4
-	;   Position2=2,
-	    Position1=3
-	;   Position2=2,
-	    Position1=4
-	;   Position2=3,
-	    Position1=4
-	;   Position2=5,
-	    Position1=6
-	;   Position2=5,
-	    Position1=7
-	;   Position2=5,
-	    Position1=8
-	;   Position2=6,
-	    Position1=7
-	;   Position2=6,
-	    Position1=8
-	;   Position2=7,
-	    Position1=8
-	;   Position1=4,
-	    Position2=7
-	;   Position2=4,
-	    Position1=7
-	).
-
-
-% 
-% 
-% Side1(GateAO)=4.
-side1(gateAO)=4.
-
-
-% 
-% Side2(GateAO)=7.
-side2(gateAO)=7.
-
-
-% 
-% 
-% ; End of file.
 % 
 % human Homer
 t(human, homer).
@@ -41139,1267 +20980,18 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-% ectest/ec_reader_test_examples.e:9002
-% load('foundations/Root.e').
+load('foundations/Root.e').
 
 
-% foundations/Root.e:1
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% foundations/Root.e:11
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
 % load foundations/EC.e
-% ectest/ec_reader_test_examples.e:9003
-% load('foundations/EC.e').
+load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:9003
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
 % load examples/AkmanEtAl2004/ZooWorld.e
-% ectest/ec_reader_test_examples.e:9004
-% load('examples/AkmanEtAl2004/ZooWorld.e').
-
-
-% ectest/ec_reader_test_examples.e:9004
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; @article{Akman:2004,
-% ;   author = "Varol Akman and Selim T. Erdogan and Joohyung Lee and Vladimir Lifschitz and Hudson Turner",
-% ;   year = "2004",
-% ;   title = "Representing the zoo world and the traffic world in the language of the causal calculator",
-% ;   journal = "Artificial Intelligence",
-% ;   volume = "153",
-% ;   pages = "105--140",
-% ; }
-% ;
-% 
-% sort position: integer
-subsort(position, integer).
-
-
-% sort location
-sort(location).
-
-
-% sort cage: location
-subsort(cage, location).
-
-
-% sort gate
-sort(gate).
-
-
-% sort animal
-sort(animal).
-
-
-% sort elephant: animal
-subsort(elephant, animal).
-
-
-% sort horse: animal
-subsort(horse, animal).
-
-
-% sort dog: animal
-subsort(dog, animal).
-
-
-% sort human: animal
-subsort(human, animal).
-
-
-% sort species
-sort(species).
-
-
-% 
-% function Loc(position): location
-function(loc(position), location).
-
-
-% function Side1(gate): position
-function(side1(gate), position).
-
-
-% function Side2(gate): position
-function(side2(gate), position).
-
-
-% function Species(animal): species
-function(species(animal), species).
-
-
-% 
-% predicate Accessible(position,position,time)
-predicate(accessible(position, position, time)).
-
-
-% predicate Adult(animal)
-predicate(adult(animal)).
-
-
-% predicate Large(animal)
-predicate(large(animal)).
-
-
-% predicate LargeSpecies(species)
-predicate(largeSpecies(species)).
-
-
-% predicate Neighbor(position,position)
-predicate(neighbor(position, position)).
-
-
-% predicate Sides(position,position,gate)
-predicate(sides(position, position, gate)).
-
-
-% 
-% event Close(human,gate)
-event(close(human, gate)).
-
-
-% event GetOff(human,animal)
-event(getOff(human, animal)).
-
-
-% event Mount(human,animal)
-event(mount(human, animal)).
-
-
-% event Move(animal,position)
-event(move(animal, position)).
-
-
-% event Open(human,gate)
-event(open(human, gate)).
-
-
-% event ThrowOff(animal,human)
-event(throwOff(animal, human)).
-
-
-% 
-% fluent AbnormalEncroachment(human)
-fluent(abnormalEncroachment(human)).
-
-
-% noninertial AbnormalEncroachment
-noninertial(abnormalEncroachment).
-
-
-% fluent DoneBy(event,animal)
-fluent(doneBy(event, animal)).
-
-
-% noninertial DoneBy
-noninertial(doneBy).
-
-
-% fluent Mounted(human,animal)
-fluent(mounted(human, animal)).
-
-
-% fluent MountFails(human)
-fluent(mountFails(human)).
-
-
-% noninertial MountFails
-noninertial(mountFails).
-
-
-% fluent Moves(animal)
-fluent(moves(animal)).
-
-
-% noninertial Moves
-noninertial(moves).
-
-
-% fluent Opened(gate)
-fluent(opened(gate)).
-
-
-% fluent Pos(animal,position)
-fluent(pos(animal, position)).
-
-
-% fluent PosDeterminingFluent(human,position)
-fluent(posDeterminingFluent(human, position)).
-
-
-% noninertial PosDeterminingFluent
-noninertial(posDeterminingFluent).
-
-
-% fluent ThrowOffFails(animal,human)
-fluent(throwOffFails(animal, human)).
-
-
-% noninertial ThrowOffFails
-noninertial(throwOffFails).
-
-
-% 
-% species HumanSpecies, ElephantSpecies, HorseSpecies, DogSpecies
-t(species, humanSpecies).
-
-
-t(species, elephantSpecies).
-
-
-t(species, horseSpecies).
-
-
-t(species, dogSpecies).
-
-
-% location Outside
-t(location, outside).
-
-
-% 
-% LargeSpecies(HumanSpecies).
-largeSpecies(humanSpecies).
-
-
-% 
-% LargeSpecies(ElephantSpecies).
-largeSpecies(elephantSpecies).
-
-
-% 
-% LargeSpecies(HorseSpecies).
-largeSpecies(horseSpecies).
-
-
-% 
-% !LargeSpecies(DogSpecies).
-not(largeSpecies(dogSpecies)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [event,animal,time]% 
-% HoldsAt(DoneBy(event,animal),time) <->
-% (Happens(event,time) &
-%  (({gate} event=Close(animal,gate)) |
-%   ({animal1} event=GetOff(animal,animal1))|
-%   ({animal1} event=Mount(animal,animal1))|
-%   ({position} event=Move(animal,position))|
-%   ({gate} event=Open(animal,gate)) |
-%   ({human1} event=ThrowOff(animal,human1)))).
-holds_at(doneBy(Event, Animal), Time) <->
-	happens(Event, Time),
-	(   exists([Gate], Event=close(Animal, Gate))
-	;   exists([Animal1],
-		   Event=getOff(Animal, Animal1))
-	;   exists([Animal15],
-		   Event=mount(Animal, Animal15))
-	;   exists([Position],
-		   Event=move(Animal, Position))
-	;   exists([Gate7], Event=open(Animal, Gate7))
-	;   exists([Human1],
-		   Event=throwOff(Animal, Human1))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [event1,event2,animal,time]% 
-% HoldsAt(DoneBy(event1,animal),time) &
-% HoldsAt(DoneBy(event2,animal),time) ->
-% event1=event2.
-holds_at(doneBy(Event1, Animal), Time), holds_at(doneBy(Event2, Animal), Time) ->
-	Event1=Event2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [animal] % Large(animal) <-> (Adult(animal) & LargeSpecies(Species(animal))).
-large(Animal) <->
-	adult(Animal),
-	largeSpecies(species(Animal)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [position] 
-% ectest/ec_reader_test_examples.e:9004
-% {position1} % position1!=% position & Neighbor(position,position1).
-exists([Position1],  (Position1\=Position, neighbor(Position, Position1))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [position] % !Neighbor(position,position).
-not(neighbor(Position, Position)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [position1,position2]% 
-% Neighbor(position1,position2) ->
-% Neighbor(position2,position1).
-neighbor(Position1, Position2) ->
-	neighbor(Position2, Position1).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [cage] % cage!=% Outside.
-Cage\=outside.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [position1,position2,gate]% 
-% Sides(position1,position2,gate) <->
-% ((Side1(gate)=position1 &
-%   Side2(gate)=position2) |
-%  (Side2(gate)=position1 &
-%   Side1(gate)=position2)).
-sides(Position1, Position2, Gate) <->
-	(   side1(Gate)=Position1,
-	    side2(Gate)=Position2
-	;   side2(Gate)=Position1,
-	    side1(Gate)=Position2
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [gate] % Loc(Side1(gate))!=Loc(Side2(gate)).
-loc(side1(Gate))\=loc(side2(Gate)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [position1,position2,gate1,gate2]% 
-% Sides(position1,position2,gate1) &
-% Sides(position1,position2,gate2) ->
-% gate1=gate2.
-sides(Position1, Position2, Gate1), sides(Position1, Position2, Gate2) ->
-	Gate1=Gate2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [position1,position2,gate]% 
-% Sides(position1,position2,gate) ->
-% Neighbor(position1,position2).
-sides(Position1, Position2, Gate) ->
-	neighbor(Position1, Position2).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [position1,position2]% 
-% Loc(position1) != Loc(position2) &
-% Neighbor(position1,position2) ->
-% ectest/ec_reader_test_examples.e:9004
-% {gate}%  Sides(position1,position2,gate).
-exists([Gate],  (loc(Position1)\=loc(Position2), neighbor(Position1, Position2)->sides(Position1, Position2, Gate))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [animal,position1,position2,time]% 
-% HoldsAt(Pos(animal,position1),time) &
-% HoldsAt(Pos(animal,position2),time) ->
-% position1=position2.
-holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time) ->
-	Position1=Position2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [animal,time]% 
-% ectest/ec_reader_test_examples.e:9004
-% {position} % HoldsAt(Pos(animal,position),time).
-exists([Position], holds_at(pos(Animal, Position), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [animal1,animal2,position,time]% 
-% (animal1!=animal2 &
-%  Large(animal1) &
-%  Large(animal2) &
-%  HoldsAt(Pos(animal1,position),time) &
-%  HoldsAt(Pos(animal2,position),time)) ->
-% (({human} human=animal1 & HoldsAt(Mounted(human,animal2),time)) |
-%  ({human} human=animal2 & HoldsAt(Mounted(human,animal1),time))).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position), Time), holds_at(pos(Animal2, Position), Time) ->
-	(   exists([Human],
-		   (Human=Animal1, holds_at(mounted(Human, Animal2), Time)))
-	;   exists([Human5],
-		   (Human5=Animal2, holds_at(mounted(Human5, Animal1), Time)))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,position1,position2,time]% 
-% HoldsAt(PosDeterminingFluent(human,position1),time) &
-% HoldsAt(PosDeterminingFluent(human,position2),time) ->
-% position1=position2.
-holds_at(posDeterminingFluent(Human, Position1), Time), holds_at(posDeterminingFluent(Human, Position2), Time) ->
-	Position1=Position2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [animal,position,time]% 
-% Initiates(Move(animal,position),Pos(animal,position),time).
-initiates(move(Animal, Position), pos(Animal, Position), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [animal,position1,position2,time]% 
-% HoldsAt(Pos(animal,position1),time) ->
-% Terminates(Move(animal,position2),Pos(animal,position1),time).
-holds_at(pos(Animal, Position1), Time) ->
-	terminates(move(Animal, Position2),
-		   pos(Animal, Position1),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [animal,position,time]% 
-% Happens(Move(animal,position),time) ->
-% !HoldsAt(Pos(animal,position),time).
-happens(move(Animal, Position), Time) ->
-	not(holds_at(pos(Animal, Position), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,position,time]% 
-% Happens(Move(human,position),time) ->
-% !{animal} HoldsAt(Mounted(human,animal),time).
-happens(move(Human, Position), Time) ->
-	not(exists([Animal],
-		   holds_at(mounted(Human, Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,gate,time]% 
-% Initiates(Open(human,gate),Opened(gate),time).
-initiates(open(Human, Gate), opened(Gate), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,gate,time]% 
-% Happens(Open(human,gate),time) ->
-% !HoldsAt(Opened(gate),time) &
-% (!{animal} HoldsAt(Mounted(human,animal),time)) &
-% ({position}
-%  (Side1(gate)=position | Side2(gate)=position) &
-%  HoldsAt(Pos(human,position),time)).
-happens(open(Human, Gate), Time) ->
-	not(holds_at(opened(Gate), Time)),
-	not(exists([Animal],
-		   holds_at(mounted(Human, Animal), Time))),
-	exists([Position],
-	       ((side1(Gate)=Position;side2(Gate)=Position), holds_at(pos(Human, Position), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,gate,time]% 
-% Terminates(Close(human,gate),Opened(gate),time).
-terminates(close(Human, Gate), opened(Gate), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,gate,time]% 
-% Happens(Close(human,gate),time) ->
-% HoldsAt(Opened(gate),time) &
-% (!{animal} HoldsAt(Mounted(human,animal),time)) &
-% ectest/ec_reader_test_examples.e:9004
-% {position}% 
-% (Side1(gate)=position | Side2(gate)=position) &
-% HoldsAt(Pos(human,position),time).
-exists([Position],  (happens(close(Human, Gate), Time)->holds_at(opened(Gate), Time), not(exists([Animal], holds_at(mounted(Human, Animal), Time))), (side1(Gate)=Position;side2(Gate)=Position), holds_at(pos(Human, Position), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,animal,position,time]% 
-% HoldsAt(Mounted(human,animal),time) &
-% HoldsAt(Pos(animal,position),time) ->
-% HoldsAt(Pos(human,position),time).
-holds_at(mounted(Human, Animal), Time), holds_at(pos(Animal, Position), Time) ->
-	holds_at(pos(Human, Position), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [animal,time]% 
-% HoldsAt(Moves(animal),time) <->
-% ({position}
-%  HoldsAt(Pos(animal,position),time) &
-%  !HoldsAt(Pos(animal,position),time+1)).
-holds_at(moves(Animal), Time) <->
-	exists([Position],
-	       (holds_at(pos(Animal, Position), Time), not(holds_at(pos(Animal, Position), Time+1)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,time]% 
-% HoldsAt(MountFails(human),time) <->
-% ({animal}
-%   Happens(Mount(human,animal),time) &
-%   HoldsAt(Moves(animal),time)).
-holds_at(mountFails(Human), Time) <->
-	exists([Animal],
-	       (happens(mount(Human, Animal), Time), holds_at(moves(Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Releases(Mount(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)) ->
-	releases(mount(Human, Animal),
-		 pos(Human, Position),
-		 Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,animal,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Initiates(Mount(human,animal),Mounted(human,animal),time).
-not(holds_at(moves(Animal), Time)) ->
-	initiates(mount(Human, Animal),
-		  mounted(Human, Animal),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,animal,position,time]% 
-% HoldsAt(Pos(animal,position),time) &
-% HoldsAt(Moves(animal),time) ->
-% Initiates(Mount(human,animal),Pos(human,position),time).
-holds_at(pos(Animal, Position), Time), holds_at(moves(Animal), Time) ->
-	initiates(mount(Human, Animal),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,animal,position,time]% 
-% HoldsAt(Pos(human,position),time) &
-% HoldsAt(Moves(animal),time) ->
-% Terminates(Mount(human,animal),Pos(human,position),time).
-holds_at(pos(Human, Position), Time), holds_at(moves(Animal), Time) ->
-	terminates(mount(Human, Animal),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% Large(animal).
-happens(mount(Human, Animal), Time) ->
-	large(Animal).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,animal,time]% 
-% HoldsAt(Mounted(human,animal),time) ->
-% Large(animal).
-holds_at(mounted(Human, Animal), Time) ->
-	large(Animal).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human1,human2,time]% 
-% Happens(Mount(human1,human2),time) ->
-% !Large(human1).
-happens(mount(Human1, Human2), Time) ->
-	not(large(Human1)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human1,human2,time]% 
-% HoldsAt(Mounted(human1,human2),time) ->
-% !Large(human1).
-holds_at(mounted(Human1, Human2), Time) ->
-	not(large(Human1)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{human1} human1!=human & HoldsAt(Mounted(human1,animal),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Human1],
-		   (Human1\=Human, holds_at(mounted(Human1, Animal), Time)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human1,human2,animal,time]% 
-% HoldsAt(Mounted(human1,animal),time) &
-% HoldsAt(Mounted(human2,animal),time) ->
-% human1=human2.
-holds_at(mounted(Human1, Animal), Time), holds_at(mounted(Human2, Animal), Time) ->
-	Human1=Human2.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{human1} human1!=human & HoldsAt(Mounted(human1,human),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Human1],
-		   (Human1\=Human, holds_at(mounted(Human1, Human), Time)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human1,human2,time]% 
-% Happens(Mount(human1,human2),time) ->
-% ectest/ec_reader_test_examples.e:9004
-% {animal}%  HoldsAt(Mounted(human2,animal),time).
-exists([Animal],  (happens(mount(Human1, Human2), Time)->holds_at(mounted(Human2, Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human1,human2,time]% 
-% HoldsAt(Mounted(human1,human2),time) ->
-% !{animal} HoldsAt(Mounted(human2,animal),time).
-holds_at(mounted(Human1, Human2), Time) ->
-	not(exists([Animal],
-		   holds_at(mounted(Human2, Animal), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,animal,time]% 
-% Happens(Mount(human,animal),time) ->
-% !{animal1} HoldsAt(Mounted(human,animal1),time).
-happens(mount(Human, Animal), Time) ->
-	not(exists([Animal1],
-		   holds_at(mounted(Human, Animal1), Time))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,animal,time]% 
-% !HoldsAt(Moves(animal),time) ->
-% Terminates(GetOff(human,animal),Mounted(human,animal),time).
-not(holds_at(moves(Animal), Time)) ->
-	terminates(getOff(Human, Animal),
-		   mounted(Human, Animal),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(PosDeterminingFluent(human,position),time) ->
-% Initiates(GetOff(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)), holds_at(posDeterminingFluent(Human, Position), Time) ->
-	initiates(getOff(Human, Animal),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,animal,position,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(Pos(human,position),time) ->
-% Terminates(GetOff(human,animal),Pos(human,position),time).
-not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position), Time) ->
-	terminates(getOff(Human, Animal),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,animal,position1,position2,time]% 
-% !HoldsAt(Moves(animal),time) &
-% HoldsAt(Pos(human,position1),time) &
-% position1!=position2 ->
-% Terminates(GetOff(human,animal),Pos(human,position2),time).
-not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position1), Time), Position1\=Position2 ->
-	terminates(getOff(Human, Animal),
-		   pos(Human, Position2),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,animal,time]% 
-% Happens(GetOff(human,animal),time) ->
-% HoldsAt(Mounted(human,animal),time).
-happens(getOff(Human, Animal), Time) ->
-	holds_at(mounted(Human, Animal), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [animal1,human,time]% 
-% HoldsAt(ThrowOffFails(animal1,human),time) <->
-% ({position,animal2}
-%  animal2!=human &
-%  HoldsAt(PosDeterminingFluent(human,position),time) &
-%  Large(animal2) &
-%  HoldsAt(Pos(animal2,position),time+1)).
-holds_at(throwOffFails(Animal1, Human), Time) <->
-	exists([Position, Animal2],
-	       (Animal2\=Human, holds_at(posDeterminingFluent(Human, Position), Time), large(Animal2), holds_at(pos(Animal2, Position), Time+1))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [animal,human,position,time]% 
-% HoldsAt(PosDeterminingFluent(human,position),time) &
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Initiates(ThrowOff(animal,human),Pos(human,position),time).
-holds_at(posDeterminingFluent(Human, Position), Time), not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	initiates(throwOff(Animal, Human),
-		  pos(Human, Position),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [animal,human,position,time]% 
-% HoldsAt(Pos(human,position),time) &
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Terminates(ThrowOff(animal,human),Pos(human,position),time).
-holds_at(pos(Human, Position), Time), not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	terminates(throwOff(Animal, Human),
-		   pos(Human, Position),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [animal,human,position1,position2,time]% 
-% !HoldsAt(ThrowOffFails(animal,human),time) &
-% HoldsAt(Pos(human,position1),time) &
-% !HoldsAt(PosDeterminingFluent(human,position2),time) &
-% position1!=position2 ->
-% Terminates(ThrowOff(animal,human),Pos(human,position2),time).
-not(holds_at(throwOffFails(Animal, Human), Time)), holds_at(pos(Human, Position1), Time), not(holds_at(posDeterminingFluent(Human, Position2), Time)), Position1\=Position2 ->
-	terminates(throwOff(Animal, Human),
-		   pos(Human, Position2),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,time]% 
-% (!{animal} Happens(ThrowOff(animal,human),time) |
-%            Happens(GetOff(human,animal),time)) ->
-% HoldsAt(PosDeterminingFluent(human,1),time).
-not(exists([Animal], happens(throwOff(Animal, Human), Time)));happens(getOff(Human, animal), Time) ->
-	holds_at(posDeterminingFluent(Human, 1), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,position,animal1,animal2,time]% 
-% HoldsAt(PosDeterminingFluent(human,position),time) &
-% HoldsAt(ThrowOffFails(animal1,human),time) &
-% HoldsAt(Pos(animal2,position),time) ->
-% Initiates(ThrowOff(animal1,human),Mounted(human,animal2),time).
-holds_at(posDeterminingFluent(Human, Position), Time), holds_at(throwOffFails(Animal1, Human), Time), holds_at(pos(Animal2, Position), Time) ->
-	initiates(throwOff(Animal1, Human),
-		  mounted(Human, Animal2),
-		  Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [human,animal,time]% 
-% !HoldsAt(ThrowOffFails(animal,human),time) ->
-% Terminates(ThrowOff(animal,human),Mounted(human,animal),time).
-not(holds_at(throwOffFails(Animal, Human), Time)) ->
-	terminates(throwOff(Animal, Human),
-		   mounted(Human, Animal),
-		   Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [animal,human,time]% 
-% Happens(ThrowOff(animal,human),time) ->
-% HoldsAt(Mounted(human,animal),time).
-happens(throwOff(Animal, Human), Time) ->
-	holds_at(mounted(Human, Animal), Time).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [animal,human,time]% 
-% Happens(ThrowOff(animal,human),time) ->
-% !Happens(GetOff(human,animal),time).
-happens(throwOff(Animal, Human), Time) ->
-	not(happens(getOff(Human, Animal), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [animal,human,time]% 
-% Happens(GetOff(human,animal),time) ->
-% !Happens(ThrowOff(animal,human),time).
-happens(getOff(Human, Animal), Time) ->
-	not(happens(throwOff(Animal, Human), Time)).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [position1,position2,time]% 
-% Accessible(position1,position2,time) <->
-% (Neighbor(position1,position2) &
-%  !{gate} Sides(position1,position2,gate) &
-%          !HoldsAt(Opened(gate),time)).
-accessible(Position1, Position2, Time) <->
-	thereExists((neighbor(Position1, Position2), not([gate])),
-		    (sides(Position1, Position2, gate), not(holds_at(opened(gate), Time)))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [animal,position1,position2,time]% 
-% (position1!=position2 &
-%  HoldsAt(Pos(animal,position1),time) &
-%  HoldsAt(Pos(animal,position2),time+1)) ->
-% Accessible(position1,position2,time).
-Position1\=Position2, holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time+1) ->
-	accessible(Position1, Position2, Time).
+load('examples/AkmanEtAl2004/ZooWorld.e').
 
 
-% 
-% 
 % ectest/ec_reader_test_examples.e:9004
-% [human,time]% 
-% HoldsAt(AbnormalEncroachment(human),time) <->
-% (HoldsAt(MountFails(human),time) |
-%  ({position,animal1,animal2}
-%    HoldsAt(PosDeterminingFluent(human,position),time) &
-%    !HoldsAt(ThrowOffFails(animal2,human),time) &
-%    Happens(ThrowOff(animal2,human),time) &
-%    animal1!=human &
-%    Large(animal1) &
-%    HoldsAt(Pos(animal1,position),time) &
-%    !HoldsAt(Pos(animal1,position),time+1))).
-holds_at(abnormalEncroachment(Human), Time) <->
-	(   holds_at(mountFails(Human), Time)
-	;   exists([Position, Animal1, Animal2],
-		   (holds_at(posDeterminingFluent(Human, Position), Time), not(holds_at(throwOffFails(Animal2, Human), Time)), happens(throwOff(Animal2, Human), Time), Animal1\=Human, large(Animal1), holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Time+1))))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [animal1,animal2,position,time]% 
-% HoldsAt(Pos(animal1,position),time) &
-% !HoldsAt(Pos(animal1,position),time+1) &
-% !HoldsAt(Pos(animal2,position),time) &
-% HoldsAt(Pos(animal2,position),time+1) ->
-% (!Large(animal1) |
-%  !Large(animal2) |
-%  ({human} human=animal2 & HoldsAt(AbnormalEncroachment(human),time))).
-holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Time+1)), not(holds_at(pos(Animal2, Position), Time)), holds_at(pos(Animal2, Position), Time+1) ->
-	(   not(large(Animal1))
-	;   not(large(Animal2))
-	;   exists([Human],
-		   (Human=Animal2, holds_at(abnormalEncroachment(Human), Time)))
-	).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [animal1,animal2,position1,position2,time]% 
-% animal1!=% animal2 &
-% Large(animal1) & Large(animal2) &
-% HoldsAt(Pos(animal1,position1),time) &
-% HoldsAt(Pos(animal1,position2),time+1) &
-% HoldsAt(Pos(animal2,position1),time) &
-% HoldsAt(Pos(animal2,position2),time+1) ->
-% !{gate} Sides(position1,position2,gate).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position1), Time), holds_at(pos(Animal1, Position2), Time+1), holds_at(pos(Animal2, Position1), Time), holds_at(pos(Animal2, Position2), Time+1) ->
-	not(exists([Gate],
-		   sides(Position1, Position2, Gate))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [animal1,animal2,position1,position2,time]% 
-% animal1!=% animal2 &
-% Large(animal1) & Large(animal2) &
-% HoldsAt(Pos(animal1,position1),time) &
-% HoldsAt(Pos(animal1,position2),time+1) &
-% HoldsAt(Pos(animal2,position2),time) &
-% HoldsAt(Pos(animal2,position1),time+1) ->
-% !{gate} Sides(position1,position2,gate).
-Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position1), Time), holds_at(pos(Animal1, Position2), Time+1), holds_at(pos(Animal2, Position2), Time), holds_at(pos(Animal2, Position1), Time+1) ->
-	not(exists([Gate],
-		   sides(Position1, Position2, Gate))).
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [gate,position1,position2,time]% 
-% HoldsAt(Opened(gate),time) &
-% !HoldsAt(Opened(gate),time+1) &
-% Sides(position1,position2,gate) ->
-% !{animal}
-% HoldsAt(Pos(animal,position1),time) &
-% HoldsAt(Pos(animal,position2),time+1).
-holds_at(opened(Gate), Time), not(holds_at(opened(Gate), Time+1)), sides(Position1, Position2, Gate) ->
-	not(exists([Animal],
-		   (holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time+1)))).
-
-
-% 
-% 
-% gate GateAO
-t(gate, gateAO).
-
-
-% cage CageA
-t(cage, cageA).
-
-
-% 
-% Loc(1)=CageA.
-loc(1)=cageA.
-
-
-% 
-% Loc(2)=CageA.
-loc(2)=cageA.
-
-
-% 
-% Loc(3)=CageA.
-loc(3)=cageA.
-
-
-% 
-% Loc(4)=CageA.
-loc(4)=cageA.
-
-
-% 
-% Loc(5)=Outside.
-loc(5)=outside.
-
-
-% 
-% Loc(6)=Outside.
-loc(6)=outside.
-
-
-% 
-% Loc(7)=Outside.
-loc(7)=outside.
-
-
-% 
-% Loc(8)=Outside.
-loc(8)=outside.
-
-
-% 
-% 
-% ectest/ec_reader_test_examples.e:9004
-% [position1,position2]% 
-% Neighbor(position1,position2) <->
-% ((position1=1 & position2=2) |
-%  (position1=1 & position2=3) |
-%  (position1=1 & position2=4) |
-%  (position1=2 & position2=3) |
-%  (position1=2 & position2=4) |
-%  (position1=3 & position2=4) |
-%  (position1=5 & position2=6) |
-%  (position1=5 & position2=7) |
-%  (position1=5 & position2=8) |
-%  (position1=6 & position2=7) |
-%  (position1=6 & position2=8) |
-%  (position1=7 & position2=8) |
-%  (position2=1 & position1=2) |
-%  (position2=1 & position1=3) |
-%  (position2=1 & position1=4) |
-%  (position2=2 & position1=3) |
-%  (position2=2 & position1=4) |
-%  (position2=3 & position1=4) |
-%  (position2=5 & position1=6) |
-%  (position2=5 & position1=7) |
-%  (position2=5 & position1=8) |
-%  (position2=6 & position1=7) |
-%  (position2=6 & position1=8) |
-%  (position2=7 & position1=8) |
-%  (position1=4 & position2=7) |
-%  (position2=4 & position1=7)).
-neighbor(Position1, Position2) <->
-	(   Position1=1,
-	    Position2=2
-	;   Position1=1,
-	    Position2=3
-	;   Position1=1,
-	    Position2=4
-	;   Position1=2,
-	    Position2=3
-	;   Position1=2,
-	    Position2=4
-	;   Position1=3,
-	    Position2=4
-	;   Position1=5,
-	    Position2=6
-	;   Position1=5,
-	    Position2=7
-	;   Position1=5,
-	    Position2=8
-	;   Position1=6,
-	    Position2=7
-	;   Position1=6,
-	    Position2=8
-	;   Position1=7,
-	    Position2=8
-	;   Position2=1,
-	    Position1=2
-	;   Position2=1,
-	    Position1=3
-	;   Position2=1,
-	    Position1=4
-	;   Position2=2,
-	    Position1=3
-	;   Position2=2,
-	    Position1=4
-	;   Position2=3,
-	    Position1=4
-	;   Position2=5,
-	    Position1=6
-	;   Position2=5,
-	    Position1=7
-	;   Position2=5,
-	    Position1=8
-	;   Position2=6,
-	    Position1=7
-	;   Position2=6,
-	    Position1=8
-	;   Position2=7,
-	    Position1=8
-	;   Position1=4,
-	    Position2=7
-	;   Position2=4,
-	    Position1=7
-	).
-
-
-% 
-% 
-% Side1(GateAO)=4.
-side1(gateAO)=4.
-
-
-% 
-% Side2(GateAO)=7.
-side2(gateAO)=7.
-
-
-% 
-% 
-% ; End of file.
 % 
 % human Homer
 t(human, homer).
@@ -42499,3 +21091,5 @@ range(offset, 0, 0).
 
 % 
 % ; End of file.
+% ectest/ec_reader_test_examples.e:9039
+% translate: ending  File: ectest/ec_reader_test_examples.e.pro 

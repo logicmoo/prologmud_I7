@@ -113,20 +113,7 @@ e_to_pl(Why, outdir(Dir), Ins):- must(is_stream(Ins)), !,
 e_to_pl(Why, OutputName, _Ins):- is_filename(OutputName), 
    \+ should_update(OutputName),
    raise_translation_event(Why,skipped,OutputName),
-   raise_translation_event(Why,ready,OutputName).
-
-% Out is a filename not currently loadable 
-e_to_pl(Why, OutputName, Ins):-  \+ is_stream(OutputName), !,
-   must(should_update(OutputName)),
-   raise_translation_event(Why,unskipped,OutputName),
-   setup_call_cleanup(
-     open(OutputName, write, Outs),
-     with_output_to(Outs, 
-      (raise_translation_event(Why,begining,OutputName),
-       e_to_pl(Why, current_output, Ins),
-       raise_translation_event(Why,ending,OutputName))),
-     close(Outs)),
-   raise_translation_event(Why,ready,OutputName).
+   raise_translation_event(Why,ready,OutputName), !.
 
 e_to_pl(Why, Out, F):- is_filename(F), !, 
       setup_call_cleanup(
@@ -134,10 +121,22 @@ e_to_pl(Why, Out, F):- is_filename(F), !,
         e_to_pl(Why, Out, Ins),
         close(Ins)),!.
 
+% Out is a filename not currently loadable 
+e_to_pl(Why, OutputName, Ins):-  \+ is_stream(OutputName), !,
+   assertion(is_stream(Ins)), assertion(stream_property(Ins, input)),
+   must(should_update(OutputName)),
+   raise_translation_event(Why,unskipped,OutputName),
+   setup_call_cleanup(
+     open(OutputName, write, Outs),
+     with_output_to(Outs, 
+       (raise_translation_event(Why,begining,OutputName), 
+         e_to_pl(Why, current_output, Ins),
+          raise_translation_event(Why,ending,OutputName))),
+     close(Outs)),
+   raise_translation_event(Why,ready,OutputName).
+
 e_to_pl(Why, Out, Ins):- 
-      assertion(current_output(Out)), 
-      assertion(is_stream(Ins)),
-      assertion(stream_property(Ins, input)),
+      assertion(current_output(Out)),       
       e_io(Why, Ins).
 
 
@@ -150,8 +149,7 @@ should_update(OutputName):- \+ exists_file(OutputName),!.
 should_update(_):- etmp:ec_option(overwrite_transated_files,always),!.
         
 %e_io(Why, Ins):- dmsg(e_io(Why, Ins)), fail.
-e_io(Why, Ins):-
-  mention_s_l,
+e_io(Why, Ins):-  
   repeat, 
   once(process_e_stream(Why, Ins)), 
   notrace(at_end_of_stream(Ins)), !.
@@ -471,30 +469,36 @@ cont_one_e_compound(S, InCodes, WasLast, Term):-
 
 :- dynamic(last_s_l/2).
 maybe_mention_s_l:- last_s_l(B,L),LLL is L+5,  s_l(BB,LL), B==BB, !, (LLL<LL -> mention_s_l; true).
-maybe_mention_s_l:- mention_s_l.
+maybe_mention_s_l:- mention_s_l.                      
 
-mention_s_l:-  notrace((flush_output, format('~N'),
+mention_s_l:-  must_det_l((flush_output, format('~N'),
   s_l(B,L), ansi_format([fg(green)], '% ~w~n', [B:L]), flush_output)),
   retractall(last_s_l(B,_)),asserta(last_s_l(B,L)).
-s_l(F,L):- 
-  current_stream(F,read,S),atom(F),
-  stream_property(S,file_name(F)),
-  ignore(stream_property(S,line_count(L));line_or_char_count(S,L);stream_property(S,line_or_char_count(L))),
-  ignore(L=999),!.
+
+s_l(F,L):- source_location(F,L), !.
+s_l(F,L):- any_stream(F,S), any_line_count(S,L),any_line_count(_,L), !.
+s_l(unknown,0).
+
+any_stream(F,S):- stream_property(S, file_name(F)),stream_property(S, input).
+any_stream(F,S):- current_stream(F, read, S), atom(F).
+any_stream(F,S):- stream_property(S, file_name(F)).
+any_stream(F,S):- current_stream(F, _, S), atom(F).
+any_line_count(_,L):- nonvar(L),!.
+any_line_count(S,L):- stream_property(S, line_count(L)).
+any_line_count(S,L):- line_or_char_count(S, L).
+any_line_count(S,L):- stream_property(S, line_or_char_count(L)).
+any_line_count(_,0).
 
 
 process_e(Why, SL):- e_to_ec(SL, SO) -> SL\=@=SO, !, process_e(Why, SO).
 process_e(Why, S):- must(glean_data(Why, S)), must(call(Why, S)), !.
 
 
-do_ec_load(translate(begining, _Outfile)):- !.
-do_ec_load(translate(ending, _Outfile)):- !.
-do_ec_load(load(SS)):- mention_s_l, exists_file(SS), !, format('~N'), e_print(load(SS)), ec_load(SS), !.
+do_ec_load(translate(Event, Outfile)):- !, mention_s_l, format('~N% translate: ~w  File: ~w ~n',[Event, Outfile]).
+do_ec_load(load(SS)):- exists_file(SS), !, format('~N% '), e_print(loading(SS)), ec_load(SS), !.
 do_ec_load(SS):- flush_output, format('~N'), e_print(SS).
 
-do_convert_e(translate(begining, _Outfile)):- !.
-do_convert_e(translate(ending, _Outfile)):- !.
-do_convert_e(load(SS)):- mention_s_l, exists_file(SS), !, format('~N% '), e_print(load(SS)), convert_e(current_output, SS).
+do_convert_e(translate(Event, Outfile)):- !, mention_s_l, format('~N% translate: ~w  File: ~w ~n',[Event, Outfile]).
 do_convert_e(SS):- flush_output, format('~N'), e_print(SS).
 
 
