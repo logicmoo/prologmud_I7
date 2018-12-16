@@ -489,21 +489,20 @@ process_e(Why, S):- must(glean_data(Why, S)), must(call(Why, S)), !.
 
 do_ec_load(translate(begining, _Outfile)):- !.
 do_ec_load(translate(ending, _Outfile)):- !.
-do_ec_load(load(SS)):- mention_s_l, exists_file(SS), !, do_convert_e_print(SS), ec_load(SS), !.
-do_ec_load(SS):- do_convert_e(SS).
+do_ec_load(load(SS)):- mention_s_l, exists_file(SS), !, format('~N'), e_print(load(SS)), ec_load(SS), !.
+do_ec_load(SS):- flush_output, format('~N'), e_print(SS).
 
 do_convert_e(translate(begining, _Outfile)):- !.
 do_convert_e(translate(ending, _Outfile)):- !.
-do_convert_e(load(SS)):- mention_s_l, exists_file(SS), !, do_convert_e_print(SS), convert_e(current_output, SS).
-do_convert_e(SS):- do_convert_e_print(SS).
+do_convert_e(load(SS)):- mention_s_l, exists_file(SS), !, format('~N% '), e_print(load(SS)), convert_e(current_output, SS).
+do_convert_e(SS):- flush_output, format('~N'), e_print(SS).
 
 
 
 
-do_convert_e_print(SS):- 
+e_print(SS):- 
    must(pretty_numbervars(SS, SS1)), 
-   flush_output, format('~N'),
-    with_op_cleanup(1200,xfx,(<->),
+   with_op_cleanup(1200,xfx,(<->),
      with_op_cleanup(1200,xfx,(->),
        ansi_format([fg(yellow)], '~@~n~n', [ec_reader:pprint_sf(SS1)]))), 
     flush_output, !.
