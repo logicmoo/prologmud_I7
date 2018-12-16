@@ -25,7 +25,9 @@
 */
 :- module(ec_reader,[process_e/2,ec_load/1,convert_e/1]).
 
-:- meta_predicate e_to_pl(1,+,+), e_in_to_pl(1,+,+).
+:- ensure_loaded('./ec_config').
+
+:- meta_predicate e_to_pl(1,+,+), e_to_pl(1,+,+).
 :- meta_predicate map_callables(2,*,*).
 :- meta_predicate in_space_cmt(0).
 :- meta_predicate process_e_stream(1,*).
@@ -51,78 +53,103 @@
 %:- use_module(library(file_utils/filestreams)).
 
 :- export(e_reader_testf/0).
-e_reader_testf :- convert_e(outf, 'ectest/*.e').
+e_reader_testf:- e_reader_testout(outdir('.')).
 
 :- export(e_reader_test/0).
-e_reader_test :- convert_e(user_output, 'ectest/*.e'),  
-  convert_e(user_output, 'examples/AkmanEtAl2004/ZooWorld.e'),
-  convert_e(user_output, 'examples/Mueller2006/Chapter11/HungryCat.e').
+e_reader_test:- e_reader_testout(user_output).
+
+e_reader_testout(Out) :- convert_e(Out, 'ectest/*.e'),  
+  convert_e(Out, 'examples/AkmanEtAl2004/ZooWorld.e'),
+  convert_e(Out, 'examples/Mueller2006/Chapter11/HungryCat.e').
 %:- initialization(e_reader_test, main).
+
+raise_translation_event(Why,What,OutputName):- call(Why,translate(What,OutputName)).
+
 
 :- export(ec_load/1).
 ec_load(F):-  
-  \+ etmp:e_option(load(F), _),
-  asserta(etmp:e_option(load(F), ec_load)),
+  \+ etmp:ec_option(load(F), _),
+  asserta(etmp:ec_option(load(F), ec_load)),
   e_to_pl(do_ec_load, current_output, F).
 
 :- export(convert_e/1).
-convert_e(F):- convert_e(outf, F).
+convert_e(F):- convert_e(outdir('.'), F).
 convert_e(Out, F):- e_to_pl(do_convert_e, Out, F).
 
+is_filename(F):- atom(F), \+ is_stream(F),
+  (exists_file(F);is_absolute_file_name(F)).
 
-e_to_pl(Why, Out, F):- dmsg(e_to_pl(Why, Out, F)), fail.
-e_to_pl(Why, Out, F):- notrace(is_stream(F)), !, e_in_to_pl(Why, Out, F).
-e_to_pl(Why, Out, F):- atom(F), (exists_file(F);is_absolute_file_name(F)), !, 
-   setup_call_cleanup(open(F, read, Ins), 
-     e_in_to_pl(Why, Out, Ins),
-     close(Ins)),!.
-e_to_pl(Why, Out, F):- atom(F), expand_file_name(F, L), L\==[], [F]\==L, !, maplist(e_to_pl(Why, Out), L).
-e_to_pl(Why, Out, F):- 
+%e_to_pl(Why, Out, F):- dmsg(e_to_pl(Why, Out, F)), fail.
+
+% wildcard input file  "./foo*.e"
+e_to_pl(Why, Out, F):- atom(F), \+ is_stream(F), \+ is_filename(F), 
+   expand_file_name(F, L), L\==[], [F]\==L, !, maplist(e_to_pl(Why, Out), L).
+
+% wildcard input file  logical(./foo*.e).
+e_to_pl(Why, Out, F):-  \+ is_stream(F), \+ is_filename(F),
    findall(N, absolute_file_name(F, N, [file_type(txt), file_errors(fail), expand(false), solutions(all)]), L), 
    L\=[F], !, maplist(e_to_pl(Why, Out), L).
-e_to_pl(Why, Outs, In):- atom(In), 
-  setup_call_cleanup(open(In, read, Ins), 
-     e_in_to_pl(Why, Outs, Ins), 
-     close(Ins)).
 
-
-e_in_to_pl(Why, Out, F):- dmsg(e_in_to_pl(Why, Out, F)), fail.
-e_in_to_pl(_, _, Ins):- retractall(last_s_l(_,_)),
-  assertion(stream_property(Ins, input)), fail.
-  
-e_in_to_pl(Why, Outs, Ins):- 
-   atomic(Outs), is_stream(Outs), !, 
+% Out is a misdirected stream
+e_to_pl(Why, Outs, Ins):- 
+   atomic(Outs), is_stream(Outs),
    assertion(stream_property(Outs, output)), 
-   ( \+ current_output(Outs) -> 
-       with_output_to(Outs, e_io(Why, Ins)); 
-         e_io(Why, Ins)), !.
+   \+ current_output(Outs), !,
+   with_output_to(Outs, 
+    e_to_pl(current_output, Why, Ins)),!.
 
-e_in_to_pl(Why, Trans, Ins):- Trans == outf, !, 
-   must(stream_property(Ins, file(InputName))), 
-   atom_concat(InputName, '.pl', OutputName), 
-   retractall(etmp:e_option(_,_)),
-   open(OutputName, write, Outs), 
-   e_in_to_pl(Why, Outs, Ins).
+% Out is like a wildcard stream (but we have a real filename)
+e_to_pl(Why, outdir(Dir), F):- is_filename(F), !, 
+   calc_where_to(F, outdir(Dir), OutputName),
+   e_to_pl(Why, OutputName, F).
 
-e_in_to_pl(Why, Trans, Ins):- (var(Trans) ; Trans == trans), !, 
-   stream_property(Ins, file(InputName)), 
-   atom_concat(InputName, '.pl', OutputName), 
-   ignore((Trans = OutputName)), 
-   e_in_to_pl(Why, OutputName, Ins). 
+% Out is like a wildcard stream (calc a real filename)
+e_to_pl(Why, outdir(Dir), Ins):- must(is_stream(Ins)), !, 
+   must(stream_property(Ins, file(InputName))),
+   calc_where_to(InputName, outdir(Dir), OutputName),
+   e_to_pl(Why, OutputName, Ins).
 
-e_in_to_pl(_Why, OutputName, _Ins):-  
-   exists_file(OutputName), !, 
-   ensure_loaded(OutputName), !.
+% Out is a filename not neding update
+e_to_pl(Why, OutputName, _Ins):- is_filename(OutputName), 
+   \+ should_update(OutputName),
+   raise_translation_event(Why,skipped,OutputName),
+   raise_translation_event(Why,ready,OutputName).
 
-e_in_to_pl(Why, OutputName, Ins):-  
-   \+ exists_file(OutputName), 
-   retractall(etmp:e_option(_,_)),   
-   open(OutputName, write, Outs), !, 
-   with_output_to(Outs, e_io(Why, Ins)).
+% Out is a filename not currently loadable 
+e_to_pl(Why, OutputName, Ins):-  \+ is_stream(OutputName), !,
+   must(should_update(OutputName)),
+   raise_translation_event(Why,unskipped,OutputName),
+   setup_call_cleanup(
+     open(OutputName, write, Outs),
+     with_output_to(Outs, 
+      (raise_translation_event(Why,begining,OutputName),
+       e_to_pl(Why, current_output, Ins),
+       raise_translation_event(Why,ending,OutputName))),
+     close(Outs)),
+   raise_translation_event(Why,ready,OutputName).
 
-e_in_to_pl(Why, Outs, Ins):- throw(unknown_e_in_to_pl(Why, Outs, Ins)).
+e_to_pl(Why, Out, F):- is_filename(F), !, 
+      setup_call_cleanup(
+        open(F, read, Ins),    
+        e_to_pl(Why, Out, Ins),
+        close(Ins)),!.
 
-e_io(Why, Ins):- dmsg(e_io(Why, Ins)), fail.
+e_to_pl(Why, Out, Ins):- 
+      assertion(current_output(Out)), 
+      assertion(is_stream(Ins)),
+      assertion(stream_property(Ins, input)),
+      e_io(Why, Ins).
+
+
+
+calc_where_to(InputName,_Dir,OutputName):- atom_concat(InputName, '.pro', OutputName).
+
+:- set_ec_option(overwrite_transated_files,always).
+
+should_update(OutputName):- \+ exists_file(OutputName),!.
+should_update(_):- etmp:ec_option(overwrite_transated_files,always),!.
+        
+%e_io(Why, Ins):- dmsg(e_io(Why, Ins)), fail.
 e_io(Why, Ins):-
   mention_s_l,
   repeat, 
@@ -236,7 +263,7 @@ e_read3(String, Term):-
 
 :- use_module(library(hybrid_db/portray_vars)).
 :- dynamic(etmp:temp_varnames/2).
-:- dynamic(etmp:e_option/2).
+:- dynamic(etmp:ec_option/2).
 
 
 insert_vars(Term, [], Term, []).
@@ -459,13 +486,21 @@ s_l(F,L):-
 process_e(Why, SL):- e_to_ec(SL, SO) -> SL\=@=SO, !, process_e(Why, SO).
 process_e(Why, S):- must(glean_data(Why, S)), must(call(Why, S)), !.
 
-  
-do_ec_load(SS):- 
-  do_convert_e(SS).
 
-do_convert_e(load(F)):- mention_s_l, exists_file(F), ec_load(F),!.
-%do_convert_e(load(F)):- exists_file(F),!,e_to_pl(do_convert_e, current_output, F).
-do_convert_e(SS):- 
+do_ec_load(translate(begining, _Outfile)):- !.
+do_ec_load(translate(ending, _Outfile)):- !.
+do_ec_load(load(SS)):- mention_s_l, exists_file(SS), !, do_convert_e_print(SS), ec_load(SS), !.
+do_ec_load(SS):- do_convert_e(SS).
+
+do_convert_e(translate(begining, _Outfile)):- !.
+do_convert_e(translate(ending, _Outfile)):- !.
+do_convert_e(load(SS)):- mention_s_l, exists_file(SS), !, do_convert_e_print(SS), convert_e(current_output, SS).
+do_convert_e(SS):- do_convert_e_print(SS).
+
+
+
+
+do_convert_e_print(SS):- 
    must(pretty_numbervars(SS, SS1)), 
    flush_output, format('~N'),
     with_op_cleanup(1200,xfx,(<->),
