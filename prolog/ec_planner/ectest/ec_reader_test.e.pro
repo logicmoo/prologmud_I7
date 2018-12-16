@@ -4638,10 +4638,10 @@ option(renaming, off).
 % ectest/ec_reader_test.e:2496
 % load foundations/Root.e
 % ectest/ec_reader_test.e:2497
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test.e:2497
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -4652,6 +4652,7 @@ option(renaming, off).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -4672,10 +4673,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test.e:2498
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% ectest/ec_reader_test.e:2498
+% foundations/EC.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -4701,6 +4702,7 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
+% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -4719,6 +4721,7 @@ reified_sort(fluent).
 reified_sort(event).
 
 
+% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -4740,6 +4743,7 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
+% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -4992,7 +4996,7 @@ option(encoding, 3).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test.e:2580
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % foundations/Root.e:1
@@ -5027,10 +5031,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test.e:2581
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% foundations/EC.e:1
+% ectest/ec_reader_test.e:2581
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -5056,7 +5060,6 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
-% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -5075,7 +5078,6 @@ reified_sort(fluent).
 reified_sort(event).
 
 
-% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -5097,7 +5099,6 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
-% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -9759,10 +9760,10 @@ ignore([sayPleaseToMeet, move]).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test.e:4506
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% foundations/Root.e:1
+% ectest/ec_reader_test.e:4506
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -9773,7 +9774,6 @@ ignore([sayPleaseToMeet, move]).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
-% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -9794,7 +9794,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test.e:4507
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % foundations/EC.e:1

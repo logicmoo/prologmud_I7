@@ -32,7 +32,7 @@
 % 
 % load foundations/Root.e
 % examples/Mueller2006/Chapter11/HungryCat.e:32
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % examples/Mueller2006/Chapter11/HungryCat.e:32
@@ -66,7 +66,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % examples/Mueller2006/Chapter11/HungryCat.e:33
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % examples/Mueller2006/Chapter11/HungryCat.e:33

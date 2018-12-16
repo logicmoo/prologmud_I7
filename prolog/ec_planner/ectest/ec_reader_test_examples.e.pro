@@ -34,7 +34,7 @@ option(encoding, 3).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:31
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:31
@@ -68,10 +68,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:32
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% foundations/EC.e:1
+% ectest/ec_reader_test_examples.e:32
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -97,7 +97,6 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
-% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -116,7 +115,6 @@ reified_sort(fluent).
 reified_sort(event).
 
 
-% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -138,7 +136,6 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
-% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -251,7 +248,7 @@ option(trajectory, on).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:86
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:86
@@ -285,7 +282,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:87
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:87
@@ -799,10 +796,10 @@ happens(move(Grid, Object, Xcoord1, Ycoord1, Xcoord2, Ycoord2), Time) ->
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:291
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% foundations/Root.e:1
+% ectest/ec_reader_test_examples.e:291
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -813,7 +810,6 @@ happens(move(Grid, Object, Xcoord1, Ycoord1, Xcoord2, Ycoord2), Time) ->
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
-% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -834,7 +830,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:292
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:292
@@ -914,7 +910,7 @@ predicate(trajectory(fluent, time, fluent, offset)).
 % ; End of file.
 % load examples/Cassimatis2002/PolySpace.e
 % ectest/ec_reader_test_examples.e:293
-'examples/Cassimatis2002/PolySpace.e'.
+% load('examples/Cassimatis2002/PolySpace.e').
 
 
 % ectest/ec_reader_test_examples.e:293
@@ -1330,7 +1326,7 @@ range(offset, 0, 0).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:353
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:353
@@ -1364,7 +1360,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:354
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:354
@@ -1444,7 +1440,7 @@ predicate(trajectory(fluent, time, fluent, offset)).
 % ; End of file.
 % load examples/Cassimatis2002/PolySpace.e
 % ectest/ec_reader_test_examples.e:355
-'examples/Cassimatis2002/PolySpace.e'.
+% load('examples/Cassimatis2002/PolySpace.e').
 
 
 % ectest/ec_reader_test_examples.e:355
@@ -1843,7 +1839,7 @@ range(offset, 0, 0).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:415
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:415
@@ -1877,7 +1873,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:416
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:416
@@ -2090,7 +2086,7 @@ option(showpred, off).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:486
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:486
@@ -2124,7 +2120,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:487
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:487
@@ -2336,7 +2332,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:556
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:556
@@ -2370,10 +2366,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:557
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% foundations/EC.e:1
+% ectest/ec_reader_test_examples.e:557
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -2399,7 +2395,6 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
-% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -2418,7 +2413,6 @@ reified_sort(fluent).
 reified_sort(event).
 
 
-% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -2440,7 +2434,6 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
-% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -2601,7 +2594,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:629
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:629
@@ -2635,7 +2628,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:630
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:630
@@ -2875,7 +2868,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:697
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:697
@@ -2909,7 +2902,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:698
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:698
@@ -3141,7 +3134,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:775
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:775
@@ -3175,7 +3168,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:776
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:776
@@ -3467,10 +3460,10 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:878
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% foundations/Root.e:1
+% ectest/ec_reader_test_examples.e:878
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -3481,7 +3474,6 @@ range(offset, 1, 1).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
-% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -3502,10 +3494,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:879
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% foundations/EC.e:1
+% ectest/ec_reader_test_examples.e:879
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -3531,7 +3523,6 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
-% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -3550,7 +3541,6 @@ reified_sort(fluent).
 reified_sort(event).
 
 
-% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -3572,7 +3562,6 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
-% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -3674,7 +3663,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:929
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:929
@@ -3708,10 +3697,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:930
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% foundations/EC.e:1
+% ectest/ec_reader_test_examples.e:930
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -3737,7 +3726,6 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
-% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -3756,7 +3744,6 @@ reified_sort(fluent).
 reified_sort(event).
 
 
-% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -3778,7 +3765,6 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
-% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -3920,7 +3906,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:1002
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:1002
@@ -3954,7 +3940,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:1003
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:1003
@@ -4165,7 +4151,7 @@ completion([theta, ab2]).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:1078
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:1078
@@ -4199,7 +4185,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:1079
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:1079
@@ -4397,7 +4383,7 @@ completion([theta, ab2]).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:1130
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:1130
@@ -4431,7 +4417,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:1131
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:1131
@@ -4606,7 +4592,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:1184
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:1184
@@ -4640,7 +4626,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:1185
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:1185
@@ -4824,7 +4810,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:1243
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:1243
@@ -4858,7 +4844,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:1244
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:1244
@@ -5052,10 +5038,10 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:1306
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:1306
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -5066,6 +5052,7 @@ range(offset, 1, 1).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -5086,7 +5073,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:1307
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:1307
@@ -5243,10 +5230,10 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:1350
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:1350
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -5257,6 +5244,7 @@ range(offset, 1, 1).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -5277,7 +5265,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:1351
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:1351
@@ -5452,10 +5440,10 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:1405
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:1405
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -5466,6 +5454,7 @@ range(offset, 1, 1).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -5486,7 +5475,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:1406
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:1406
@@ -5657,10 +5646,10 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:1454
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:1454
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -5671,6 +5660,7 @@ range(offset, 1, 1).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -5691,7 +5681,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:1455
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:1455
@@ -5848,7 +5838,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:1498
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:1498
@@ -5882,7 +5872,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:1499
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:1499
@@ -6039,7 +6029,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:1542
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:1542
@@ -6073,7 +6063,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:1543
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:1543
@@ -6313,7 +6303,7 @@ option(renaming, off).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:1619
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:1619
@@ -6347,7 +6337,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:1620
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:1620
@@ -6725,7 +6715,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:1749
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:1749
@@ -6759,7 +6749,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:1750
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:1750
@@ -6917,10 +6907,10 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:1796
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:1796
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -6931,6 +6921,7 @@ range(offset, 1, 1).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -6951,7 +6942,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:1797
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:1797
@@ -7427,10 +7418,10 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:1975
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% foundations/Root.e:1
+% ectest/ec_reader_test_examples.e:1975
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -7441,7 +7432,6 @@ range(offset, 1, 1).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
-% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -7462,7 +7452,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:1976
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:1976
@@ -7818,10 +7808,10 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:2096
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:2096
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -7832,6 +7822,7 @@ range(offset, 1, 1).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -7852,10 +7843,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:2097
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:2097
+% foundations/EC.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -7881,6 +7872,7 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
+% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -7899,6 +7891,7 @@ reified_sort(fluent).
 reified_sort(event).
 
 
+% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -7920,6 +7913,7 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
+% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -8185,7 +8179,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:2204
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:2204
@@ -8219,7 +8213,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:2205
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:2205
@@ -8421,7 +8415,7 @@ option(modeldiff, on).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:2262
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:2262
@@ -8455,10 +8449,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:2263
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% foundations/EC.e:1
+% ectest/ec_reader_test_examples.e:2263
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -8484,7 +8478,6 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
-% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -8503,7 +8496,6 @@ reified_sort(fluent).
 reified_sort(event).
 
 
-% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -8525,7 +8517,6 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
-% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -8735,7 +8726,7 @@ option(modeldiff, on).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:2359
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:2359
@@ -8769,7 +8760,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:2360
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:2360
@@ -9338,10 +9329,10 @@ option(modeldiff, on).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:2552
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% foundations/Root.e:1
+% ectest/ec_reader_test_examples.e:2552
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -9352,7 +9343,6 @@ option(modeldiff, on).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
-% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -9373,7 +9363,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:2553
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:2553
@@ -9924,7 +9914,7 @@ option(modeldiff, on).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:2743
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:2743
@@ -9958,7 +9948,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:2744
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:2744
@@ -10518,7 +10508,7 @@ option(modeldiff, on).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:2935
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:2935
@@ -10552,7 +10542,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:2936
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:2936
@@ -10874,10 +10864,10 @@ option(modeldiff, on).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:3057
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:3057
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -10888,6 +10878,7 @@ option(modeldiff, on).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -10908,7 +10899,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:3058
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:3058
@@ -11509,7 +11500,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:3231
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:3231
@@ -11543,7 +11534,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:3232
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:3232
@@ -11623,7 +11614,7 @@ predicate(trajectory(fluent, time, fluent, offset)).
 % ; End of file.
 % load foundations/ECCausal.e
 % ectest/ec_reader_test_examples.e:3233
-'foundations/ECCausal.e'.
+% load('foundations/ECCausal.e').
 
 
 % ectest/ec_reader_test_examples.e:3233
@@ -11934,10 +11925,10 @@ option(modeldiff, on).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:3318
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:3318
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -11948,6 +11939,7 @@ option(modeldiff, on).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -11968,7 +11960,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:3319
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:3319
@@ -12279,10 +12271,10 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:3424
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% foundations/Root.e:1
+% ectest/ec_reader_test_examples.e:3424
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -12293,7 +12285,6 @@ range(offset, 1, 1).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
-% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -12314,7 +12305,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:3425
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:3425
@@ -12627,10 +12618,10 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:3522
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:3522
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -12641,6 +12632,7 @@ range(offset, 1, 1).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -12661,7 +12653,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:3523
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:3523
@@ -12992,10 +12984,10 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:3622
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:3622
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -13006,6 +12998,7 @@ range(offset, 1, 1).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -13026,10 +13019,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:3623
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:3623
+% foundations/EC.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -13055,6 +13048,7 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
+% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -13073,6 +13067,7 @@ reified_sort(fluent).
 reified_sort(event).
 
 
+% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -13094,6 +13089,7 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
+% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -13352,10 +13348,10 @@ option(trajectory, on).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:3734
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% foundations/Root.e:1
+% ectest/ec_reader_test_examples.e:3734
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -13366,7 +13362,6 @@ option(trajectory, on).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
-% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -13387,7 +13382,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:3735
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:3735
@@ -13661,7 +13656,7 @@ range(offset, 1, 2).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:3822
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:3822
@@ -13695,7 +13690,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:3823
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:3823
@@ -13986,10 +13981,10 @@ option(trajectory, on).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:3916
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:3916
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -14000,6 +13995,7 @@ option(trajectory, on).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -14020,10 +14016,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:3917
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:3917
+% foundations/EC.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -14049,6 +14045,7 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
+% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -14067,6 +14064,7 @@ reified_sort(fluent).
 reified_sort(event).
 
 
+% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -14088,6 +14086,7 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
+% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -14298,7 +14297,7 @@ range(offset, 1, 3).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:4005
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:4005
@@ -14332,7 +14331,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:4006
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:4006
@@ -14904,7 +14903,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:4196
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:4196
@@ -14938,10 +14937,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:4197
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:4197
+% foundations/EC.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -14967,6 +14966,7 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
+% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -14985,6 +14985,7 @@ reified_sort(fluent).
 reified_sort(event).
 
 
+% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -15006,6 +15007,7 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
+% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -15491,7 +15493,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:4365
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:4365
@@ -15525,10 +15527,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:4366
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:4366
+% foundations/EC.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -15554,6 +15556,7 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
+% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -15572,6 +15575,7 @@ reified_sort(fluent).
 reified_sort(event).
 
 
+% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -15593,6 +15597,7 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
+% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -15890,7 +15895,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:4483
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:4483
@@ -15924,7 +15929,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:4484
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:4484
@@ -16195,10 +16200,10 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:4561
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% foundations/Root.e:1
+% ectest/ec_reader_test_examples.e:4561
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -16209,7 +16214,6 @@ range(offset, 1, 1).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
-% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -16230,7 +16234,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:4562
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:4562
@@ -16517,10 +16521,10 @@ option(modeldiff, on).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:4646
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:4646
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -16531,6 +16535,7 @@ option(modeldiff, on).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -16551,7 +16556,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:4647
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:4647
@@ -16855,7 +16860,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:4748
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:4748
@@ -16889,10 +16894,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:4749
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:4749
+% foundations/EC.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -16918,6 +16923,7 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
+% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -16936,6 +16942,7 @@ reified_sort(fluent).
 reified_sort(event).
 
 
+% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -17113,7 +17120,7 @@ completion([theta, ab2]).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:4813
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:4813
@@ -17147,10 +17154,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:4814
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:4814
+% foundations/EC.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -17176,6 +17183,7 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
+% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -17194,6 +17202,7 @@ reified_sort(fluent).
 reified_sort(event).
 
 
+% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -17215,6 +17224,7 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
+% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -17394,10 +17404,10 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:4890
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:4890
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -17408,6 +17418,7 @@ range(offset, 1, 1).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -17428,7 +17439,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:4891
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:4891
@@ -17610,7 +17621,7 @@ completion([theta, ab]).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:4941
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:4941
@@ -17644,7 +17655,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:4942
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:4942
@@ -17793,7 +17804,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:4981
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:4981
@@ -17827,7 +17838,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:4982
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:4982
@@ -18001,7 +18012,7 @@ option(timediff, off).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:5027
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:5027
@@ -18035,10 +18046,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:5028
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:5028
+% foundations/EC.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -18064,6 +18075,7 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
+% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -18082,6 +18094,7 @@ reified_sort(fluent).
 reified_sort(event).
 
 
+% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -18103,6 +18116,7 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
+% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -18197,7 +18211,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:5070
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:5070
@@ -18231,7 +18245,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:5071
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:5071
@@ -18393,7 +18407,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:5113
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:5113
@@ -18427,7 +18441,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:5114
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:5114
@@ -18579,10 +18593,10 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:5154
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:5154
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -18593,6 +18607,7 @@ range(offset, 1, 1).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -18613,7 +18628,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:5155
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:5155
@@ -18909,7 +18924,7 @@ option(modeldiff, on).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:5252
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:5252
@@ -18943,10 +18958,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:5253
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:5253
+% foundations/EC.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -18972,6 +18987,7 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
+% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -18990,6 +19006,7 @@ reified_sort(fluent).
 reified_sort(event).
 
 
+% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -19346,7 +19363,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:5395
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:5395
@@ -19380,7 +19397,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:5396
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:5396
@@ -19696,7 +19713,7 @@ option(modeldiff, on).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:5485
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:5485
@@ -19730,7 +19747,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:5486
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:5486
@@ -19967,7 +19984,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:5558
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:5558
@@ -20001,10 +20018,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:5559
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% foundations/EC.e:1
+% ectest/ec_reader_test_examples.e:5559
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -20030,7 +20047,6 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
-% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -20049,7 +20065,6 @@ reified_sort(fluent).
 reified_sort(event).
 
 
-% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -20323,10 +20338,10 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:5653
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:5653
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -20337,6 +20352,7 @@ range(offset, 1, 1).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -20357,7 +20373,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:5654
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:5654
@@ -20700,7 +20716,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:5771
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:5771
@@ -20734,10 +20750,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:5772
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% foundations/EC.e:1
+% ectest/ec_reader_test_examples.e:5772
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -20763,7 +20779,6 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
-% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -20782,7 +20797,6 @@ reified_sort(fluent).
 reified_sort(event).
 
 
-% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -20804,7 +20818,6 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
-% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -21375,7 +21388,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:5994
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:5994
@@ -21409,7 +21422,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:5995
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:5995
@@ -22170,7 +22183,7 @@ option(modeldiff, on).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:6283
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:6283
@@ -22204,7 +22217,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:6284
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:6284
@@ -22577,7 +22590,7 @@ option(timediff, off).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:6392
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:6392
@@ -22611,10 +22624,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:6393
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:6393
+% foundations/EC.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -22640,6 +22653,7 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
+% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -22658,6 +22672,7 @@ reified_sort(fluent).
 reified_sort(event).
 
 
+% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -22679,6 +22694,7 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
+% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -22766,7 +22782,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:6428
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:6428
@@ -22800,7 +22816,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:6429
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:6429
@@ -22953,7 +22969,7 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:6461
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:6462
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:6462
@@ -22987,7 +23003,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:6463
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:6463
@@ -23145,7 +23161,7 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:6495
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:6496
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:6496
@@ -23179,7 +23195,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:6497
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:6497
@@ -23325,7 +23341,7 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:6527
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:6528
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:6528
@@ -23359,7 +23375,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:6529
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:6529
@@ -23514,7 +23530,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:6572
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:6572
@@ -23548,7 +23564,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:6573
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:6573
@@ -23734,10 +23750,10 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:6628
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% foundations/Root.e:1
+% ectest/ec_reader_test_examples.e:6628
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -23748,7 +23764,6 @@ range(offset, 1, 1).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
-% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -23769,7 +23784,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:6629
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:6629
@@ -23964,7 +23979,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:6684
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:6684
@@ -23998,10 +24013,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:6685
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:6685
+% foundations/EC.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -24027,6 +24042,7 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
+% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -24045,6 +24061,7 @@ reified_sort(fluent).
 reified_sort(event).
 
 
+% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -24066,6 +24083,7 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
+% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -24218,7 +24236,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:6748
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:6748
@@ -24252,7 +24270,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:6749
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:6749
@@ -24470,10 +24488,10 @@ option(trajectory, on).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:6813
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:6813
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -24484,6 +24502,7 @@ option(trajectory, on).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -24504,7 +24523,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:6814
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:6814
@@ -24762,10 +24781,10 @@ range(height, 0, 4).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:6898
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% foundations/Root.e:1
+% ectest/ec_reader_test_examples.e:6898
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -24776,7 +24795,6 @@ range(height, 0, 4).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
-% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -24797,7 +24815,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:6899
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:6899
@@ -24988,7 +25006,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:6955
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:6955
@@ -25022,10 +25040,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:6956
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% foundations/EC.e:1
+% ectest/ec_reader_test_examples.e:6956
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -25051,7 +25069,6 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
-% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -25070,7 +25087,6 @@ reified_sort(fluent).
 reified_sort(event).
 
 
-% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -25092,7 +25108,6 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
-% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -25243,7 +25258,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:7017
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:7017
@@ -25277,7 +25292,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:7018
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:7018
@@ -25513,7 +25528,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:7092
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:7092
@@ -25547,7 +25562,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:7093
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:7093
@@ -25912,10 +25927,10 @@ option(modeldiff, on).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:7208
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:7208
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -25926,6 +25941,7 @@ option(modeldiff, on).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -25946,7 +25962,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:7209
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:7209
@@ -26032,10 +26048,10 @@ sort(agent).
 % 
 % load examples/FrankEtAl2003/FrankEtAl.e
 % ectest/ec_reader_test_examples.e:7213
-'examples/FrankEtAl2003/FrankEtAl.e'.
+% load('examples/FrankEtAl2003/FrankEtAl.e').
 
 
-% ectest/ec_reader_test_examples.e:7213
+% examples/FrankEtAl2003/FrankEtAl.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -26055,6 +26071,7 @@ sort(agent).
 % ;   pages = "875--910",
 % ; }
 % ;
+% examples/FrankEtAl2003/FrankEtAl.e:20
 % 
 % fluent SunShining()
 fluent(sunShining()).
@@ -26076,6 +26093,7 @@ fluent(playSoccer(agent)).
 fluent(playHideAndSeek(agent)).
 
 
+% examples/FrankEtAl2003/FrankEtAl.e:26
 % fluent PlayComputerGame(agent)
 fluent(playComputerGame(agent)).
 
@@ -26097,13 +26115,14 @@ noninertial([outside, playSoccer, playHideAndSeek, playComputerGame]).
 noninertial([playWithDog, win]).
 
 
+% examples/FrankEtAl2003/FrankEtAl.e:32
 % 
 % xor PlaySoccer, PlayHideAndSeek, PlayComputerGame, PlayWithDog
 xor([playSoccer, playHideAndSeek, playComputerGame, playWithDog]).
 
 
 % 
-% ectest/ec_reader_test_examples.e:7213
+% examples/FrankEtAl2003/FrankEtAl.e:35
 % [agent,time]% 
 % HoldsAt(PlaySoccer(agent),time) ->
 % HoldsAt(Outside(agent),time).
@@ -26113,7 +26132,7 @@ holds_at(playSoccer(Agent), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:7213
+% examples/FrankEtAl2003/FrankEtAl.e:39
 % [agent,time]% 
 % HoldsAt(PlaySoccer(agent),time) ->
 % ({agent1} agent1!=agent & HoldsAt(PlaySoccer(agent1),time)).
@@ -26124,7 +26143,7 @@ holds_at(playSoccer(Agent), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:7213
+% examples/FrankEtAl2003/FrankEtAl.e:43
 % [agent,time]% 
 % HoldsAt(PlayHideAndSeek(agent),time) ->
 % ({agent1} agent1!=agent & HoldsAt(PlayHideAndSeek(agent1),time)).
@@ -26135,7 +26154,7 @@ holds_at(playHideAndSeek(Agent), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:7213
+% examples/FrankEtAl2003/FrankEtAl.e:47
 % [agent,time]% 
 % HoldsAt(PlayComputerGame(agent),time) ->
 % !HoldsAt(Outside(agent),time).
@@ -26145,7 +26164,7 @@ holds_at(playComputerGame(Agent), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:7213
+% examples/FrankEtAl2003/FrankEtAl.e:51
 % [agent,time]% 
 % HoldsAt(Win(agent),time) ->
 % (HoldsAt(PlaySoccer(agent),time) |
@@ -26162,8 +26181,9 @@ holds_at(win(Agent), Time) ->
 
 
 % 
+% examples/FrankEtAl2003/FrankEtAl.e:57
 % 
-% ectest/ec_reader_test_examples.e:7213
+% examples/FrankEtAl2003/FrankEtAl.e:58
 % [agent,time]% 
 % HoldsAt(PlaySoccer(agent),time) &
 % HoldsAt(Win(agent),time) ->
@@ -26174,7 +26194,7 @@ holds_at(playSoccer(Agent), Time), holds_at(win(Agent), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:7213
+% examples/FrankEtAl2003/FrankEtAl.e:63
 % [agent,time]% 
 % HoldsAt(PlayHideAndSeek(agent),time) &
 % HoldsAt(Win(agent),time) ->
@@ -26185,7 +26205,7 @@ holds_at(playHideAndSeek(Agent), Time), holds_at(win(Agent), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:7213
+% examples/FrankEtAl2003/FrankEtAl.e:68
 % [agent,time]% 
 % HoldsAt(PlayComputerGame(agent),time) &
 % HoldsAt(Win(agent),time) ->
@@ -26196,7 +26216,7 @@ holds_at(playComputerGame(Agent), Time), holds_at(win(Agent), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:7213
+% examples/FrankEtAl2003/FrankEtAl.e:73
 % [agent,time]% 
 % HoldsAt(Win(agent),time) ->
 % HoldsAt(PlaySoccer(agent),time-1) |
@@ -26211,7 +26231,7 @@ holds_at(playComputerGame(Agent), Time), holds_at(win(Agent), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:7213
+% examples/FrankEtAl2003/FrankEtAl.e:79
 % [agent,time]% 
 % HoldsAt(PlaySoccer(agent),time) ->
 % !HoldsAt(Raining(),time).
@@ -26221,7 +26241,7 @@ holds_at(playSoccer(Agent), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:7213
+% examples/FrankEtAl2003/FrankEtAl.e:83
 % [agent,time]% 
 % HoldsAt(Win(agent),time) ->
 % !({agent1} agent1!=agent & HoldsAt(Win(agent1),time)).
@@ -26232,7 +26252,7 @@ holds_at(win(Agent), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:7213
+% examples/FrankEtAl2003/FrankEtAl.e:87
 % [agent1,agent2,time]% 
 % HoldsAt(PlayHideAndSeek(agent1),time) &
 % HoldsAt(PlayHideAndSeek(agent2),time) ->
@@ -26559,10 +26579,10 @@ holds_at(playHideAndSeek(Agent1), Time), holds_at(playHideAndSeek(Agent2), Time)
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:7357
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:7357
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -26573,6 +26593,7 @@ holds_at(playHideAndSeek(Agent1), Time), holds_at(playHideAndSeek(Agent2), Time)
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -26593,7 +26614,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:7358
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:7358
@@ -26673,10 +26694,10 @@ predicate(trajectory(fluent, time, fluent, offset)).
 % ; End of file.
 % load examples/GiunchigliaEtAl2004/MonkeyBananas.e
 % ectest/ec_reader_test_examples.e:7359
-'examples/GiunchigliaEtAl2004/MonkeyBananas.e'.
+% load('examples/GiunchigliaEtAl2004/MonkeyBananas.e').
 
 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:1
+% ectest/ec_reader_test_examples.e:7359
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -26696,7 +26717,6 @@ predicate(trajectory(fluent, time, fluent, offset)).
 % ;   pages = "49--104",
 % ; }
 % ;
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:20
 % 
 % sort object
 sort(object).
@@ -26727,7 +26747,6 @@ t(location, l2).
 t(location, l3).
 
 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:26
 % 
 % fluent At(object,location)
 fluent(at(object, location)).
@@ -26746,7 +26765,6 @@ fluent(hasBananas()).
 event(walk(location)).
 
 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:32
 % event PushBox(location)
 event(pushBox(location)).
 
@@ -26764,7 +26782,7 @@ event(graspBananas()).
 
 
 % 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:37
+% ectest/ec_reader_test_examples.e:7359
 % [object,location1,location2,time]% 
 % HoldsAt(At(object,location1),time) &
 % HoldsAt(At(object,location2),time) ->
@@ -26775,7 +26793,7 @@ holds_at(at(Object, Location1), Time), holds_at(at(Object, Location2), Time) ->
 
 % 
 % 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:42
+% ectest/ec_reader_test_examples.e:7359
 % [object,location,time]% 
 % object=% Monkey ->
 % Initiates(Walk(location),At(object,location),time).
@@ -26787,7 +26805,7 @@ Object=monkey ->
 
 % 
 % 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:46
+% ectest/ec_reader_test_examples.e:7359
 % [object,location1,location2,time]% 
 % object=% Monkey &
 % HoldsAt(At(object,location1),time) ->
@@ -26800,7 +26818,7 @@ Object=monkey, holds_at(at(Object, Location1), Time) ->
 
 % 
 % 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:51
+% ectest/ec_reader_test_examples.e:7359
 % [location,time]% 
 % Happens(Walk(location),time) ->
 % !HoldsAt(At(Monkey,location),time) &
@@ -26812,7 +26830,7 @@ happens(walk(Location), Time) ->
 
 % 
 % 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:56
+% ectest/ec_reader_test_examples.e:7359
 % [location,time]% 
 % HoldsAt(HasBananas(),time) &
 % HoldsAt(At(Monkey,location),time) ->
@@ -26823,7 +26841,7 @@ holds_at(hasBananas(), Time), holds_at(at(monkey, Location), Time) ->
 
 % 
 % 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:61
+% ectest/ec_reader_test_examples.e:7359
 % [object,location,time]% 
 % object=% Box | object=Monkey ->
 % Initiates(PushBox(location),At(object,location),time).
@@ -26838,7 +26856,7 @@ holds_at(hasBananas(), Time), holds_at(at(monkey, Location), Time) ->
 
 % 
 % 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:65
+% ectest/ec_reader_test_examples.e:7359
 % [object,location1,location2,time]% 
 % (object=Box | object=Monkey) &
 % HoldsAt(At(object,location1),time) ->
@@ -26851,7 +26869,7 @@ holds_at(hasBananas(), Time), holds_at(at(monkey, Location), Time) ->
 
 % 
 % 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:70
+% ectest/ec_reader_test_examples.e:7359
 % [location,time]% 
 % Happens(PushBox(location),time) ->
 % ({location1}
@@ -26866,17 +26884,16 @@ happens(pushBox(Location), Time) ->
 	not(holds_at(onBox(), Time)).
 
 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:76
 % 
 % 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:78
+% ectest/ec_reader_test_examples.e:7359
 % [time] % Initiates(ClimbOn(),OnBox(),time).
 initiates(climbOn(), onBox(), Time).
 
 
 % 
 % 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:80
+% ectest/ec_reader_test_examples.e:7359
 % [time]% 
 % Happens(ClimbOn(),time) ->
 % !HoldsAt(OnBox(),time).
@@ -26886,14 +26903,14 @@ happens(climbOn(), Time) ->
 
 % 
 % 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:84
+% ectest/ec_reader_test_examples.e:7359
 % [time] % Terminates(ClimbOff(),OnBox(),time).
 terminates(climbOff(), onBox(), Time).
 
 
 % 
 % 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:86
+% ectest/ec_reader_test_examples.e:7359
 % [time]% 
 % Happens(ClimbOff(),time) ->
 % HoldsAt(OnBox(),time).
@@ -26903,14 +26920,14 @@ happens(climbOff(), Time) ->
 
 % 
 % 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:90
+% ectest/ec_reader_test_examples.e:7359
 % [time] % Initiates(GraspBananas(),HasBananas(),time).
 initiates(graspBananas(), hasBananas(), Time).
 
 
 % 
 % 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:92
+% ectest/ec_reader_test_examples.e:7359
 % [object,location,time]% 
 % object=% Bananas ->
 % Releases(GraspBananas(),At(object,location),time).
@@ -26920,7 +26937,7 @@ Object=bananas ->
 
 % 
 % 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:96
+% ectest/ec_reader_test_examples.e:7359
 % [time]% 
 % Happens(GraspBananas(),time) ->
 % ({location1}
@@ -26934,12 +26951,11 @@ happens(graspBananas(), Time) ->
 
 
 % 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:102
 % 
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:103
+% ectest/ec_reader_test_examples.e:7359
 % [time]% 
 % HoldsAt(OnBox(),time) ->
-% examples/GiunchigliaEtAl2004/MonkeyBananas.e:105
+% ectest/ec_reader_test_examples.e:7359
 % {location1}%  HoldsAt(At(Box,location1),time) &
 %             HoldsAt(At(Monkey,location1),time).
 exists([Location1],  (holds_at(onBox(), Time)->holds_at(at(box, Location1), Time), holds_at(at(monkey, Location1), Time))).
@@ -27023,7 +27039,7 @@ range(offset, 0, 0).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:7401
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:7401
@@ -27057,7 +27073,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:7402
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:7402
@@ -27137,7 +27153,7 @@ predicate(trajectory(fluent, time, fluent, offset)).
 % ; End of file.
 % load examples/GiunchigliaEtAl2004/MonkeyBananas.e
 % ectest/ec_reader_test_examples.e:7403
-'examples/GiunchigliaEtAl2004/MonkeyBananas.e'.
+% load('examples/GiunchigliaEtAl2004/MonkeyBananas.e').
 
 
 % ectest/ec_reader_test_examples.e:7403
@@ -27487,10 +27503,10 @@ range(offset, 0, 0).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:7451
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:7451
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -27501,6 +27517,7 @@ range(offset, 0, 0).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -27521,7 +27538,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:7452
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:7452
@@ -27601,7 +27618,7 @@ predicate(trajectory(fluent, time, fluent, offset)).
 % ; End of file.
 % load examples/GiunchigliaEtAl2004/MonkeyBananas.e
 % ectest/ec_reader_test_examples.e:7453
-'examples/GiunchigliaEtAl2004/MonkeyBananas.e'.
+% load('examples/GiunchigliaEtAl2004/MonkeyBananas.e').
 
 
 % ectest/ec_reader_test_examples.e:7453
@@ -28219,7 +28236,7 @@ exists([Location1],  (holds_at(onBox(), Time)->holds_at(at(box, Location1), Time
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:7608
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:7608
@@ -28253,7 +28270,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:7609
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:7609
@@ -28457,10 +28474,10 @@ completion([theta, ab2]).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:7664
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:7664
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -28471,6 +28488,7 @@ completion([theta, ab2]).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -28491,7 +28509,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:7665
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:7665
@@ -28684,10 +28702,10 @@ completion([theta, ab2]).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:7726
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% foundations/Root.e:1
+% ectest/ec_reader_test_examples.e:7726
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -28698,7 +28716,6 @@ completion([theta, ab2]).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
-% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -28719,10 +28736,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:7727
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:7727
+% foundations/EC.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -28748,6 +28765,7 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
+% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -28941,10 +28959,10 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:7804
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:7804
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -28955,6 +28973,7 @@ range(offset, 1, 1).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -28975,10 +28994,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:7805
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:7805
+% foundations/EC.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -29004,6 +29023,7 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
+% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -29022,6 +29042,7 @@ reified_sort(fluent).
 reified_sort(event).
 
 
+% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -29043,6 +29064,7 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
+% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -29055,7 +29077,7 @@ predicate(trajectory(fluent, time, fluent, offset)).
 % ; End of file.
 % load foundations/ECCausal.e
 % ectest/ec_reader_test_examples.e:7806
-'foundations/ECCausal.e'.
+% load('foundations/ECCausal.e').
 
 
 % ectest/ec_reader_test_examples.e:7806
@@ -29358,7 +29380,7 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:7905
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:7905
@@ -29392,7 +29414,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:7906
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:7906
@@ -29607,10 +29629,10 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:7981
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% foundations/Root.e:1
+% ectest/ec_reader_test_examples.e:7981
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -29621,7 +29643,6 @@ range(offset, 1, 1).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
-% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -29642,10 +29663,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:7982
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:7982
+% foundations/EC.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -29671,6 +29692,7 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
+% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -29689,6 +29711,7 @@ reified_sort(fluent).
 reified_sort(event).
 
 
+% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -29710,6 +29733,7 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
+% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -29882,10 +29906,10 @@ range(offset, 1, 1).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:8064
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:8064
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -29896,6 +29920,7 @@ range(offset, 1, 1).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -29916,7 +29941,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:8065
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:8065
@@ -30120,10 +30145,10 @@ option(encoding, 3).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:8118
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% foundations/Root.e:1
+% ectest/ec_reader_test_examples.e:8118
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -30134,7 +30159,6 @@ option(encoding, 3).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
-% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -30155,10 +30179,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:8119
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% foundations/EC.e:1
+% ectest/ec_reader_test_examples.e:8119
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -30184,7 +30208,6 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
-% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -30203,7 +30226,6 @@ reified_sort(fluent).
 reified_sort(event).
 
 
-% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -30225,7 +30247,6 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
-% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -30238,7 +30259,7 @@ predicate(trajectory(fluent, time, fluent, offset)).
 % ; End of file.
 % load examples/AkmanEtAl2004/ZooWorld.e
 % ectest/ec_reader_test_examples.e:8120
-'examples/AkmanEtAl2004/ZooWorld.e'.
+% load('examples/AkmanEtAl2004/ZooWorld.e').
 
 
 % ectest/ec_reader_test_examples.e:8120
@@ -31536,7 +31557,7 @@ option(encoding, 3).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:8192
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:8192
@@ -31570,7 +31591,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:8193
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:8193
@@ -31650,10 +31671,10 @@ predicate(trajectory(fluent, time, fluent, offset)).
 % ; End of file.
 % load examples/AkmanEtAl2004/ZooWorld.e
 % ectest/ec_reader_test_examples.e:8194
-'examples/AkmanEtAl2004/ZooWorld.e'.
+% load('examples/AkmanEtAl2004/ZooWorld.e').
 
 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -31673,6 +31694,7 @@ predicate(trajectory(fluent, time, fluent, offset)).
 % ;   pages = "105--140",
 % ; }
 % ;
+% examples/AkmanEtAl2004/ZooWorld.e:20
 % 
 % sort position: integer
 subsort(position, integer).
@@ -31694,6 +31716,7 @@ sort(gate).
 sort(animal).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:26
 % sort elephant: animal
 subsort(elephant, animal).
 
@@ -31715,6 +31738,7 @@ sort(species).
 
 
 % 
+% examples/AkmanEtAl2004/ZooWorld.e:32
 % function Loc(position): location
 function(loc(position), location).
 
@@ -31736,6 +31760,7 @@ function(species(animal), species).
 predicate(accessible(position, position, time)).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:38
 % predicate Adult(animal)
 predicate(adult(animal)).
 
@@ -31757,6 +31782,7 @@ predicate(sides(position, position, gate)).
 
 
 % 
+% examples/AkmanEtAl2004/ZooWorld.e:44
 % event Close(human,gate)
 event(close(human, gate)).
 
@@ -31781,6 +31807,7 @@ event(open(human, gate)).
 event(throwOff(animal, human)).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:50
 % 
 % fluent AbnormalEncroachment(human)
 fluent(abnormalEncroachment(human)).
@@ -31802,6 +31829,7 @@ noninertial(doneBy).
 fluent(mounted(human, animal)).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:56
 % fluent MountFails(human)
 fluent(mountFails(human)).
 
@@ -31826,6 +31854,7 @@ fluent(opened(gate)).
 fluent(pos(animal, position)).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:62
 % fluent PosDeterminingFluent(human,position)
 fluent(posDeterminingFluent(human, position)).
 
@@ -31856,6 +31885,7 @@ t(species, horseSpecies).
 t(species, dogSpecies).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:68
 % location Outside
 t(location, outside).
 
@@ -31881,8 +31911,9 @@ not(largeSpecies(dogSpecies)).
 
 
 % 
+% examples/AkmanEtAl2004/ZooWorld.e:74
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:75
 % [event,animal,time]% 
 % HoldsAt(DoneBy(event,animal),time) <->
 % (Happens(event,time) &
@@ -31907,9 +31938,10 @@ holds_at(doneBy(Event, Animal), Time) <->
 	).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:83
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:85
 % [event1,event2,animal,time]% 
 % HoldsAt(DoneBy(event1,animal),time) &
 % HoldsAt(DoneBy(event2,animal),time) ->
@@ -31920,7 +31952,7 @@ holds_at(doneBy(Event1, Animal), Time), holds_at(doneBy(Event2, Animal), Time) -
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:90
 % [animal] % Large(animal) <-> (Adult(animal) & LargeSpecies(Species(animal))).
 large(Animal) <->
 	adult(Animal),
@@ -31929,23 +31961,23 @@ large(Animal) <->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:92
 % [position] 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:92
 % {position1} % position1!=% position & Neighbor(position,position1).
 exists([Position1],  (Position1\=Position, neighbor(Position, Position1))).
 
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:94
 % [position] % !Neighbor(position,position).
 not(neighbor(Position, Position)).
 
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:96
 % [position1,position2]% 
 % Neighbor(position1,position2) ->
 % Neighbor(position2,position1).
@@ -31955,14 +31987,14 @@ neighbor(Position1, Position2) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:100
 % [cage] % cage!=% Outside.
 Cage\=outside.
 
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:102
 % [position1,position2,gate]% 
 % Sides(position1,position2,gate) <->
 % ((Side1(gate)=position1 &
@@ -31978,15 +32010,16 @@ sides(Position1, Position2, Gate) <->
 
 
 % 
+% examples/AkmanEtAl2004/ZooWorld.e:108
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:109
 % [gate] % Loc(Side1(gate))!=Loc(Side2(gate)).
 loc(side1(Gate))\=loc(side2(Gate)).
 
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:111
 % [position1,position2,gate1,gate2]% 
 % Sides(position1,position2,gate1) &
 % Sides(position1,position2,gate2) ->
@@ -31997,7 +32030,7 @@ sides(Position1, Position2, Gate1), sides(Position1, Position2, Gate2) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:116
 % [position1,position2,gate]% 
 % Sides(position1,position2,gate) ->
 % Neighbor(position1,position2).
@@ -32007,18 +32040,18 @@ sides(Position1, Position2, Gate) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:120
 % [position1,position2]% 
 % Loc(position1) != Loc(position2) &
 % Neighbor(position1,position2) ->
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:123
 % {gate}%  Sides(position1,position2,gate).
 exists([Gate],  (loc(Position1)\=loc(Position2), neighbor(Position1, Position2)->sides(Position1, Position2, Gate))).
 
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:125
 % [animal,position1,position2,time]% 
 % HoldsAt(Pos(animal,position1),time) &
 % HoldsAt(Pos(animal,position2),time) ->
@@ -32029,16 +32062,16 @@ holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time) -
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:130
 % [animal,time]% 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:131
 % {position} % HoldsAt(Pos(animal,position),time).
 exists([Position], holds_at(pos(Animal, Position), Time)).
 
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:133
 % [animal1,animal2,position,time]% 
 % (animal1!=animal2 &
 %  Large(animal1) &
@@ -32055,9 +32088,10 @@ Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position
 	).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:140
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:142
 % [human,position1,position2,time]% 
 % HoldsAt(PosDeterminingFluent(human,position1),time) &
 % HoldsAt(PosDeterminingFluent(human,position2),time) ->
@@ -32068,7 +32102,7 @@ holds_at(posDeterminingFluent(Human, Position1), Time), holds_at(posDeterminingF
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:147
 % [animal,position,time]% 
 % Initiates(Move(animal,position),Pos(animal,position),time).
 initiates(move(Animal, Position), pos(Animal, Position), Time).
@@ -32076,7 +32110,7 @@ initiates(move(Animal, Position), pos(Animal, Position), Time).
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:150
 % [animal,position1,position2,time]% 
 % HoldsAt(Pos(animal,position1),time) ->
 % Terminates(Move(animal,position2),Pos(animal,position1),time).
@@ -32088,7 +32122,7 @@ holds_at(pos(Animal, Position1), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:154
 % [animal,position,time]% 
 % Happens(Move(animal,position),time) ->
 % !HoldsAt(Pos(animal,position),time).
@@ -32098,7 +32132,7 @@ happens(move(Animal, Position), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:158
 % [human,position,time]% 
 % Happens(Move(human,position),time) ->
 % !{animal} HoldsAt(Mounted(human,animal),time).
@@ -32109,7 +32143,7 @@ happens(move(Human, Position), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:162
 % [human,gate,time]% 
 % Initiates(Open(human,gate),Opened(gate),time).
 initiates(open(Human, Gate), opened(Gate), Time).
@@ -32117,7 +32151,7 @@ initiates(open(Human, Gate), opened(Gate), Time).
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:165
 % [human,gate,time]% 
 % Happens(Open(human,gate),time) ->
 % !HoldsAt(Opened(gate),time) &
@@ -32133,9 +32167,10 @@ happens(open(Human, Gate), Time) ->
 	       ((side1(Gate)=Position;side2(Gate)=Position), holds_at(pos(Human, Position), Time))).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:171
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:173
 % [human,gate,time]% 
 % Terminates(Close(human,gate),Opened(gate),time).
 terminates(close(Human, Gate), opened(Gate), Time).
@@ -32143,12 +32178,12 @@ terminates(close(Human, Gate), opened(Gate), Time).
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:176
 % [human,gate,time]% 
 % Happens(Close(human,gate),time) ->
 % HoldsAt(Opened(gate),time) &
 % (!{animal} HoldsAt(Mounted(human,animal),time)) &
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:180
 % {position}% 
 % (Side1(gate)=position | Side2(gate)=position) &
 % HoldsAt(Pos(human,position),time).
@@ -32157,7 +32192,7 @@ exists([Position],  (happens(close(Human, Gate), Time)->holds_at(opened(Gate), T
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:184
 % [human,animal,position,time]% 
 % HoldsAt(Mounted(human,animal),time) &
 % HoldsAt(Pos(animal,position),time) ->
@@ -32168,7 +32203,7 @@ holds_at(mounted(Human, Animal), Time), holds_at(pos(Animal, Position), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:189
 % [animal,time]% 
 % HoldsAt(Moves(animal),time) <->
 % ({position}
@@ -32181,7 +32216,7 @@ holds_at(moves(Animal), Time) <->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:195
 % [human,time]% 
 % HoldsAt(MountFails(human),time) <->
 % ({animal}
@@ -32194,7 +32229,7 @@ holds_at(mountFails(Human), Time) <->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:201
 % [human,animal,position,time]% 
 % !HoldsAt(Moves(animal),time) ->
 % Releases(Mount(human,animal),Pos(human,position),time).
@@ -32206,7 +32241,7 @@ not(holds_at(moves(Animal), Time)) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:205
 % [human,animal,time]% 
 % !HoldsAt(Moves(animal),time) ->
 % Initiates(Mount(human,animal),Mounted(human,animal),time).
@@ -32218,7 +32253,7 @@ not(holds_at(moves(Animal), Time)) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:209
 % [human,animal,position,time]% 
 % HoldsAt(Pos(animal,position),time) &
 % HoldsAt(Moves(animal),time) ->
@@ -32231,7 +32266,7 @@ holds_at(pos(Animal, Position), Time), holds_at(moves(Animal), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:214
 % [human,animal,position,time]% 
 % HoldsAt(Pos(human,position),time) &
 % HoldsAt(Moves(animal),time) ->
@@ -32244,7 +32279,7 @@ holds_at(pos(Human, Position), Time), holds_at(moves(Animal), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:219
 % [human,animal,time]% 
 % Happens(Mount(human,animal),time) ->
 % Large(animal).
@@ -32254,7 +32289,7 @@ happens(mount(Human, Animal), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:223
 % [human,animal,time]% 
 % HoldsAt(Mounted(human,animal),time) ->
 % Large(animal).
@@ -32264,7 +32299,7 @@ holds_at(mounted(Human, Animal), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:227
 % [human1,human2,time]% 
 % Happens(Mount(human1,human2),time) ->
 % !Large(human1).
@@ -32274,7 +32309,7 @@ happens(mount(Human1, Human2), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:231
 % [human1,human2,time]% 
 % HoldsAt(Mounted(human1,human2),time) ->
 % !Large(human1).
@@ -32284,7 +32319,7 @@ holds_at(mounted(Human1, Human2), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:235
 % [human,animal,time]% 
 % Happens(Mount(human,animal),time) ->
 % !{human1} human1!=human & HoldsAt(Mounted(human1,animal),time).
@@ -32295,7 +32330,7 @@ happens(mount(Human, Animal), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:239
 % [human1,human2,animal,time]% 
 % HoldsAt(Mounted(human1,animal),time) &
 % HoldsAt(Mounted(human2,animal),time) ->
@@ -32306,7 +32341,7 @@ holds_at(mounted(Human1, Animal), Time), holds_at(mounted(Human2, Animal), Time)
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:244
 % [human,animal,time]% 
 % Happens(Mount(human,animal),time) ->
 % !{human1} human1!=human & HoldsAt(Mounted(human1,human),time).
@@ -32317,17 +32352,17 @@ happens(mount(Human, Animal), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:248
 % [human1,human2,time]% 
 % Happens(Mount(human1,human2),time) ->
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:250
 % {animal}%  HoldsAt(Mounted(human2,animal),time).
 exists([Animal],  (happens(mount(Human1, Human2), Time)->holds_at(mounted(Human2, Animal), Time))).
 
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:252
 % [human1,human2,time]% 
 % HoldsAt(Mounted(human1,human2),time) ->
 % !{animal} HoldsAt(Mounted(human2,animal),time).
@@ -32338,7 +32373,7 @@ holds_at(mounted(Human1, Human2), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:256
 % [human,animal,time]% 
 % Happens(Mount(human,animal),time) ->
 % !{animal1} HoldsAt(Mounted(human,animal1),time).
@@ -32349,7 +32384,7 @@ happens(mount(Human, Animal), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:260
 % [human,animal,time]% 
 % !HoldsAt(Moves(animal),time) ->
 % Terminates(GetOff(human,animal),Mounted(human,animal),time).
@@ -32361,7 +32396,7 @@ not(holds_at(moves(Animal), Time)) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:264
 % [human,animal,position,time]% 
 % !HoldsAt(Moves(animal),time) &
 % HoldsAt(PosDeterminingFluent(human,position),time) ->
@@ -32374,7 +32409,7 @@ not(holds_at(moves(Animal), Time)), holds_at(posDeterminingFluent(Human, Positio
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:269
 % [human,animal,position,time]% 
 % !HoldsAt(Moves(animal),time) &
 % HoldsAt(Pos(human,position),time) ->
@@ -32387,7 +32422,7 @@ not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:274
 % [human,animal,position1,position2,time]% 
 % !HoldsAt(Moves(animal),time) &
 % HoldsAt(Pos(human,position1),time) &
@@ -32401,7 +32436,7 @@ not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position1), Time), Posit
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:280
 % [human,animal,time]% 
 % Happens(GetOff(human,animal),time) ->
 % HoldsAt(Mounted(human,animal),time).
@@ -32411,7 +32446,7 @@ happens(getOff(Human, Animal), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:284
 % [animal1,human,time]% 
 % HoldsAt(ThrowOffFails(animal1,human),time) <->
 % ({position,animal2}
@@ -32424,9 +32459,10 @@ holds_at(throwOffFails(Animal1, Human), Time) <->
 	       (Animal2\=Human, holds_at(posDeterminingFluent(Human, Position), Time), large(Animal2), holds_at(pos(Animal2, Position), Time+1))).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:290
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:292
 % [animal,human,position,time]% 
 % HoldsAt(PosDeterminingFluent(human,position),time) &
 % !HoldsAt(ThrowOffFails(animal,human),time) ->
@@ -32439,7 +32475,7 @@ holds_at(posDeterminingFluent(Human, Position), Time), not(holds_at(throwOffFail
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:297
 % [animal,human,position,time]% 
 % HoldsAt(Pos(human,position),time) &
 % !HoldsAt(ThrowOffFails(animal,human),time) ->
@@ -32452,7 +32488,7 @@ holds_at(pos(Human, Position), Time), not(holds_at(throwOffFails(Animal, Human),
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:302
 % [animal,human,position1,position2,time]% 
 % !HoldsAt(ThrowOffFails(animal,human),time) &
 % HoldsAt(Pos(human,position1),time) &
@@ -32466,8 +32502,9 @@ not(holds_at(throwOffFails(Animal, Human), Time)), holds_at(pos(Human, Position1
 
 
 % 
+% examples/AkmanEtAl2004/ZooWorld.e:308
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:309
 % [human,time]% 
 % (!{animal} Happens(ThrowOff(animal,human),time) |
 %            Happens(GetOff(human,animal),time)) ->
@@ -32478,7 +32515,7 @@ not(exists([Animal], happens(throwOff(Animal, Human), Time)));happens(getOff(Hum
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:314
 % [human,position,animal1,animal2,time]% 
 % HoldsAt(PosDeterminingFluent(human,position),time) &
 % HoldsAt(ThrowOffFails(animal1,human),time) &
@@ -32492,7 +32529,7 @@ holds_at(posDeterminingFluent(Human, Position), Time), holds_at(throwOffFails(An
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:320
 % [human,animal,time]% 
 % !HoldsAt(ThrowOffFails(animal,human),time) ->
 % Terminates(ThrowOff(animal,human),Mounted(human,animal),time).
@@ -32504,7 +32541,7 @@ not(holds_at(throwOffFails(Animal, Human), Time)) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:324
 % [animal,human,time]% 
 % Happens(ThrowOff(animal,human),time) ->
 % HoldsAt(Mounted(human,animal),time).
@@ -32514,7 +32551,7 @@ happens(throwOff(Animal, Human), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:328
 % [animal,human,time]% 
 % Happens(ThrowOff(animal,human),time) ->
 % !Happens(GetOff(human,animal),time).
@@ -32524,7 +32561,7 @@ happens(throwOff(Animal, Human), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:332
 % [animal,human,time]% 
 % Happens(GetOff(human,animal),time) ->
 % !Happens(ThrowOff(animal,human),time).
@@ -32534,7 +32571,7 @@ happens(getOff(Human, Animal), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:336
 % [position1,position2,time]% 
 % Accessible(position1,position2,time) <->
 % (Neighbor(position1,position2) &
@@ -32547,7 +32584,7 @@ accessible(Position1, Position2, Time) <->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:342
 % [animal,position1,position2,time]% 
 % (position1!=position2 &
 %  HoldsAt(Pos(animal,position1),time) &
@@ -32559,7 +32596,7 @@ Position1\=Position2, holds_at(pos(Animal, Position1), Time), holds_at(pos(Anima
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:348
 % [human,time]% 
 % HoldsAt(AbnormalEncroachment(human),time) <->
 % (HoldsAt(MountFails(human),time) |
@@ -32578,9 +32615,10 @@ holds_at(abnormalEncroachment(Human), Time) <->
 	).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:358
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:360
 % [animal1,animal2,position,time]% 
 % HoldsAt(Pos(animal1,position),time) &
 % !HoldsAt(Pos(animal1,position),time+1) &
@@ -32597,9 +32635,10 @@ holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Tim
 	).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:367
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:369
 % [animal1,animal2,position1,position2,time]% 
 % animal1!=% animal2 &
 % Large(animal1) & Large(animal2) &
@@ -32613,9 +32652,10 @@ Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position
 		   sides(Position1, Position2, Gate))).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:376
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:378
 % [animal1,animal2,position1,position2,time]% 
 % animal1!=% animal2 &
 % Large(animal1) & Large(animal2) &
@@ -32629,9 +32669,10 @@ Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position
 		   sides(Position1, Position2, Gate))).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:385
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:387
 % [gate,position1,position2,time]% 
 % HoldsAt(Opened(gate),time) &
 % !HoldsAt(Opened(gate),time+1) &
@@ -32644,6 +32685,7 @@ holds_at(opened(Gate), Time), not(holds_at(opened(Gate), Time+1)), sides(Positio
 		   (holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time+1)))).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:393
 % 
 % 
 % gate GateAO
@@ -32660,6 +32702,7 @@ loc(1)=cageA.
 
 
 % 
+% examples/AkmanEtAl2004/ZooWorld.e:399
 % Loc(2)=CageA.
 loc(2)=cageA.
 
@@ -32690,13 +32733,14 @@ loc(7)=outside.
 
 
 % 
+% examples/AkmanEtAl2004/ZooWorld.e:405
 % Loc(8)=Outside.
 loc(8)=outside.
 
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8194
+% examples/AkmanEtAl2004/ZooWorld.e:407
 % [position1,position2]% 
 % Neighbor(position1,position2) <->
 % ((position1=1 & position2=2) |
@@ -32781,6 +32825,7 @@ neighbor(Position1, Position2) <->
 	).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:434
 % 
 % 
 % Side1(GateAO)=4.
@@ -32964,10 +33009,10 @@ option(encoding, 3).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:8265
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:8265
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -32978,6 +33023,7 @@ option(encoding, 3).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -32998,7 +33044,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:8266
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:8266
@@ -33078,7 +33124,7 @@ predicate(trajectory(fluent, time, fluent, offset)).
 % ; End of file.
 % load examples/AkmanEtAl2004/ZooWorld.e
 % ectest/ec_reader_test_examples.e:8267
-'examples/AkmanEtAl2004/ZooWorld.e'.
+% load('examples/AkmanEtAl2004/ZooWorld.e').
 
 
 % ectest/ec_reader_test_examples.e:8267
@@ -35520,7 +35566,7 @@ option(encoding, 3).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:8765
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:8765
@@ -35554,7 +35600,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:8766
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:8766
@@ -35634,10 +35680,10 @@ predicate(trajectory(fluent, time, fluent, offset)).
 % ; End of file.
 % load examples/AkmanEtAl2004/ZooWorld.e
 % ectest/ec_reader_test_examples.e:8767
-'examples/AkmanEtAl2004/ZooWorld.e'.
+% load('examples/AkmanEtAl2004/ZooWorld.e').
 
 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -35657,6 +35703,7 @@ predicate(trajectory(fluent, time, fluent, offset)).
 % ;   pages = "105--140",
 % ; }
 % ;
+% examples/AkmanEtAl2004/ZooWorld.e:20
 % 
 % sort position: integer
 subsort(position, integer).
@@ -35678,6 +35725,7 @@ sort(gate).
 sort(animal).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:26
 % sort elephant: animal
 subsort(elephant, animal).
 
@@ -35699,6 +35747,7 @@ sort(species).
 
 
 % 
+% examples/AkmanEtAl2004/ZooWorld.e:32
 % function Loc(position): location
 function(loc(position), location).
 
@@ -35720,6 +35769,7 @@ function(species(animal), species).
 predicate(accessible(position, position, time)).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:38
 % predicate Adult(animal)
 predicate(adult(animal)).
 
@@ -35741,6 +35791,7 @@ predicate(sides(position, position, gate)).
 
 
 % 
+% examples/AkmanEtAl2004/ZooWorld.e:44
 % event Close(human,gate)
 event(close(human, gate)).
 
@@ -35765,6 +35816,7 @@ event(open(human, gate)).
 event(throwOff(animal, human)).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:50
 % 
 % fluent AbnormalEncroachment(human)
 fluent(abnormalEncroachment(human)).
@@ -35786,6 +35838,7 @@ noninertial(doneBy).
 fluent(mounted(human, animal)).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:56
 % fluent MountFails(human)
 fluent(mountFails(human)).
 
@@ -35810,6 +35863,7 @@ fluent(opened(gate)).
 fluent(pos(animal, position)).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:62
 % fluent PosDeterminingFluent(human,position)
 fluent(posDeterminingFluent(human, position)).
 
@@ -35840,6 +35894,7 @@ t(species, horseSpecies).
 t(species, dogSpecies).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:68
 % location Outside
 t(location, outside).
 
@@ -35865,8 +35920,9 @@ not(largeSpecies(dogSpecies)).
 
 
 % 
+% examples/AkmanEtAl2004/ZooWorld.e:74
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:75
 % [event,animal,time]% 
 % HoldsAt(DoneBy(event,animal),time) <->
 % (Happens(event,time) &
@@ -35891,9 +35947,10 @@ holds_at(doneBy(Event, Animal), Time) <->
 	).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:83
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:85
 % [event1,event2,animal,time]% 
 % HoldsAt(DoneBy(event1,animal),time) &
 % HoldsAt(DoneBy(event2,animal),time) ->
@@ -35904,7 +35961,7 @@ holds_at(doneBy(Event1, Animal), Time), holds_at(doneBy(Event2, Animal), Time) -
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:90
 % [animal] % Large(animal) <-> (Adult(animal) & LargeSpecies(Species(animal))).
 large(Animal) <->
 	adult(Animal),
@@ -35913,23 +35970,23 @@ large(Animal) <->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:92
 % [position] 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:92
 % {position1} % position1!=% position & Neighbor(position,position1).
 exists([Position1],  (Position1\=Position, neighbor(Position, Position1))).
 
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:94
 % [position] % !Neighbor(position,position).
 not(neighbor(Position, Position)).
 
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:96
 % [position1,position2]% 
 % Neighbor(position1,position2) ->
 % Neighbor(position2,position1).
@@ -35939,14 +35996,14 @@ neighbor(Position1, Position2) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:100
 % [cage] % cage!=% Outside.
 Cage\=outside.
 
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:102
 % [position1,position2,gate]% 
 % Sides(position1,position2,gate) <->
 % ((Side1(gate)=position1 &
@@ -35962,15 +36019,16 @@ sides(Position1, Position2, Gate) <->
 
 
 % 
+% examples/AkmanEtAl2004/ZooWorld.e:108
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:109
 % [gate] % Loc(Side1(gate))!=Loc(Side2(gate)).
 loc(side1(Gate))\=loc(side2(Gate)).
 
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:111
 % [position1,position2,gate1,gate2]% 
 % Sides(position1,position2,gate1) &
 % Sides(position1,position2,gate2) ->
@@ -35981,7 +36039,7 @@ sides(Position1, Position2, Gate1), sides(Position1, Position2, Gate2) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:116
 % [position1,position2,gate]% 
 % Sides(position1,position2,gate) ->
 % Neighbor(position1,position2).
@@ -35991,18 +36049,18 @@ sides(Position1, Position2, Gate) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:120
 % [position1,position2]% 
 % Loc(position1) != Loc(position2) &
 % Neighbor(position1,position2) ->
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:123
 % {gate}%  Sides(position1,position2,gate).
 exists([Gate],  (loc(Position1)\=loc(Position2), neighbor(Position1, Position2)->sides(Position1, Position2, Gate))).
 
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:125
 % [animal,position1,position2,time]% 
 % HoldsAt(Pos(animal,position1),time) &
 % HoldsAt(Pos(animal,position2),time) ->
@@ -36013,16 +36071,16 @@ holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time) -
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:130
 % [animal,time]% 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:131
 % {position} % HoldsAt(Pos(animal,position),time).
 exists([Position], holds_at(pos(Animal, Position), Time)).
 
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:133
 % [animal1,animal2,position,time]% 
 % (animal1!=animal2 &
 %  Large(animal1) &
@@ -36039,9 +36097,10 @@ Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position
 	).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:140
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:142
 % [human,position1,position2,time]% 
 % HoldsAt(PosDeterminingFluent(human,position1),time) &
 % HoldsAt(PosDeterminingFluent(human,position2),time) ->
@@ -36052,7 +36111,7 @@ holds_at(posDeterminingFluent(Human, Position1), Time), holds_at(posDeterminingF
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:147
 % [animal,position,time]% 
 % Initiates(Move(animal,position),Pos(animal,position),time).
 initiates(move(Animal, Position), pos(Animal, Position), Time).
@@ -36060,7 +36119,7 @@ initiates(move(Animal, Position), pos(Animal, Position), Time).
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:150
 % [animal,position1,position2,time]% 
 % HoldsAt(Pos(animal,position1),time) ->
 % Terminates(Move(animal,position2),Pos(animal,position1),time).
@@ -36072,7 +36131,7 @@ holds_at(pos(Animal, Position1), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:154
 % [animal,position,time]% 
 % Happens(Move(animal,position),time) ->
 % !HoldsAt(Pos(animal,position),time).
@@ -36082,7 +36141,7 @@ happens(move(Animal, Position), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:158
 % [human,position,time]% 
 % Happens(Move(human,position),time) ->
 % !{animal} HoldsAt(Mounted(human,animal),time).
@@ -36093,7 +36152,7 @@ happens(move(Human, Position), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:162
 % [human,gate,time]% 
 % Initiates(Open(human,gate),Opened(gate),time).
 initiates(open(Human, Gate), opened(Gate), Time).
@@ -36101,7 +36160,7 @@ initiates(open(Human, Gate), opened(Gate), Time).
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:165
 % [human,gate,time]% 
 % Happens(Open(human,gate),time) ->
 % !HoldsAt(Opened(gate),time) &
@@ -36117,9 +36176,10 @@ happens(open(Human, Gate), Time) ->
 	       ((side1(Gate)=Position;side2(Gate)=Position), holds_at(pos(Human, Position), Time))).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:171
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:173
 % [human,gate,time]% 
 % Terminates(Close(human,gate),Opened(gate),time).
 terminates(close(Human, Gate), opened(Gate), Time).
@@ -36127,12 +36187,12 @@ terminates(close(Human, Gate), opened(Gate), Time).
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:176
 % [human,gate,time]% 
 % Happens(Close(human,gate),time) ->
 % HoldsAt(Opened(gate),time) &
 % (!{animal} HoldsAt(Mounted(human,animal),time)) &
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:180
 % {position}% 
 % (Side1(gate)=position | Side2(gate)=position) &
 % HoldsAt(Pos(human,position),time).
@@ -36141,7 +36201,7 @@ exists([Position],  (happens(close(Human, Gate), Time)->holds_at(opened(Gate), T
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:184
 % [human,animal,position,time]% 
 % HoldsAt(Mounted(human,animal),time) &
 % HoldsAt(Pos(animal,position),time) ->
@@ -36152,7 +36212,7 @@ holds_at(mounted(Human, Animal), Time), holds_at(pos(Animal, Position), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:189
 % [animal,time]% 
 % HoldsAt(Moves(animal),time) <->
 % ({position}
@@ -36165,7 +36225,7 @@ holds_at(moves(Animal), Time) <->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:195
 % [human,time]% 
 % HoldsAt(MountFails(human),time) <->
 % ({animal}
@@ -36178,7 +36238,7 @@ holds_at(mountFails(Human), Time) <->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:201
 % [human,animal,position,time]% 
 % !HoldsAt(Moves(animal),time) ->
 % Releases(Mount(human,animal),Pos(human,position),time).
@@ -36190,7 +36250,7 @@ not(holds_at(moves(Animal), Time)) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:205
 % [human,animal,time]% 
 % !HoldsAt(Moves(animal),time) ->
 % Initiates(Mount(human,animal),Mounted(human,animal),time).
@@ -36202,7 +36262,7 @@ not(holds_at(moves(Animal), Time)) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:209
 % [human,animal,position,time]% 
 % HoldsAt(Pos(animal,position),time) &
 % HoldsAt(Moves(animal),time) ->
@@ -36215,7 +36275,7 @@ holds_at(pos(Animal, Position), Time), holds_at(moves(Animal), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:214
 % [human,animal,position,time]% 
 % HoldsAt(Pos(human,position),time) &
 % HoldsAt(Moves(animal),time) ->
@@ -36228,7 +36288,7 @@ holds_at(pos(Human, Position), Time), holds_at(moves(Animal), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:219
 % [human,animal,time]% 
 % Happens(Mount(human,animal),time) ->
 % Large(animal).
@@ -36238,7 +36298,7 @@ happens(mount(Human, Animal), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:223
 % [human,animal,time]% 
 % HoldsAt(Mounted(human,animal),time) ->
 % Large(animal).
@@ -36248,7 +36308,7 @@ holds_at(mounted(Human, Animal), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:227
 % [human1,human2,time]% 
 % Happens(Mount(human1,human2),time) ->
 % !Large(human1).
@@ -36258,7 +36318,7 @@ happens(mount(Human1, Human2), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:231
 % [human1,human2,time]% 
 % HoldsAt(Mounted(human1,human2),time) ->
 % !Large(human1).
@@ -36268,7 +36328,7 @@ holds_at(mounted(Human1, Human2), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:235
 % [human,animal,time]% 
 % Happens(Mount(human,animal),time) ->
 % !{human1} human1!=human & HoldsAt(Mounted(human1,animal),time).
@@ -36279,7 +36339,7 @@ happens(mount(Human, Animal), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:239
 % [human1,human2,animal,time]% 
 % HoldsAt(Mounted(human1,animal),time) &
 % HoldsAt(Mounted(human2,animal),time) ->
@@ -36290,7 +36350,7 @@ holds_at(mounted(Human1, Animal), Time), holds_at(mounted(Human2, Animal), Time)
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:244
 % [human,animal,time]% 
 % Happens(Mount(human,animal),time) ->
 % !{human1} human1!=human & HoldsAt(Mounted(human1,human),time).
@@ -36301,17 +36361,17 @@ happens(mount(Human, Animal), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:248
 % [human1,human2,time]% 
 % Happens(Mount(human1,human2),time) ->
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:250
 % {animal}%  HoldsAt(Mounted(human2,animal),time).
 exists([Animal],  (happens(mount(Human1, Human2), Time)->holds_at(mounted(Human2, Animal), Time))).
 
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:252
 % [human1,human2,time]% 
 % HoldsAt(Mounted(human1,human2),time) ->
 % !{animal} HoldsAt(Mounted(human2,animal),time).
@@ -36322,7 +36382,7 @@ holds_at(mounted(Human1, Human2), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:256
 % [human,animal,time]% 
 % Happens(Mount(human,animal),time) ->
 % !{animal1} HoldsAt(Mounted(human,animal1),time).
@@ -36333,7 +36393,7 @@ happens(mount(Human, Animal), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:260
 % [human,animal,time]% 
 % !HoldsAt(Moves(animal),time) ->
 % Terminates(GetOff(human,animal),Mounted(human,animal),time).
@@ -36345,7 +36405,7 @@ not(holds_at(moves(Animal), Time)) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:264
 % [human,animal,position,time]% 
 % !HoldsAt(Moves(animal),time) &
 % HoldsAt(PosDeterminingFluent(human,position),time) ->
@@ -36358,7 +36418,7 @@ not(holds_at(moves(Animal), Time)), holds_at(posDeterminingFluent(Human, Positio
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:269
 % [human,animal,position,time]% 
 % !HoldsAt(Moves(animal),time) &
 % HoldsAt(Pos(human,position),time) ->
@@ -36371,7 +36431,7 @@ not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:274
 % [human,animal,position1,position2,time]% 
 % !HoldsAt(Moves(animal),time) &
 % HoldsAt(Pos(human,position1),time) &
@@ -36385,7 +36445,7 @@ not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position1), Time), Posit
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:280
 % [human,animal,time]% 
 % Happens(GetOff(human,animal),time) ->
 % HoldsAt(Mounted(human,animal),time).
@@ -36395,7 +36455,7 @@ happens(getOff(Human, Animal), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:284
 % [animal1,human,time]% 
 % HoldsAt(ThrowOffFails(animal1,human),time) <->
 % ({position,animal2}
@@ -36408,9 +36468,10 @@ holds_at(throwOffFails(Animal1, Human), Time) <->
 	       (Animal2\=Human, holds_at(posDeterminingFluent(Human, Position), Time), large(Animal2), holds_at(pos(Animal2, Position), Time+1))).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:290
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:292
 % [animal,human,position,time]% 
 % HoldsAt(PosDeterminingFluent(human,position),time) &
 % !HoldsAt(ThrowOffFails(animal,human),time) ->
@@ -36423,7 +36484,7 @@ holds_at(posDeterminingFluent(Human, Position), Time), not(holds_at(throwOffFail
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:297
 % [animal,human,position,time]% 
 % HoldsAt(Pos(human,position),time) &
 % !HoldsAt(ThrowOffFails(animal,human),time) ->
@@ -36436,7 +36497,7 @@ holds_at(pos(Human, Position), Time), not(holds_at(throwOffFails(Animal, Human),
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:302
 % [animal,human,position1,position2,time]% 
 % !HoldsAt(ThrowOffFails(animal,human),time) &
 % HoldsAt(Pos(human,position1),time) &
@@ -36450,8 +36511,9 @@ not(holds_at(throwOffFails(Animal, Human), Time)), holds_at(pos(Human, Position1
 
 
 % 
+% examples/AkmanEtAl2004/ZooWorld.e:308
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:309
 % [human,time]% 
 % (!{animal} Happens(ThrowOff(animal,human),time) |
 %            Happens(GetOff(human,animal),time)) ->
@@ -36462,7 +36524,7 @@ not(exists([Animal], happens(throwOff(Animal, Human), Time)));happens(getOff(Hum
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:314
 % [human,position,animal1,animal2,time]% 
 % HoldsAt(PosDeterminingFluent(human,position),time) &
 % HoldsAt(ThrowOffFails(animal1,human),time) &
@@ -36476,7 +36538,7 @@ holds_at(posDeterminingFluent(Human, Position), Time), holds_at(throwOffFails(An
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:320
 % [human,animal,time]% 
 % !HoldsAt(ThrowOffFails(animal,human),time) ->
 % Terminates(ThrowOff(animal,human),Mounted(human,animal),time).
@@ -36488,7 +36550,7 @@ not(holds_at(throwOffFails(Animal, Human), Time)) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:324
 % [animal,human,time]% 
 % Happens(ThrowOff(animal,human),time) ->
 % HoldsAt(Mounted(human,animal),time).
@@ -36498,7 +36560,7 @@ happens(throwOff(Animal, Human), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:328
 % [animal,human,time]% 
 % Happens(ThrowOff(animal,human),time) ->
 % !Happens(GetOff(human,animal),time).
@@ -36508,7 +36570,7 @@ happens(throwOff(Animal, Human), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:332
 % [animal,human,time]% 
 % Happens(GetOff(human,animal),time) ->
 % !Happens(ThrowOff(animal,human),time).
@@ -36518,7 +36580,7 @@ happens(getOff(Human, Animal), Time) ->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:336
 % [position1,position2,time]% 
 % Accessible(position1,position2,time) <->
 % (Neighbor(position1,position2) &
@@ -36531,7 +36593,7 @@ accessible(Position1, Position2, Time) <->
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:342
 % [animal,position1,position2,time]% 
 % (position1!=position2 &
 %  HoldsAt(Pos(animal,position1),time) &
@@ -36543,7 +36605,7 @@ Position1\=Position2, holds_at(pos(Animal, Position1), Time), holds_at(pos(Anima
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:348
 % [human,time]% 
 % HoldsAt(AbnormalEncroachment(human),time) <->
 % (HoldsAt(MountFails(human),time) |
@@ -36562,9 +36624,10 @@ holds_at(abnormalEncroachment(Human), Time) <->
 	).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:358
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:360
 % [animal1,animal2,position,time]% 
 % HoldsAt(Pos(animal1,position),time) &
 % !HoldsAt(Pos(animal1,position),time+1) &
@@ -36581,9 +36644,10 @@ holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Tim
 	).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:367
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:369
 % [animal1,animal2,position1,position2,time]% 
 % animal1!=% animal2 &
 % Large(animal1) & Large(animal2) &
@@ -36597,9 +36661,10 @@ Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position
 		   sides(Position1, Position2, Gate))).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:376
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:378
 % [animal1,animal2,position1,position2,time]% 
 % animal1!=% animal2 &
 % Large(animal1) & Large(animal2) &
@@ -36613,9 +36678,10 @@ Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position
 		   sides(Position1, Position2, Gate))).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:385
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:387
 % [gate,position1,position2,time]% 
 % HoldsAt(Opened(gate),time) &
 % !HoldsAt(Opened(gate),time+1) &
@@ -36628,6 +36694,7 @@ holds_at(opened(Gate), Time), not(holds_at(opened(Gate), Time+1)), sides(Positio
 		   (holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time+1)))).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:393
 % 
 % 
 % gate GateAO
@@ -36644,6 +36711,7 @@ loc(1)=cageA.
 
 
 % 
+% examples/AkmanEtAl2004/ZooWorld.e:399
 % Loc(2)=CageA.
 loc(2)=cageA.
 
@@ -36674,13 +36742,14 @@ loc(7)=outside.
 
 
 % 
+% examples/AkmanEtAl2004/ZooWorld.e:405
 % Loc(8)=Outside.
 loc(8)=outside.
 
 
 % 
 % 
-% ectest/ec_reader_test_examples.e:8767
+% examples/AkmanEtAl2004/ZooWorld.e:407
 % [position1,position2]% 
 % Neighbor(position1,position2) <->
 % ((position1=1 & position2=2) |
@@ -36765,6 +36834,7 @@ neighbor(Position1, Position2) <->
 	).
 
 
+% examples/AkmanEtAl2004/ZooWorld.e:434
 % 
 % 
 % Side1(GateAO)=4.
@@ -36916,10 +36986,10 @@ option(encoding, 3).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:8831
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% foundations/Root.e:1
+% ectest/ec_reader_test_examples.e:8831
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -36930,7 +37000,6 @@ option(encoding, 3).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
-% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -36951,7 +37020,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:8832
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:8832
@@ -37031,7 +37100,7 @@ predicate(trajectory(fluent, time, fluent, offset)).
 % ; End of file.
 % load examples/AkmanEtAl2004/ZooWorld.e
 % ectest/ec_reader_test_examples.e:8833
-'examples/AkmanEtAl2004/ZooWorld.e'.
+% load('examples/AkmanEtAl2004/ZooWorld.e').
 
 
 % ectest/ec_reader_test_examples.e:8833
@@ -38274,10 +38343,10 @@ option(encoding, 3).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:8880
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:8880
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -38288,6 +38357,7 @@ option(encoding, 3).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -38308,10 +38378,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:8881
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% ectest/ec_reader_test_examples.e:8881
+% foundations/EC.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -38337,6 +38407,7 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
+% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -38355,6 +38426,7 @@ reified_sort(fluent).
 reified_sort(event).
 
 
+% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -38376,6 +38448,7 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
+% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -38388,7 +38461,7 @@ predicate(trajectory(fluent, time, fluent, offset)).
 % ; End of file.
 % load examples/AkmanEtAl2004/ZooWorld.e
 % ectest/ec_reader_test_examples.e:8882
-'examples/AkmanEtAl2004/ZooWorld.e'.
+% load('examples/AkmanEtAl2004/ZooWorld.e').
 
 
 % ectest/ec_reader_test_examples.e:8882
@@ -39673,7 +39746,7 @@ option(encoding, 3).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:8938
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/ec_reader_test_examples.e:8938
@@ -39707,7 +39780,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:8939
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:8939
@@ -39787,7 +39860,7 @@ predicate(trajectory(fluent, time, fluent, offset)).
 % ; End of file.
 % load examples/AkmanEtAl2004/ZooWorld.e
 % ectest/ec_reader_test_examples.e:8940
-'examples/AkmanEtAl2004/ZooWorld.e'.
+% load('examples/AkmanEtAl2004/ZooWorld.e').
 
 
 % ectest/ec_reader_test_examples.e:8940
@@ -41067,10 +41140,10 @@ option(encoding, 3).
 % 
 % load foundations/Root.e
 % ectest/ec_reader_test_examples.e:9002
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
-% ectest/ec_reader_test_examples.e:9002
+% foundations/Root.e:1
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -41081,6 +41154,7 @@ option(encoding, 3).
 % ; Contributors:
 % ; IBM - Initial implementation
 % ;
+% foundations/Root.e:11
 % sort boolean
 sort(boolean).
 
@@ -41101,7 +41175,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/ec_reader_test_examples.e:9003
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:9003
@@ -41181,7 +41255,7 @@ predicate(trajectory(fluent, time, fluent, offset)).
 % ; End of file.
 % load examples/AkmanEtAl2004/ZooWorld.e
 % ectest/ec_reader_test_examples.e:9004
-'examples/AkmanEtAl2004/ZooWorld.e'.
+% load('examples/AkmanEtAl2004/ZooWorld.e').
 
 
 % ectest/ec_reader_test_examples.e:9004

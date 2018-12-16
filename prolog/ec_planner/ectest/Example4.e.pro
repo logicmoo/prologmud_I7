@@ -12,7 +12,7 @@
 % ectest/Example4.e:11
 % load foundations/Root.e
 % ectest/Example4.e:12
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/Example4.e:12
@@ -46,7 +46,7 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/Example4.e:13
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
 % foundations/EC.e:1

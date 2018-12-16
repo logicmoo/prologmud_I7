@@ -12,7 +12,7 @@
 % ectest/Example3.e:11
 % load foundations/Root.e
 % ectest/Example3.e:12
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % foundations/Root.e:1
@@ -47,10 +47,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/Example3.e:13
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% foundations/EC.e:1
+% ectest/Example3.e:13
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -76,7 +76,6 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
-% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -95,7 +94,6 @@ reified_sort(fluent).
 reified_sort(event).
 
 
-% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -117,7 +115,6 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
-% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 

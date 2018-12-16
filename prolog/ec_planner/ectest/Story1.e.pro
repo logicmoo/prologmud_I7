@@ -27,7 +27,7 @@ option(modeldiff, on).
 % 
 % load foundations/Root.e
 % ectest/Story1.e:24
-'foundations/Root.e'.
+% load('foundations/Root.e').
 
 
 % ectest/Story1.e:24
@@ -61,10 +61,10 @@ reified_sort(function).
 % ; End of file.
 % load foundations/EC.e
 % ectest/Story1.e:25
-'foundations/EC.e'.
+% load('foundations/EC.e').
 
 
-% foundations/EC.e:1
+% ectest/Story1.e:25
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -90,7 +90,6 @@ reified_sort(function).
 % ;   publisher = "Springer",
 % ; }
 % ;
-% foundations/EC.e:26
 % 
 % sort time: integer
 subsort(time, integer).
@@ -109,7 +108,6 @@ reified_sort(fluent).
 reified_sort(event).
 
 
-% foundations/EC.e:32
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
@@ -131,7 +129,6 @@ predicate(initiates(event, fluent, time)).
 predicate(terminates(event, fluent, time)).
 
 
-% foundations/EC.e:38
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
@@ -150,10 +147,10 @@ sort(agent).
 % 
 % load examples/FrankEtAl2003/FrankEtAl.e
 % ectest/Story1.e:29
-'examples/FrankEtAl2003/FrankEtAl.e'.
+% load('examples/FrankEtAl2003/FrankEtAl.e').
 
 
-% examples/FrankEtAl2003/FrankEtAl.e:1
+% ectest/Story1.e:29
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -173,7 +170,6 @@ sort(agent).
 % ;   pages = "875--910",
 % ; }
 % ;
-% examples/FrankEtAl2003/FrankEtAl.e:20
 % 
 % fluent SunShining()
 fluent(sunShining()).
@@ -195,7 +191,6 @@ fluent(playSoccer(agent)).
 fluent(playHideAndSeek(agent)).
 
 
-% examples/FrankEtAl2003/FrankEtAl.e:26
 % fluent PlayComputerGame(agent)
 fluent(playComputerGame(agent)).
 
@@ -217,14 +212,13 @@ noninertial([outside, playSoccer, playHideAndSeek, playComputerGame]).
 noninertial([playWithDog, win]).
 
 
-% examples/FrankEtAl2003/FrankEtAl.e:32
 % 
 % xor PlaySoccer, PlayHideAndSeek, PlayComputerGame, PlayWithDog
 xor([playSoccer, playHideAndSeek, playComputerGame, playWithDog]).
 
 
 % 
-% examples/FrankEtAl2003/FrankEtAl.e:35
+% ectest/Story1.e:29
 % [agent,time]% 
 % HoldsAt(PlaySoccer(agent),time) ->
 % HoldsAt(Outside(agent),time).
@@ -234,7 +228,7 @@ holds_at(playSoccer(Agent), Time) ->
 
 % 
 % 
-% examples/FrankEtAl2003/FrankEtAl.e:39
+% ectest/Story1.e:29
 % [agent,time]% 
 % HoldsAt(PlaySoccer(agent),time) ->
 % ({agent1} agent1!=agent & HoldsAt(PlaySoccer(agent1),time)).
@@ -245,7 +239,7 @@ holds_at(playSoccer(Agent), Time) ->
 
 % 
 % 
-% examples/FrankEtAl2003/FrankEtAl.e:43
+% ectest/Story1.e:29
 % [agent,time]% 
 % HoldsAt(PlayHideAndSeek(agent),time) ->
 % ({agent1} agent1!=agent & HoldsAt(PlayHideAndSeek(agent1),time)).
@@ -256,7 +250,7 @@ holds_at(playHideAndSeek(Agent), Time) ->
 
 % 
 % 
-% examples/FrankEtAl2003/FrankEtAl.e:47
+% ectest/Story1.e:29
 % [agent,time]% 
 % HoldsAt(PlayComputerGame(agent),time) ->
 % !HoldsAt(Outside(agent),time).
@@ -266,7 +260,7 @@ holds_at(playComputerGame(Agent), Time) ->
 
 % 
 % 
-% examples/FrankEtAl2003/FrankEtAl.e:51
+% ectest/Story1.e:29
 % [agent,time]% 
 % HoldsAt(Win(agent),time) ->
 % (HoldsAt(PlaySoccer(agent),time) |
@@ -283,9 +277,8 @@ holds_at(win(Agent), Time) ->
 
 
 % 
-% examples/FrankEtAl2003/FrankEtAl.e:57
 % 
-% examples/FrankEtAl2003/FrankEtAl.e:58
+% ectest/Story1.e:29
 % [agent,time]% 
 % HoldsAt(PlaySoccer(agent),time) &
 % HoldsAt(Win(agent),time) ->
@@ -296,7 +289,7 @@ holds_at(playSoccer(Agent), Time), holds_at(win(Agent), Time) ->
 
 % 
 % 
-% examples/FrankEtAl2003/FrankEtAl.e:63
+% ectest/Story1.e:29
 % [agent,time]% 
 % HoldsAt(PlayHideAndSeek(agent),time) &
 % HoldsAt(Win(agent),time) ->
@@ -307,7 +300,7 @@ holds_at(playHideAndSeek(Agent), Time), holds_at(win(Agent), Time) ->
 
 % 
 % 
-% examples/FrankEtAl2003/FrankEtAl.e:68
+% ectest/Story1.e:29
 % [agent,time]% 
 % HoldsAt(PlayComputerGame(agent),time) &
 % HoldsAt(Win(agent),time) ->
@@ -318,7 +311,7 @@ holds_at(playComputerGame(Agent), Time), holds_at(win(Agent), Time) ->
 
 % 
 % 
-% examples/FrankEtAl2003/FrankEtAl.e:73
+% ectest/Story1.e:29
 % [agent,time]% 
 % HoldsAt(Win(agent),time) ->
 % HoldsAt(PlaySoccer(agent),time-1) |
@@ -333,7 +326,7 @@ holds_at(playComputerGame(Agent), Time), holds_at(win(Agent), Time) ->
 
 % 
 % 
-% examples/FrankEtAl2003/FrankEtAl.e:79
+% ectest/Story1.e:29
 % [agent,time]% 
 % HoldsAt(PlaySoccer(agent),time) ->
 % !HoldsAt(Raining(),time).
@@ -343,7 +336,7 @@ holds_at(playSoccer(Agent), Time) ->
 
 % 
 % 
-% examples/FrankEtAl2003/FrankEtAl.e:83
+% ectest/Story1.e:29
 % [agent,time]% 
 % HoldsAt(Win(agent),time) ->
 % !({agent1} agent1!=agent & HoldsAt(Win(agent1),time)).
@@ -354,7 +347,7 @@ holds_at(win(Agent), Time) ->
 
 % 
 % 
-% examples/FrankEtAl2003/FrankEtAl.e:87
+% ectest/Story1.e:29
 % [agent1,agent2,time]% 
 % HoldsAt(PlayHideAndSeek(agent1),time) &
 % HoldsAt(PlayHideAndSeek(agent2),time) ->
