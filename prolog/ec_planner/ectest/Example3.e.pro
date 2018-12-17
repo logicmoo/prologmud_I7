@@ -1,4 +1,3 @@
-:- include('../ec_test_incl').
 % ectest/Example3.e:1
 % translate: begining  File: ectest/Example3.e.pro 
 % ;
@@ -13,13 +12,21 @@
 % ;
 % ectest/Example3.e:11
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% foundations/Root.e:1
+% translate: unskipped  File: on_load_ele 
+% foundations/Root.e:17
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/Example3.e:13
+% translate: unskipped  File: on_load_ele 
+% ectest/Example3.e:13
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
@@ -30,7 +37,6 @@ sort(agent).
 fluent(awake(agent)).
 
 
-% ectest/Example3.e:17
 % event WakeUp(agent)
 event(wakeUp(agent)).
 

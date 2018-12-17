@@ -25,7 +25,7 @@ load foundations/EC.e
 
 sort agent
 
-load examples/FrankEtAl2003/FrankEtAl.e
+include examples/FrankEtAl2003/FrankEtAl.e
 
 agent Bob, Jilly
 

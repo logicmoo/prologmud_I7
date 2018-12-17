@@ -26,13 +26,21 @@
  
 % ectest/TestBoxRoom.e:24
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/TestBoxRoom.e:25
+% translate: unskipped  File: on_load_ele 
+% ectest/TestBoxRoom.e:25
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/TestBoxRoom.e:26
+% translate: unskipped  File: on_load_ele 
+% foundations/EC.e:42
+% translate: ready  File: on_load_ele 
 % % 
 % sort object
 sort(object).
@@ -46,12 +54,12 @@ subsort(agent, object).
 subsort(physobj, object).
 
 
-% ectest/TestBoxRoom.e:30
 % sort room: object
 subsort(room, object).
 
 
 % % 
+% ectest/TestBoxRoom.e:32
 % fluent directlyIn(object,object)fluent(directlyIn(object, object)).
 
 
@@ -66,8 +74,8 @@ noninertial(inRoom).
 
 % % 
 % ;; executable(move(agent,object,object,object))
-% ectest/TestBoxRoom.e:37
 % % 
+% ectest/TestBoxRoom.e:38
 % agent Lisa
 t(agent, lisa).
 
@@ -88,7 +96,6 @@ t(room, livingRoom).
 
 % % 
 % ; Sigma
-% ectest/TestBoxRoom.e:43
 % % 
 % ; RS10
 % ectest/TestBoxRoom.e:45

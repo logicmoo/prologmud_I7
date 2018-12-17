@@ -1,4 +1,3 @@
-:- include('../ec_test_incl').
 % ectest/Example1a.e:1
 % translate: begining  File: ectest/Example1a.e.pro 
 % ;
@@ -20,13 +19,21 @@ option(timediff, off).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% foundations/Root.e:1
+% translate: unskipped  File: on_load_ele 
+% foundations/Root.e:17
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% foundations/EC.e:1
+% translate: unskipped  File: on_load_ele 
+% foundations/EC.e:42
+% translate: ready  File: on_load_ele 
 % 
 % ectest/Example1a.e:18
 % sort agent

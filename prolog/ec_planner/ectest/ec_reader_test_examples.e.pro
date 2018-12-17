@@ -34,15 +34,22 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:31
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:31
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:32
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:32
+% translate: ready  File: on_load_ele 
 % 
-% ectest/ec_reader_test_examples.e:33
 % sort person
 sort(person).
 
@@ -60,8 +67,8 @@ event(hold(person, object)).
 fluent(holding(person, object)).
 
 
+% ectest/ec_reader_test_examples.e:38
 % 
-% ectest/ec_reader_test_examples.e:39
 % person P1
 t(person, p1).
 
@@ -143,15 +150,22 @@ option(trajectory, on).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:86
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:86
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:87
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:87
+% translate: ready  File: on_load_ele 
 % 
-% ectest/ec_reader_test_examples.e:88
 % sort object
 sort(object).
 
@@ -169,11 +183,11 @@ fluent(height(object, height)).
 fluent(falling(object)).
 
 
+% ectest/ec_reader_test_examples.e:93
 % event StartFalling(object)
 event(startFalling(object)).
 
 
-% ectest/ec_reader_test_examples.e:94
 % event HitsGround(object)
 event(hitsGround(object)).
 
@@ -586,23 +600,34 @@ happens(move(Grid, Object, Xcoord1, Ycoord1, Xcoord2, Ycoord2), Time) ->
 % ectest/ec_reader_test_examples.e:289
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:291
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:291
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:292
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:292
+% translate: ready  File: on_load_ele 
 % load examples/Cassimatis2002/PolySpace.e
-load('examples/Cassimatis2002/PolySpace.e').
+% loading('examples/Cassimatis2002/PolySpace.e').
 
 
+% ectest/ec_reader_test_examples.e:293
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:293
+% translate: ready  File: on_load_ele 
 % 
 % grid G1
 t(grid, g1).
 
 
-% ectest/ec_reader_test_examples.e:295
 % object X,Y,Screen1,Screen2
 t(object, x).
 
@@ -623,6 +648,7 @@ shape(x, round).
 
 
 % 
+% ectest/ec_reader_test_examples.e:299
 % Color(X,Red).
 color(x, red).
 
@@ -633,7 +659,6 @@ shape(y, round).
 
 
 % 
-% ectest/ec_reader_test_examples.e:301
 % Color(Y,Red).
 color(y, red).
 
@@ -654,6 +679,7 @@ shape(screen2, square).
 
 
 % 
+% ectest/ec_reader_test_examples.e:305
 % Color(Screen2,Green).
 color(screen2, green).
 
@@ -761,23 +787,34 @@ range(offset, 0, 0).
 % ectest/ec_reader_test_examples.e:351
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:353
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:353
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:354
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:354
+% translate: ready  File: on_load_ele 
 % load examples/Cassimatis2002/PolySpace.e
-load('examples/Cassimatis2002/PolySpace.e').
+% loading('examples/Cassimatis2002/PolySpace.e').
 
 
+% ectest/ec_reader_test_examples.e:355
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:355
+% translate: ready  File: on_load_ele 
 % 
 % grid G1
 t(grid, g1).
 
 
-% ectest/ec_reader_test_examples.e:357
 % object X,Y,Screen
 t(object, x).
 
@@ -795,6 +832,7 @@ shape(x, round).
 
 
 % 
+% ectest/ec_reader_test_examples.e:361
 % Color(X,Red).
 color(x, red).
 
@@ -805,7 +843,6 @@ shape(y, round).
 
 
 % 
-% ectest/ec_reader_test_examples.e:363
 % Color(Y,Red).
 color(y, red).
 
@@ -920,13 +957,21 @@ range(offset, 0, 0).
 % ectest/ec_reader_test_examples.e:413
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:415
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:415
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:416
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:416
+% translate: ready  File: on_load_ele 
 % 
 % sort x
 sort(x).
@@ -936,7 +981,6 @@ sort(x).
 t(x, person).
 
 
-% ectest/ec_reader_test_examples.e:419
 % 
 % predicate LikesWine(x)
 predicate(likesWine(x)).
@@ -946,6 +990,7 @@ predicate(likesWine(x)).
 predicate(italian(x)).
 
 
+% ectest/ec_reader_test_examples.e:422
 % predicate French(x)
 predicate(french(x)).
 
@@ -958,7 +1003,6 @@ predicate(ab1(x)).
 predicate(ab2(x)).
 
 
-% ectest/ec_reader_test_examples.e:425
 % 
 % ectest/ec_reader_test_examples.e:426
 % [x] % Italian(x) & !Ab1(x) -> LikesWine(x).
@@ -1062,15 +1106,22 @@ option(showpred, off).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:486
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:486
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:487
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:487
+% translate: ready  File: on_load_ele 
 % 
-% ectest/ec_reader_test_examples.e:488
 % event Load()
 event(load()).
 
@@ -1091,6 +1142,7 @@ fluent(loaded()).
 fluent(alive()).
 
 
+% ectest/ec_reader_test_examples.e:493
 % 
 % ectest/ec_reader_test_examples.e:494
 % [time] % Initiates(Load(),Loaded(),time).
@@ -1202,13 +1254,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:554
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:556
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:556
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:557
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:557
+% translate: ready  File: on_load_ele 
 % 
 % event Close1()
 event(close1()).
@@ -1218,7 +1278,6 @@ event(close1()).
 event(close2()).
 
 
-% ectest/ec_reader_test_examples.e:560
 % event Start()
 event(start()).
 
@@ -1231,6 +1290,7 @@ fluent(blocked1()).
 fluent(blocked2()).
 
 
+% ectest/ec_reader_test_examples.e:563
 % fluent Stuffy()
 fluent(stuffy()).
 
@@ -1358,13 +1418,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:627
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:629
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:629
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:630
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:630
+% translate: ready  File: on_load_ele 
 % 
 % fluent HasTicket()
 fluent(hasTicket()).
@@ -1374,7 +1442,6 @@ fluent(hasTicket()).
 fluent(onRed()).
 
 
-% ectest/ec_reader_test_examples.e:633
 % fluent OnYellow()
 fluent(onYellow()).
 
@@ -1387,6 +1454,7 @@ event(buy()).
 event(board()).
 
 
+% ectest/ec_reader_test_examples.e:636
 % event BoardRed()
 event(boardRed()).
 
@@ -1526,13 +1594,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:695
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:697
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:697
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:698
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:698
+% translate: ready  File: on_load_ele 
 % 
 % event Load()
 event(load()).
@@ -1542,7 +1618,6 @@ event(load()).
 event(shoot()).
 
 
-% ectest/ec_reader_test_examples.e:701
 % event Sneeze()
 event(sneeze()).
 
@@ -1555,6 +1630,7 @@ fluent(loaded()).
 fluent(alive()).
 
 
+% ectest/ec_reader_test_examples.e:704
 % fluent Dead()
 fluent(dead()).
 
@@ -1686,13 +1762,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:773
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:775
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:775
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:776
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:776
+% translate: ready  File: on_load_ele 
 % 
 % event Push()
 event(push()).
@@ -1702,7 +1786,6 @@ event(push()).
 event(pull()).
 
 
-% ectest/ec_reader_test_examples.e:779
 % fluent Forwards()
 fluent(forwards()).
 
@@ -1715,6 +1798,7 @@ fluent(backwards()).
 fluent(spinning()).
 
 
+% ectest/ec_reader_test_examples.e:782
 % 
 % ectest/ec_reader_test_examples.e:783
 % [time]% 
@@ -1906,13 +1990,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:876
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:878
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:878
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:879
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:879
+% translate: ready  File: on_load_ele 
 % 
 % event Park()
 event(park()).
@@ -1922,7 +2014,6 @@ event(park()).
 event(steal()).
 
 
-% ectest/ec_reader_test_examples.e:882
 % fluent CarParked()
 fluent(carParked()).
 
@@ -2004,13 +2095,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:927
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:929
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:929
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:930
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:930
+% translate: ready  File: on_load_ele 
 % 
 % event LiftLeft()
 event(liftLeft()).
@@ -2020,7 +2119,6 @@ event(liftLeft()).
 event(liftRight()).
 
 
-% ectest/ec_reader_test_examples.e:933
 % fluent Spilt()
 fluent(spilt()).
 
@@ -2142,20 +2240,27 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1000
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:1002
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1002
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:1003
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1003
+% translate: ready  File: on_load_ele 
 % 
 % sort x
 sort(x).
 
 
 % 
-% ectest/ec_reader_test_examples.e:1006
 % predicate Republican(x)
 predicate(republican(x)).
 
@@ -2168,6 +2273,7 @@ predicate(quaker(x)).
 predicate(pacifist(x)).
 
 
+% ectest/ec_reader_test_examples.e:1009
 % predicate Ab1(x)
 predicate(ab1(x)).
 
@@ -2177,7 +2283,6 @@ predicate(ab2(x)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:1012
 % x John
 t(x, john).
 
@@ -2188,6 +2293,7 @@ republican(john).
 
 
 % 
+% ectest/ec_reader_test_examples.e:1015
 % Quaker(John).
 quaker(john).
 
@@ -2281,20 +2387,27 @@ completion([theta, ab2]).
 % ectest/ec_reader_test_examples.e:1076
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:1078
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1078
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:1079
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1079
+% translate: ready  File: on_load_ele 
 % 
 % sort x
 sort(x).
 
 
 % 
-% ectest/ec_reader_test_examples.e:1082
 % predicate Republican(x)
 predicate(republican(x)).
 
@@ -2307,6 +2420,7 @@ predicate(quaker(x)).
 predicate(pacifist(x)).
 
 
+% ectest/ec_reader_test_examples.e:1085
 % predicate Ab1(x)
 predicate(ab1(x)).
 
@@ -2316,7 +2430,6 @@ predicate(ab2(x)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:1088
 % x John
 t(x, john).
 
@@ -2327,6 +2440,7 @@ republican(john).
 
 
 % 
+% ectest/ec_reader_test_examples.e:1091
 % Quaker(John).
 quaker(john).
 
@@ -2407,20 +2521,27 @@ completion([theta, ab2]).
 % ectest/ec_reader_test_examples.e:1128
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:1130
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1130
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:1131
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1131
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
 
 
 % 
-% ectest/ec_reader_test_examples.e:1134
 % agent Nathan
 t(agent, nathan).
 
@@ -2430,6 +2551,7 @@ t(agent, nathan).
 fluent(awake(agent)).
 
 
+% ectest/ec_reader_test_examples.e:1137
 % 
 % event WakeUp(agent)
 event(wakeUp(agent)).
@@ -2439,7 +2561,6 @@ event(wakeUp(agent)).
 event(fallAsleep(agent)).
 
 
-% ectest/ec_reader_test_examples.e:1140
 % 
 % ; Sigma
 % 
@@ -2511,20 +2632,27 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1182
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:1184
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1184
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:1185
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1185
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
 
 
 % 
-% ectest/ec_reader_test_examples.e:1188
 % agent Nathan
 t(agent, nathan).
 
@@ -2534,6 +2662,7 @@ t(agent, nathan).
 fluent(awake(agent)).
 
 
+% ectest/ec_reader_test_examples.e:1191
 % 
 % event WakeUp(agent)
 event(wakeUp(agent)).
@@ -2543,7 +2672,6 @@ event(wakeUp(agent)).
 event(fallAsleep(agent)).
 
 
-% ectest/ec_reader_test_examples.e:1194
 % 
 % ; Sigma
 % 
@@ -2624,20 +2752,27 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1241
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:1243
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1243
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:1244
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1244
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
 
 
 % 
-% ectest/ec_reader_test_examples.e:1247
 % agent Nathan
 t(agent, nathan).
 
@@ -2647,6 +2782,7 @@ t(agent, nathan).
 fluent(awake(agent)).
 
 
+% ectest/ec_reader_test_examples.e:1250
 % 
 % event WakeUp(agent)
 event(wakeUp(agent)).
@@ -2656,7 +2792,6 @@ event(wakeUp(agent)).
 event(fallAsleep(agent)).
 
 
-% ectest/ec_reader_test_examples.e:1253
 % 
 % ; Sigma
 % 
@@ -2747,13 +2882,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1304
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:1306
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1306
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:1307
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1307
+% translate: ready  File: on_load_ele 
 % 
 % sort object
 sort(object).
@@ -2763,13 +2906,13 @@ sort(object).
 t(object, o1).
 
 
-% ectest/ec_reader_test_examples.e:1310
 % 
 % fluent F(object)
 fluent(f(object)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:1313
 % event E(object)
 event(e(object)).
 
@@ -2832,20 +2975,27 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1348
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:1350
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1350
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:1351
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1351
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
 
 
 % 
-% ectest/ec_reader_test_examples.e:1354
 % agent Nathan
 t(agent, nathan).
 
@@ -2855,6 +3005,7 @@ t(agent, nathan).
 fluent(awake(agent)).
 
 
+% ectest/ec_reader_test_examples.e:1357
 % 
 % event WakeUp(agent)
 event(wakeUp(agent)).
@@ -2864,7 +3015,6 @@ event(wakeUp(agent)).
 event(fallAsleep(agent)).
 
 
-% ectest/ec_reader_test_examples.e:1360
 % 
 % ; Sigma
 % 
@@ -2936,13 +3086,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1403
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:1405
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1405
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:1406
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1406
+% translate: ready  File: on_load_ele 
 % 
 % sort object
 sort(object).
@@ -2952,13 +3110,13 @@ sort(object).
 t(object, o1).
 
 
-% ectest/ec_reader_test_examples.e:1409
 % 
 % event E(object)
 event(e(object)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:1412
 % fluent F1(object)
 fluent(f1(object)).
 
@@ -3035,13 +3193,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1452
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:1454
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1454
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:1455
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1455
+% translate: ready  File: on_load_ele 
 % 
 % sort object
 sort(object).
@@ -3051,13 +3217,13 @@ sort(object).
 t(object, o1).
 
 
-% ectest/ec_reader_test_examples.e:1458
 % 
 % fluent F(object)
 fluent(f(object)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:1461
 % event E(object)
 event(e(object)).
 
@@ -3120,13 +3286,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1496
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:1498
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1498
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:1499
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1499
+% translate: ready  File: on_load_ele 
 % 
 % sort object
 sort(object).
@@ -3136,13 +3310,13 @@ sort(object).
 t(object, o1).
 
 
-% ectest/ec_reader_test_examples.e:1502
 % 
 % fluent F(object)
 fluent(f(object)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:1505
 % event E(object)
 event(e(object)).
 
@@ -3205,20 +3379,27 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1540
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:1542
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1542
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:1543
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1543
+% translate: ready  File: on_load_ele 
 % 
 % sort camera
 sort(camera).
 
 
 % 
-% ectest/ec_reader_test_examples.e:1546
 % camera Camera1
 t(camera, camera1).
 
@@ -3228,6 +3409,7 @@ t(camera, camera1).
 fluent(properlyExposedPicture(camera)).
 
 
+% ectest/ec_reader_test_examples.e:1549
 % fluent ImproperlyExposedPicture(camera)
 fluent(improperlyExposedPicture(camera)).
 
@@ -3237,13 +3419,13 @@ fluent(improperlyExposedPicture(camera)).
 event(releaseShutter(camera)).
 
 
-% ectest/ec_reader_test_examples.e:1552
 % event TriggerFlash(camera)
 event(triggerFlash(camera)).
 
 
 % 
 % ; Sigma
+% ectest/ec_reader_test_examples.e:1555
 % 
 % ectest/ec_reader_test_examples.e:1556
 % [camera,time]% 
@@ -3373,15 +3555,22 @@ option(renaming, off).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:1619
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1619
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:1620
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1620
+% translate: ready  File: on_load_ele 
 % 
-% ectest/ec_reader_test_examples.e:1621
 % sort coord: integer
 subsort(coord, integer).
 
@@ -3393,11 +3582,11 @@ subsort(direction, integer).
 
 % ; 0 -> 0, 1 -> 90, 2 -> 180, 3 -> 370
 % 
+% ectest/ec_reader_test_examples.e:1626
 % sort robot
 sort(robot).
 
 
-% ectest/ec_reader_test_examples.e:1627
 % 
 % robot Robot1
 t(robot, robot1).
@@ -3412,8 +3601,8 @@ function(sin(direction), coord).
 function(cos(direction), coord).
 
 
+% ectest/ec_reader_test_examples.e:1632
 % 
-% ectest/ec_reader_test_examples.e:1633
 % Sin(0)=0.
 sin(0)=0.
 
@@ -3435,12 +3624,12 @@ sin(3)=3.
 
 % 
 % 
+% ectest/ec_reader_test_examples.e:1638
 % Cos(0)=1.
 cos(0)=1.
 
 
 % 
-% ectest/ec_reader_test_examples.e:1639
 % Cos(1)=2.
 cos(1)=2.
 
@@ -3461,11 +3650,11 @@ cos(3)=4.
 fluent(direction(robot, direction)).
 
 
+% ectest/ec_reader_test_examples.e:1644
 % fluent Location(robot,coord,coord)
 fluent(location(robot, coord, coord)).
 
 
-% ectest/ec_reader_test_examples.e:1645
 % 
 % event MoveLeftWheel(robot)
 event(moveLeftWheel(robot)).
@@ -3477,6 +3666,7 @@ event(moveRightWheel(robot)).
 
 % 
 % ; Sigma
+% ectest/ec_reader_test_examples.e:1650
 % 
 % ectest/ec_reader_test_examples.e:1651
 % [robot,direction1,direction2,time]% 
@@ -3679,20 +3869,27 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1747
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:1749
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1749
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:1750
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1750
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
 
 
 % 
-% ectest/ec_reader_test_examples.e:1753
 % event PatHead(agent)
 event(patHead(agent)).
 
@@ -3702,13 +3899,13 @@ event(rubStomach(agent)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:1756
 % agent Nathan
 t(agent, nathan).
 
 
 % 
 % ; Delta
-% ectest/ec_reader_test_examples.e:1759
 % 
 % ectest/ec_reader_test_examples.e:1760
 % [agent,time]% 
@@ -3766,13 +3963,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1794
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:1796
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1796
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:1797
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1797
+% translate: ready  File: on_load_ele 
 % 
 % sort object
 sort(object).
@@ -3782,7 +3987,6 @@ sort(object).
 subsort(agent, object).
 
 
-% ectest/ec_reader_test_examples.e:1800
 % sort physobj: object
 subsort(physobj, object).
 
@@ -3792,6 +3996,7 @@ subsort(room, object).
 
 
 % 
+% ectest/ec_reader_test_examples.e:1803
 % fluent IN(object,object)
 fluent(in(object, object)).
 
@@ -3804,13 +4009,13 @@ fluent(inroom(object, room)).
 noninertial(inroom).
 
 
-% ectest/ec_reader_test_examples.e:1806
 % 
 % event MOVE(agent,object,object,object)
 event(move(agent, object, object, object)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:1809
 % agent Lisa
 t(agent, lisa).
 
@@ -3829,7 +4034,6 @@ t(room, kitchen).
 t(room, livingRoom).
 
 
-% ectest/ec_reader_test_examples.e:1812
 % 
 % ; Sigma
 % 
@@ -4171,13 +4375,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:1973
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:1975
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1975
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:1976
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:1976
+% translate: ready  File: on_load_ele 
 % 
 % sort object
 sort(object).
@@ -4187,7 +4399,6 @@ sort(object).
 sort(location).
 
 
-% ectest/ec_reader_test_examples.e:1979
 % 
 % object O1, O2
 t(object, o1).
@@ -4212,6 +4423,7 @@ t(location, l4).
 t(location, l5).
 
 
+% ectest/ec_reader_test_examples.e:1982
 % 
 % predicate Adjacent(location,location)
 predicate(adjacent(location, location)).
@@ -4221,7 +4433,6 @@ predicate(adjacent(location, location)).
 predicate(equal(object, object)).
 
 
-% ectest/ec_reader_test_examples.e:1985
 % 
 % fluent At(object,location)
 fluent(at(object, location)).
@@ -4231,6 +4442,7 @@ fluent(at(object, location)).
 event(move(object, location, location)).
 
 
+% ectest/ec_reader_test_examples.e:1988
 % 
 % ; Sigma
 % 
@@ -4455,13 +4667,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:2094
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:2096
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:2096
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:2097
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:2097
+% translate: ready  File: on_load_ele 
 % 
 % sort object
 sort(object).
@@ -4471,7 +4691,6 @@ sort(object).
 sort(location).
 
 
-% ectest/ec_reader_test_examples.e:2100
 % 
 % object O1, O2
 t(object, o1).
@@ -4490,6 +4709,7 @@ t(location, l2).
 t(location, l3).
 
 
+% ectest/ec_reader_test_examples.e:2103
 % 
 % predicate Adjacent(location,location)
 predicate(adjacent(location, location)).
@@ -4499,7 +4719,6 @@ predicate(adjacent(location, location)).
 predicate(equal(object, object)).
 
 
-% ectest/ec_reader_test_examples.e:2106
 % 
 % fluent At(object,location)
 fluent(at(object, location)).
@@ -4509,6 +4728,7 @@ fluent(at(object, location)).
 event(move(object, location, location)).
 
 
+% ectest/ec_reader_test_examples.e:2109
 % 
 % ; Sigma
 % 
@@ -4716,13 +4936,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:2202
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:2204
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:2204
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:2205
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:2205
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
@@ -4732,7 +4960,6 @@ sort(agent).
 sort(location).
 
 
-% ectest/ec_reader_test_examples.e:2208
 % 
 % agent James
 t(agent, james).
@@ -4742,13 +4969,13 @@ t(agent, james).
 t(location, bookstore).
 
 
+% ectest/ec_reader_test_examples.e:2211
 % 
 % fluent Tired(agent)
 fluent(tired(agent)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:2214
 % event Go(agent,location)
 event(go(agent, location)).
 
@@ -4761,6 +4988,7 @@ event(run(agent, location)).
 event(drive(agent, location)).
 
 
+% ectest/ec_reader_test_examples.e:2217
 % 
 % ectest/ec_reader_test_examples.e:2218
 % [agent,location,time]% 
@@ -4846,15 +5074,22 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:2262
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:2262
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:2263
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:2263
+% translate: ready  File: on_load_ele 
 % 
-% ectest/ec_reader_test_examples.e:2264
 % sort dealer
 sort(dealer).
 
@@ -4872,11 +5107,11 @@ subsort(value, integer).
 t(wheel, wheel1).
 
 
+% ectest/ec_reader_test_examples.e:2269
 % dealer Dealer1
 t(dealer, dealer1).
 
 
-% ectest/ec_reader_test_examples.e:2270
 % 
 % fluent WheelNumberDeterminer(wheel,value)
 fluent(wheelNumberDeterminer(wheel, value)).
@@ -4891,11 +5126,11 @@ noninertial(wheelNumberDeterminer).
 
 
 % 
+% ectest/ec_reader_test_examples.e:2275
 % event Spin(dealer,wheel)
 event(spin(dealer, wheel)).
 
 
-% ectest/ec_reader_test_examples.e:2276
 % event Reset(dealer,wheel)
 event(reset(dealer, wheel)).
 
@@ -5052,15 +5287,22 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:2359
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:2359
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:2360
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:2360
+% translate: ready  File: on_load_ele 
 % 
-% ectest/ec_reader_test_examples.e:2361
 % sort agent
 sort(agent).
 
@@ -5081,8 +5323,8 @@ sort(product).
 t(product, britneyCD).
 
 
+% ectest/ec_reader_test_examples.e:2366
 % 
-% ectest/ec_reader_test_examples.e:2367
 % sort f
 sort(f).
 
@@ -5100,11 +5342,11 @@ t(f, ePOSentJenMusicStore1).
 
 
 % 
+% ectest/ec_reader_test_examples.e:2372
 % sort amount: integer
 subsort(amount, integer).
 
 
-% ectest/ec_reader_test_examples.e:2373
 % 
 % fluent C(agent,agent,f)
 fluent(c(agent, agent, f)).
@@ -5119,11 +5361,11 @@ fluent(cc(agent, agent, f, f)).
 event(createC(agent, agent, f)).
 
 
+% ectest/ec_reader_test_examples.e:2378
 % event CreateCC(agent,agent,f,f)
 event(createCC(agent, agent, f, f)).
 
 
-% ectest/ec_reader_test_examples.e:2379
 % event DischargeC(agent,agent,f)
 event(dischargeC(agent, agent, f)).
 
@@ -5141,11 +5383,11 @@ fluent(quoteSent(agent, agent, product, amount)).
 fluent(purchaseRequested(agent, agent, product, amount)).
 
 
+% ectest/ec_reader_test_examples.e:2384
 % fluent Delivered(agent,agent,product)
 fluent(delivered(agent, agent, product)).
 
 
-% ectest/ec_reader_test_examples.e:2385
 % fluent EPOSent(agent,agent,amount)
 fluent(ePOSent(agent, agent, amount)).
 
@@ -5163,11 +5405,11 @@ event(requestPurchase(agent, agent, product, amount)).
 event(deliver(agent, agent, product)).
 
 
+% ectest/ec_reader_test_examples.e:2390
 % event SendEPO(agent,agent,amount)
 event(sendEPO(agent, agent, amount)).
 
 
-% ectest/ec_reader_test_examples.e:2391
 % 
 % ; Sigma
 % 
@@ -5550,15 +5792,22 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:2552
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:2552
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:2553
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:2553
+% translate: ready  File: on_load_ele 
 % 
-% ectest/ec_reader_test_examples.e:2554
 % sort agent
 sort(agent).
 
@@ -5579,8 +5828,8 @@ sort(product).
 t(product, britneyCD).
 
 
+% ectest/ec_reader_test_examples.e:2559
 % 
-% ectest/ec_reader_test_examples.e:2560
 % sort f
 sort(f).
 
@@ -5598,11 +5847,11 @@ t(f, ePOSentJenMusicStore1).
 
 
 % 
+% ectest/ec_reader_test_examples.e:2565
 % sort amount: integer
 subsort(amount, integer).
 
 
-% ectest/ec_reader_test_examples.e:2566
 % 
 % fluent C(agent,agent,f)
 fluent(c(agent, agent, f)).
@@ -5617,11 +5866,11 @@ fluent(cc(agent, agent, f, f)).
 event(createC(agent, agent, f)).
 
 
+% ectest/ec_reader_test_examples.e:2571
 % event CreateCC(agent,agent,f,f)
 event(createCC(agent, agent, f, f)).
 
 
-% ectest/ec_reader_test_examples.e:2572
 % event DischargeC(agent,agent,f)
 event(dischargeC(agent, agent, f)).
 
@@ -5639,11 +5888,11 @@ fluent(quoteSent(agent, agent, product, amount)).
 fluent(purchaseRequested(agent, agent, product, amount)).
 
 
+% ectest/ec_reader_test_examples.e:2577
 % fluent Delivered(agent,agent,product)
 fluent(delivered(agent, agent, product)).
 
 
-% ectest/ec_reader_test_examples.e:2578
 % fluent EPOSent(agent,agent,amount)
 fluent(ePOSent(agent, agent, amount)).
 
@@ -5661,11 +5910,11 @@ event(requestPurchase(agent, agent, product, amount)).
 event(deliver(agent, agent, product)).
 
 
+% ectest/ec_reader_test_examples.e:2583
 % event SendEPO(agent,agent,amount)
 event(sendEPO(agent, agent, amount)).
 
 
-% ectest/ec_reader_test_examples.e:2584
 % 
 % ; Sigma
 % 
@@ -6030,15 +6279,22 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:2743
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:2743
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:2744
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:2744
+% translate: ready  File: on_load_ele 
 % 
-% ectest/ec_reader_test_examples.e:2745
 % sort agent
 sort(agent).
 
@@ -6059,8 +6315,8 @@ sort(product).
 t(product, britneyCD).
 
 
+% ectest/ec_reader_test_examples.e:2750
 % 
-% ectest/ec_reader_test_examples.e:2751
 % sort f
 sort(f).
 
@@ -6078,11 +6334,11 @@ t(f, ePOSentJenMusicStore1).
 
 
 % 
+% ectest/ec_reader_test_examples.e:2756
 % sort amount: integer
 subsort(amount, integer).
 
 
-% ectest/ec_reader_test_examples.e:2757
 % 
 % fluent C(agent,agent,f)
 fluent(c(agent, agent, f)).
@@ -6097,11 +6353,11 @@ fluent(cc(agent, agent, f, f)).
 event(createC(agent, agent, f)).
 
 
+% ectest/ec_reader_test_examples.e:2762
 % event CreateCC(agent,agent,f,f)
 event(createCC(agent, agent, f, f)).
 
 
-% ectest/ec_reader_test_examples.e:2763
 % event DischargeC(agent,agent,f)
 event(dischargeC(agent, agent, f)).
 
@@ -6119,11 +6375,11 @@ fluent(quoteSent(agent, agent, product, amount)).
 fluent(purchaseRequested(agent, agent, product, amount)).
 
 
+% ectest/ec_reader_test_examples.e:2768
 % fluent Delivered(agent,agent,product)
 fluent(delivered(agent, agent, product)).
 
 
-% ectest/ec_reader_test_examples.e:2769
 % fluent EPOSent(agent,agent,amount)
 fluent(ePOSent(agent, agent, amount)).
 
@@ -6141,11 +6397,11 @@ event(requestPurchase(agent, agent, product, amount)).
 event(deliver(agent, agent, product)).
 
 
+% ectest/ec_reader_test_examples.e:2774
 % event SendEPO(agent,agent,amount)
 event(sendEPO(agent, agent, amount)).
 
 
-% ectest/ec_reader_test_examples.e:2775
 % 
 % ; Sigma
 % 
@@ -6519,15 +6775,22 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:2935
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:2935
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:2936
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:2936
+% translate: ready  File: on_load_ele 
 % 
-% ectest/ec_reader_test_examples.e:2937
 % sort object
 sort(object).
 
@@ -6545,6 +6808,7 @@ sort(aspect).
 t(object, object1).
 
 
+% ectest/ec_reader_test_examples.e:2942
 % aspect Aspect1, Aspect2, Aspect3
 t(aspect, aspect1).
 
@@ -6555,7 +6819,6 @@ t(aspect, aspect2).
 t(aspect, aspect3).
 
 
-% ectest/ec_reader_test_examples.e:2943
 % shape Shape1, Shape2
 t(shape, shape1).
 
@@ -6576,11 +6839,11 @@ predicate(arc(shape, aspect, aspect)).
 fluent(aspect(object, aspect)).
 
 
+% ectest/ec_reader_test_examples.e:2948
 % event Change(object,aspect,aspect)
 event(change(object, aspect, aspect)).
 
 
-% ectest/ec_reader_test_examples.e:2949
 % 
 % ; Sigma
 % 
@@ -6770,15 +7033,22 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:3057
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:3057
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:3058
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:3058
+% translate: ready  File: on_load_ele 
 % 
-% ectest/ec_reader_test_examples.e:3059
 % sort activity
 sort(activity).
 
@@ -6835,11 +7105,11 @@ t(condition, fc).
 
 
 % 
+% ectest/ec_reader_test_examples.e:3064
 % fluent Active(activity)
 fluent(active(activity)).
 
 
-% ectest/ec_reader_test_examples.e:3065
 % fluent Completed(activity)
 fluent(completed(activity)).
 
@@ -6857,11 +7127,11 @@ noninertial(condition).
 event(start(activity)).
 
 
+% ectest/ec_reader_test_examples.e:3070
 % event End(activity)
 event(end(activity)).
 
 
-% ectest/ec_reader_test_examples.e:3071
 % 
 % ; Sigma
 % 
@@ -7300,23 +7570,34 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:3229
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:3231
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:3231
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:3232
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:3232
+% translate: ready  File: on_load_ele 
 % load foundations/ECCausal.e
-load('foundations/ECCausal.e').
+% loading('foundations/ECCausal.e').
 
 
+% ectest/ec_reader_test_examples.e:3233
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:3233
+% translate: ready  File: on_load_ele 
 % 
 % sort switch
 sort(switch).
 
 
-% ectest/ec_reader_test_examples.e:3235
 % sort relay
 sort(relay).
 
@@ -7336,6 +7617,7 @@ t(switch, s2).
 t(switch, s3).
 
 
+% ectest/ec_reader_test_examples.e:3239
 % relay R
 t(relay, r).
 
@@ -7344,7 +7626,6 @@ t(relay, r).
 t(light, l).
 
 
-% ectest/ec_reader_test_examples.e:3241
 % 
 % event Light(light)
 event(light(light)).
@@ -7358,12 +7639,12 @@ event(close(switch)).
 event(open(switch)).
 
 
+% ectest/ec_reader_test_examples.e:3245
 % event Activate(relay)
 event(activate(relay)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:3247
 % fluent Lit(light)
 fluent(lit(light)).
 
@@ -7522,15 +7803,22 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:3318
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:3318
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:3319
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:3319
+% translate: ready  File: on_load_ele 
 % 
-% ectest/ec_reader_test_examples.e:3320
 % sort object
 sort(object).
 
@@ -7548,11 +7836,11 @@ sort(room).
 t(object, book).
 
 
+% ectest/ec_reader_test_examples.e:3325
 % agent Nathan
 t(agent, nathan).
 
 
-% ectest/ec_reader_test_examples.e:3326
 % room LivingRoom, Kitchen
 t(room, livingRoom).
 
@@ -7573,8 +7861,8 @@ event(pickUp(agent, object)).
 event(walk(agent, room, room)).
 
 
+% ectest/ec_reader_test_examples.e:3331
 % 
-% ectest/ec_reader_test_examples.e:3332
 % fluent InRoom(object,room)
 fluent(inRoom(object, room)).
 
@@ -7762,13 +8050,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:3422
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:3424
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:3424
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:3425
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:3425
+% translate: ready  File: on_load_ele 
 % 
 % sort switch
 sort(switch).
@@ -7778,7 +8074,6 @@ sort(switch).
 sort(relay).
 
 
-% ectest/ec_reader_test_examples.e:3428
 % sort light
 sort(light).
 
@@ -7794,6 +8089,7 @@ t(switch, s2).
 t(switch, s3).
 
 
+% ectest/ec_reader_test_examples.e:3431
 % relay R
 t(relay, r).
 
@@ -7803,7 +8099,6 @@ t(light, l).
 
 
 % 
-% ectest/ec_reader_test_examples.e:3434
 % event Light(light)
 event(light(light)).
 
@@ -7816,6 +8111,7 @@ event(unlight(light)).
 event(close(switch)).
 
 
+% ectest/ec_reader_test_examples.e:3437
 % event Open(switch)
 event(open(switch)).
 
@@ -7825,7 +8121,6 @@ event(activate(relay)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:3440
 % fluent Lit(light)
 fluent(lit(light)).
 
@@ -7838,6 +8133,7 @@ fluent(closed(switch)).
 fluent(activated(relay)).
 
 
+% ectest/ec_reader_test_examples.e:3443
 % 
 % ectest/ec_reader_test_examples.e:3444
 % [time]% 
@@ -8003,13 +8299,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:3520
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:3522
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:3522
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:3523
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:3523
+% translate: ready  File: on_load_ele 
 % 
 % sort switch
 sort(switch).
@@ -8019,7 +8323,6 @@ sort(switch).
 sort(relay).
 
 
-% ectest/ec_reader_test_examples.e:3526
 % sort light
 sort(light).
 
@@ -8035,6 +8338,7 @@ t(switch, s2).
 t(switch, s3).
 
 
+% ectest/ec_reader_test_examples.e:3529
 % relay R
 t(relay, r).
 
@@ -8044,7 +8348,6 @@ t(light, l).
 
 
 % 
-% ectest/ec_reader_test_examples.e:3532
 % event Light(light)
 event(light(light)).
 
@@ -8057,6 +8360,7 @@ event(unlight(light)).
 event(close(switch)).
 
 
+% ectest/ec_reader_test_examples.e:3535
 % event Open(switch)
 event(open(switch)).
 
@@ -8069,7 +8373,6 @@ event(activate(relay)).
 event(deactivate(relay)).
 
 
-% ectest/ec_reader_test_examples.e:3538
 % 
 % fluent Lit(light)
 fluent(lit(light)).
@@ -8079,6 +8382,7 @@ fluent(lit(light)).
 fluent(closed(switch)).
 
 
+% ectest/ec_reader_test_examples.e:3541
 % fluent Activated(relay)
 fluent(activated(relay)).
 
@@ -8262,13 +8566,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:3620
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:3622
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:3622
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:3623
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:3623
+% translate: ready  File: on_load_ele 
 % 
 % sort object
 sort(object).
@@ -8278,7 +8590,6 @@ sort(object).
 subsort(agent, object).
 
 
-% ectest/ec_reader_test_examples.e:3626
 % sort room
 sort(room).
 
@@ -8288,6 +8599,7 @@ sort(room).
 t(object, book).
 
 
+% ectest/ec_reader_test_examples.e:3629
 % agent Nathan
 t(agent, nathan).
 
@@ -8300,7 +8612,6 @@ t(room, kitchen).
 
 
 % 
-% ectest/ec_reader_test_examples.e:3632
 % event LetGoOf(agent,object)
 event(letGoOf(agent, object)).
 
@@ -8313,6 +8624,7 @@ event(pickUp(agent, object)).
 event(walk(agent, room, room)).
 
 
+% ectest/ec_reader_test_examples.e:3635
 % 
 % fluent InRoom(object,room)
 fluent(inRoom(object, room)).
@@ -8322,7 +8634,6 @@ fluent(inRoom(object, room)).
 fluent(holding(agent, object)).
 
 
-% ectest/ec_reader_test_examples.e:3638
 % 
 % ; Sigma
 % 
@@ -8517,14 +8828,21 @@ option(trajectory, on).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:3734
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:3734
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:3735
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:3735
+% translate: ready  File: on_load_ele 
 % 
 % sort balloon
 sort(balloon).
@@ -8720,13 +9038,21 @@ range(offset, 1, 2).
 % ectest/ec_reader_test_examples.e:3820
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:3822
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:3822
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:3823
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:3823
+% translate: ready  File: on_load_ele 
 % 
 % sort object
 sort(object).
@@ -8736,7 +9062,6 @@ sort(object).
 sort(agent).
 
 
-% ectest/ec_reader_test_examples.e:3826
 % sort height: integer
 subsort(height, integer).
 
@@ -8746,6 +9071,7 @@ subsort(height, integer).
 t(agent, nathan).
 
 
+% ectest/ec_reader_test_examples.e:3829
 % object Apple
 t(object, apple).
 
@@ -8755,7 +9081,6 @@ t(object, apple).
 fluent(falling(object)).
 
 
-% ectest/ec_reader_test_examples.e:3832
 % fluent Height(object,height)
 fluent(height(object, height)).
 
@@ -8765,13 +9090,13 @@ fluent(height(object, height)).
 event(drop(agent, object)).
 
 
+% ectest/ec_reader_test_examples.e:3835
 % event HitGround(object)
 event(hitGround(object)).
 
 
 % 
 % ; Sigma
-% ectest/ec_reader_test_examples.e:3838
 % 
 % ectest/ec_reader_test_examples.e:3839
 % [agent,object,time]% 
@@ -8940,14 +9265,21 @@ option(trajectory, on).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:3916
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:3916
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
 % ectest/ec_reader_test_examples.e:3917
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:3917
+% translate: ready  File: on_load_ele 
 % 
 % sort object
 sort(object).
@@ -9147,13 +9479,21 @@ range(offset, 1, 3).
 % ectest/ec_reader_test_examples.e:4003
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:4005
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4005
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:4006
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4006
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
@@ -9163,7 +9503,6 @@ sort(agent).
 sort(phone).
 
 
-% ectest/ec_reader_test_examples.e:4009
 % 
 % agent Agent1, Agent2
 t(agent, agent1).
@@ -9179,6 +9518,7 @@ t(phone, phone1).
 t(phone, phone2).
 
 
+% ectest/ec_reader_test_examples.e:4012
 % 
 % fluent Ringing(phone,phone)
 fluent(ringing(phone, phone)).
@@ -9188,7 +9528,6 @@ fluent(ringing(phone, phone)).
 fluent(dialTone(phone)).
 
 
-% ectest/ec_reader_test_examples.e:4015
 % fluent BusySignal(phone)
 fluent(busySignal(phone)).
 
@@ -9201,6 +9540,7 @@ fluent(idle(phone)).
 fluent(connected(phone, phone)).
 
 
+% ectest/ec_reader_test_examples.e:4018
 % fluent Disconnected(phone)
 fluent(disconnected(phone)).
 
@@ -9210,7 +9550,6 @@ fluent(disconnected(phone)).
 event(pickUp(agent, phone)).
 
 
-% ectest/ec_reader_test_examples.e:4021
 % event SetDown(agent,phone)
 event(setDown(agent, phone)).
 
@@ -9221,6 +9560,7 @@ event(dial(agent, phone, phone)).
 
 % 
 % ; Sigma
+% ectest/ec_reader_test_examples.e:4025
 % 
 % ectest/ec_reader_test_examples.e:4026
 % [agent,phone,time]% 
@@ -9647,13 +9987,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:4194
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:4196
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4196
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:4197
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4197
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
@@ -9663,7 +10011,6 @@ sort(agent).
 sort(phone).
 
 
-% ectest/ec_reader_test_examples.e:4200
 % 
 % agent Agent1, Agent2
 t(agent, agent1).
@@ -9679,6 +10026,7 @@ t(phone, phone1).
 t(phone, phone2).
 
 
+% ectest/ec_reader_test_examples.e:4203
 % 
 % fluent Ringing(phone,phone)
 fluent(ringing(phone, phone)).
@@ -9688,7 +10036,6 @@ fluent(ringing(phone, phone)).
 fluent(dialTone(phone)).
 
 
-% ectest/ec_reader_test_examples.e:4206
 % fluent BusySignal(phone)
 fluent(busySignal(phone)).
 
@@ -9701,6 +10048,7 @@ fluent(idle(phone)).
 fluent(connected(phone, phone)).
 
 
+% ectest/ec_reader_test_examples.e:4209
 % fluent Disconnected(phone)
 fluent(disconnected(phone)).
 
@@ -9710,7 +10058,6 @@ fluent(disconnected(phone)).
 event(pickUp(agent, phone)).
 
 
-% ectest/ec_reader_test_examples.e:4212
 % event SetDown(agent,phone)
 event(setDown(agent, phone)).
 
@@ -9721,6 +10068,7 @@ event(dial(agent, phone, phone)).
 
 % 
 % ; Sigma
+% ectest/ec_reader_test_examples.e:4216
 % 
 % ectest/ec_reader_test_examples.e:4217
 % [agent,phone,time]% 
@@ -10128,13 +10476,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:4363
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:4365
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4365
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:4366
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4366
+% translate: ready  File: on_load_ele 
 % 
 % sort object
 sort(object).
@@ -10144,7 +10500,6 @@ sort(object).
 subsort(agent, object).
 
 
-% ectest/ec_reader_test_examples.e:4369
 % sort device: object
 subsort(device, object).
 
@@ -10157,6 +10512,7 @@ subsort(tv, device).
 sort(room).
 
 
+% ectest/ec_reader_test_examples.e:4372
 % 
 % agent Nathan
 t(agent, nathan).
@@ -10166,7 +10522,6 @@ t(agent, nathan).
 t(tv, tv).
 
 
-% ectest/ec_reader_test_examples.e:4375
 % room LivingRoom, Kitchen
 t(room, livingRoom).
 
@@ -10179,6 +10534,7 @@ t(room, kitchen).
 event(turnOn(agent, device)).
 
 
+% ectest/ec_reader_test_examples.e:4378
 % event Walk(agent,room,room)
 event(walk(agent, room, room)).
 
@@ -10188,7 +10544,6 @@ event(walk(agent, room, room)).
 fluent(inRoom(object, room)).
 
 
-% ectest/ec_reader_test_examples.e:4381
 % fluent On(device)
 fluent(on(device)).
 
@@ -10201,6 +10556,7 @@ fluent(pluggedIn(device)).
 fluent(brokenSwitch(device)).
 
 
+% ectest/ec_reader_test_examples.e:4384
 % 
 % predicate Ab1(device,time)
 predicate(ab1(device, time)).
@@ -10210,7 +10566,6 @@ predicate(ab1(device, time)).
 predicate(ab2(room, time)).
 
 
-% ectest/ec_reader_test_examples.e:4387
 % 
 % ; Sigma
 % 
@@ -10422,13 +10777,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:4481
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:4483
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4483
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:4484
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4484
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
@@ -10438,7 +10801,6 @@ sort(agent).
 sort(device).
 
 
-% ectest/ec_reader_test_examples.e:4487
 % 
 % agent Nathan
 t(agent, nathan).
@@ -10451,13 +10813,13 @@ t(device, device1).
 t(device, antiqueDevice1).
 
 
+% ectest/ec_reader_test_examples.e:4490
 % 
 % predicate Ab1(device,time)
 predicate(ab1(device, time)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:4493
 % fluent On(device)
 fluent(on(device)).
 
@@ -10470,6 +10832,7 @@ fluent(pluggedIn(device)).
 fluent(brokenSwitch(device)).
 
 
+% ectest/ec_reader_test_examples.e:4496
 % 
 % event TurnOn(agent,device)
 event(turnOn(agent, device)).
@@ -10477,7 +10840,6 @@ event(turnOn(agent, device)).
 
 % 
 % ; Sigma
-% ectest/ec_reader_test_examples.e:4500
 % 
 % ectest/ec_reader_test_examples.e:4501
 % [agent,device,time]% 
@@ -10622,13 +10984,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:4559
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:4561
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4561
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:4562
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4562
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
@@ -10638,7 +11008,6 @@ sort(agent).
 sort(device).
 
 
-% ectest/ec_reader_test_examples.e:4565
 % 
 % agent Nathan
 t(agent, nathan).
@@ -10648,13 +11017,13 @@ t(agent, nathan).
 t(device, device1).
 
 
+% ectest/ec_reader_test_examples.e:4568
 % 
 % predicate Ab1(device,time)
 predicate(ab1(device, time)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:4571
 % fluent On(device)
 fluent(on(device)).
 
@@ -10667,6 +11036,7 @@ fluent(pluggedIn(device)).
 fluent(brokenSwitch(device)).
 
 
+% ectest/ec_reader_test_examples.e:4574
 % fluent Erratic(device)
 fluent(erratic(device)).
 
@@ -10676,7 +11046,6 @@ fluent(erratic(device)).
 fluent(determiningFluent(device)).
 
 
-% ectest/ec_reader_test_examples.e:4577
 % noninertial DeterminingFluent
 noninertial(determiningFluent).
 
@@ -10686,6 +11055,7 @@ noninertial(determiningFluent).
 event(turnOn(agent, device)).
 
 
+% ectest/ec_reader_test_examples.e:4580
 % 
 % ; Sigma
 % 
@@ -10837,15 +11207,22 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:4646
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4646
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:4647
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4647
+% translate: ready  File: on_load_ele 
 % 
-% ectest/ec_reader_test_examples.e:4648
 % sort agent
 sort(agent).
 
@@ -10863,11 +11240,11 @@ fluent(beeping(clock)).
 fluent(alarmTime(clock, time)).
 
 
+% ectest/ec_reader_test_examples.e:4653
 % fluent AlarmOn(clock)
 fluent(alarmOn(clock)).
 
 
-% ectest/ec_reader_test_examples.e:4654
 % 
 % event SetAlarmTime(agent,clock,time)
 event(setAlarmTime(agent, clock, time)).
@@ -10885,8 +11262,8 @@ event(turnOnAlarm(agent, clock)).
 event(turnOffAlarm(agent, clock)).
 
 
+% ectest/ec_reader_test_examples.e:4659
 % 
-% ectest/ec_reader_test_examples.e:4660
 % predicate Ab1(clock,time)
 predicate(ab1(clock, time)).
 
@@ -11070,20 +11447,27 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:4746
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:4748
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4748
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:4749
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4749
+% translate: ready  File: on_load_ele 
 % 
 % sort object
 sort(object).
 
 
 % 
-% ectest/ec_reader_test_examples.e:4752
 % object A,B
 t(object, a).
 
@@ -11096,6 +11480,7 @@ t(object, b).
 fluent(p(object)).
 
 
+% ectest/ec_reader_test_examples.e:4755
 % fluent Q(object)
 fluent(q(object)).
 
@@ -11105,7 +11490,6 @@ fluent(r(object)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:4758
 % predicate Ab1(object,time)
 predicate(ab1(object, time)).
 
@@ -11223,13 +11607,21 @@ completion([theta, ab2]).
 % ectest/ec_reader_test_examples.e:4811
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:4813
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4813
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:4814
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4814
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
@@ -11239,7 +11631,6 @@ sort(agent).
 sort(device).
 
 
-% ectest/ec_reader_test_examples.e:4817
 % 
 % agent Nathan
 t(agent, nathan).
@@ -11249,13 +11640,13 @@ t(agent, nathan).
 t(device, device1).
 
 
+% ectest/ec_reader_test_examples.e:4820
 % 
 % predicate Ab1(device,time)
 predicate(ab1(device, time)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:4823
 % fluent On(device)
 fluent(on(device)).
 
@@ -11268,6 +11659,7 @@ fluent(pluggedIn(device)).
 fluent(brokenSwitch(device)).
 
 
+% ectest/ec_reader_test_examples.e:4826
 % 
 % event TurnOn(agent,device)
 event(turnOn(agent, device)).
@@ -11275,7 +11667,6 @@ event(turnOn(agent, device)).
 
 % 
 % ; Sigma
-% ectest/ec_reader_test_examples.e:4830
 % 
 % ectest/ec_reader_test_examples.e:4831
 % [agent,device,time]% 
@@ -11399,20 +11790,27 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:4888
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:4890
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4890
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:4891
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4891
+% translate: ready  File: on_load_ele 
 % 
 % sort object
 sort(object).
 
 
 % 
-% ectest/ec_reader_test_examples.e:4894
 % object A,B
 t(object, a).
 
@@ -11425,6 +11823,7 @@ t(object, b).
 fluent(p(object)).
 
 
+% ectest/ec_reader_test_examples.e:4897
 % fluent Q(object)
 fluent(q(object)).
 
@@ -11509,20 +11908,27 @@ completion([theta, ab]).
 % ectest/ec_reader_test_examples.e:4939
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:4941
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4941
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:4942
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4942
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
 
 
 % 
-% ectest/ec_reader_test_examples.e:4945
 % fluent Awake(agent)
 fluent(awake(agent)).
 
@@ -11587,20 +11993,27 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:4979
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:4981
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4981
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:4982
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:4982
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
 
 
 % 
-% ectest/ec_reader_test_examples.e:4985
 % fluent Awake(agent)
 fluent(awake(agent)).
 
@@ -11690,15 +12103,22 @@ option(timediff, off).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:5027
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5027
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:5028
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5028
+% translate: ready  File: on_load_ele 
 % 
-% ectest/ec_reader_test_examples.e:5029
 % sort agent
 sort(agent).
 
@@ -11781,20 +12201,27 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:5068
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:5070
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5070
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:5071
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5071
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
 
 
 % 
-% ectest/ec_reader_test_examples.e:5074
 % fluent Awake(agent)
 fluent(awake(agent)).
 
@@ -11872,20 +12299,27 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:5111
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:5113
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5113
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:5114
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5114
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
 
 
 % 
-% ectest/ec_reader_test_examples.e:5117
 % fluent Awake(agent)
 fluent(awake(agent)).
 
@@ -11953,13 +12387,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:5152
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:5154
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5154
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:5155
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5155
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
@@ -11969,7 +12411,6 @@ sort(agent).
 sort(clock).
 
 
-% ectest/ec_reader_test_examples.e:5158
 % 
 % fluent Beeping(clock)
 fluent(beeping(clock)).
@@ -11979,6 +12420,7 @@ fluent(beeping(clock)).
 fluent(alarmTime(clock, time)).
 
 
+% ectest/ec_reader_test_examples.e:5161
 % fluent AlarmOn(clock)
 fluent(alarmOn(clock)).
 
@@ -11988,7 +12430,6 @@ fluent(alarmOn(clock)).
 event(setAlarmTime(agent, clock, time)).
 
 
-% ectest/ec_reader_test_examples.e:5164
 % event StartBeeping(clock)
 event(startBeeping(clock)).
 
@@ -12001,6 +12442,7 @@ event(turnOnAlarm(agent, clock)).
 event(turnOffAlarm(agent, clock)).
 
 
+% ectest/ec_reader_test_examples.e:5167
 % 
 % agent Nathan
 t(agent, nathan).
@@ -12010,7 +12452,6 @@ t(agent, nathan).
 t(clock, clock).
 
 
-% ectest/ec_reader_test_examples.e:5170
 % 
 % ; Sigma
 % 
@@ -12178,15 +12619,22 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:5252
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5252
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:5253
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5253
+% translate: ready  File: on_load_ele 
 % 
-% ectest/ec_reader_test_examples.e:5254
 % sort account
 sort(account).
 
@@ -12204,11 +12652,11 @@ t(account, account2).
 
 
 % 
+% ectest/ec_reader_test_examples.e:5259
 % predicate EndOfMonth(time)
 predicate(endOfMonth(time)).
 
 
-% ectest/ec_reader_test_examples.e:5260
 % function ServiceFee(account): value
 function(serviceFee(account), value).
 
@@ -12226,8 +12674,8 @@ fluent(serviceFeeCharged(account)).
 fluent(balance(account, value)).
 
 
+% ectest/ec_reader_test_examples.e:5265
 % 
-% ectest/ec_reader_test_examples.e:5266
 % event Transfer(account,account,value)
 event(transfer(account, account, value)).
 
@@ -12242,6 +12690,7 @@ event(chargeServiceFee(account)).
 
 % 
 % ; Sigma
+% ectest/ec_reader_test_examples.e:5271
 % 
 % ectest/ec_reader_test_examples.e:5272
 % [account1,account2,value1,value2,value3,value4,time]% 
@@ -12509,13 +12958,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:5393
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:5395
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5395
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:5396
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5396
+% translate: ready  File: on_load_ele 
 % 
 % sort counter
 sort(counter).
@@ -12525,7 +12982,6 @@ sort(counter).
 t(counter, counter1).
 
 
-% ectest/ec_reader_test_examples.e:5399
 % 
 % event FalseToTrue(counter)
 event(falseToTrue(counter)).
@@ -12535,6 +12991,7 @@ event(falseToTrue(counter)).
 event(trueToFalse(counter)).
 
 
+% ectest/ec_reader_test_examples.e:5402
 % 
 % fluent Count(counter,integer)
 fluent(count(counter, integer)).
@@ -12544,7 +13001,6 @@ fluent(count(counter, integer)).
 fluent(true(counter)).
 
 
-% ectest/ec_reader_test_examples.e:5405
 % fluent InputLine(counter)
 fluent(inputLine(counter)).
 
@@ -12554,6 +13010,7 @@ noninertial(inputLine).
 
 
 % 
+% ectest/ec_reader_test_examples.e:5408
 % Delta:
 directive(delta).
 
@@ -12753,15 +13210,22 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:5485
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5485
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:5486
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5486
+% translate: ready  File: on_load_ele 
 % 
-% ectest/ec_reader_test_examples.e:5487
 % sort agent
 sort(agent).
 
@@ -12782,6 +13246,7 @@ t(agent, teacher).
 t(agent, student).
 
 
+% ectest/ec_reader_test_examples.e:5492
 % room Kitchen, Classroom
 t(room, kitchen).
 
@@ -12789,7 +13254,6 @@ t(room, kitchen).
 t(room, classroom).
 
 
-% ectest/ec_reader_test_examples.e:5493
 % fact Fact1, Fact2
 t(fact, fact1).
 
@@ -12810,8 +13274,8 @@ fluent(listeningTo(agent, agent)).
 fluent(know(agent, fact)).
 
 
+% ectest/ec_reader_test_examples.e:5498
 % 
-% ectest/ec_reader_test_examples.e:5499
 % event Tell(agent,agent,fact)
 event(tell(agent, agent, fact)).
 
@@ -12919,13 +13383,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:5556
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:5558
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5558
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:5559
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5559
+% translate: ready  File: on_load_ele 
 % 
 % sort palette
 sort(palette).
@@ -12935,7 +13407,6 @@ sort(palette).
 sort(color).
 
 
-% ectest/ec_reader_test_examples.e:5562
 % 
 % palette Palette1
 t(palette, palette1).
@@ -12954,6 +13425,7 @@ t(color, blue).
 t(color, green).
 
 
+% ectest/ec_reader_test_examples.e:5565
 % 
 % event PlaceOnPalette(palette,color)
 event(placeOnPalette(palette, color)).
@@ -12963,7 +13435,6 @@ event(placeOnPalette(palette, color)).
 fluent(onPalette(palette, color)).
 
 
-% ectest/ec_reader_test_examples.e:5568
 % 
 % ectest/ec_reader_test_examples.e:5569
 % [palette,color,time]% 
@@ -13167,13 +13638,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:5651
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:5653
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5653
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:5654
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5654
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
@@ -13183,7 +13662,6 @@ sort(agent).
 sort(clock).
 
 
-% ectest/ec_reader_test_examples.e:5657
 % 
 % fluent Beeping(clock)
 fluent(beeping(clock)).
@@ -13193,6 +13671,7 @@ fluent(beeping(clock)).
 fluent(alarmTime(clock, time)).
 
 
+% ectest/ec_reader_test_examples.e:5660
 % fluent AlarmOn(clock)
 fluent(alarmOn(clock)).
 
@@ -13202,7 +13681,6 @@ fluent(alarmOn(clock)).
 event(setAlarmTime(agent, clock, time)).
 
 
-% ectest/ec_reader_test_examples.e:5663
 % event StartBeeping(clock)
 event(startBeeping(clock)).
 
@@ -13215,13 +13693,13 @@ event(turnOnAlarm(agent, clock)).
 event(turnOffAlarm(agent, clock)).
 
 
+% ectest/ec_reader_test_examples.e:5666
 % 
 % event PressSnooze(agent,clock)
 event(pressSnooze(agent, clock)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:5669
 % agent Nathan
 t(agent, nathan).
 
@@ -13232,6 +13710,7 @@ t(clock, clock).
 
 % 
 % ; Sigma
+% ectest/ec_reader_test_examples.e:5673
 % 
 % ectest/ec_reader_test_examples.e:5674
 % [agent,clock,time1,time2,time]% 
@@ -13438,13 +13917,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:5769
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:5771
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5771
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:5772
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5772
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
@@ -13454,7 +13941,6 @@ sort(agent).
 sort(phone).
 
 
-% ectest/ec_reader_test_examples.e:5775
 % 
 % agent Agent1, Agent2
 t(agent, agent1).
@@ -13470,6 +13956,7 @@ t(phone, phone1).
 t(phone, phone2).
 
 
+% ectest/ec_reader_test_examples.e:5778
 % 
 % fluent Ringing(phone,phone)
 fluent(ringing(phone, phone)).
@@ -13479,7 +13966,6 @@ fluent(ringing(phone, phone)).
 fluent(dialTone(phone)).
 
 
-% ectest/ec_reader_test_examples.e:5781
 % fluent BusySignal(phone)
 fluent(busySignal(phone)).
 
@@ -13492,6 +13978,7 @@ fluent(idle(phone)).
 fluent(connected(phone, phone)).
 
 
+% ectest/ec_reader_test_examples.e:5784
 % fluent Disconnected(phone)
 fluent(disconnected(phone)).
 
@@ -13501,7 +13988,6 @@ fluent(disconnected(phone)).
 event(pickUp(agent, phone)).
 
 
-% ectest/ec_reader_test_examples.e:5787
 % event SetDown(agent,phone)
 event(setDown(agent, phone)).
 
@@ -13512,6 +13998,7 @@ event(dial(agent, phone, phone)).
 
 % 
 % ; Sigma
+% ectest/ec_reader_test_examples.e:5791
 % 
 % ectest/ec_reader_test_examples.e:5792
 % [agent,phone,time]% 
@@ -14004,13 +14491,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:5992
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:5994
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5994
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:5995
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:5995
+% translate: ready  File: on_load_ele 
 % 
 % sort object
 sort(object).
@@ -14020,7 +14515,6 @@ sort(object).
 subsort(agent, object).
 
 
-% ectest/ec_reader_test_examples.e:5998
 % sort food: object
 subsort(food, object).
 
@@ -14033,13 +14527,13 @@ sort(surface).
 sort(plan).
 
 
+% ectest/ec_reader_test_examples.e:6001
 % 
 % reified sort belief
 reified_sort(belief).
 
 
 % 
-% ectest/ec_reader_test_examples.e:6004
 % agent Cat
 t(agent, cat).
 
@@ -14064,6 +14558,7 @@ t(food, food1).
 t(food, food2).
 
 
+% ectest/ec_reader_test_examples.e:6007
 % plan P1, P1a, P1b, P2, P2a
 t(plan, p1).
 
@@ -14085,7 +14580,6 @@ t(plan, p2a).
 predicate(selectedPlan(agent, belief, plan, time)).
 
 
-% ectest/ec_reader_test_examples.e:6010
 % predicate SoundPlan(agent,belief,plan,time)
 predicate(soundPlan(agent, belief, plan, time)).
 
@@ -14095,6 +14589,7 @@ predicate(soundPlan(agent, belief, plan, time)).
 fluent(on(object, surface)).
 
 
+% ectest/ec_reader_test_examples.e:6013
 % fluent Goal(agent,belief)
 fluent(goal(agent, belief)).
 
@@ -14107,7 +14602,6 @@ fluent(canJump(surface, surface)).
 fluent(plan(agent, belief, plan)).
 
 
-% ectest/ec_reader_test_examples.e:6016
 % fluent Satiated(agent)
 fluent(satiated(agent)).
 
@@ -14117,6 +14611,7 @@ fluent(believe(agent, belief)).
 
 
 % 
+% ectest/ec_reader_test_examples.e:6019
 % event AddPlan(agent,belief,plan)
 event(addPlan(agent, belief, plan)).
 
@@ -14129,7 +14624,6 @@ event(dropPlan(agent, belief, plan)).
 event(jump(agent, surface, surface)).
 
 
-% ectest/ec_reader_test_examples.e:6022
 % event Move(surface,surface,surface)
 event(move(surface, surface, surface)).
 
@@ -14142,6 +14636,7 @@ event(eat(agent, food)).
 event(wait(agent)).
 
 
+% ectest/ec_reader_test_examples.e:6025
 % 
 % belief BSatiated(agent)
 t(belief, 'bSatiated(agent)').
@@ -14154,7 +14649,6 @@ t(belief, 'bCanJump(surface').
 t(belief, 'surface)').
 
 
-% ectest/ec_reader_test_examples.e:6028
 % belief BOn(object,surface)
 t(belief, 'bOn(object').
 
@@ -14164,6 +14658,7 @@ t(belief, 'surface)').
 
 % 
 % ; Sigma
+% ectest/ec_reader_test_examples.e:6031
 % 
 % ; A5
 % ectest/ec_reader_test_examples.e:6033
@@ -14693,15 +15188,22 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:6283
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6283
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:6284
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6284
+% translate: ready  File: on_load_ele 
 % 
-% ectest/ec_reader_test_examples.e:6285
 % sort agent
 sort(agent).
 
@@ -14722,6 +15224,7 @@ t(agent, kate).
 t(agent, lisa).
 
 
+% ectest/ec_reader_test_examples.e:6290
 % aboutevent WinLotteryKate, WinLotteryLisa
 t(aboutevent, winLotteryKate).
 
@@ -14729,7 +15232,6 @@ t(aboutevent, winLotteryKate).
 t(aboutevent, winLotteryLisa).
 
 
-% ectest/ec_reader_test_examples.e:6291
 % 
 % fluent Joy(agent,aboutevent)
 fluent(joy(agent, aboutevent)).
@@ -14747,11 +15249,11 @@ fluent(believe(agent, aboutevent)).
 fluent(like(agent, agent)).
 
 
+% ectest/ec_reader_test_examples.e:6296
 % fluent HappyFor(agent,agent,aboutevent)
 fluent(happyFor(agent, agent, aboutevent)).
 
 
-% ectest/ec_reader_test_examples.e:6297
 % 
 % event WinLottery(agent)
 event(winLottery(agent)).
@@ -14995,15 +15497,22 @@ option(timediff, off).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:6392
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6392
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:6393
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6393
+% translate: ready  File: on_load_ele 
 % 
-% ectest/ec_reader_test_examples.e:6394
 % sort agent
 sort(agent).
 
@@ -15079,20 +15588,27 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:6426
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:6428
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6428
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:6429
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6429
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
 
 
 % 
-% ectest/ec_reader_test_examples.e:6432
 % fluent Awake(agent)
 fluent(awake(agent)).
 
@@ -15161,13 +15677,21 @@ range(offset, 1, 1).
 % ;
 % ectest/ec_reader_test_examples.e:6461
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:6462
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6462
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:6463
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6463
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
@@ -15178,7 +15702,6 @@ sort(agent).
 fluent(awake(agent)).
 
 
-% ectest/ec_reader_test_examples.e:6467
 % event WakeUp(agent)
 event(wakeUp(agent)).
 
@@ -15248,13 +15771,21 @@ range(offset, 1, 1).
 % ;
 % ectest/ec_reader_test_examples.e:6495
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:6496
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6496
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:6497
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6497
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
@@ -15265,7 +15796,6 @@ sort(agent).
 fluent(awake(agent)).
 
 
-% ectest/ec_reader_test_examples.e:6501
 % event WakeUp(agent)
 event(wakeUp(agent)).
 
@@ -15323,13 +15853,21 @@ range(offset, 1, 1).
 % ;
 % ectest/ec_reader_test_examples.e:6527
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:6528
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6528
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:6529
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6529
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
@@ -15340,7 +15878,6 @@ sort(agent).
 fluent(awake(agent)).
 
 
-% ectest/ec_reader_test_examples.e:6533
 % event WakeUp(agent)
 event(wakeUp(agent)).
 
@@ -15407,20 +15944,27 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:6570
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:6572
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6572
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:6573
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6573
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
 
 
 % 
-% ectest/ec_reader_test_examples.e:6576
 % fluent Tired(agent)
 fluent(tired(agent)).
 
@@ -15430,6 +15974,7 @@ fluent(tired(agent)).
 event(move(agent)).
 
 
+% ectest/ec_reader_test_examples.e:6579
 % event Run(agent)
 event(run(agent)).
 
@@ -15521,13 +16066,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:6626
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:6628
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6628
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:6629
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6629
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
@@ -15537,7 +16090,6 @@ sort(agent).
 sort(switch).
 
 
-% ectest/ec_reader_test_examples.e:6632
 % 
 % fluent On(switch)
 fluent(on(switch)).
@@ -15547,6 +16099,7 @@ fluent(on(switch)).
 fluent(off(switch)).
 
 
+% ectest/ec_reader_test_examples.e:6635
 % event TurnOn(agent,switch)
 event(turnOn(agent, switch)).
 
@@ -15556,7 +16109,6 @@ event(turnOff(agent, switch)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:6638
 % noninertial Off
 noninertial(off).
 
@@ -15645,13 +16197,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:6682
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:6684
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6684
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:6685
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6685
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
@@ -15661,7 +16221,6 @@ sort(agent).
 sort(switch).
 
 
-% ectest/ec_reader_test_examples.e:6688
 % sort tv
 sort(tv).
 
@@ -15671,6 +16230,7 @@ sort(tv).
 function(tVOf(switch), tv).
 
 
+% ectest/ec_reader_test_examples.e:6691
 % fluent SwitchOn(switch)
 fluent(switchOn(switch)).
 
@@ -15683,7 +16243,6 @@ fluent(tVOn(tv)).
 fluent(pluggedIn(tv)).
 
 
-% ectest/ec_reader_test_examples.e:6694
 % event TurnOn(agent,switch)
 event(turnOn(agent, switch)).
 
@@ -15794,20 +16353,27 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:6746
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:6748
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6748
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:6749
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6749
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
 
 
 % 
-% ectest/ec_reader_test_examples.e:6752
 % event ApproveOf(agent,agent)
 event(approveOf(agent, agent)).
 
@@ -15820,6 +16386,7 @@ event(disapproveOf(agent, agent)).
 fluent(happy(agent)).
 
 
+% ectest/ec_reader_test_examples.e:6755
 % fluent Confused(agent)
 fluent(confused(agent)).
 
@@ -15940,15 +16507,22 @@ option(trajectory, on).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:6813
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6813
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:6814
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6814
+% translate: ready  File: on_load_ele 
 % 
-% ectest/ec_reader_test_examples.e:6815
 % sort object
 sort(object).
 
@@ -15966,11 +16540,11 @@ fluent(height(object, height)).
 fluent(falling(object)).
 
 
+% ectest/ec_reader_test_examples.e:6820
 % event StartFalling(object)
 event(startFalling(object)).
 
 
-% ectest/ec_reader_test_examples.e:6821
 % event HitsGround(object)
 event(hitsGround(object)).
 
@@ -16127,20 +16701,27 @@ range(height, 0, 4).
 % ectest/ec_reader_test_examples.e:6896
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:6898
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6898
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:6899
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6899
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
 
 
 % 
-% ectest/ec_reader_test_examples.e:6902
 % fluent Tired(agent)
 fluent(tired(agent)).
 
@@ -16150,6 +16731,7 @@ fluent(tired(agent)).
 event(move(agent)).
 
 
+% ectest/ec_reader_test_examples.e:6905
 % event Run(agent)
 event(run(agent)).
 
@@ -16246,13 +16828,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:6953
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:6955
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6955
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:6956
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:6956
+% translate: ready  File: on_load_ele 
 % 
 % sort agent
 sort(agent).
@@ -16262,7 +16852,6 @@ sort(agent).
 sort(switch).
 
 
-% ectest/ec_reader_test_examples.e:6959
 % sort tv
 sort(tv).
 
@@ -16272,6 +16861,7 @@ sort(tv).
 function(tVOf(switch), tv).
 
 
+% ectest/ec_reader_test_examples.e:6962
 % fluent SwitchOn(switch)
 fluent(switchOn(switch)).
 
@@ -16284,7 +16874,6 @@ fluent(tVOn(tv)).
 fluent(pluggedIn(tv)).
 
 
-% ectest/ec_reader_test_examples.e:6965
 % event TurnOn(agent,switch)
 event(turnOn(agent, switch)).
 
@@ -16393,13 +16982,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:7015
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:7017
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7017
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:7018
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7018
+% translate: ready  File: on_load_ele 
 % 
 % sort wheel
 sort(wheel).
@@ -16409,7 +17006,6 @@ sort(wheel).
 subsort(value, integer).
 
 
-% ectest/ec_reader_test_examples.e:7021
 % 
 % fluent WheelValueDeterminingFluent(wheel,value)
 fluent(wheelValueDeterminingFluent(wheel, value)).
@@ -16419,6 +17015,7 @@ fluent(wheelValueDeterminingFluent(wheel, value)).
 fluent(wheelValue(wheel, value)).
 
 
+% ectest/ec_reader_test_examples.e:7024
 % noninertial WheelValueDeterminingFluent
 noninertial(wheelValueDeterminingFluent).
 
@@ -16557,13 +17154,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:7090
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:7092
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7092
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:7093
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7093
+% translate: ready  File: on_load_ele 
 % 
 % sort object
 sort(object).
@@ -16573,7 +17178,6 @@ sort(object).
 subsort(agent, object).
 
 
-% ectest/ec_reader_test_examples.e:7096
 % sort physobj: object
 subsort(physobj, object).
 
@@ -16583,6 +17187,7 @@ sort(location).
 
 
 % 
+% ectest/ec_reader_test_examples.e:7099
 % fluent At(object,location)
 fluent(at(object, location)).
 
@@ -16595,7 +17200,6 @@ fluent(holding(agent, physobj)).
 event(pickUp(agent, physobj)).
 
 
-% ectest/ec_reader_test_examples.e:7102
 % event SetDown(agent,physobj)
 event(setDown(agent, physobj)).
 
@@ -16606,6 +17210,7 @@ event(move(agent, location, location)).
 
 % 
 % ; state constraints
+% ectest/ec_reader_test_examples.e:7106
 % 
 % ectest/ec_reader_test_examples.e:7107
 % [agent,location,physobj,time]% 
@@ -16850,24 +17455,35 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:7208
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7208
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:7209
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7209
+% translate: ready  File: on_load_ele 
 % 
-% ectest/ec_reader_test_examples.e:7210
 % sort agent
 sort(agent).
 
 
 % 
 % load examples/FrankEtAl2003/FrankEtAl.e
-load('examples/FrankEtAl2003/FrankEtAl.e').
+% loading('examples/FrankEtAl2003/FrankEtAl.e').
 
 
+% ectest/ec_reader_test_examples.e:7213
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7213
+% translate: ready  File: on_load_ele 
 % 
 % agent Bob, Jilly
 t(agent, bob).
@@ -16877,7 +17493,6 @@ t(agent, jilly).
 
 
 % 
-% ectest/ec_reader_test_examples.e:7216
 % !HoldsAt(Raining(),0).
 not(holds_at(raining(), 0)).
 
@@ -16889,6 +17504,7 @@ not(holds_at(sunShining(), 0)).
 
 % 
 % 
+% ectest/ec_reader_test_examples.e:7219
 % (HoldsAt(PlaySoccer(Bob),1) & HoldsAt(PlaySoccer(Jilly),1)) |
 % (HoldsAt(PlayHideAndSeek(Bob),1) & HoldsAt(PlayHideAndSeek(Jilly),1)) |
 % (HoldsAt(PlayComputerGame(Bob),1) & HoldsAt(PlayComputerGame(Jilly),1)).
@@ -16902,7 +17518,6 @@ not(holds_at(sunShining(), 0)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:7222
 % 
 % HoldsAt(Win(Bob),1) | HoldsAt(Win(Jilly),1).
 (   holds_at(win(bob), 1)
@@ -16912,6 +17527,7 @@ not(holds_at(sunShining(), 0)).
 
 % 
 % 
+% ectest/ec_reader_test_examples.e:7225
 % range time 0 1
 range(time, 0, 1).
 
@@ -16922,9 +17538,9 @@ range(offset, 0, 0).
 
 % 
 % ; End of file.
-% ectest/ec_reader_test_examples.e:7229
 % 
 % 
+% ectest/ec_reader_test_examples.e:7231
 % 
 % ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 % ; FILE: examples/FrankEtAl2003/FrankEtAl.e
@@ -17177,18 +17793,29 @@ holds_at(playHideAndSeek(Agent1), Time), holds_at(playHideAndSeek(Agent2), Time)
 % ; deduction
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:7357
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7357
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:7358
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7358
+% translate: ready  File: on_load_ele 
 % load examples/GiunchigliaEtAl2004/MonkeyBananas.e
-load('examples/GiunchigliaEtAl2004/MonkeyBananas.e').
+% loading('examples/GiunchigliaEtAl2004/MonkeyBananas.e').
 
 
 % ectest/ec_reader_test_examples.e:7359
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7359
+% translate: ready  File: on_load_ele 
 % 
 % HoldsAt(At(Monkey,L1),0).
 holds_at(at(monkey, l1), 0).
@@ -17263,18 +17890,29 @@ range(offset, 0, 0).
 % ; planning
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:7401
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7401
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:7402
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7402
+% translate: ready  File: on_load_ele 
 % load examples/GiunchigliaEtAl2004/MonkeyBananas.e
-load('examples/GiunchigliaEtAl2004/MonkeyBananas.e').
+% loading('examples/GiunchigliaEtAl2004/MonkeyBananas.e').
 
 
 % ectest/ec_reader_test_examples.e:7403
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7403
+% translate: ready  File: on_load_ele 
 % 
 % HoldsAt(At(Monkey,L1),0).
 holds_at(at(monkey, l1), 0).
@@ -17354,18 +17992,29 @@ range(offset, 0, 0).
 % ; postdiction
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:7451
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7451
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:7452
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7452
+% translate: ready  File: on_load_ele 
 % load examples/GiunchigliaEtAl2004/MonkeyBananas.e
-load('examples/GiunchigliaEtAl2004/MonkeyBananas.e').
+% loading('examples/GiunchigliaEtAl2004/MonkeyBananas.e').
 
 
 % ectest/ec_reader_test_examples.e:7453
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7453
+% translate: ready  File: on_load_ele 
 % 
 % HoldsAt(At(Monkey,L1),0).
 holds_at(at(monkey, l1), 0).
@@ -17713,20 +18362,27 @@ exists([Location1],  (holds_at(onBox(), Time)->holds_at(at(box, Location1), Time
 % ectest/ec_reader_test_examples.e:7606
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:7608
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7608
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:7609
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7609
+% translate: ready  File: on_load_ele 
 % 
 % sort x
 sort(x).
 
 
 % 
-% ectest/ec_reader_test_examples.e:7612
 % predicate Adult(x)
 predicate(adult(x)).
 
@@ -17739,6 +18395,7 @@ predicate(student(x)).
 predicate(employed(x)).
 
 
+% ectest/ec_reader_test_examples.e:7615
 % predicate Ab1(x)
 predicate(ab1(x)).
 
@@ -17748,7 +18405,6 @@ predicate(ab2(x)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:7618
 % x Mary
 t(x, mary).
 
@@ -17759,6 +18415,7 @@ student(mary).
 
 
 % 
+% ectest/ec_reader_test_examples.e:7621
 % 
 % ectest/ec_reader_test_examples.e:7622
 % [x] % Adult(x) & !Ab1(x) -> Employed(x).
@@ -17845,20 +18502,27 @@ completion([theta, ab2]).
 % ectest/ec_reader_test_examples.e:7662
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:7664
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7664
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:7665
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7665
+% translate: ready  File: on_load_ele 
 % 
 % sort x
 sort(x).
 
 
 % 
-% ectest/ec_reader_test_examples.e:7668
 % predicate Dropout(x)
 predicate(dropout(x)).
 
@@ -17871,6 +18535,7 @@ predicate(adult(x)).
 predicate(employed(x)).
 
 
+% ectest/ec_reader_test_examples.e:7671
 % predicate Ab1(x)
 predicate(ab1(x)).
 
@@ -17880,7 +18545,6 @@ predicate(ab2(x)).
 
 
 % 
-% ectest/ec_reader_test_examples.e:7674
 % x Bill
 t(x, bill).
 
@@ -17891,6 +18555,7 @@ dropout(bill).
 
 
 % 
+% ectest/ec_reader_test_examples.e:7677
 % 
 % ectest/ec_reader_test_examples.e:7678
 % [x] % Dropout(x) & !Ab1(x) -> Adult(x).
@@ -17966,13 +18631,21 @@ completion([theta, ab2]).
 % ectest/ec_reader_test_examples.e:7724
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:7726
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7726
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:7727
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7727
+% translate: ready  File: on_load_ele 
 % 
 % sort person
 sort(person).
@@ -17982,7 +18655,6 @@ sort(person).
 event(feed(person)).
 
 
-% ectest/ec_reader_test_examples.e:7730
 % event Clothe(person)
 event(clothe(person)).
 
@@ -17995,6 +18667,7 @@ fluent(happy(person)).
 fluent(hungry(person)).
 
 
+% ectest/ec_reader_test_examples.e:7733
 % fluent Cold(person)
 fluent(cold(person)).
 
@@ -18116,23 +18789,34 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:7802
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:7804
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7804
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:7805
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7805
+% translate: ready  File: on_load_ele 
 % load foundations/ECCausal.e
-load('foundations/ECCausal.e').
+% loading('foundations/ECCausal.e').
 
 
+% ectest/ec_reader_test_examples.e:7806
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7806
+% translate: ready  File: on_load_ele 
 % 
 % event LightOn()
 event(lightOn()).
 
 
-% ectest/ec_reader_test_examples.e:7808
 % event Close1()
 event(close1()).
 
@@ -18146,6 +18830,7 @@ event(closeRelay()).
 
 
 % 
+% ectest/ec_reader_test_examples.e:7812
 % fluent Light()
 fluent(light()).
 
@@ -18154,7 +18839,6 @@ fluent(light()).
 fluent(switch1()).
 
 
-% ectest/ec_reader_test_examples.e:7814
 % fluent Switch2()
 fluent(switch2()).
 
@@ -18330,13 +19014,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:7903
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:7905
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7905
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:7906
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7906
+% translate: ready  File: on_load_ele 
 % 
 % event Toss()
 event(toss()).
@@ -18346,7 +19038,6 @@ event(toss()).
 fluent(itsHeads()).
 
 
-% ectest/ec_reader_test_examples.e:7909
 % fluent Heads()
 fluent(heads()).
 
@@ -18474,13 +19165,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:7979
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:7981
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7981
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:7982
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:7982
+% translate: ready  File: on_load_ele 
 % 
 % event Throw()
 event(throw()).
@@ -18490,7 +19189,6 @@ event(throw()).
 fluent(itsBlack()).
 
 
-% ectest/ec_reader_test_examples.e:7985
 % fluent ItsWhite()
 fluent(itsWhite()).
 
@@ -18503,6 +19201,7 @@ fluent(onBlack()).
 fluent(onWhite()).
 
 
+% ectest/ec_reader_test_examples.e:7988
 % noninertial ItsBlack, ItsWhite
 noninertial([itsBlack, itsWhite]).
 
@@ -18642,13 +19341,21 @@ range(offset, 1, 1).
 % ectest/ec_reader_test_examples.e:8062
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:8064
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8064
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:8065
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8065
+% translate: ready  File: on_load_ele 
 % 
 % event Load()
 event(load()).
@@ -18658,7 +19365,6 @@ event(load()).
 event(shoot()).
 
 
-% ectest/ec_reader_test_examples.e:8068
 % event Spin()
 event(spin()).
 
@@ -18671,6 +19377,7 @@ fluent(loaded()).
 fluent(alive()).
 
 
+% ectest/ec_reader_test_examples.e:8071
 % 
 % ectest/ec_reader_test_examples.e:8072
 % [time] % Initiates(Load(),Loaded(),time).
@@ -18774,18 +19481,29 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:8118
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8118
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:8119
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8119
+% translate: ready  File: on_load_ele 
 % load examples/AkmanEtAl2004/ZooWorld.e
-load('examples/AkmanEtAl2004/ZooWorld.e').
+% loading('examples/AkmanEtAl2004/ZooWorld.e').
 
 
 % ectest/ec_reader_test_examples.e:8120
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8120
+% translate: ready  File: on_load_ele 
 % 
 % human Homer
 t(human, homer).
@@ -18938,18 +19656,29 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:8192
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8192
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:8193
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8193
+% translate: ready  File: on_load_ele 
 % load examples/AkmanEtAl2004/ZooWorld.e
-load('examples/AkmanEtAl2004/ZooWorld.e').
+% loading('examples/AkmanEtAl2004/ZooWorld.e').
 
 
 % ectest/ec_reader_test_examples.e:8194
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8194
+% translate: ready  File: on_load_ele 
 % 
 % human Homer
 t(human, homer).
@@ -19118,18 +19847,29 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:8265
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8265
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:8266
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8266
+% translate: ready  File: on_load_ele 
 % load examples/AkmanEtAl2004/ZooWorld.e
-load('examples/AkmanEtAl2004/ZooWorld.e').
+% loading('examples/AkmanEtAl2004/ZooWorld.e').
 
 
 % ectest/ec_reader_test_examples.e:8267
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8267
+% translate: ready  File: on_load_ele 
 % 
 % human Homer
 t(human, homer).
@@ -20426,18 +21166,29 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:8765
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8765
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:8766
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8766
+% translate: ready  File: on_load_ele 
 % load examples/AkmanEtAl2004/ZooWorld.e
-load('examples/AkmanEtAl2004/ZooWorld.e').
+% loading('examples/AkmanEtAl2004/ZooWorld.e').
 
 
 % ectest/ec_reader_test_examples.e:8767
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8767
+% translate: ready  File: on_load_ele 
 % 
 % human Homer
 t(human, homer).
@@ -20574,18 +21325,29 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:8831
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8831
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:8832
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8832
+% translate: ready  File: on_load_ele 
 % load examples/AkmanEtAl2004/ZooWorld.e
-load('examples/AkmanEtAl2004/ZooWorld.e').
+% loading('examples/AkmanEtAl2004/ZooWorld.e').
 
 
 % ectest/ec_reader_test_examples.e:8833
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8833
+% translate: ready  File: on_load_ele 
 % 
 % human Homer
 t(human, homer).
@@ -20683,18 +21445,29 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:8880
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8880
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:8881
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8881
+% translate: ready  File: on_load_ele 
 % load examples/AkmanEtAl2004/ZooWorld.e
-load('examples/AkmanEtAl2004/ZooWorld.e').
+% loading('examples/AkmanEtAl2004/ZooWorld.e').
 
 
 % ectest/ec_reader_test_examples.e:8882
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8882
+% translate: ready  File: on_load_ele 
 % 
 % human Homer
 t(human, homer).
@@ -20834,18 +21607,29 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:8938
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8938
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:8939
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8939
+% translate: ready  File: on_load_ele 
 % load examples/AkmanEtAl2004/ZooWorld.e
-load('examples/AkmanEtAl2004/ZooWorld.e').
+% loading('examples/AkmanEtAl2004/ZooWorld.e').
 
 
 % ectest/ec_reader_test_examples.e:8940
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:8940
+% translate: ready  File: on_load_ele 
 % 
 % human Homer
 t(human, homer).
@@ -20980,18 +21764,29 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_examples.e:9002
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:9002
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_examples.e:9003
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:9003
+% translate: ready  File: on_load_ele 
 % load examples/AkmanEtAl2004/ZooWorld.e
-load('examples/AkmanEtAl2004/ZooWorld.e').
+% loading('examples/AkmanEtAl2004/ZooWorld.e').
 
 
 % ectest/ec_reader_test_examples.e:9004
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_examples.e:9004
+% translate: ready  File: on_load_ele 
 % 
 % human Homer
 t(human, homer).

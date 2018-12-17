@@ -4623,13 +4623,21 @@ option(renaming, off).
 % 
 % ectest/ec_reader_test_ecnet.e:2489
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_ecnet.e:2490
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_ecnet.e:2490
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_ecnet.e:2491
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_ecnet.e:2491
+% translate: ready  File: on_load_ele 
 % load answers/Mueller2003/Ontology.e
 load('answers/Mueller2003/Ontology.e').
 
@@ -4646,12 +4654,12 @@ load('answers/Mueller2004c/OTSpaceM.e').
 load('answers/Mueller2004c/Cognition.e').
 
 
-% ectest/ec_reader_test_ecnet.e:2495
 % load answers/Mueller2003/Sleep.e
 load('answers/Mueller2003/Sleep.e').
 
 
 % 
+% ectest/ec_reader_test_ecnet.e:2497
 % door Door1
 t(door, door1).
 
@@ -4662,12 +4670,12 @@ t(room, room0).
 
 
 % 
-% ectest/ec_reader_test_ecnet.e:2501
 % room Room1
 t(room, room1).
 
 
 % 
+% ectest/ec_reader_test_ecnet.e:2503
 % Side1(Door1)=Room0.
 side1(door1)=room0.
 
@@ -4683,12 +4691,12 @@ side2(door1)=room1.
 t(agent, sleeper1).
 
 
-% ectest/ec_reader_test_ecnet.e:2507
 % 
 % bed Bed1
 t(bed, bed1).
 
 
+% ectest/ec_reader_test_ecnet.e:2509
 % 
 % outside Outside1
 t(outside, outside1).
@@ -4867,14 +4875,21 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test_ecnet.e:2573
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_ecnet.e:2573
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
 % ectest/ec_reader_test_ecnet.e:2574
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_ecnet.e:2574
+% translate: ready  File: on_load_ele 
 % load answers/Mueller2003/Ontology.e
 load('answers/Mueller2003/Ontology.e').
 
@@ -9523,13 +9538,21 @@ ignore([sayPleaseToMeet, move]).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% foundations/Root.e:1
+% translate: unskipped  File: on_load_ele 
+% foundations/Root.e:17
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% ectest/ec_reader_test_ecnet.e:4500
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test_ecnet.e:4500
+% translate: ready  File: on_load_ele 
 % load answers/Mueller2003/Ontology.e
 load('answers/Mueller2003/Ontology.e').
 
@@ -9538,7 +9561,6 @@ load('answers/Mueller2003/Ontology.e').
 load('answers/Mueller2004c/RTSpaceM.e').
 
 
-% ectest/ec_reader_test_ecnet.e:4502
 % load answers/Mueller2004c/OTSpaceM.e
 load('answers/Mueller2004c/OTSpaceM.e').
 
@@ -9555,6 +9577,7 @@ load('answers/Mueller2004c/Restaurant.e').
 load('answers/Mueller2003/Sleep.e').
 
 
+% ectest/ec_reader_test_ecnet.e:4506
 % load answers/Mueller2003/SpeechAct.e
 load('answers/Mueller2003/SpeechAct.e').
 
@@ -9563,7 +9586,6 @@ load('answers/Mueller2003/SpeechAct.e').
 load('answers/Mueller2004c/Dress.e').
 
 
-% ectest/ec_reader_test_ecnet.e:4508
 % 
 % room Upstairs1
 t(room, upstairs1).
@@ -9574,12 +9596,12 @@ t(room, upstairs1).
 t(staircase, staircase1).
 
 
+% ectest/ec_reader_test_ecnet.e:4512
 % 
 % room Hallway1
 t(room, hallway1).
 
 
-% ectest/ec_reader_test_ecnet.e:4514
 % 
 % Side1(Staircase1)=Hallway1.
 side1(staircase1)=hallway1.
@@ -9592,12 +9614,12 @@ side2(staircase1)=upstairs1.
 
 % 
 % 
+% ectest/ec_reader_test_ecnet.e:4518
 % door DiningRoomDoor1
 t(door, diningRoomDoor1).
 
 
 % 
-% ectest/ec_reader_test_ecnet.e:4520
 % room DiningRoom1
 t(room, diningRoom1).
 
@@ -9613,12 +9635,12 @@ side2(diningRoomDoor1)=diningRoom1.
 
 
 % 
+% ectest/ec_reader_test_ecnet.e:4524
 % 
 % door KitchenDoor1
 t(door, kitchenDoor1).
 
 
-% ectest/ec_reader_test_ecnet.e:4526
 % 
 % room Kitchen1
 t(room, kitchen1).
@@ -9630,13 +9652,13 @@ side1(kitchenDoor1)=diningRoom1.
 
 
 % 
+% ectest/ec_reader_test_ecnet.e:4530
 % Side2(KitchenDoor1)=Kitchen1.
 side2(kitchenDoor1)=kitchen1.
 
 
 % 
 % 
-% ectest/ec_reader_test_ecnet.e:4532
 % agent Eater1
 t(agent, eater1).
 
@@ -9647,12 +9669,12 @@ t(agent, eater2).
 
 
 % 
+% ectest/ec_reader_test_ecnet.e:4536
 % clothing Clothing1
 t(clothing, clothing1).
 
 
 % 
-% ectest/ec_reader_test_ecnet.e:4538
 % clothing Clothing2
 t(clothing, clothing2).
 
@@ -9663,12 +9685,12 @@ t(chair, chair1).
 
 
 % 
+% ectest/ec_reader_test_ecnet.e:4542
 % chair Chair2
 t(chair, chair2).
 
 
 % 
-% ectest/ec_reader_test_ecnet.e:4544
 % food Food1
 t(food, food1).
 
@@ -9679,12 +9701,12 @@ t(agent, cook1).
 
 
 % 
+% ectest/ec_reader_test_ecnet.e:4548
 % table Table1
 t(table, table1).
 
 
 % 
-% ectest/ec_reader_test_ecnet.e:4550
 % content Content1
 t(content, content1).
 
@@ -9695,13 +9717,13 @@ t(content, content2).
 
 
 % 
+% ectest/ec_reader_test_ecnet.e:4554
 % outside DummyOutside1
 t(outside, dummyOutside1).
 
 
 % 
 % ; prune
-% ectest/ec_reader_test_ecnet.e:4557
 % sort ona, onb
 sort([ona, onb]).
 
@@ -9714,6 +9736,7 @@ fluent(on(ona, onb)).
 event(placeOn(agent, ona, onb)).
 
 
+% ectest/ec_reader_test_ecnet.e:4560
 % event! TakeOffOf(agent,ona,onb)
 event(takeOffOf(agent, ona, onb)).
 
@@ -9723,7 +9746,6 @@ event(takeOffOf(agent, ona, onb)).
 sort([ordera, orderb, orderc]).
 
 
-% ectest/ec_reader_test_ecnet.e:4563
 % event! Order(ordera,orderb,orderc)
 event(order(ordera, orderb, orderc)).
 
@@ -9733,6 +9755,7 @@ fluent(knowOrder(orderb, ordera, orderc)).
 
 
 % 
+% ectest/ec_reader_test_ecnet.e:4566
 % sort requesta, requestb, requestc
 sort([requesta, requestb, requestc]).
 
@@ -9745,7 +9768,6 @@ event(request(requesta, requestb, requestc)).
 fluent(knowRequest(requestb, requesta, requestc)).
 
 
-% ectest/ec_reader_test_ecnet.e:4569
 % 
 % sort holda, holdb, holdc
 sort([holda, holdb, holdc]).
@@ -9755,6 +9777,7 @@ sort([holda, holdb, holdc]).
 event(takeOffOf(holda, holdb, holdc)).
 
 
+% ectest/ec_reader_test_ecnet.e:4572
 % event! PickUp(holda,holdb)
 event(pickUp(holda, holdb)).
 
@@ -9767,7 +9790,6 @@ event(letGoOf(holda, holdb)).
 event(hold(holda, holdb)).
 
 
-% ectest/ec_reader_test_ecnet.e:4575
 % fluent! Holding(holda,holdb)
 fluent(holding(holda, holdb)).
 
@@ -9777,6 +9799,7 @@ fluent(holding(holda, holdb)).
 sort([sita, sitb]).
 
 
+% ectest/ec_reader_test_ecnet.e:4578
 % event! LieOn(sita,sitb)
 event(lieOn(sita, sitb)).
 
@@ -9789,7 +9812,6 @@ event(sitOn(sita, sitb)).
 event(riseFrom(sita, sitb)).
 
 
-% ectest/ec_reader_test_ecnet.e:4581
 % fluent! LyingOn(sita,sitb)
 fluent(lyingOn(sita, sitb)).
 
@@ -9799,6 +9821,7 @@ fluent(sittingOn(sita, sitb)).
 
 
 % 
+% ectest/ec_reader_test_ecnet.e:4584
 % ona! Food1
 t(ona, food1).
 
@@ -9811,7 +9834,6 @@ t(onb, table1).
 t(holda, cook1).
 
 
-% ectest/ec_reader_test_ecnet.e:4587
 % holdb! Food1
 t(holdb, food1).
 
@@ -9824,6 +9846,7 @@ t(holdc, table1).
 t(sita, eater1).
 
 
+% ectest/ec_reader_test_ecnet.e:4590
 % sitb! Chair1
 t(sitb, chair1).
 

@@ -27,25 +27,33 @@ option(modeldiff, on).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/Story1.e:24
+% translate: unskipped  File: on_load_ele 
+% ectest/Story1.e:24
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% foundations/EC.e:1
+% translate: unskipped  File: on_load_ele 
+% foundations/EC.e:42
+% translate: ready  File: on_load_ele 
 % 
-% ectest/Story1.e:26
 % sort agent
 sort(agent).
 
 
 % 
-% load examples/FrankEtAl2003/FrankEtAl.e
-load('examples/FrankEtAl2003/FrankEtAl.e').
+% include examples/FrankEtAl2003/FrankEtAl.e
+t(include, 'examples/FrankEtAl2003/FrankEtAl.e').
 
 
 % 
+% ectest/Story1.e:30
 % agent Bob, Jilly
 t(agent, bob).
 
@@ -54,7 +62,6 @@ t(agent, jilly).
 
 
 % 
-% ectest/Story1.e:32
 % !HoldsAt(Raining(),0).
 not(holds_at(raining(), 0)).
 
@@ -78,8 +85,8 @@ not(holds_at(sunShining(), 0)).
 ).
 
 
+% ectest/Story1.e:37
 % 
-% ectest/Story1.e:38
 % 
 % HoldsAt(Win(Bob),1) | HoldsAt(Win(Jilly),1).
 (   holds_at(win(bob), 1)
@@ -97,6 +104,7 @@ range(time, 0, 1).
 range(offset, 0, 0).
 
 
+% ectest/Story1.e:43
 % 
 % ; End of file.
 % ectest/Story1.e:45

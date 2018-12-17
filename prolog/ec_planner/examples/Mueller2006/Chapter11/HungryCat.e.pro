@@ -1,4 +1,5 @@
 % examples/Mueller2006/Chapter11/HungryCat.e:1
+% translate: begining  File: examples/Mueller2006/Chapter11/HungryCat.e.pro 
 % ;
 % ; Copyright (c) 2005 IBM Corporation and others.
 % ; All rights reserved. This program and the accompanying materials
@@ -31,119 +32,21 @@
 % examples/Mueller2006/Chapter11/HungryCat.e:30
 % 
 % load foundations/Root.e
-% examples/Mueller2006/Chapter11/HungryCat.e:32
-% load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
 % examples/Mueller2006/Chapter11/HungryCat.e:32
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% sort boolean
-sort(boolean).
-
-
-% sort integer
-sort(integer).
-
-
-% reified sort predicate
-reified_sort(predicate).
-
-
-% reified sort function
-reified_sort(function).
-
-
-% 
-% ; End of file.
+% translate: unskipped  File: on_load_ele 
+% examples/Mueller2006/Chapter11/HungryCat.e:32
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-% examples/Mueller2006/Chapter11/HungryCat.e:33
-% load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
-% examples/Mueller2006/Chapter11/HungryCat.e:33
-% ;
-% ; Copyright (c) 2005 IBM Corporation and others.
-% ; All rights reserved. This program and the accompanying materials
-% ; are made available under the terms of the Common Public License v1.0
-% ; which accompanies this distribution, and is available at
-% ; http://www.eclipse.org/legal/cpl-v10.html
-% ;
-% ; Contributors:
-% ; IBM - Initial implementation
-% ;
-% ; Event Calculus (EC)
-% ;
-% ; @incollection{MillerShanahan:2002,
-% ;   author = "Rob Miller and Murray Shanahan",
-% ;   year = "2002",
-% ;   title = "Some alternative formulations of the event calculus",
-% ;   editor = "Antonis C. Kakas and Fariba Sadri",
-% ;   booktitle = "Computational Logic: Logic Programming and Beyond: Essays in Honour of \uppercase{R}obert \uppercase{A}. \uppercase{K}owalski, Part \uppercase{II}",
-% ;   series = "Lecture Notes in Computer Science",
-% ;   volume = "2408",
-% ;   pages = "452--490",
-% ;   address = "Berlin",
-% ;   publisher = "Springer",
-% ; }
-% ;
-% 
-% sort time: integer
-subsort(time, integer).
-
-
-% sort offset: integer
-subsort(offset, integer).
-
-
-% 
-% reified sort fluent
-reified_sort(fluent).
-
-
-% reified sort event
-reified_sort(event).
-
-
-% 
-% predicate Happens(event,time)
-predicate(happens(event, time)).
-
-
-% predicate HoldsAt(fluent,time)
-predicate(holds_at(fluent, time)).
-
-
-% predicate ReleasedAt(fluent,time)
-predicate(releasedAt(fluent, time)).
-
-
-% predicate Initiates(event,fluent,time)
-predicate(initiates(event, fluent, time)).
-
-
-% predicate Terminates(event,fluent,time)
-predicate(terminates(event, fluent, time)).
-
-
-% predicate Releases(event,fluent,time)
-predicate(releases(event, fluent, time)).
-
-
-% predicate Trajectory(fluent,time,fluent,offset)
-predicate(trajectory(fluent, time, fluent, offset)).
-
-
-% 
-% ; End of file.
+% foundations/EC.e:1
+% translate: unskipped  File: on_load_ele 
+% foundations/EC.e:42
+% translate: ready  File: on_load_ele 
 % 
 % sort object
 sort(object).
@@ -161,11 +64,11 @@ subsort(food, object).
 sort(surface).
 
 
+% examples/Mueller2006/Chapter11/HungryCat.e:38
 % sort plan
 sort(plan).
 
 
-% examples/Mueller2006/Chapter11/HungryCat.e:39
 % 
 % reified sort belief
 reified_sort(belief).
@@ -189,6 +92,7 @@ t(surface, shelf).
 t(surface, table).
 
 
+% examples/Mueller2006/Chapter11/HungryCat.e:44
 % food Food1, Food2
 t(food, food1).
 
@@ -196,7 +100,6 @@ t(food, food1).
 t(food, food2).
 
 
-% examples/Mueller2006/Chapter11/HungryCat.e:45
 % plan P1, P1a, P1b, P2, P2a
 t(plan, p1).
 
@@ -223,11 +126,11 @@ predicate(soundPlan(agent, belief, plan, time)).
 
 
 % 
+% examples/Mueller2006/Chapter11/HungryCat.e:50
 % fluent On(object,surface)
 fluent(on(object, surface)).
 
 
-% examples/Mueller2006/Chapter11/HungryCat.e:51
 % fluent Goal(agent,belief)
 fluent(goal(agent, belief)).
 
@@ -248,8 +151,8 @@ fluent(satiated(agent)).
 fluent(believe(agent, belief)).
 
 
+% examples/Mueller2006/Chapter11/HungryCat.e:56
 % 
-% examples/Mueller2006/Chapter11/HungryCat.e:57
 % event AddPlan(agent,belief,plan)
 event(addPlan(agent, belief, plan)).
 
@@ -270,11 +173,11 @@ event(move(surface, surface, surface)).
 event(eat(agent, food)).
 
 
+% examples/Mueller2006/Chapter11/HungryCat.e:62
 % event Wait(agent)
 event(wait(agent)).
 
 
-% examples/Mueller2006/Chapter11/HungryCat.e:63
 % 
 % belief BSatiated(agent)
 t(belief, 'bSatiated(agent)').
@@ -785,3 +688,5 @@ range(offset, 1, 1).
 
 % 
 % ; End of file.
+% examples/Mueller2006/Chapter11/HungryCat.e:285
+% translate: ending  File: examples/Mueller2006/Chapter11/HungryCat.e.pro 

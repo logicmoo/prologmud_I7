@@ -87,22 +87,88 @@ is_quantifier_type(forAll,all).
 %:- meta_predicate each_doing(1, ?).
 %:- meta_predicate doing(1, *).
   
+:- meta_predicate 
+   with_e_sample_tests(1),
+   raise_translation_event(1,*,*).
 
 :- use_module(library(logicmoo_common)).
 %:- use_module(library(file_utils/filestreams)).
 
-:- export(e_reader_testf/0).
-e_reader_testf:- e_reader_testout(outdir('.')).
-
 :- export(e_reader_test/0).
-e_reader_test:- e_reader_testout(user_output).
+e_reader_test:- with_e_sample_tests(convert_e(user_output)).
 
-e_reader_testout(Out) :- convert_e(Out, 'ectest/*.e'),  
-  convert_e(Out, 'examples/AkmanEtAl2004/ZooWorld.e'),
-  convert_e(Out, 'examples/Mueller2006/Chapter11/HungryCat.e').
+:- export(e_reader_testf/0).
+e_reader_testf:- with_e_sample_tests(convert_e(outdir('.'))).
+
+:- export(e_reader_teste/0).
+e_reader_teste:- with_e_sample_tests(load_e).
+
+:- export(e_reader_testec/0).
+e_reader_testec:- with_e_sample_tests(load_e_pl).
+
+
+with_e_sample_tests(Out) :- 
+  call(Out, 'ectest/*.e'),  
+  call(Out, 'examples/AkmanEtAl2004/ZooWorld.e'),
+  call(Out, 'ecnet/Kidnapping.e'),
+  call(Out, 'examples/Mueller2006/Chapter11/HungryCat.e').
 %:- initialization(e_reader_test, main).
 
+
+% 
+% :- meta_predicate ec_reader:must(0).
+
 raise_translation_event(Why,What,OutputName):- call(Why,translate(What,OutputName)).
+
+
+dedupe_files(SL0,SL):- maplist(relative_file_name,SL0,SL1), list_to_set(SL1,SL).
+  relative_file_name(A,S):-  prolog_canonical_source(A,L), file_name_on_path(L,S), atom(S), \+ name(S,[]), !.
+  relative_file_name(A,A).          
+
+exists_all_filenames(S0, SL, Options):- 
+  findall(N, (relative_from(D), 
+     absolute_file_name(S0, N, 
+        [relative_to(D), file_type(txt), file_errors(fail), access(read), solutions(all)|Options])), SL0),
+  dedupe_files(SL0,SL),!.
+
+resolve_local_files(S0,SL):- atom(S0), expand_file_name(S0,SL), SL \= [E|_], exists_file(E), !.
+resolve_local_files(S0,SL):- exists_all_filenames(S0,SL, [expand(false)]), SL \= [].
+resolve_local_files(S0,SL):- exists_all_filenames(S0,SL, [expand(true)]), SL \= [].
+resolve_local_files(S0,SS):- atom(S0), file_base_name(S0,S1), S0\==S1, resolve_local_files(S1,SS).
+
+relative_from(F):- nb_current('$ec_input_file', F).
+relative_from(D):- working_directory(D,D).
+relative_from(F):- stream_property(_,file_name(F)).
+
+/*
+resolve_file(S0,SS):- atom(S0), exists_file(S0), !, SS=S0. 
+resolve_file(S0,SS):- absolute_file_name(S0, SS, [expand(true), file_errors(fail), access(read)]), !.
+resolve_file(S0,SS):- relative_from(F), absolute_file_name(S0, SS, [relative_to(F),file_errors(fail),access(read)]), !.
+resolve_file(S0,SS):- atom(S0), file_base_name(S0,S1), S0\==S1, resolve_file(S1,SS).
+*/
+
+
+needs_resolve_local_files(F, L):- \+ is_stream(F), \+ is_filename(F),
+  resolve_local_files(F, L), !,  L \= [], L \= [F].
+
+:- export(load_e/1).
+load_e(F):- needs_resolve_local_files(F, L), !, maplist(load_e, L).  
+load_e(SS):- must_det_l((echo_format('~N% '), e_print(loading(SS)), convert_e(on_load_ele,SS))), !.
+
+load_e_pl(F):- needs_resolve_local_files(F, L), !, maplist(load_e_pl, L).  
+load_e_pl(F):-
+  calc_where_to(F, outdir('.'), OutputName),
+  open(OutputName, write, Outs),
+  format(Outs,'~n~q.~n',[:-(include(library('ec_planner/ec_test_incl')))]), 
+  include_e(F), !,
+  close(Outs), consult(OutputName).
+
+
+on_load_ele(translate(Event, Outfile)):- !, mention_s_l, echo_format('~N% translate: ~w  File: ~w ~n',[Event, Outfile]).
+on_load_ele(load(S0)):- resolve_local_files(S0,SS), !, maplist(load_e, SS), !.
+on_load_ele(include(S0)):- resolve_local_files(S0,SS), !, maplist(load_e, SS), !.
+on_load_ele(SS):- echo_format('~N'), e_print(SS).
+
 
 
 :- export(convert_e/1).
@@ -150,10 +216,11 @@ e_to_pl(Why, OutputName, _Ins):- is_filename(OutputName),
    raise_translation_event(Why,ready,OutputName), !.
 
 e_to_pl(Why, Out, F):- is_filename(F), !, 
+    locally(b_setval('$ec_input_file',F),
       setup_call_cleanup(
         open(F, read, Ins),    
         e_to_pl(Why, Out, Ins),
-        close(Ins)),!.
+        close(Ins))),!.
 
 % Out is a filename not currently loadable 
 e_to_pl(Why, OutputName, Ins):-  \+ is_stream(OutputName), !,
@@ -173,7 +240,7 @@ e_to_pl(Why, Out, Ins):-
       assertion(current_output(Out)),       
       e_io(Why, Ins).
 
-
+:- nb_setval(ec_input_file,[]).
 
 calc_where_to(InputName,_Dir,OutputName):- atom_concat(InputName, '.pro', OutputName).
 
@@ -365,6 +432,7 @@ e_to_ec(Prop,O):-
 %e_to_ec(neg(holds_at(N,V)),O):-e_to_ec((holds_at(neg(N),V)),O).
 e_to_ec(t(X, [Y]), O):- nonvar(Y), !, e_to_ec(t(X, Y), O).
 e_to_ec(load(X), load(X)).
+e_to_ec(include(X), include(X)).
 e_to_ec(option([N, V]), O):- !, e_to_ec(option(N, V), O).
 e_to_ec(range([N, V, H]), O):- !, e_to_ec(range(N, V, H), O).
 
@@ -491,20 +559,23 @@ any_line_count(S,L):- line_or_char_count(S, L).
 any_line_count(S,L):- stream_property(S, line_or_char_count(L)).
 any_line_count(_,0).
 
-%ec_on_read(S):- ec_on_read(do_ec_load, S).
+%ec_on_read(S):- ec_on_read(on_load_ele, S).
 
+ec_on_read(Why, EOF):- EOF == end_of_file, !,  must(call(Why, EOF)).
 ec_on_read(Why, SL):- e_to_ec(SL, SO) -> SL\=@=SO, !, ec_on_read(Why, SO).
-ec_on_read(Why, S):- must(glean_data(Why, S)), must(call(Why, S)), !.
+ec_on_read(Why, S):- must(glean_data(Why, S)), must(call(Why, S)).
+
+%must(G):- tracing, !, notrace(G).
+%must(G):- call(G)->true;(trace,ignore(rtrace(G)),break).
+
+on_convert_ele(translate(Event, Outfile)):- !, must((mention_s_l, echo_format('~N% translate: ~w  File: ~w ~n',[Event, Outfile]))).
+on_convert_ele(include(S0)):- resolve_local_files(S0,SS), !, maplist(include_e, SS), !.
+on_convert_ele(load(S0)):- resolve_local_files(S0,SS), !, maplist(load_e, SS), !.  
+on_convert_ele(end_of_file).
+on_convert_ele(SS):- must(echo_format('~N')), must(e_print(SS)).
 
 
-do_ec_load(translate(Event, Outfile)):- !, mention_s_l, format('~N% translate: ~w  File: ~w ~n',[Event, Outfile]).
-do_ec_load(load(SS)):- exists_file(SS), !, format('~N% '), e_print(loading(SS)), call(call,ec_load,SS), !.
-do_ec_load(SS):- flush_output, format('~N'), e_print(SS).
-
-do_convert_e(translate(Event, Outfile)):- !, mention_s_l, format('~N% translate: ~w  File: ~w ~n',[Event, Outfile]).
-do_convert_e(SS):- flush_output, format('~N'), e_print(SS).
-
-
+do_convert_e(SS):- on_convert_ele(SS).
 
 
 e_print(SS):- 
@@ -680,8 +751,9 @@ till_eol(S):- read_line_to_string(S, String), echo_format('~N% ~s~n', [String]).
 
 read_line_to_string_echo(S, String):- read_line_to_string(S, String), format('~s',String).
   
-
-echo_format(_Fmt, _Args):- flush_output, t_l:block_comment_mode(Was), Was==invisible, !.
+echo_flush:- flush_output.
+echo_format(S):- echo_flush, echo_format(S,[]).
+echo_format(_Fmt, _Args):- t_l:block_comment_mode(Was), Was==invisible, !.
 echo_format(Fmt, Args):- t_l:block_comment_mode(_), t_l:echo_mode(echo_file), !, format(Fmt, Args), flush_output.
 echo_format(Fmt, Args):- t_l:echo_mode(echo_file), !, format(Fmt, Args), flush_output.
 echo_format(_Fmt, _Args):- t_l:echo_mode(skip(_)), !.

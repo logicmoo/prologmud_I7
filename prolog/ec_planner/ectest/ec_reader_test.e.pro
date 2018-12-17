@@ -4638,13 +4638,21 @@ option(renaming, off).
 % 
 % ectest/ec_reader_test.e:2496
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% ectest/ec_reader_test.e:2497
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test.e:2497
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% foundations/EC.e:1
+% translate: unskipped  File: on_load_ele 
+% foundations/EC.e:42
+% translate: ready  File: on_load_ele 
 % load answers/Mueller2003/Ontology.e
 load('answers/Mueller2003/Ontology.e').
 
@@ -4661,11 +4669,11 @@ load('answers/Mueller2004c/OTSpaceM.e').
 load('answers/Mueller2004c/Cognition.e').
 
 
-% ectest/ec_reader_test.e:2502
 % load answers/Mueller2003/Sleep.e
 load('answers/Mueller2003/Sleep.e').
 
 
+% ectest/ec_reader_test.e:2503
 % 
 % door Door1
 t(door, door1).
@@ -4677,11 +4685,11 @@ t(room, room0).
 
 
 % 
-% ectest/ec_reader_test.e:2508
 % room Room1
 t(room, room1).
 
 
+% ectest/ec_reader_test.e:2509
 % 
 % Side1(Door1)=Room0.
 side1(door1)=room0.
@@ -4698,8 +4706,8 @@ side2(door1)=room1.
 t(agent, sleeper1).
 
 
-% ectest/ec_reader_test.e:2514
 % 
+% ectest/ec_reader_test.e:2515
 % bed Bed1
 t(bed, bed1).
 
@@ -4882,14 +4890,21 @@ option(encoding, 3).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% foundations/Root.e:1
+% translate: unskipped  File: on_load_ele 
+% foundations/Root.e:17
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
 % ectest/ec_reader_test.e:2581
+% translate: unskipped  File: on_load_ele 
+% ectest/ec_reader_test.e:2581
+% translate: ready  File: on_load_ele 
 % load answers/Mueller2003/Ontology.e
 load('answers/Mueller2003/Ontology.e').
 
@@ -9538,13 +9553,21 @@ ignore([sayPleaseToMeet, move]).
 
 % 
 % load foundations/Root.e
-load('foundations/Root.e').
+% loading('foundations/Root.e').
 
 
+% foundations/Root.e:1
+% translate: unskipped  File: on_load_ele 
+% foundations/Root.e:17
+% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-load('foundations/EC.e').
+% loading('foundations/EC.e').
 
 
+% foundations/EC.e:1
+% translate: unskipped  File: on_load_ele 
+% foundations/EC.e:42
+% translate: ready  File: on_load_ele 
 % load answers/Mueller2003/Ontology.e
 load('answers/Mueller2003/Ontology.e').
 
@@ -9876,4 +9899,204 @@ holds_at(standing(Agent), 0).
 
 % 
 % ectest/ec_reader_test.e:4605
-% [agent,object] % !HoldsAt(Hold
+% [agent,object] % !HoldsAt(Holding(agent,object),0).
+not(holds_at(holding(Agent, Object), 0)).
+
+
+% 
+% ectest/ec_reader_test.e:4606
+% [food] % HoldsAt(At(food,Kitchen1),0).
+holds_at(at(Food, kitchen1), 0).
+
+
+% 
+% ectest/ec_reader_test.e:4607
+% [food] % !HoldsAt(FoodPrepared(food),0).
+not(holds_at(foodPrepared(Food), 0)).
+
+
+% 
+% ectest/ec_reader_test.e:4608
+% [agent] % HoldsAt(Hungry(agent),0).
+holds_at(hungry(Agent), 0).
+
+
+% 
+% ectest/ec_reader_test.e:4609
+% [door] % HoldsAt(DoorIsOpen(door),0).
+holds_at(doorIsOpen(Door), 0).
+
+
+% 
+% ectest/ec_reader_test.e:4610
+% [clothing] % HoldsAt(At(clothing,Upstairs1),0).
+holds_at(at(Clothing, upstairs1), 0).
+
+
+% 
+% ectest/ec_reader_test.e:4611
+% [chair] % HoldsAt(At(chair,DiningRoom1),0).
+holds_at(at(Chair, diningRoom1), 0).
+
+
+% 
+% HoldsAt(At(Cook1,Kitchen1),0).
+holds_at(at(cook1, kitchen1), 0).
+
+
+% 
+% HoldsAt(At(Table1,DiningRoom1),0).
+holds_at(at(table1, diningRoom1), 0).
+
+
+% 
+% ectest/ec_reader_test.e:4614
+% [agent,clothing] % !HoldsAt(Wearing(agent,clothing),0).
+not(holds_at(wearing(Agent, Clothing), 0)).
+
+
+% 
+% 
+% ; narrative
+% HoldsAt(At(Cook1,Kitchen1),0).
+holds_at(at(cook1, kitchen1), 0).
+
+
+% 
+% HoldsAt(At(Eater1,Upstairs1),0).
+holds_at(at(eater1, upstairs1), 0).
+
+
+% 
+% HoldsAt(At(Eater2,Upstairs1),0).
+holds_at(at(eater2, upstairs1), 0).
+
+
+% 
+% ectest/ec_reader_test.e:4620
+% Happens(FoodPrepare(Cook1,Food1),0).
+happens(foodPrepare(cook1, food1), 0).
+
+
+% 
+% Happens(PutOn(Eater1,Clothing1),1).
+happens(putOn(eater1, clothing1), 1).
+
+
+% 
+% Happens(PutOn(Eater2,Clothing2),2).
+happens(putOn(eater2, clothing2), 2).
+
+
+% 
+% Happens(WalkDownStaircase(Eater1,Staircase1),3).
+happens(walkDownStaircase(eater1, staircase1), 3).
+
+
+% 
+% Happens(WalkDownStaircase(Eater2,Staircase1),4).
+happens(walkDownStaircase(eater2, staircase1), 4).
+
+
+% 
+% Happens(WalkThroughDoor12(Eater1,DiningRoomDoor1),5).
+happens(walkThroughDoor12(eater1, diningRoomDoor1), 5).
+
+
+% 
+% ectest/ec_reader_test.e:4626
+% Happens(WalkThroughDoor12(Eater2,DiningRoomDoor1),6).
+happens(walkThroughDoor12(eater2, diningRoomDoor1), 6).
+
+
+% 
+% Happens(SitOn(Eater1,Chair1),7).
+happens(sitOn(eater1, chair1), 7).
+
+
+% 
+% Happens(SitOn(Eater2,Chair2),8).
+happens(sitOn(eater2, chair2), 8).
+
+
+% 
+% Happens(PickUp(Cook1, Food1),9).
+happens(pickUp(cook1, food1), 9).
+
+
+% 
+% Happens(WalkThroughDoor21(Cook1, KitchenDoor1),10).
+happens(walkThroughDoor21(cook1, kitchenDoor1), 10).
+
+
+% 
+% Happens(PlaceOn(Cook1, Food1, Table1),11).
+happens(placeOn(cook1, food1, table1), 11).
+
+
+% 
+% ectest/ec_reader_test.e:4632
+% Happens(WalkThroughDoor12(Cook1, KitchenDoor1),12).
+happens(walkThroughDoor12(cook1, kitchenDoor1), 12).
+
+
+% 
+% Happens(Eat(Eater1,Food1),13).
+happens(eat(eater1, food1), 13).
+
+
+% 
+% Happens(Eat(Eater2,Food1),14).
+happens(eat(eater2, food1), 14).
+
+
+% 
+% Happens(Converse(Eater1,Eater2),15).
+happens(converse(eater1, eater2), 15).
+
+
+% 
+% Happens(TalkAbout(Eater1,Content1),16).
+happens(talkAbout(eater1, content1), 16).
+
+
+% 
+% Happens(TalkAbout(Eater2,Content2),17).
+happens(talkAbout(eater2, content2), 17).
+
+
+% 
+% ectest/ec_reader_test.e:4638
+% Happens(RiseFrom(Eater1,Chair1),18).
+happens(riseFrom(eater1, chair1), 18).
+
+
+% 
+% Happens(RiseFrom(Eater2,Chair2),19).
+happens(riseFrom(eater2, chair2), 19).
+
+
+% 
+% 
+% range time 0 20
+range(time, 0, 20).
+
+
+% range offset 0 0
+range(offset, 0, 0).
+
+
+% range diameter 0 0
+range(diameter, 0, 0).
+
+
+% ectest/ec_reader_test.e:4644
+% 
+% completion Happens
+completion(happens).
+
+
+% 
+% ; End of file.
+% ectest/ec_reader_test.e:4648
+% translate: ending  File: ectest/ec_reader_test.e.pro 
