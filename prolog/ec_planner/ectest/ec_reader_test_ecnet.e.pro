@@ -22,18 +22,14 @@
 % sort boolean
 sort(boolean).
 
-
 % sort integer
 sort(integer).
-
 
 % reified sort predicate
 reified_sort(predicate).
 
-
 % reified sort function
 reified_sort(function).
-
 
 % 
 % ; End of file.
@@ -76,50 +72,39 @@ reified_sort(function).
 % sort time: integer
 subsort(time, integer).
 
-
 % sort offset: integer
 subsort(offset, integer).
-
 
 % 
 % reified sort fluent
 reified_sort(fluent).
 
-
 % reified sort event
 reified_sort(event).
-
 
 % ectest/ec_reader_test_ecnet.e:62
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
 
-
 % predicate HoldsAt(fluent,time)
 predicate(holds_at(fluent, time)).
-
 
 % predicate ReleasedAt(fluent,time)
 predicate(releasedAt(fluent, time)).
 
-
 % predicate Initiates(event,fluent,time)
 predicate(initiates(event, fluent, time)).
 
-
 % predicate Terminates(event,fluent,time)
 predicate(terminates(event, fluent, time)).
-
 
 % ectest/ec_reader_test_ecnet.e:68
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
-
 % predicate Trajectory(fluent,time,fluent,offset)
 predicate(trajectory(fluent, time, fluent, offset)).
-
 
 % 
 % ; End of file.
@@ -158,47 +143,37 @@ predicate(trajectory(fluent, time, fluent, offset)).
 % sort time: integer
 subsort(time, integer).
 
-
 % sort offset: integer
 subsort(offset, integer).
-
 
 % 
 % reified sort fluent
 reified_sort(fluent).
 
-
 % reified sort event
 reified_sort(event).
-
 
 % ectest/ec_reader_test_ecnet.e:107
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
 
-
 % predicate HoldsAt(fluent,time)
 predicate(holds_at(fluent, time)).
 
-
 % predicate ReleasedAt(fluent,time)
 predicate(releasedAt(fluent, time)).
-
 
 % 
 % predicate Initiates(event,fluent,time)
 predicate(initiates(event, fluent, time)).
 
-
 % ectest/ec_reader_test_ecnet.e:113
 % predicate Terminates(event,fluent,time)
 predicate(terminates(event, fluent, time)).
 
-
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:116
@@ -209,7 +184,6 @@ predicate(releases(event, fluent, time)).
 % HoldsAt(fluent,time+1).
 holds_at(Fluent, Time), not(releasedAt(Fluent, Time+1)), not(exists([Event],  (happens(Event, Time), terminates(Event, Fluent, Time)))) ->
 	holds_at(Fluent, Time+1).
-
 
 % 
 % 
@@ -222,7 +196,6 @@ holds_at(Fluent, Time), not(releasedAt(Fluent, Time+1)), not(exists([Event],  (h
 not(holds_at(Fluent, Time)), not(releasedAt(Fluent, Time+1)), not(exists([Event],  (happens(Event, Time), initiates(Event, Fluent, Time)))) ->
 	not(holds_at(Fluent, Time+1)).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:128
@@ -232,7 +205,6 @@ not(holds_at(Fluent, Time)), not(releasedAt(Fluent, Time+1)), not(exists([Event]
 % !ReleasedAt(fluent,time+1).
 not(releasedAt(Fluent, Time)), not(exists([Event],  (happens(Event, Time), releases(Event, Fluent, Time)))) ->
 	not(releasedAt(Fluent, Time+1)).
-
 
 % 
 % 
@@ -246,7 +218,6 @@ not(releasedAt(Fluent, Time)), not(exists([Event],  (happens(Event, Time), relea
 releasedAt(Fluent, Time), not(exists([Event],  (happens(Event, Time), (initiates(Event, Fluent, Time);terminates(Event, Fluent, Time))))) ->
 	releasedAt(Fluent, Time+1).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:139
 % 
@@ -258,7 +229,6 @@ happens(Event, Time), initiates(Event, Fluent, Time) ->
 	holds_at(Fluent, Time+1),
 	not(releasedAt(Fluent, Time+1)).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:144
@@ -269,7 +239,6 @@ happens(Event, Time), terminates(Event, Fluent, Time) ->
 	not(holds_at(Fluent, Time+1)),
 	not(releasedAt(Fluent, Time+1)).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:148
@@ -278,7 +247,6 @@ happens(Event, Time), terminates(Event, Fluent, Time) ->
 % ReleasedAt(fluent,time+1).
 happens(Event, Time), releases(Event, Fluent, Time) ->
 	releasedAt(Fluent, Time+1).
-
 
 % 
 % 
@@ -318,10 +286,8 @@ happens(Event, Time), releases(Event, Fluent, Time) ->
 % predicate Started(fluent,time)
 predicate(started(fluent, time)).
 
-
 % predicate Stopped(fluent,time)
 predicate(stopped(fluent, time)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:186
@@ -334,7 +300,6 @@ started(Fluent, Time) <->
 	;   exists([Event],
 		   (happens(Event, Time), initiates(Event, Fluent, Time)))
 	).
-
 
 % 
 % 
@@ -349,17 +314,14 @@ stopped(Fluent, Time) <->
 		   (happens(Event, Time), terminates(Event, Fluent, Time)))
 	).
 
-
 % 
 % 
 % predicate Initiated(fluent,time)
 predicate(initiated(fluent, time)).
 
-
 % ectest/ec_reader_test_ecnet.e:197
 % predicate Terminated(fluent,time)
 predicate(terminated(fluent, time)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:199
@@ -372,7 +334,6 @@ initiated(Fluent, Time) <->
 	not(exists([Event],
 		   (happens(Event, Time), terminates(Event, Fluent, Time)))).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:204
@@ -384,7 +345,6 @@ terminated(Fluent, Time) <->
 	stopped(Fluent, Time),
 	not(exists([Event],
 		   (happens(Event, Time), initiates(Event, Fluent, Time)))).
-
 
 % 
 % 
@@ -426,19 +386,15 @@ terminated(Fluent, Time) <->
 % predicate Clipped(time,fluent,time)
 predicate(clipped(time, fluent, time)).
 
-
 % predicate Declipped(time,fluent,time)
 predicate(declipped(time, fluent, time)).
-
 
 % 
 % predicate Trajectory(fluent,time,fluent,offset)
 predicate(trajectory(fluent, time, fluent, offset)).
 
-
 % predicate AntiTrajectory(fluent,time,fluent,offset)
 predicate(antiTrajectory(fluent, time, fluent, offset)).
-
 
 % ectest/ec_reader_test_ecnet.e:246
 % 
@@ -453,7 +409,6 @@ predicate(antiTrajectory(fluent, time, fluent, offset)).
 happens(Event, Time), initiates(Event, Fluent, Time), 0<Offset, trajectory(Fluent, Time, Fluent2, Offset), not(clipped(Time, Fluent, Time+Offset)) ->
 	holds_at(Fluent2, Time+Offset).
 
-
 % ectest/ec_reader_test_ecnet.e:253
 % 
 % 
@@ -467,7 +422,6 @@ happens(Event, Time), initiates(Event, Fluent, Time), 0<Offset, trajectory(Fluen
 % HoldsAt(fluent2,time+offset).
 happens(Event, Time), terminates(Event, Fluent, Time), 0<Offset, antiTrajectory(Fluent, Time, Fluent2, Offset), not(declipped(Time, Fluent, Time+Offset)) ->
 	holds_at(Fluent2, Time+Offset).
-
 
 % ectest/ec_reader_test_ecnet.e:261
 % 
@@ -498,157 +452,124 @@ happens(Event, Time), terminates(Event, Fluent, Time), 0<Offset, antiTrajectory(
 % sort diameter: integer
 subsort(diameter, integer).
 
-
 % 
 % ; object
 % 
 % sort object
 sort(object).
 
-
 % ectest/ec_reader_test_ecnet.e:289
 % 
 % sort agent: object
 subsort(agent, object).
 
-
 % 
 % sort physobj: object
 subsort(physobj, object).
 
-
 % sort bed: physobj
 subsort(bed, physobj).
 
-
 % sort snowflake: physobj
 subsort(snowflake, physobj).
-
 
 % ectest/ec_reader_test_ecnet.e:295
 % sort sky: physobj
 subsort(sky, physobj).
 
-
 % 
 % sort stuff: physobj
 subsort(stuff, physobj).
-
 
 % 
 % sort surface: physobj
 subsort(surface, physobj).
 
-
 % sort ground: surface
 subsort(ground, surface).
-
 
 % ectest/ec_reader_test_ecnet.e:301
 % 
 % sort snow: stuff
 subsort(snow, stuff).
 
-
 % sort ball
 sort(ball).
-
 
 % 
 % sort food: physobj
 subsort(food, physobj).
 
-
 % sort fruit: food
 subsort(fruit, food).
-
 
 % ectest/ec_reader_test_ecnet.e:307
 % sort orange: fruit
 subsort(orange, fruit).
 
-
 % sort salad: food
 subsort(salad, food).
-
 
 % 
 % sort clothing: physobj
 subsort(clothing, physobj).
 
-
 % sort scarf: clothing
 subsort(scarf, clothing).
 
-
 % sort hat: clothing
 subsort(hat, clothing).
-
 
 % ectest/ec_reader_test_ecnet.e:313
 % 
 % sort vegetablematter: physobj
 subsort(vegetablematter, physobj).
 
-
 % sort coal: vegetablematter
 subsort(coal, vegetablematter).
-
 
 % 
 % sort bodypart: physobj
 subsort(bodypart, physobj).
 
-
 % sort hand: bodypart
 subsort(hand, bodypart).
-
 
 % ectest/ec_reader_test_ecnet.e:319
 % 
 % sort papertowels: physobj
 subsort(papertowels, physobj).
 
-
 % sort device: physobj
 subsort(device, physobj).
-
 
 % sort electronicdevice: device
 subsort(electronicdevice, device).
 
-
 % sort lamp: electronicdevice
 subsort(lamp, electronicdevice).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:325
 % sort cat: physobj
 subsort(cat, physobj).
 
-
 % sort horse: physobj
 subsort(horse, physobj).
-
 
 % 
 % sort weapon: physobj
 subsort(weapon, physobj).
 
-
 % sort gun: weapon
 subsort(gun, weapon).
-
 
 % sort bomb: weapon
 subsort(bomb, weapon).
 
-
 % ectest/ec_reader_test_ecnet.e:331
 % sort bullet: weapon
 subsort(bullet, weapon).
-
 
 % 
 % ; location
@@ -656,10 +577,10 @@ subsort(bullet, weapon).
 % sort location
 sort(location).
 
-
 % sort room: location, outside: location
-sort(col([room, 'location,_outside', location])).
+subsort(room, location).
 
+subsort(outside, location).
 
 % ectest/ec_reader_test_ecnet.e:337
 % 
@@ -668,117 +589,94 @@ sort(col([room, 'location,_outside', location])).
 % sort portal
 sort(portal).
 
-
 % sort door: portal, staircase: portal
-sort(col([door, 'portal,_staircase', portal])).
+subsort(door, portal).
 
+subsort(staircase, portal).
 
 % sort street: portal
 subsort(street, portal).
-
 
 % ectest/ec_reader_test_ecnet.e:343
 % sort track: portal
 subsort(track, portal).
 
-
 % 
 % sort building
 sort(building).
-
 
 % 
 % sort fire: object
 subsort(fire, object).
 
-
 % sort smoke: physobj
 subsort(smoke, physobj).
-
 
 % ectest/ec_reader_test_ecnet.e:349
 % 
 % sort furniture: physobj
 subsort(furniture, physobj).
 
-
 % sort chair: furniture
 subsort(chair, furniture).
 
-
 % sort table: furniture
 subsort(table, furniture).
-
 
 % 
 % sort bill: physobj
 subsort(bill, physobj).
 
-
 % ectest/ec_reader_test_ecnet.e:355
 % sort ticket: physobj
 subsort(ticket, physobj).
 
-
 % sort envelope: physobj
 subsort(envelope, physobj).
-
 
 % 
 % sort text: physobj
 subsort(text, physobj).
 
-
 % sort book: text
 subsort(book, text).
 
-
 % sort letter: text
 subsort(letter, text).
-
 
 % ectest/ec_reader_test_ecnet.e:361
 % sort menu: text
 subsort(menu, text).
 
-
 % 
 % sort paper: physobj
 subsort(paper, physobj).
-
 
 % 
 % sort content
 sort(content).
 
-
 % sort script
 sort(script).
-
 
 % ectest/ec_reader_test_ecnet.e:367
 % 
 % sort container: physobj
 subsort(container, physobj).
 
-
 % sort cigarette: physobj
 subsort(cigarette, physobj).
-
 
 % sort ashtray: physobj
 subsort(ashtray, physobj).
 
-
 % sort umbrella: physobj
 subsort(umbrella, physobj).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:373
 % sort pen: physobj
 subsort(pen, physobj).
-
 
 % 
 % ; End of file.
@@ -816,10 +714,8 @@ subsort(pen, physobj).
 % fluent At(object,location)
 fluent(at(object, location)).
 
-
 % manualrelease At
 manualrelease(at).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:408
@@ -829,7 +725,6 @@ manualrelease(at).
 % {object2} PartOf(object1,object2)) ->
 % ReleasedAt(At(object1,location),time).
 exists([Object2],  (partOf(Object1, Object2)->releasedAt(at(Object1, Location), Time))).
-
 
 % 
 % 
@@ -843,7 +738,6 @@ exists([Object2],  (partOf(Object1, Object2)->releasedAt(at(Object1, Location), 
 holds_at(at(Object, Location1), Time), holds_at(at(Object, Location2), Time) ->
 	Location1=Location2.
 
-
 % 
 % 
 % ; connectivity
@@ -853,11 +747,9 @@ holds_at(at(Object, Location1), Time), holds_at(at(Object, Location2), Time) ->
 % function Side1(portal): location
 function(side1(portal), location).
 
-
 % ; Side two of portal is location.
 % function Side2(portal): location
 function(side2(portal), location).
-
 
 % 
 % ; The building of room is building.
@@ -865,16 +757,13 @@ function(side2(portal), location).
 % function BuildingOf(room): building
 function(buildingOf(room), building).
 
-
 % 
 % ; object is at a location that has portal.
 % fluent NearPortal(object,portal)
 fluent(nearPortal(object, portal)).
 
-
 % noninertial NearPortal
 noninertial(nearPortal).
-
 
 % 
 % ; A state constraint says that an object is near
@@ -891,7 +780,6 @@ noninertial(nearPortal).
 %  HoldsAt(At(object,location),time).
 exists([Location],  (holds_at(nearPortal(Object, Portal), Time)<->(side1(Portal)=Location;side2(Portal)=Location), holds_at(at(Object, Location), Time))).
 
-
 % 
 % 
 % ; locking and unlocking doors
@@ -901,17 +789,14 @@ exists([Location],  (holds_at(nearPortal(Object, Portal), Time)<->(side1(Portal)
 % event DoorUnlock(agent,door)
 event(doorUnlock(agent, door)).
 
-
 % ; agent locks door.
 % event DoorLock(agent,door)
 event(doorLock(agent, door)).
-
 
 % ; door is unlocked.
 % ectest/ec_reader_test_ecnet.e:451
 % fluent DoorUnlocked(door)
 fluent(doorUnlocked(door)).
-
 
 % 
 % ; A precondition axiom states that
@@ -930,7 +815,6 @@ happens(doorUnlock(Agent, Door), Time) ->
 	not(holds_at(doorUnlocked(Door), Time)),
 	holds_at(nearPortal(Agent, Door), Time).
 
-
 % 
 % 
 % ; An effect axiom states that
@@ -940,7 +824,6 @@ happens(doorUnlock(Agent, Door), Time) ->
 % [agent,door,time]% 
 % Initiates(DoorUnlock(agent,door),DoorUnlocked(door),time).
 initiates(doorUnlock(Agent, Door), doorUnlocked(Door), Time).
-
 
 % 
 % 
@@ -960,7 +843,6 @@ happens(doorLock(Agent, Door), Time) ->
 	holds_at(doorUnlocked(Door), Time),
 	holds_at(nearPortal(Agent, Door), Time).
 
-
 % 
 % 
 % ; An effect axiom states that
@@ -970,7 +852,6 @@ happens(doorLock(Agent, Door), Time) ->
 % [agent,door,time]% 
 % Terminates(DoorLock(agent,door),DoorUnlocked(door),time).
 terminates(doorLock(Agent, Door), doorUnlocked(Door), Time).
-
 
 % 
 % 
@@ -982,7 +863,6 @@ terminates(doorLock(Agent, Door), doorUnlocked(Door), Time).
 holds_at(doorIsOpen(Door), Time) ->
 	holds_at(doorUnlocked(Door), Time).
 
-
 % 
 % 
 % ; opening and closing doors
@@ -992,16 +872,13 @@ holds_at(doorIsOpen(Door), Time) ->
 % event DoorOpen(agent,door)
 event(doorOpen(agent, door)).
 
-
 % ; agent closes door.
 % event DoorClose(agent,door)
 event(doorClose(agent, door)).
 
-
 % ; door is open.
 % fluent DoorIsOpen(door)
 fluent(doorIsOpen(door)).
-
 
 % 
 % ; A precondition axiom states that
@@ -1023,7 +900,6 @@ happens(doorOpen(Agent, Door), Time) ->
 	holds_at(doorUnlocked(Door), Time),
 	holds_at(nearPortal(Agent, Door), Time).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:513
 % 
@@ -1034,7 +910,6 @@ happens(doorOpen(Agent, Door), Time) ->
 % [agent,door,time]% 
 % Initiates(DoorOpen(agent,door),DoorIsOpen(door),time).
 initiates(doorOpen(Agent, Door), doorIsOpen(Door), Time).
-
 
 % 
 % 
@@ -1057,7 +932,6 @@ happens(doorClose(Agent, Door), Time) ->
 	holds_at(doorUnlocked(Door), Time),
 	holds_at(nearPortal(Agent, Door), Time).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:532
 % 
@@ -1069,7 +943,6 @@ happens(doorClose(Agent, Door), Time) ->
 % Terminates(DoorClose(agent,door),DoorIsOpen(door),time).
 terminates(doorClose(Agent, Door), doorIsOpen(Door), Time).
 
-
 % 
 % 
 % ; passing through doors
@@ -1079,11 +952,9 @@ terminates(doorClose(Agent, Door), doorIsOpen(Door), Time).
 % event WalkThroughDoor12(agent,door)
 event(walkThroughDoor12(agent, door)).
 
-
 % ; agent walks through side two of door.
 % event WalkThroughDoor21(agent,door)
 event(walkThroughDoor21(agent, door)).
-
 
 % 
 % ; Precondition axioms state that
@@ -1105,7 +976,6 @@ happens(walkThroughDoor12(Agent, Door), Time) ->
 	holds_at(doorIsOpen(Door), Time),
 	holds_at(at(Agent, side1(Door)), Time).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:558
 % 
@@ -1122,7 +992,6 @@ happens(walkThroughDoor21(Agent, Door), Time) ->
 	holds_at(doorIsOpen(Door), Time),
 	holds_at(at(Agent, side2(Door)), Time).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:565
 % 
@@ -1138,7 +1007,6 @@ side2(Door)=Location ->
 		  at(Agent, Location),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:573
@@ -1149,7 +1017,6 @@ side1(Door)=Location ->
 	initiates(walkThroughDoor21(Agent, Door),
 		  at(Agent, Location),
 		  Time).
-
 
 % 
 % 
@@ -1162,7 +1029,6 @@ side1(Door)=Location ->
 		   at(Agent, Location),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:581
@@ -1174,7 +1040,6 @@ side2(Door)=Location ->
 		   at(Agent, Location),
 		   Time).
 
-
 % 
 % 
 % ; walking from one end of a street to another
@@ -1184,11 +1049,9 @@ side2(Door)=Location ->
 % event WalkStreet12(agent,street)
 event(walkStreet12(agent, street)).
 
-
 % ; agent walks from the second end of street to the first end.
 % event WalkStreet21(agent,street)
 event(walkStreet21(agent, street)).
-
 
 % 
 % ; Precondition axioms state that
@@ -1207,7 +1070,6 @@ happens(walkStreet12(Agent, Street), Time) ->
 	holds_at(standing(Agent), Time),
 	holds_at(at(Agent, side1(Street)), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:603
@@ -1220,7 +1082,6 @@ happens(walkStreet21(Agent, Street), Time) ->
 	holds_at(awake(Agent), Time),
 	holds_at(standing(Agent), Time),
 	holds_at(at(Agent, side2(Street)), Time).
-
 
 % 
 % 
@@ -1236,7 +1097,6 @@ side2(Street)=Location ->
 		  at(Agent, Location),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:616
@@ -1247,7 +1107,6 @@ side1(Street)=Location ->
 	initiates(walkStreet21(Agent, Street),
 		  at(Agent, Location),
 		  Time).
-
 
 % 
 % 
@@ -1260,7 +1119,6 @@ side1(Street)=Location ->
 		   at(Agent, Location),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:624
@@ -1272,7 +1130,6 @@ side2(Street)=Location ->
 		   at(Agent, Location),
 		   Time).
 
-
 % 
 % 
 % ; floors
@@ -1282,7 +1139,6 @@ side2(Street)=Location ->
 % function Floor(room): integer
 function(floor(room), integer).
 
-
 % 
 % ; walking up and down staircases
 % 
@@ -1290,12 +1146,10 @@ function(floor(room), integer).
 % event WalkDownStaircase(agent,staircase)
 event(walkDownStaircase(agent, staircase)).
 
-
 % ectest/ec_reader_test_ecnet.e:637
 % ; agent walks up staircase.
 % event WalkUpStaircase(agent,staircase)
 event(walkUpStaircase(agent, staircase)).
-
 
 % 
 % ; Precondition axioms state that
@@ -1313,7 +1167,6 @@ happens(walkDownStaircase(Agent, Staircase), Time) ->
 	holds_at(standing(Agent), Time),
 	holds_at(at(Agent, side2(Staircase)), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:650
@@ -1326,7 +1179,6 @@ happens(walkUpStaircase(Agent, Staircase), Time) ->
 	holds_at(awake(Agent), Time),
 	holds_at(standing(Agent), Time),
 	holds_at(at(Agent, side1(Staircase)), Time).
-
 
 % 
 % 
@@ -1342,7 +1194,6 @@ side1(Staircase)=Room ->
 		  at(Agent, Room),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:663
@@ -1353,7 +1204,6 @@ side2(Staircase)=Room ->
 	terminates(walkDownStaircase(Agent, Staircase),
 		   at(Agent, Room),
 		   Time).
-
 
 % 
 % 
@@ -1366,7 +1216,6 @@ side2(Staircase)=Room ->
 		  at(Agent, Room),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:671
@@ -1377,7 +1226,6 @@ side1(Staircase)=Room ->
 	terminates(walkUpStaircase(Agent, Staircase),
 		   at(Agent, Room),
 		   Time).
-
 
 % 
 % 
@@ -1390,20 +1238,17 @@ side1(Staircase)=Room ->
 holds_at(at(Agent, Outside), Time) ->
 	holds_at(dressed(Agent), Time).
 
-
 % 
 % 
 % ; room looks out onto outside.
 % function LookOutOnto(room): outside
 function(lookOutOnto(room), outside).
 
-
 % ectest/ec_reader_test_ecnet.e:683
 % 
 % ; location1 is adjacent to location2.
 % predicate Adjacent(location,location)
 predicate(adjacent(location, location)).
-
 
 % 
 % ; A state constraint says that
@@ -1419,7 +1264,6 @@ predicate(adjacent(location, location)).
 %  Side1(portal)=location2).
 exists([Portal],  (adjacent(Location1, Location2)<->side1(Portal)=Location1, side2(Portal)=Location2;side2(Portal)=Location1, side1(Portal)=Location2)).
 
-
 % 
 % 
 % ; The ground of outside is ground.
@@ -1427,11 +1271,9 @@ exists([Portal],  (adjacent(Location1, Location2)<->side1(Portal)=Location1, sid
 % function GroundOf(outside): ground
 function(groundOf(outside), ground).
 
-
 % ; The sky of outside is sky.
 % function SkyOf(outside): sky
 function(skyOf(outside), sky).
-
 
 % 
 % ; State constraints fix the location of ground and sky:
@@ -1442,7 +1284,6 @@ function(skyOf(outside), sky).
 groundOf(Outside)=Ground ->
 	holds_at(at(Ground, Outside), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:707
@@ -1451,7 +1292,6 @@ groundOf(Outside)=Ground ->
 % HoldsAt(At(sky,outside),time).
 skyOf(Outside)=Sky ->
 	holds_at(at(Sky, Outside), Time).
-
 
 % 
 % 
@@ -1488,7 +1328,6 @@ skyOf(Outside)=Sky ->
 % predicate PartOf(physobj,object)
 predicate(partOf(physobj, object)).
 
-
 % 
 % ; A state constraint says that if a physical object
 % ; is part of an object, the location of the
@@ -1501,7 +1340,6 @@ predicate(partOf(physobj, object)).
 partOf(Physobj, Object), holds_at(at(Object, Location), Time) ->
 	holds_at(at(Physobj, Location), Time).
 
-
 % 
 % 
 % ; rolling a snowball bigger
@@ -1511,11 +1349,9 @@ partOf(Physobj, Object), holds_at(at(Object, Location), Time) ->
 % event RollAlong(agent,stuff,stuff)
 event(rollAlong(agent, stuff, stuff)).
 
-
 % ; The diameter of ball is diameter.
 % fluent Diameter(ball,diameter)
 fluent(diameter(ball, diameter)).
-
 
 % 
 % ; A state constraint says that a ball has a unique diameter:
@@ -1526,7 +1362,6 @@ fluent(diameter(ball, diameter)).
 % diameter1=diameter2.
 holds_at(diameter(Ball, Diameter1), Time), holds_at(diameter(Ball, Diameter2), Time) ->
 	Diameter1=Diameter2.
-
 
 % 
 % 
@@ -1544,7 +1379,6 @@ holds_at(diameter(Snow1, Diameter1), Time), Diameter2=Diameter1+1 ->
 		  diameter(Snow1, Diameter2),
 		  Time).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:770
 % 
@@ -1558,7 +1392,6 @@ holds_at(diameter(Snow1, Diameter1), Time) ->
 	terminates(rollAlong(Agent, Snow1, Snow2),
 		   diameter(Snow1, Diameter1),
 		   Time).
-
 
 % 
 % 
@@ -1582,7 +1415,6 @@ holds_at(diameter(Snow1, Diameter1), Time) ->
 % event Move(object)
 event(move(object)).
 
-
 % 
 % ; Holding
 % ectest/ec_reader_test_ecnet.e:796
@@ -1591,22 +1423,18 @@ event(move(object)).
 % fluent Holding(agent,physobj)
 fluent(holding(agent, physobj)).
 
-
 % ; agent holds or picks up physobj.
 % event Hold(agent,physobj)
 event(hold(agent, physobj)).
-
 
 % ; agent picks up some stuff1 from stuff2.
 % ectest/ec_reader_test_ecnet.e:802
 % event HoldSome(agent,stuff,stuff)
 event(holdSome(agent, stuff, stuff)).
 
-
 % ; agent releases or lets go of physobj.
 % event LetGoOf(agent,physobj)
 event(letGoOf(agent, physobj)).
-
 
 % 
 % ; An effect axiom states that if an agent holds
@@ -1616,7 +1444,6 @@ event(letGoOf(agent, physobj)).
 % [agent,physobj,time]% 
 % Initiates(Hold(agent,physobj),Holding(agent,physobj),time).
 initiates(hold(Agent, Physobj), holding(Agent, Physobj), Time).
-
 
 % 
 % 
@@ -1640,7 +1467,6 @@ initiates(hold(Agent, Physobj), holding(Agent, Physobj), Time).
 % Terminates(LetGoOf(agent,physobj),Holding(agent,physobj),time).
 terminates(letGoOf(Agent, Physobj), holding(Agent, Physobj), Time).
 
-
 % 
 % 
 % ; A precondition axiom states that
@@ -1653,7 +1479,6 @@ terminates(letGoOf(Agent, Physobj), holding(Agent, Physobj), Time).
 happens(letGoOf(Agent, Physobj), Time) ->
 	holds_at(holding(Agent, Physobj), Time).
 
-
 % 
 % 
 % ; A releases axiom states that if an agent holds
@@ -1664,7 +1489,6 @@ happens(letGoOf(Agent, Physobj), Time) ->
 % [agent,physobj,location,time]% 
 % Releases(Hold(agent,physobj),At(physobj,location),time).
 releases(hold(Agent, Physobj), at(Physobj, Location), Time).
-
 
 % 
 % 
@@ -1678,7 +1502,6 @@ releases(hold(Agent, Physobj), at(Physobj, Location), Time).
 % HoldsAt(At(physobj,location),time).
 holds_at(holding(Agent, Physobj), Time), holds_at(at(Agent, Location), Time) ->
 	holds_at(at(Physobj, Location), Time).
-
 
 % 
 % 
@@ -1695,7 +1518,6 @@ partOf(Physobj1, Physobj2) ->
 		 at(Physobj1, Location),
 		 Time).
 
-
 % 
 % 
 % ; Further, if an agent holds a physical object,
@@ -1710,7 +1532,6 @@ partOf(Physobj1, Physobj2) ->
 	releases(hold(Agent, Physobj1),
 		 at(Physobj2, Location),
 		 Time).
-
 
 % 
 % 
@@ -1730,7 +1551,6 @@ not(exists([Object], partOf(Physobj, Object))), holds_at(at(Agent, Location), Ti
 	initiates(letGoOf(Agent, Physobj),
 		  at(Physobj, Location),
 		  Time).
-
 
 % 
 % 
@@ -1753,7 +1573,6 @@ partOf(Physobj1, Physobj2), not(exists([Object], partOf(Physobj2, Object))), hol
 		  at(Physobj2, Location),
 		  Time).
 
-
 % 
 % 
 % ; An effect axiom states that if an agent is at a location
@@ -1768,7 +1587,6 @@ holds_at(at(Agent, Location), Time) ->
 		  at(Physobj, Location),
 		  Time).
 
-
 % 
 % 
 % ; An effect axiom states that if an agent picks up
@@ -1780,7 +1598,6 @@ holds_at(at(Agent, Location), Time) ->
 %           Holding(agent,stuff1),
 %           time).
 initiates(holdSome(Agent, Stuff1, Stuff2), holding(Agent, Stuff1), Time).
-
 
 % 
 % 
@@ -1801,7 +1618,6 @@ initiates(holdSome(Agent, Stuff1, Stuff2), holding(Agent, Stuff1), Time).
 %   HoldsAt(At(stuff2,location),time).
 exists([Location],  (happens(holdSome(Agent, Stuff1, Stuff2), Time)->partOf(Stuff1, Stuff2), holds_at(at(Agent, Location), Time), holds_at(at(Stuff1, Location), Time), holds_at(at(Stuff2, Location), Time))).
 
-
 % 
 % 
 % ; A releases axiom states that if an agent picks up some
@@ -1813,7 +1629,6 @@ exists([Location],  (happens(holdSome(Agent, Stuff1, Stuff2), Time)->partOf(Stuf
 % Releases(HoldSome(agent,stuff1,stuff2),At(stuff1,location),time).
 releases(holdSome(Agent, Stuff1, Stuff2), at(Stuff1, Location), Time).
 
-
 % 
 % 
 % ; Inside
@@ -1823,16 +1638,13 @@ releases(holdSome(Agent, Stuff1, Stuff2), at(Stuff1, Location), Time).
 % fluent Inside(physobj,physobj)
 fluent(inside(physobj, physobj)).
 
-
 % ; agent puts physobj1 inside physobj2.
 % event PutInside(agent,physobj,physobj)
 event(putInside(agent, physobj, physobj)).
 
-
 % ; agent takes physobj1 out of physobj2.
 % event TakeOutOf(agent,physobj,physobj)
 event(takeOutOf(agent, physobj, physobj)).
-
 
 % 
 % ; A state constraint says that a physical object cannot
@@ -1843,7 +1655,6 @@ event(takeOutOf(agent, physobj, physobj)).
 % physobj1!=physobj2.
 holds_at(inside(Physobj1, Physobj2), Time) ->
 	Physobj1\=Physobj2.
-
 
 % 
 % 
@@ -1857,7 +1668,6 @@ holds_at(inside(Physobj1, Physobj2), Time) ->
 holds_at(inside(Physobj1, Physobj2), Time) ->
 	not(holds_at(inside(Physobj2, Physobj1), Time)).
 
-
 % 
 % 
 % ; An effect axiom states that if an agent puts a physical
@@ -1869,7 +1679,6 @@ holds_at(inside(Physobj1, Physobj2), Time) ->
 %           Inside(physobj1,physobj2),time).
 initiates(putInside(Agent, Physobj1, Physobj2), inside(Physobj1, Physobj2), Time).
 
-
 % 
 % 
 % ; An effect axiom states that if an agent puts a physical
@@ -1880,7 +1689,6 @@ initiates(putInside(Agent, Physobj1, Physobj2), inside(Physobj1, Physobj2), Time
 % Terminates(PutInside(agent,physobj1,physobj2),
 %            Holding(agent,physobj1),time).
 terminates(putInside(Agent, Physobj1, Physobj2), holding(Agent, Physobj1), Time).
-
 
 % 
 % 
@@ -1909,7 +1717,6 @@ terminates(putInside(Agent, Physobj1, Physobj2), holding(Agent, Physobj1), Time)
 %            Inside(physobj1,physobj2),time).
 terminates(takeOutOf(Agent, Physobj1, Physobj2), inside(Physobj1, Physobj2), Time).
 
-
 % 
 % 
 % ; A precondition axiom states that
@@ -1931,7 +1738,6 @@ terminates(takeOutOf(Agent, Physobj1, Physobj2), inside(Physobj1, Physobj2), Tim
 %  HoldsAt(At(physobj2,location),time).
 exists([Location],  (happens(takeOutOf(Agent, Physobj1, Physobj2), Time)->holds_at(inside(Physobj1, Physobj2), Time), holds_at(at(Agent, Location), Time), holds_at(at(Physobj1, Location), Time), holds_at(at(Physobj2, Location), Time))).
 
-
 % 
 % 
 % ; A releases axiom states that if an agent puts a physical
@@ -1943,7 +1749,6 @@ exists([Location],  (happens(takeOutOf(Agent, Physobj1, Physobj2), Time)->holds_
 % Releases(PutInside(agent,physobj1,physobj2),
 %          At(physobj1,location),time).
 releases(putInside(Agent, Physobj1, Physobj2), at(Physobj1, Location), Time).
-
 
 % 
 % 
@@ -1958,7 +1763,6 @@ releases(putInside(Agent, Physobj1, Physobj2), at(Physobj1, Location), Time).
 holds_at(inside(Physobj1, Physobj2), Time), holds_at(at(Physobj2, Location), Time) ->
 	holds_at(at(Physobj1, Location), Time).
 
-
 % 
 % 
 % ; An effect axiom states that if an agent takes a physical
@@ -1971,7 +1775,6 @@ holds_at(inside(Physobj1, Physobj2), Time), holds_at(at(Physobj2, Location), Tim
 %           time).
 initiates(takeOutOf(Agent, Physobj1, Physobj2), holding(Agent, Physobj1), Time).
 
-
 % 
 % 
 % ; On
@@ -1981,18 +1784,15 @@ initiates(takeOutOf(Agent, Physobj1, Physobj2), holding(Agent, Physobj1), Time).
 % fluent On(physobj,physobj)
 fluent(on(physobj, physobj)).
 
-
 % 
 % ; agent places physobj1 on physobj2.
 % event PlaceOn(agent,physobj,physobj)
 event(placeOn(agent, physobj, physobj)).
 
-
 % ectest/ec_reader_test_ecnet.e:1032
 % ; agent takes physobj1 off of physobj2.
 % event TakeOffOf(agent,physobj,physobj)
 event(takeOffOf(agent, physobj, physobj)).
-
 
 % 
 % ; A state constraint says that a physical object cannot
@@ -2003,7 +1803,6 @@ event(takeOffOf(agent, physobj, physobj)).
 % physobj1!=physobj2.
 holds_at(on(Physobj1, Physobj2), Time) ->
 	Physobj1\=Physobj2.
-
 
 % 
 % 
@@ -2017,7 +1816,6 @@ holds_at(on(Physobj1, Physobj2), Time) ->
 holds_at(on(Physobj1, Physobj2), Time) ->
 	not(holds_at(on(Physobj2, Physobj1), Time)).
 
-
 % 
 % 
 % ; An effect axiom states that if an agent places a physical
@@ -2029,7 +1827,6 @@ holds_at(on(Physobj1, Physobj2), Time) ->
 %           On(physobj1,physobj2),time).
 initiates(placeOn(Agent, Physobj1, Physobj2), on(Physobj1, Physobj2), Time).
 
-
 % 
 % 
 % ; An effect axiom states that if an agent places a physical
@@ -2040,7 +1837,6 @@ initiates(placeOn(Agent, Physobj1, Physobj2), on(Physobj1, Physobj2), Time).
 % Terminates(PlaceOn(agent,physobj1,physobj2),
 %            Holding(agent,physobj1),time).
 terminates(placeOn(Agent, Physobj1, Physobj2), holding(Agent, Physobj1), Time).
-
 
 % 
 % 
@@ -2069,7 +1865,6 @@ terminates(placeOn(Agent, Physobj1, Physobj2), holding(Agent, Physobj1), Time).
 %            On(physobj1,physobj2),time).
 terminates(takeOffOf(Agent, Physobj1, Physobj2), on(Physobj1, Physobj2), Time).
 
-
 % 
 % 
 % ; An effect axiom states that if an agent takes a physical
@@ -2080,7 +1875,6 @@ terminates(takeOffOf(Agent, Physobj1, Physobj2), on(Physobj1, Physobj2), Time).
 % Initiates(TakeOffOf(agent,physobj1,physobj2),
 %           Holding(agent,physobj1),time).
 initiates(takeOffOf(Agent, Physobj1, Physobj2), holding(Agent, Physobj1), Time).
-
 
 % 
 % 
@@ -2103,7 +1897,6 @@ initiates(takeOffOf(Agent, Physobj1, Physobj2), holding(Agent, Physobj1), Time).
 %  HoldsAt(At(physobj2,location),time).
 exists([Location],  (happens(takeOffOf(Agent, Physobj1, Physobj2), Time)->holds_at(on(Physobj1, Physobj2), Time), holds_at(at(Agent, Location), Time), holds_at(at(Physobj1, Location), Time), holds_at(at(Physobj2, Location), Time))).
 
-
 % 
 % 
 % ; A releases axiom states that if an agent places a physical
@@ -2116,7 +1909,6 @@ exists([Location],  (happens(takeOffOf(Agent, Physobj1, Physobj2), Time)->holds_
 %          At(physobj1,location),
 %          time).
 releases(placeOn(Agent, Physobj1, Physobj2), at(Physobj1, Location), Time).
-
 
 % 
 % 
@@ -2131,25 +1923,20 @@ releases(placeOn(Agent, Physobj1, Physobj2), at(Physobj1, Location), Time).
 holds_at(on(Physobj1, Physobj2), Time), holds_at(at(Physobj2, Location), Time) ->
 	holds_at(at(Physobj1, Location), Time).
 
-
 % 
 % 
 % fluent Near(agent,object)
 fluent(near(agent, object)).
 
-
 % ectest/ec_reader_test_ecnet.e:1125
 % event WalkFromTo(agent,object,object)
 event(walkFromTo(agent, object, object)).
 
-
 % event WalkFrom(agent,object)
 event(walkFrom(agent, object)).
 
-
 % event RunFromTo(agent,object,object)
 event(runFromTo(agent, object, object)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:1129
@@ -2159,7 +1946,6 @@ event(runFromTo(agent, object, object)).
 %           time).
 initiates(walkFromTo(Agent, Object1, Object2), near(Agent, Object2), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:1134
@@ -2168,7 +1954,6 @@ initiates(walkFromTo(Agent, Object1, Object2), near(Agent, Object2), Time).
 %            Near(agent,object1),
 %            time).
 terminates(walkFromTo(Agent, Object1, Object2), near(Agent, Object1), Time).
-
 
 % 
 % 
@@ -2182,7 +1967,6 @@ terminates(walkFromTo(Agent, Object1, Object2), near(Agent, Object1), Time).
 % HoldsAt(At(object2,location),time).
 exists([Location],  (happens(walkFromTo(Agent, Object1, Object2), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Object1, Location), Time), holds_at(at(Object2, Location), Time))).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:1146
@@ -2192,7 +1976,6 @@ exists([Location],  (happens(walkFromTo(Agent, Object1, Object2), Time)->holds_a
 %           time).
 initiates(runFromTo(Agent, Object1, Object2), near(Agent, Object2), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:1151
@@ -2201,7 +1984,6 @@ initiates(runFromTo(Agent, Object1, Object2), near(Agent, Object2), Time).
 %            Near(agent,object1),
 %            time).
 terminates(runFromTo(Agent, Object1, Object2), near(Agent, Object1), Time).
-
 
 % 
 % 
@@ -2215,7 +1997,6 @@ terminates(runFromTo(Agent, Object1, Object2), near(Agent, Object1), Time).
 % HoldsAt(At(object2,location),time).
 exists([Location],  (happens(runFromTo(Agent, Object1, Object2), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Object1, Location), Time), holds_at(at(Object2, Location), Time))).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:1163
@@ -2224,7 +2005,6 @@ exists([Location],  (happens(runFromTo(Agent, Object1, Object2), Time)->holds_at
 %            Near(agent,object),
 %            time).
 terminates(walkFrom(Agent, Object), near(Agent, Object), Time).
-
 
 % 
 % 
@@ -2238,7 +2018,6 @@ terminates(walkFrom(Agent, Object), near(Agent, Object), Time).
 % Happens(WalkFrom(agent,object),time).
 holds_at(near(Agent, Object), Time), holds_at(at(Agent, Location), Time), holds_at(at(Object, Location), Time), side1(Door)=Location, happens(walkThroughDoor12(Agent, Door), Time) ->
 	happens(walkFrom(Agent, Object), Time).
-
 
 % ectest/ec_reader_test_ecnet.e:1174
 % 
@@ -2254,7 +2033,6 @@ holds_at(near(Agent, Object), Time), holds_at(at(Agent, Location), Time), holds_
 holds_at(near(Agent, Object), Time), holds_at(at(Agent, Location), Time), holds_at(at(Object, Location), Time), side2(Door)=Location, happens(walkThroughDoor21(Agent, Door), Time) ->
 	happens(walkFrom(Agent, Object), Time).
 
-
 % ectest/ec_reader_test_ecnet.e:1182
 % 
 % 
@@ -2269,7 +2047,6 @@ holds_at(near(Agent, Object), Time), holds_at(at(Agent, Location), Time), holds_
 holds_at(near(Agent, Object), Time), holds_at(at(Agent, Room), Time), holds_at(at(Object, Room), Time), side1(Staircase)=Room, happens(walkUpStaircase(Agent, Staircase), Time) ->
 	happens(walkFrom(Agent, Object), Time).
 
-
 % ectest/ec_reader_test_ecnet.e:1190
 % 
 % 
@@ -2283,7 +2060,6 @@ holds_at(near(Agent, Object), Time), holds_at(at(Agent, Room), Time), holds_at(a
 % Happens(WalkFrom(agent,object),time).
 holds_at(near(Agent, Object), Time), holds_at(at(Agent, Room), Time), holds_at(at(Object, Room), Time), side2(Staircase)=Room, happens(walkDownStaircase(Agent, Staircase), Time) ->
 	happens(walkFrom(Agent, Object), Time).
-
 
 % ectest/ec_reader_test_ecnet.e:1198
 % 
@@ -2335,10 +2111,8 @@ holds_at(near(Agent, Object), Time), holds_at(at(Agent, Room), Time), holds_at(a
 % sort height: integer
 subsort(height, integer).
 
-
 % sort distance: integer
 subsort(distance, integer).
-
 
 % 
 % ; Height
@@ -2347,7 +2121,6 @@ subsort(distance, integer).
 % ectest/ec_reader_test_ecnet.e:1248
 % fluent Height(object,height)
 fluent(height(object, height)).
-
 
 % 
 % ; State constraint represent the fact that each
@@ -2360,7 +2133,6 @@ fluent(height(object, height)).
 holds_at(height(Object, Height1), Time), holds_at(height(Object, Height2), Time) ->
 	Height1=Height2.
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:1257
@@ -2369,7 +2141,6 @@ holds_at(height(Object, Height1), Time), holds_at(height(Object, Height2), Time)
 % {height}% 
 % HoldsAt(Height(object,height),time).
 exists([Height], holds_at(height(Object, Height), Time)).
-
 
 % 
 % 
@@ -2380,16 +2151,13 @@ exists([Height], holds_at(height(Object, Height), Time)).
 % fluent FallingFromTo(physobj,physobj,physobj)
 fluent(fallingFromTo(physobj, physobj, physobj)).
 
-
 % ; physobj1 starts falling from physobj2 to physobj3.
 % event StartFallingFromTo(physobj,physobj,physobj)
 event(startFallingFromTo(physobj, physobj, physobj)).
 
-
 % ; physobj1 collides with physobj2.
 % event CollideWith(physobj,physobj)
 event(collideWith(physobj, physobj)).
-
 
 % 
 % ; An effect axiom states that if a first physical object starts
@@ -2402,7 +2170,6 @@ event(collideWith(physobj, physobj)).
 %           FallingFromTo(physobj1,physobj2,physobj3),
 %           time).
 initiates(startFallingFromTo(Physobj1, Physobj2, Physobj3), fallingFromTo(Physobj1, Physobj2, Physobj3), Time).
-
 
 % 
 % 
@@ -2421,7 +2188,6 @@ initiates(startFallingFromTo(Physobj1, Physobj2, Physobj3), fallingFromTo(Physob
 happens(startFallingFromTo(Physobj1, Physobj2, Physobj3), Time), holds_at(height(Physobj1, Height1), Time), holds_at(height(Physobj2, Height2), Time) ->
 	Height1=Height2.
 
-
 % 
 % 
 % ; A state constraint says that a physical object
@@ -2438,7 +2204,6 @@ holds_at(fallingFromTo(Physobj1, Physobj2, Physobj3), Time) ->
 	Physobj1\=Physobj3,
 	Physobj2\=Physobj3.
 
-
 % 
 % 
 % ; A state constraint says that the sky cannot fall:
@@ -2446,7 +2211,6 @@ holds_at(fallingFromTo(Physobj1, Physobj2, Physobj3), Time) ->
 % [sky,physobj1,physobj2,time]% 
 % !HoldsAt(FallingFromTo(sky,physobj1,physobj2),time).
 not(holds_at(fallingFromTo(Sky, Physobj1, Physobj2), Time)).
-
 
 % 
 % 
@@ -2461,7 +2225,6 @@ not(holds_at(fallingFromTo(Sky, Physobj1, Physobj2), Time)).
 %          Height(physobj1,height),
 %          time).
 releases(startFallingFromTo(Physobj1, Physobj2, Physobj3), height(Physobj1, Height), Time).
-
 
 % 
 % 
@@ -2486,7 +2249,6 @@ holds_at(height(Physobj1, Height1), Time), Height2=Height1-Offset ->
 		   height(Physobj1, Height2),
 		   Offset).
 
-
 % 
 % 
 % ; A trigger axiom states that
@@ -2505,7 +2267,6 @@ holds_at(height(Physobj1, Height1), Time), Height2=Height1-Offset ->
 % Happens(CollideWith(physobj1,physobj3),time).
 holds_at(fallingFromTo(Physobj1, Physobj2, Physobj3), Time), holds_at(height(Physobj1, Height), Time), holds_at(height(Physobj3, Height), Time) ->
 	happens(collideWith(Physobj1, Physobj3), Time).
-
 
 % 
 % 
@@ -2527,7 +2288,6 @@ holds_at(fallingFromTo(Physobj1, Physobj2, Physobj3), Time) ->
 		  on(Physobj1, Physobj3),
 		  Time).
 
-
 % 
 % 
 % ; An effect axiom states that
@@ -2545,7 +2305,6 @@ holds_at(height(Physobj2, Height), Time) ->
 	initiates(collideWith(Physobj1, Physobj2),
 		  height(Physobj1, Height),
 		  Time).
-
 
 % 
 % 
@@ -2577,7 +2336,6 @@ holds_at(fallingFromTo(Physobj1, Physobj2, Physobj3), Time) ->
 		   fallingFromTo(Physobj1, Physobj2, Physobj3),
 		   Time).
 
-
 % 
 % 
 % ; flying
@@ -2587,17 +2345,14 @@ holds_at(fallingFromTo(Physobj1, Physobj2, Physobj3), Time) ->
 % fluent FlyingFromTo(agent,physobj,physobj)
 fluent(flyingFromTo(agent, physobj, physobj)).
 
-
 % ; agent starts flying from physobj1 to physobj2.
 % event StartFlyingFromTo(agent,physobj,physobj)
 event(startFlyingFromTo(agent, physobj, physobj)).
-
 
 % ; agent reaches physobj.
 % ectest/ec_reader_test_ecnet.e:1396
 % event Reach(agent,physobj)
 event(reach(agent, physobj)).
-
 
 % 
 % ; An effect axiom states that if an agent starts
@@ -2610,7 +2365,6 @@ event(reach(agent, physobj)).
 %           FlyingFromTo(agent,physobj1,physobj2),
 %           time).
 initiates(startFlyingFromTo(Agent, Physobj1, Physobj2), flyingFromTo(Agent, Physobj1, Physobj2), Time).
-
 
 % 
 % 
@@ -2628,7 +2382,6 @@ initiates(startFlyingFromTo(Agent, Physobj1, Physobj2), flyingFromTo(Agent, Phys
 happens(startFlyingFromTo(Agent, Physobj1, Physobj2), Time), holds_at(height(Agent, Height1), Time), holds_at(height(Physobj1, Height2), Time) ->
 	Height1=Height2.
 
-
 % 
 % 
 % ; A state constraint says that an agent
@@ -2639,7 +2392,6 @@ happens(startFlyingFromTo(Agent, Physobj1, Physobj2), Time), holds_at(height(Age
 % physobj1!=physobj2.
 holds_at(flyingFromTo(Agent, Physobj1, Physobj2), Time) ->
 	Physobj1\=Physobj2.
-
 
 % 
 % 
@@ -2653,7 +2405,6 @@ holds_at(flyingFromTo(Agent, Physobj1, Physobj2), Time) ->
 %          Height(agent,height),
 %          time).
 releases(startFlyingFromTo(Agent, Physobj1, Physobj2), height(Agent, Height), Time).
-
 
 % 
 % 
@@ -2678,7 +2429,6 @@ holds_at(height(Agent, Height1), Time), Height2=Height1+Offset ->
 		   height(Agent, Height2),
 		   Offset).
 
-
 % 
 % 
 % ; A trigger axiom states that
@@ -2697,7 +2447,6 @@ holds_at(height(Agent, Height1), Time), Height2=Height1+Offset ->
 holds_at(flyingFromTo(Agent, Physobj1, Physobj2), Time), holds_at(height(Agent, Height), Time), holds_at(height(Physobj2, Height), Time) ->
 	happens(reach(Agent, Physobj2), Time).
 
-
 % 
 % 
 % ; An effect axiom states that
@@ -2712,7 +2461,6 @@ holds_at(height(Physobj, Height), Time) ->
 	initiates(reach(Agent, Physobj),
 		  height(Agent, Height),
 		  Time).
-
 
 % 
 % 
@@ -2741,7 +2489,6 @@ holds_at(flyingFromTo(Agent, Physobj1, Physobj2), Time) ->
 		   flyingFromTo(Agent, Physobj1, Physobj2),
 		   Time).
 
-
 % 
 % 
 % ; A releases axiom states that
@@ -2751,7 +2498,6 @@ holds_at(flyingFromTo(Agent, Physobj1, Physobj2), Time) ->
 % [agent,physobj,height,time]% 
 % Releases(Hold(agent,physobj),Height(physobj,height),time).
 releases(hold(Agent, Physobj), height(Physobj, Height), Time).
-
 
 % 
 % 
@@ -2772,7 +2518,6 @@ not(exists([Object], partOf(Physobj, Object))), holds_at(height(Physobj, Height)
 		  height(Physobj, Height),
 		  Time).
 
-
 % 
 % 
 % ; A state constraint says that
@@ -2787,7 +2532,6 @@ not(exists([Object], partOf(Physobj, Object))), holds_at(height(Physobj, Height)
 holds_at(holding(Agent, Physobj), Time), holds_at(height(Agent, Height), Time) ->
 	holds_at(height(Physobj, Height), Time).
 
-
 % 
 % 
 % ; A state constraint says that if a physical object
@@ -2801,7 +2545,6 @@ holds_at(holding(Agent, Physobj), Time), holds_at(height(Agent, Height), Time) -
 % HoldsAt(Height(physobj,height),time).
 partOf(Physobj, Object), holds_at(height(Object, Height), Time) ->
 	holds_at(height(Physobj, Height), Time).
-
 
 % 
 % 
@@ -2887,16 +2630,13 @@ partOf(Physobj, Object), holds_at(height(Object, Height), Time) ->
 % sort coord: integer
 subsort(coord, integer).
 
-
 % sort grid
 sort(grid).
-
 
 % 
 % ; object is at (coord1, coord2) in grid.
 % fluent GridAt(grid,object,coord,coord)
 fluent(gridAt(grid, object, coord, coord)).
-
 
 % ectest/ec_reader_test_ecnet.e:1599
 % 
@@ -2904,7 +2644,6 @@ fluent(gridAt(grid, object, coord, coord)).
 % ; to (coord3, coord4) in grid.
 % event GridWalk(grid,agent,coord,coord,coord,coord)
 event(gridWalk(grid, agent, coord, coord, coord, coord)).
-
 
 % 
 % ; A state constraint says that for a given grid an
@@ -2918,7 +2657,6 @@ holds_at(gridAt(Grid, Object, Coord1, Coord2), Time), holds_at(gridAt(Grid, Obje
 	Coord1=Coord3,
 	Coord2=Coord4.
 
-
 % 
 % 
 % ; An effect axiom states that
@@ -2931,7 +2669,6 @@ holds_at(gridAt(Grid, Object, Coord1, Coord2), Time), holds_at(gridAt(Grid, Obje
 %           time).
 initiates(gridWalk(Grid, Agent, Coord1, Coord2, Coord3, Coord4), gridAt(Grid, Agent, Coord3, Coord4), Time).
 
-
 % 
 % 
 % ; An effect axiom states that
@@ -2943,7 +2680,6 @@ initiates(gridWalk(Grid, Agent, Coord1, Coord2, Coord3, Coord4), gridAt(Grid, Ag
 %            GridAt(grid,agent,coord1,coord2),
 %            time).
 terminates(gridWalk(Grid, Agent, Coord1, Coord2, Coord3, Coord4), gridAt(Grid, Agent, Coord1, Coord2), Time).
-
 
 % 
 % 
@@ -2981,7 +2717,6 @@ happens(gridWalk(Grid, Agent, Coord1, Coord2, Coord3, Coord4), Time) ->
 	;   Coord2=Coord4-1
 	).
 
-
 % ectest/ec_reader_test_ecnet.e:1641
 % 
 % 
@@ -3018,43 +2753,33 @@ happens(gridWalk(Grid, Agent, Coord1, Coord2, Coord3, Coord4), Time) ->
 % sort object
 sort(object).
 
-
 % sort xcoord: integer
 subsort(xcoord, integer).
-
 
 % sort ycoord: integer
 subsort(ycoord, integer).
 
-
 % sort grid
 sort(grid).
-
 
 % ectest/ec_reader_test_ecnet.e:1675
 % sort shape
 sort(shape).
 
-
 % sort color
 sort(color).
-
 
 % 
 % ; constants
 % shape Round,Square
 t(shape, round).
 
-
 t(shape, square).
-
 
 % color Red,Green
 t(color, red).
 
-
 t(color, green).
-
 
 % ectest/ec_reader_test_ecnet.e:1681
 % 
@@ -3062,23 +2787,18 @@ t(color, green).
 % predicate Equal(object,object)
 predicate(equal(object, object)).
 
-
 % predicate Shape(object,shape)
 predicate(shape(object, shape)).
-
 
 % predicate Color(object,color)
 predicate(color(object, color)).
 
-
 % fluent Location(grid,object,xcoord,ycoord)
 fluent(location(grid, object, xcoord, ycoord)).
-
 
 % ectest/ec_reader_test_ecnet.e:1687
 % event Move(grid,object,xcoord,ycoord,xcoord,ycoord)
 event(move(grid, object, xcoord, ycoord, xcoord, ycoord)).
-
 
 % 
 % ; axioms
@@ -3087,7 +2807,6 @@ event(move(grid, object, xcoord, ycoord, xcoord, ycoord)).
 % [object1,object2] % Equal(object1,object2) -> Equal(object2,object1).
 equal(Object1, Object2) ->
 	equal(Object2, Object1).
-
 
 % 
 % 
@@ -3099,7 +2818,6 @@ equal(Object1, Object2) ->
 shape(Object, Shape1), shape(Object, Shape2) ->
 	Shape1=Shape2.
 
-
 % 
 % 
 % ; objects have unique color
@@ -3109,7 +2827,6 @@ shape(Object, Shape1), shape(Object, Shape2) ->
 % color1=color2.
 color(Object, Color1), color(Object, Color2) ->
 	Color1=Color2.
-
 
 % 
 % 
@@ -3122,7 +2839,6 @@ equal(Object1, Object2) ->
 	exists([Shape],
 	       (shape(Object1, Shape), shape(Object2, Shape))).
 
-
 % 
 % 
 % ; if objects are the same, they have the same color
@@ -3133,7 +2849,6 @@ equal(Object1, Object2) ->
 equal(Object1, Object2) ->
 	exists([Color],
 	       (color(Object1, Color), color(Object2, Color))).
-
 
 % 
 % 
@@ -3148,7 +2863,6 @@ equal(Object1, Object2) ->
 	( holds_at(location(Grid, Object1, Xcoord1, Ycoord1), Time), holds_at(location(Grid, Object2, Xcoord2, Ycoord2), Time)->Xcoord1=Xcoord2, Ycoord1=Ycoord2
 	).
 
-
 % 
 % 
 % ; object in one location at a time
@@ -3161,7 +2875,6 @@ holds_at(location(Grid, Object, Xcoord1, Ycoord1), Time), holds_at(location(Grid
 	Xcoord1=Xcoord2,
 	Ycoord1=Ycoord2.
 
-
 % 
 % 
 % ; objects have locations
@@ -3171,7 +2884,6 @@ holds_at(location(Grid, Object, Xcoord1, Ycoord1), Time), holds_at(location(Grid
 % ectest/ec_reader_test_ecnet.e:1728
 % {xcoord,ycoord} HoldsAt(Location(grid,object,xcoord,ycoord),time)).
 exists([Xcoord, Ycoord], holds_at(location(Grid, Object, Xcoord, Ycoord), Time)).
-
 
 % 
 % 
@@ -3184,7 +2896,6 @@ exists([Xcoord, Ycoord], holds_at(location(Grid, Object, Xcoord, Ycoord), Time))
 holds_at(location(Grid, Object1, Xcoord1, Ycoord1), Time), holds_at(location(Grid, Object2, Xcoord1, Ycoord1), Time) ->
 	equal(Object1, Object2).
 
-
 % 
 % 
 % ; moving to a location causes an object to be at that location
@@ -3194,7 +2905,6 @@ holds_at(location(Grid, Object1, Xcoord1, Ycoord1), Time), holds_at(location(Gri
 %           Location(grid,object,xcoord2,ycoord2),
 %           time).
 initiates(move(Grid, Object, Xcoord1, Ycoord1, Xcoord2, Ycoord2), location(Grid, Object, Xcoord2, Ycoord2), Time).
-
 
 % 
 % 
@@ -3206,7 +2916,6 @@ initiates(move(Grid, Object, Xcoord1, Ycoord1, Xcoord2, Ycoord2), location(Grid,
 %            Location(grid,object,xcoord1,ycoord1),
 %            time).
 terminates(move(Grid, Object, Xcoord1, Ycoord1, Xcoord2, Ycoord2), location(Grid, Object, Xcoord1, Ycoord1), Time).
-
 
 % 
 % 
@@ -3242,7 +2951,6 @@ happens(move(Grid, Object, Xcoord1, Ycoord1, Xcoord2, Ycoord2), Time) ->
 	    )
 	).
 
-
 % 
 % 
 % ; End of file.
@@ -3270,7 +2978,6 @@ happens(move(Grid, Object, Xcoord1, Ycoord1, Xcoord2, Ycoord2), Time) ->
 % event HandTo(agent,agent,physobj)
 event(handTo(agent, agent, physobj)).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:1788
 % [agent1,agent2,physobj,time]% 
@@ -3278,7 +2985,6 @@ event(handTo(agent, agent, physobj)).
 %           Holding(agent2,physobj),
 %           time).
 initiates(handTo(Agent1, Agent2, Physobj), holding(Agent2, Physobj), Time).
-
 
 % 
 % 
@@ -3289,7 +2995,6 @@ initiates(handTo(Agent1, Agent2, Physobj), holding(Agent2, Physobj), Time).
 %            time).
 terminates(handTo(Agent1, Agent2, Physobj), holding(Agent1, Physobj), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:1798
@@ -3299,18 +3004,15 @@ terminates(handTo(Agent1, Agent2, Physobj), holding(Agent1, Physobj), Time).
 happens(handTo(Agent1, Agent2, Physobj), Time) ->
 	holds_at(holding(Agent1, Physobj), Time).
 
-
 % 
 % 
 % event ShakeHands(agent,agent)
 event(shakeHands(agent, agent)).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:1804
 % event WriteOn(agent,paper,pen)
 event(writeOn(agent, paper, pen)).
-
 
 % 
 % 
@@ -3343,7 +3045,6 @@ event(writeOn(agent, paper, pen)).
 happens(takeOutOf(Agent, Container1, Container2), Time) ->
 	holds_at(containerIsOpen(Container2), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:1831
@@ -3353,13 +3054,11 @@ happens(takeOutOf(Agent, Container1, Container2), Time) ->
 happens(putInside(Agent, Container1, Container2), Time) ->
 	holds_at(containerIsOpen(Container2), Time).
 
-
 % 
 % 
 % ; agent opens container.
 % event ContainerOpen(agent,container)
 event(containerOpen(agent, container)).
-
 
 % ectest/ec_reader_test_ecnet.e:1837
 % 
@@ -3367,22 +3066,18 @@ event(containerOpen(agent, container)).
 % event ContainerClose(agent,container)
 event(containerClose(agent, container)).
 
-
 % 
 % ; container is open.
 % fluent ContainerIsOpen(container)
 fluent(containerIsOpen(container)).
-
 
 % ectest/ec_reader_test_ecnet.e:1843
 % 
 % fluent ContainerClosed(container)
 fluent(containerClosed(container)).
 
-
 % noninertial ContainerClosed
 noninertial(containerClosed).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:1847
@@ -3391,7 +3086,6 @@ noninertial(containerClosed).
 % !HoldsAt(ContainerIsOpen(container),time).
 holds_at(containerClosed(Container), Time) <->
 	not(holds_at(containerIsOpen(Container), Time)).
-
 
 % 
 % 
@@ -3411,7 +3105,6 @@ happens(containerOpen(Agent, Container), Time) ->
 	not(holds_at(containerIsOpen(Container), Time)),
 	holds_at(holding(Agent, Container), Time).
 
-
 % 
 % 
 % ; An effect axiom states that
@@ -3421,7 +3114,6 @@ happens(containerOpen(Agent, Container), Time) ->
 % [agent,container,time]% 
 % Initiates(ContainerOpen(agent,container),ContainerIsOpen(container),time).
 initiates(containerOpen(Agent, Container), containerIsOpen(Container), Time).
-
 
 % 
 % 
@@ -3441,7 +3133,6 @@ happens(containerClose(Agent, Container), Time) ->
 	holds_at(containerIsOpen(Container), Time),
 	holds_at(holding(Agent, Container), Time).
 
-
 % 
 % 
 % ; An effect axiom states that
@@ -3451,7 +3142,6 @@ happens(containerClose(Agent, Container), Time) ->
 % [agent,container,time]% 
 % Terminates(ContainerClose(agent,container),ContainerIsOpen(container),time).
 terminates(containerClose(Agent, Container), containerIsOpen(Container), Time).
-
 
 % 
 % 
@@ -3499,12 +3189,10 @@ terminates(containerClose(Agent, Container), containerIsOpen(Container), Time).
 % event InviteIn(agent,agent,room)
 event(inviteIn(agent, agent, room)).
 
-
 % ; agent1 is invited into room by agent2.
 % ectest/ec_reader_test_ecnet.e:1926
 % fluent InvitedIn(agent,room,agent)
 fluent(invitedIn(agent, room, agent)).
-
 
 % 
 % ; A precondition axiom states that for
@@ -3523,7 +3211,6 @@ fluent(invitedIn(agent, room, agent)).
 % Adjacent(room,outside).
 exists([Outside],  (happens(inviteIn(Agent1, Agent2, Room), Time)->holds_at(at(Agent1, Room), Time), holds_at(at(Agent2, Outside), Time), adjacent(Room, Outside))).
 
-
 % 
 % 
 % ; An effect axiom states that if
@@ -3536,7 +3223,6 @@ exists([Outside],  (happens(inviteIn(Agent1, Agent2, Room), Time)->holds_at(at(A
 %           time).
 initiates(inviteIn(Agent1, Agent2, Room), invitedIn(Agent2, Room, Agent1), Time).
 
-
 % 
 % 
 % ; agent intends to walk into room.
@@ -3544,20 +3230,16 @@ initiates(inviteIn(Agent1, Agent2, Room), invitedIn(Agent2, Room, Agent1), Time)
 % event IntendToWalkIn(agent,room)
 event(intendToWalkIn(agent, room)).
 
-
 % ; agent has the intention to walk into room.
 % fluent IntentionToWalkIn(agent,room)
 fluent(intentionToWalkIn(agent, room)).
-
 
 % ; agent acts on the intention to walk into room.
 % fluent ActOnIntentionToWalkIn(agent,room)
 fluent(actOnIntentionToWalkIn(agent, room)).
 
-
 % noninertial ActOnIntentionToWalkIn
 noninertial(actOnIntentionToWalkIn).
-
 
 % ectest/ec_reader_test_ecnet.e:1956
 % 
@@ -3576,7 +3258,6 @@ noninertial(actOnIntentionToWalkIn).
 holds_at(invitedIn(Agent1, Room, Agent2), Time), holds_at(like(Agent1, Agent2), Time), not(holds_at(intentionToWalkIn(Agent1, Room), Time)) ->
 	happens(intendToWalkIn(Agent1, Room), Time).
 
-
 % 
 % 
 % ; An effect axiom states that
@@ -3588,7 +3269,6 @@ holds_at(invitedIn(Agent1, Room, Agent2), Time), holds_at(like(Agent1, Agent2), 
 %           IntentionToWalkIn(agent,room),
 %           time).
 initiates(intendToWalkIn(Agent, Room), intentionToWalkIn(Agent, Room), Time).
-
 
 % 
 % 
@@ -3610,7 +3290,6 @@ initiates(intendToWalkIn(Agent, Room), intentionToWalkIn(Agent, Room), Time).
 holds_at(intentionToWalkIn(Agent, Room), Time), holds_at(actOnIntentionToWalkIn(Agent, Room), Time), holds_at(at(Agent, Location), Time), side1(Door)=Room, side2(Door)=Location ->
 	happens(walkThroughDoor21(Agent, Door), Time).
 
-
 % ectest/ec_reader_test_ecnet.e:1990
 % 
 % 
@@ -3624,7 +3303,6 @@ holds_at(intentionToWalkIn(Agent, Room), Time), holds_at(actOnIntentionToWalkIn(
 % Happens(WalkThroughDoor12(agent,door),time).
 holds_at(intentionToWalkIn(Agent, Room), Time), holds_at(actOnIntentionToWalkIn(Agent, Room), Time), holds_at(at(Agent, Location), Time), side2(Door)=Room, side1(Door)=Location ->
 	happens(walkThroughDoor12(Agent, Door), Time).
-
 
 % ectest/ec_reader_test_ecnet.e:1998
 % 
@@ -3645,7 +3323,6 @@ side1(Door)=Room ->
 		   intentionToWalkIn(Agent, Room),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2011
@@ -3659,7 +3336,6 @@ side2(Door)=Room ->
 		   intentionToWalkIn(Agent, Room),
 		   Time).
 
-
 % 
 % 
 % ; agent greets object.
@@ -3667,28 +3343,23 @@ side2(Door)=Room ->
 % event Greet(agent,object)
 event(greet(agent, object)).
 
-
 % 
 % event SayPleasedToMeet(agent,agent)
 event(sayPleasedToMeet(agent, agent)).
-
 
 % 
 % ; agent says goodbye to object.
 % event SayGoodbye(agent,object)
 event(sayGoodbye(agent, object)).
 
-
 % ectest/ec_reader_test_ecnet.e:2024
 % 
 % event TalkAbout(agent,content)
 event(talkAbout(agent, content)).
 
-
 % 
 % event Converse(agent,agent)
 event(converse(agent, agent)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2029
@@ -3699,7 +3370,6 @@ event(converse(agent, agent)).
 % HoldsAt(At(agent1,location),time) &
 % HoldsAt(At(agent2,location),time).
 exists([Location],  (happens(converse(Agent1, Agent2), Time)->holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
-
 
 % 
 % 
@@ -3717,7 +3387,6 @@ exists([Location],  (happens(converse(Agent1, Agent2), Time)->holds_at(at(Agent1
 % HoldsAt(At(object,location),time).
 exists([Location],  (happens(greet(Agent, Object), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Object, Location), Time))).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2046
@@ -3729,7 +3398,6 @@ exists([Location],  (happens(greet(Agent, Object), Time)->holds_at(at(Agent, Loc
 % HoldsAt(At(object,location),time).
 exists([Location],  (happens(sayGoodbye(Agent, Object), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Object, Location), Time))).
 
-
 % 
 % 
 % ; speech: expression of emotions
@@ -3738,7 +3406,6 @@ exists([Location],  (happens(sayGoodbye(Agent, Object), Time)->holds_at(at(Agent
 % ectest/ec_reader_test_ecnet.e:2055
 % event CryForJoy(agent)
 event(cryForJoy(agent)).
-
 
 % 
 % ; A precondition axiom states that for
@@ -3751,23 +3418,19 @@ event(cryForJoy(agent)).
 happens(cryForJoy(Agent), Time) ->
 	holds_at(happy(Agent), Time).
 
-
 % 
 % 
 % event Threaten(agent,agent,weapon)
 event(threaten(agent, agent, weapon)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2066
 % event ReleaseFromThreat(agent,agent)
 event(releaseFromThreat(agent, agent)).
 
-
 % 
 % fluent ThreatenedBy(agent,agent)
 fluent(threatenedBy(agent, agent)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2070
@@ -3780,7 +3443,6 @@ fluent(threatenedBy(agent, agent)).
 % HoldsAt(At(agent2,location),time).
 exists([Location],  (happens(threaten(Agent1, Agent2, Weapon), Time)->holds_at(holding(Agent1, Weapon), Time), holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2077
@@ -3789,7 +3451,6 @@ exists([Location],  (happens(threaten(Agent1, Agent2, Weapon), Time)->holds_at(h
 % Happens(BecomeAngryAt(agent2,agent1),time).
 happens(threaten(Agent1, Agent2, Weapon), Time) ->
 	happens(becomeAngryAt(Agent2, Agent1), Time).
-
 
 % 
 % 
@@ -3800,7 +3461,6 @@ happens(threaten(Agent1, Agent2, Weapon), Time) ->
 %           time).
 initiates(threaten(Agent1, Agent2, Weapon), threatenedBy(Agent2, Agent1), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2086
@@ -3810,18 +3470,15 @@ initiates(threaten(Agent1, Agent2, Weapon), threatenedBy(Agent2, Agent1), Time).
 %            time).
 terminates(releaseFromThreat(Agent1, Agent2), threatenedBy(Agent2, Agent1), Time).
 
-
 % 
 % 
 % event Order(agent,agent,physobj)
 event(order(agent, agent, physobj)).
 
-
 % ectest/ec_reader_test_ecnet.e:2092
 % 
 % fluent KnowOrder(agent,agent,physobj)
 fluent(knowOrder(agent, agent, physobj)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2095
@@ -3830,7 +3487,6 @@ fluent(knowOrder(agent, agent, physobj)).
 %           KnowOrder(agent2,agent1,physobj),
 %           time).
 initiates(order(Agent1, Agent2, Physobj), knowOrder(Agent2, Agent1, Physobj), Time).
-
 
 % 
 % 
@@ -3843,18 +3499,15 @@ initiates(order(Agent1, Agent2, Physobj), knowOrder(Agent2, Agent1, Physobj), Ti
 % HoldsAt(At(agent2,location),time).
 exists([Location],  (happens(order(Agent1, Agent2, Physobj), Time)->holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
 
-
 % 
 % 
 % event Request(agent,agent,physobj)
 event(request(agent, agent, physobj)).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:2108
 % fluent KnowRequest(agent,agent,physobj)
 fluent(knowRequest(agent, agent, physobj)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2110
@@ -3863,7 +3516,6 @@ fluent(knowRequest(agent, agent, physobj)).
 %           KnowRequest(agent2,agent1,physobj),
 %           time).
 initiates(request(Agent1, Agent2, Physobj), knowRequest(Agent2, Agent1, Physobj), Time).
-
 
 % 
 % 
@@ -3875,7 +3527,6 @@ initiates(request(Agent1, Agent2, Physobj), knowRequest(Agent2, Agent1, Physobj)
 % HoldsAt(At(agent1,location),time) &
 % HoldsAt(At(agent2,location),time).
 exists([Location],  (happens(request(Agent1, Agent2, Physobj), Time)->holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
-
 
 % 
 % 
@@ -3919,19 +3570,16 @@ exists([Location],  (happens(request(Agent1, Agent2, Physobj), Time)->holds_at(a
 % event WakeUp(agent)
 event(wakeUp(agent)).
 
-
 % 
 % ; agent gets tired.
 % ectest/ec_reader_test_ecnet.e:2159
 % event GetTired(agent)
 event(getTired(agent)).
 
-
 % 
 % ; agent falls asleep.
 % event FallAsleep(agent)
 event(fallAsleep(agent)).
-
 
 % 
 % ; agent is asleep.
@@ -3939,44 +3587,36 @@ event(fallAsleep(agent)).
 % fluent Sleep0(agent)
 fluent(sleep0(agent)).
 
-
 % ; agent is awake and in bed.
 % fluent Sleep1(agent)
 fluent(sleep1(agent)).
 
-
 % ; agent is awake, out of bed, and undressed.
 % fluent Sleep2(agent)
 fluent(sleep2(agent)).
-
 
 % ; agent is awake and dressed.
 % ectest/ec_reader_test_ecnet.e:2171
 % fluent Sleep3(agent)
 fluent(sleep3(agent)).
 
-
 % ; agent is tired and dressed.
 % fluent Sleep4(agent)
 fluent(sleep4(agent)).
 
-
 % ; agent is tired and undressed.
 % fluent Sleep5(agent)
 fluent(sleep5(agent)).
-
 
 % ; agent is in bed, waiting to fall asleep.
 % ectest/ec_reader_test_ecnet.e:2177
 % fluent Sleep6(agent)
 fluent(sleep6(agent)).
 
-
 % 
 % ; At any time, an agent is in one of seven sleep states:
 % xor Sleep0, Sleep1, Sleep2, Sleep3, Sleep4, Sleep5, Sleep6
 xor([sleep0, sleep1, sleep2, sleep3, sleep4, sleep5, sleep6]).
-
 
 % 
 % ; constraints
@@ -3986,20 +3626,16 @@ xor([sleep0, sleep1, sleep2, sleep3, sleep4, sleep5, sleep6]).
 % fluent Asleep(agent)
 fluent(asleep(agent)).
 
-
 % ; agent is awake.
 % fluent Awake(agent)
 fluent(awake(agent)).
 
-
 % noninertial Asleep
 noninertial(asleep).
-
 
 % ectest/ec_reader_test_ecnet.e:2189
 % noninertial Awake
 noninertial(awake).
-
 
 % 
 % ; Sleep0 indicates that the agent is asleep:
@@ -4007,7 +3643,6 @@ noninertial(awake).
 % [agent,time] % HoldsAt(Asleep(agent),time) <-> HoldsAt(Sleep0(agent),time).
 holds_at(asleep(Agent), Time) <->
 	holds_at(sleep0(Agent), Time).
-
 
 % 
 % 
@@ -4030,7 +3665,6 @@ holds_at(awake(Agent), Time) <->
 	;   holds_at(sleep6(Agent), Time)
 	).
 
-
 % ectest/ec_reader_test_ecnet.e:2202
 % 
 % 
@@ -4044,13 +3678,11 @@ holds_at(awake(Agent), Time) <->
 % [agent,time] % Terminates(WakeUp(agent),Sleep0(agent),time).
 terminates(wakeUp(Agent), sleep0(Agent), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2212
 % [agent,time] % Initiates(WakeUp(agent),Sleep1(agent),time).
 initiates(wakeUp(Agent), sleep1(Agent), Time).
-
 
 % 
 % 
@@ -4058,7 +3690,6 @@ initiates(wakeUp(Agent), sleep1(Agent), Time).
 % [agent,time] % Happens(WakeUp(agent),time) -> HoldsAt(Sleep0(agent),time).
 happens(wakeUp(Agent), Time) ->
 	holds_at(sleep0(Agent), Time).
-
 
 % 
 % 
@@ -4070,13 +3701,11 @@ happens(wakeUp(Agent), Time) ->
 % [agent,bed,time] % Terminates(RiseFrom(agent,bed),Sleep1(agent),time).
 terminates(riseFrom(Agent, Bed), sleep1(Agent), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2222
 % [agent,bed,time] % Initiates(RiseFrom(agent,bed),Sleep2(agent),time).
 initiates(riseFrom(Agent, Bed), sleep2(Agent), Time).
-
 
 % 
 % 
@@ -4085,7 +3714,6 @@ initiates(riseFrom(Agent, Bed), sleep2(Agent), Time).
 % Happens(RiseFrom(agent,bed),time) -> HoldsAt(Sleep1(agent),time).
 happens(riseFrom(Agent, Bed), Time) ->
 	holds_at(sleep1(Agent), Time).
-
 
 % 
 % 
@@ -4097,13 +3725,11 @@ happens(riseFrom(Agent, Bed), Time) ->
 % [agent,time] % Terminates(GetDressed(agent),Sleep2(agent),time).
 terminates(getDressed(Agent), sleep2(Agent), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2233
 % [agent,time] % Initiates(GetDressed(agent),Sleep3(agent),time).
 initiates(getDressed(Agent), sleep3(Agent), Time).
-
 
 % 
 % 
@@ -4111,7 +3737,6 @@ initiates(getDressed(Agent), sleep3(Agent), Time).
 % [agent,time] % Happens(GetDressed(agent),time) -> HoldsAt(Sleep2(agent),time).
 happens(getDressed(Agent), Time) ->
 	holds_at(sleep2(Agent), Time).
-
 
 % 
 % 
@@ -4123,13 +3748,11 @@ happens(getDressed(Agent), Time) ->
 % [agent,time] % Terminates(GetTired(agent),Sleep3(agent),time).
 terminates(getTired(Agent), sleep3(Agent), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2243
 % [agent,time] % Initiates(GetTired(agent),Sleep4(agent),time).
 initiates(getTired(Agent), sleep4(Agent), Time).
-
 
 % 
 % 
@@ -4137,7 +3760,6 @@ initiates(getTired(Agent), sleep4(Agent), Time).
 % [agent,time] % Happens(GetTired(agent),time) -> HoldsAt(Sleep3(agent),time).
 happens(getTired(Agent), Time) ->
 	holds_at(sleep3(Agent), Time).
-
 
 % 
 % 
@@ -4149,13 +3771,11 @@ happens(getTired(Agent), Time) ->
 % [agent,time] % Terminates(GetUndressed(agent),Sleep4(agent),time).
 terminates(getUndressed(Agent), sleep4(Agent), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2253
 % [agent,time] % Initiates(GetUndressed(agent),Sleep5(agent),time).
 initiates(getUndressed(Agent), sleep5(Agent), Time).
-
 
 % 
 % 
@@ -4163,7 +3783,6 @@ initiates(getUndressed(Agent), sleep5(Agent), Time).
 % [agent,time] % Happens(GetUndressed(agent),time) -> HoldsAt(Sleep4(agent),time).
 happens(getUndressed(Agent), Time) ->
 	holds_at(sleep4(Agent), Time).
-
 
 % 
 % 
@@ -4175,13 +3794,11 @@ happens(getUndressed(Agent), Time) ->
 % [agent,bed,time] % Terminates(LieOn(agent,bed),Sleep5(agent),time).
 terminates(lieOn(Agent, Bed), sleep5(Agent), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2263
 % [agent,bed,time] % Initiates(LieOn(agent,bed),Sleep6(agent),time).
 initiates(lieOn(Agent, Bed), sleep6(Agent), Time).
-
 
 % 
 % 
@@ -4189,7 +3806,6 @@ initiates(lieOn(Agent, Bed), sleep6(Agent), Time).
 % [agent,bed,time] % Happens(LieOn(agent,bed),time) -> HoldsAt(Sleep5(agent),time).
 happens(lieOn(Agent, Bed), Time) ->
 	holds_at(sleep5(Agent), Time).
-
 
 % 
 % 
@@ -4201,13 +3817,11 @@ happens(lieOn(Agent, Bed), Time) ->
 % [agent,time] % Terminates(FallAsleep(agent),Sleep6(agent),time).
 terminates(fallAsleep(Agent), sleep6(Agent), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2273
 % [agent,time] % Initiates(FallAsleep(agent),Sleep0(agent),time).
 initiates(fallAsleep(Agent), sleep0(Agent), Time).
-
 
 % 
 % 
@@ -4215,7 +3829,6 @@ initiates(fallAsleep(Agent), sleep0(Agent), Time).
 % [agent,time] % Happens(FallAsleep(agent),time) -> HoldsAt(Sleep6(agent),time).
 happens(fallAsleep(Agent), Time) ->
 	holds_at(sleep6(Agent), Time).
-
 
 % 
 % 
@@ -4225,11 +3838,9 @@ happens(fallAsleep(Agent), Time) ->
 % fluent ActOnSleep5(agent)
 fluent(actOnSleep5(agent)).
 
-
 % ectest/ec_reader_test_ecnet.e:2281
 % noninertial ActOnSleep5
 noninertial(actOnSleep5).
-
 
 % 
 % ; We reduce the number of models by asserting that
@@ -4241,7 +3852,6 @@ noninertial(actOnSleep5).
 % !HoldsAt(ActOnSleep5(agent),time).
 not(holds_at(sleep5(Agent), Time)) ->
 	not(holds_at(actOnSleep5(Agent), Time)).
-
 
 % 
 % 
@@ -4261,7 +3871,6 @@ not(holds_at(sleep5(Agent), Time)) ->
 % Happens(LieOn(agent,bed),time).
 holds_at(sleep5(Agent), Time), holds_at(actOnSleep5(Agent), Time), holds_at(at(Agent, Room), Time), holds_at(at(Bed, Room), Time) ->
 	happens(lieOn(Agent, Bed), Time).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2302
@@ -4283,7 +3892,6 @@ holds_at(sleep5(Agent), Time), holds_at(actOnSleep5(Agent), Time), holds_at(at(A
 %  HoldsAt(At(bed,room),time).
 exists([Room],  (happens(lieOn(Agent, Bed), Time)->holds_at(sleep5(Agent), Time), holds_at(actOnSleep5(Agent), Time), holds_at(at(Agent, Room), Time), holds_at(at(Bed, Room), Time))).
 
-
 % 
 % 
 % ; (body) posture
@@ -4293,12 +3901,10 @@ exists([Room],  (happens(lieOn(Agent, Bed), Time)->holds_at(sleep5(Agent), Time)
 % event LieOn(agent,physobj)
 event(lieOn(agent, physobj)).
 
-
 % 
 % ; agent sits on physobj.
 % event SitOn(agent,physobj)
 event(sitOn(agent, physobj)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2325
@@ -4310,13 +3916,11 @@ event(sitOn(agent, physobj)).
 %  HoldsAt(At(physobj,location),time).
 exists([Location],  (happens(sitOn(Agent, Physobj), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Physobj, Location), Time))).
 
-
 % 
 % 
 % ; agent rises from physobj.
 % event RiseFrom(agent,physobj)
 event(riseFrom(agent, physobj)).
-
 
 % ectest/ec_reader_test_ecnet.e:2333
 % 
@@ -4324,43 +3928,35 @@ event(riseFrom(agent, physobj)).
 % fluent LyingOn(agent,physobj)
 fluent(lyingOn(agent, physobj)).
 
-
 % ; agent is sitting on physobj.
 % fluent SittingOn(agent,physobj)
 fluent(sittingOn(agent, physobj)).
-
 
 % ; agent is standing.
 % ectest/ec_reader_test_ecnet.e:2339
 % fluent Standing(agent)
 fluent(standing(agent)).
 
-
 % 
 % ; agent is lying down.
 % fluent Lying(agent)
 fluent(lying(agent)).
 
-
 % ; agent is sitting.
 % fluent Sitting(agent)
 fluent(sitting(agent)).
-
 
 % ectest/ec_reader_test_ecnet.e:2345
 % noninertial Lying
 noninertial(lying).
 
-
 % noninertial Sitting
 noninertial(sitting).
-
 
 % 
 % ; At any time, an agent is either lying, sitting, or standing:
 % xor Lying, Sitting, Standing
 xor([lying, sitting, standing]).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2351
@@ -4370,7 +3966,6 @@ xor([lying, sitting, standing]).
 holds_at(lyingOn(Agent, Physobj), Time) ->
 	holds_at(lying(Agent), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2355
@@ -4379,7 +3974,6 @@ holds_at(lyingOn(Agent, Physobj), Time) ->
 % HoldsAt(Sitting(agent),time).
 holds_at(sittingOn(Agent, Physobj), Time) ->
 	holds_at(sitting(Agent), Time).
-
 
 % 
 % 
@@ -4393,7 +3987,6 @@ holds_at(sittingOn(Agent, Physobj), Time) ->
 holds_at(lyingOn(Agent, Physobj1), Time), holds_at(lyingOn(Agent, Physobj2), Time) ->
 	Physobj1=Physobj2.
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2366
@@ -4403,7 +3996,6 @@ holds_at(lyingOn(Agent, Physobj1), Time), holds_at(lyingOn(Agent, Physobj2), Tim
 % physobj1=physobj2.
 holds_at(sittingOn(Agent, Physobj1), Time), holds_at(sittingOn(Agent, Physobj2), Time) ->
 	Physobj1=Physobj2.
-
 
 % 
 % 
@@ -4421,7 +4013,6 @@ holds_at(standing(Agent), Time) ->
 		  lyingOn(Agent, Physobj),
 		  Time).
 
-
 % 
 % 
 % ; An effect axiom states that if an agent
@@ -4433,7 +4024,6 @@ holds_at(standing(Agent), Time) ->
 %            Standing(agent),
 %            time).
 terminates(lieOn(Agent, Physobj), standing(Agent), Time).
-
 
 % 
 % 
@@ -4451,7 +4041,6 @@ holds_at(standing(Agent), Time) ->
 		  sittingOn(Agent, Physobj),
 		  Time).
 
-
 % 
 % 
 % ; An effect axiom states that if an agent
@@ -4463,7 +4052,6 @@ holds_at(standing(Agent), Time) ->
 %            Standing(agent),
 %            time).
 terminates(sitOn(Agent, Physobj), standing(Agent), Time).
-
 
 % 
 % 
@@ -4483,7 +4071,6 @@ holds_at(sittingOn(Agent, Physobj), Time);holds_at(lyingOn(Agent, Physobj), Time
 		  standing(Agent),
 		  Time).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:2415
 % 
@@ -4502,7 +4089,6 @@ holds_at(sittingOn(Agent, Physobj), Time) ->
 		   sittingOn(Agent, Physobj),
 		   Time).
 
-
 % 
 % 
 % ; An effect axiom states that if an agent is lying on
@@ -4520,7 +4106,6 @@ holds_at(lyingOn(Agent, Physobj), Time) ->
 		   lyingOn(Agent, Physobj),
 		   Time).
 
-
 % 
 % 
 % ; dressing
@@ -4530,17 +4115,14 @@ holds_at(lyingOn(Agent, Physobj), Time) ->
 % event GetDressed(agent)
 event(getDressed(agent)).
 
-
 % ; agent gets dressed.
 % event GetUndressed(agent)
 event(getUndressed(agent)).
-
 
 % ; agent is dressed.
 % ectest/ec_reader_test_ecnet.e:2443
 % fluent Dressed(agent)
 fluent(dressed(agent)).
-
 
 % 
 % ; Effect axioms deal with getting dressed and undressed:
@@ -4548,12 +4130,10 @@ fluent(dressed(agent)).
 % [agent,time] % Initiates(GetDressed(agent),Dressed(agent),time).
 initiates(getDressed(Agent), dressed(Agent), Time).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:2447
 % [agent,time] % Terminates(GetUndressed(agent),Dressed(agent),time).
 terminates(getUndressed(Agent), dressed(Agent), Time).
-
 
 % 
 % 
@@ -4591,116 +4171,98 @@ terminates(getUndressed(Agent), dressed(Agent), Time).
 % option modeldiff on
 option(modeldiff, on).
 
-
 % 
 % ignore Love, ThreatenedBy
-ignore([love, threatenedBy]).
+ignore(love).
 
+ignore(threatenedBy).
 
 % ignore LookOutOnto, Floor, BuildingOf, SkyOf, GroundOf
-ignore([lookOutOnto, floor, buildingOf, skyOf, groundOf]).
+ignore(lookOutOnto).
 
+ignore(floor).
+
+ignore(buildingOf).
+
+ignore(skyOf).
+
+ignore(groundOf).
 
 % ignore Inside, Near
-ignore([inside, near]).
+ignore(inside).
 
+ignore(near).
 
 % ectest/ec_reader_test_ecnet.e:2483
 % ignore See
 ignore(see).
 
-
 % 
 % ignore ActOnSleep5
 ignore(actOnSleep5).
-
 
 % 
 % option renaming off
 option(renaming, off).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:2489
 % load foundations/Root.e
-% loading('foundations/Root.e').
+load('foundations/Root.e').
 
-
-% ectest/ec_reader_test_ecnet.e:2490
-% translate: unskipped  File: on_load_ele 
-% ectest/ec_reader_test_ecnet.e:2490
-% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-% loading('foundations/EC.e').
+load('foundations/EC.e').
 
-
-% ectest/ec_reader_test_ecnet.e:2491
-% translate: unskipped  File: on_load_ele 
-% ectest/ec_reader_test_ecnet.e:2491
-% translate: ready  File: on_load_ele 
 % load answers/Mueller2003/Ontology.e
 load('answers/Mueller2003/Ontology.e').
-
 
 % load answers/Mueller2004c/RTSpaceM.e
 load('answers/Mueller2004c/RTSpaceM.e').
 
-
 % load answers/Mueller2004c/OTSpaceM.e
 load('answers/Mueller2004c/OTSpaceM.e').
-
 
 % load answers/Mueller2004c/Cognition.e
 load('answers/Mueller2004c/Cognition.e').
 
-
+% ectest/ec_reader_test_ecnet.e:2495
 % load answers/Mueller2003/Sleep.e
 load('answers/Mueller2003/Sleep.e').
 
-
 % 
-% ectest/ec_reader_test_ecnet.e:2497
 % door Door1
 t(door, door1).
-
 
 % 
 % room Room0
 t(room, room0).
 
-
 % 
+% ectest/ec_reader_test_ecnet.e:2501
 % room Room1
 t(room, room1).
 
-
 % 
-% ectest/ec_reader_test_ecnet.e:2503
 % Side1(Door1)=Room0.
 side1(door1)=room0.
-
 
 % 
 % Side2(Door1)=Room1.
 side2(door1)=room1.
-
 
 % 
 % 
 % agent Sleeper1
 t(agent, sleeper1).
 
-
+% ectest/ec_reader_test_ecnet.e:2507
 % 
 % bed Bed1
 t(bed, bed1).
 
-
-% ectest/ec_reader_test_ecnet.e:2509
 % 
 % outside Outside1
 t(outside, outside1).
-
 
 % 
 % ; initial state
@@ -4708,59 +4270,48 @@ t(outside, outside1).
 % [agent,object] % !HoldsAt(Holding(agent,object),0).
 not(holds_at(holding(Agent, Object), 0)).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:2514
 % [agent,physobj] % !HoldsAt(SittingOn(agent,physobj),0).
 not(holds_at(sittingOn(Agent, Physobj), 0)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2515
 % [agent,physobj] % !HoldsAt(LyingOn(agent,physobj),0).
 not(holds_at(lyingOn(Agent, Physobj), 0)).
 
-
 % 
 % HoldsAt(Dressed(Sleeper1),0).
 holds_at(dressed(sleeper1), 0).
-
 
 % 
 % HoldsAt(Awake(Sleeper1),0).
 holds_at(awake(sleeper1), 0).
 
-
 % 
 % HoldsAt(Sleep3(Sleeper1),0).
 holds_at(sleep3(sleeper1), 0).
-
 
 % 
 % HoldsAt(Standing(Sleeper1),0).
 holds_at(standing(sleeper1), 0).
 
-
 % 
 % HoldsAt(DoorUnlocked(Door1),0).
 holds_at(doorUnlocked(door1), 0).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2521
 % HoldsAt(DoorIsOpen(Door1),0).
 holds_at(doorIsOpen(door1), 0).
 
-
 % 
 % HoldsAt(At(Sleeper1,Room0),0).
 holds_at(at(sleeper1, room0), 0).
 
-
 % 
 % HoldsAt(At(Bed1,Room1),0).
 holds_at(at(bed1, room1), 0).
-
 
 % 
 % 
@@ -4768,73 +4319,59 @@ holds_at(at(bed1, room1), 0).
 % Happens(GetTired(Sleeper1),0).
 happens(getTired(sleeper1), 0).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:2527
 % Happens(WalkThroughDoor12(Sleeper1,Door1),1).
 happens(walkThroughDoor12(sleeper1, door1), 1).
 
-
 % 
 % Happens(GetUndressed(Sleeper1),2).
 happens(getUndressed(sleeper1), 2).
-
 
 % 
 % Happens(LieOn(Sleeper1,Bed1),3).
 happens(lieOn(sleeper1, bed1), 3).
 
-
 % 
 % Happens(FallAsleep(Sleeper1),4).
 happens(fallAsleep(sleeper1), 4).
-
 
 % 
 % Happens(Dream(Sleeper1),5).
 happens(dream(sleeper1), 5).
 
-
 % 
 % Happens(WakeUp(Sleeper1),6).
 happens(wakeUp(sleeper1), 6).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2533
 % Happens(RiseFrom(Sleeper1,Bed1),7).
 happens(riseFrom(sleeper1, bed1), 7).
 
-
 % 
 % Happens(GetDressed(Sleeper1),8).
 happens(getDressed(sleeper1), 8).
 
-
 % 
 % Happens(WalkThroughDoor21(Sleeper1,Door1),9).
 happens(walkThroughDoor21(sleeper1, door1), 9).
-
 
 % 
 % 
 % range time 0 10
 range(time, 0, 10).
 
-
 % range offset 0 0
 range(offset, 0, 0).
-
 
 % ectest/ec_reader_test_ecnet.e:2539
 % range diameter 0 0
 range(diameter, 0, 0).
 
-
 % 
 % completion Happens
 completion(happens).
-
 
 % 
 % ; End of file.
@@ -4868,40 +4405,26 @@ completion(happens).
 % option renaming off
 option(renaming, off).
 
-
 % option encoding 3
 option(encoding, 3).
 
-
 % 
 % load foundations/Root.e
-% loading('foundations/Root.e').
+load('foundations/Root.e').
 
-
-% ectest/ec_reader_test_ecnet.e:2573
-% translate: unskipped  File: on_load_ele 
-% ectest/ec_reader_test_ecnet.e:2573
-% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-% loading('foundations/EC.e').
-
+load('foundations/EC.e').
 
 % ectest/ec_reader_test_ecnet.e:2574
-% translate: unskipped  File: on_load_ele 
-% ectest/ec_reader_test_ecnet.e:2574
-% translate: ready  File: on_load_ele 
 % load answers/Mueller2003/Ontology.e
 load('answers/Mueller2003/Ontology.e').
-
 
 % load answers/MuellerInPress/RepRest.e
 load('answers/MuellerInPress/RepRest.e').
 
-
 % 
 % door MainEntrance1
 t(door, mainEntrance1).
-
 
 % 
 % ; room-scale topological space
@@ -4909,97 +4432,77 @@ t(door, mainEntrance1).
 % outside Street1
 t(outside, street1).
 
-
 % room DiningRoom1
 t(room, diningRoom1).
-
 
 % door KitchenDoor1
 t(door, kitchenDoor1).
 
-
 % room Kitchen1
 t(room, kitchen1).
-
 
 % Side1(MainEntrance1)=Street1.
 side1(mainEntrance1)=street1.
 
-
 % 
 % Side2(MainEntrance1)=DiningRoom1.
 side2(mainEntrance1)=diningRoom1.
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2586
 % Side1(KitchenDoor1)=DiningRoom1.
 side1(kitchenDoor1)=diningRoom1.
 
-
 % 
 % Side2(KitchenDoor1)=Kitchen1.
 side2(kitchenDoor1)=kitchen1.
-
 
 % 
 % 
 % agent Customer1
 t(agent, customer1).
 
-
 % menu Menu1
 t(menu, menu1).
 
-
 % chair Chair1
 t(chair, chair1).
-
 
 % ectest/ec_reader_test_ecnet.e:2592
 % food Food1
 t(food, food1).
 
-
 % HoldsAt(At(Customer1,Street1),0).
 holds_at(at(customer1, street1), 0).
-
 
 % 
 % HoldsAt(Hungry(Customer1),0).
 holds_at(hungry(customer1), 0).
 
-
 % 
 % HoldsAt(At(Chair1,DiningRoom1),0).
 holds_at(at(chair1, diningRoom1), 0).
-
 
 % 
 % HoldsAt(At(Menu1,DiningRoom1),0).
 holds_at(at(menu1, diningRoom1), 0).
 
-
 % 
 % HoldsAt(On(Menu1,Table1),0).
 holds_at(on(menu1, table1), 0).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2598
 % HoldsAt(At(Food1,Kitchen1),0).
 holds_at(at(food1, kitchen1), 0).
 
-
 % 
 % 
 % waiter Waiter1
 t(waiter, waiter1).
 
-
 % cook Cook1
 t(cook, cook1).
-
 
 % 
 % ; props
@@ -5007,386 +4510,321 @@ t(cook, cook1).
 % table Table1
 t(table, table1).
 
-
 % bill Bill1
 t(bill, bill1).
-
 
 % 
 % ; restaurant
 % restaurant Restaurant1
 t(restaurant, restaurant1).
 
-
 % CookOf(Restaurant1)=Cook1.
 cookOf(restaurant1)=cook1.
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2610
 % TableOf(Restaurant1)=Table1.
 tableOf(restaurant1)=table1.
 
-
 % 
 % WaiterOf(Restaurant1)=Waiter1.
 waiterOf(restaurant1)=waiter1.
-
 
 % 
 % KitchenDoorOf(Restaurant1)=KitchenDoor1.
 kitchenDoorOf(restaurant1)=kitchenDoor1.
 
-
 % 
 % BillOf(Restaurant1)=Bill1.
 billOf(restaurant1)=bill1.
-
 
 % 
 % 
 % ; prune
 % ectest/ec_reader_test_ecnet.e:2616
 % sort ona, onb
-sort([ona, onb]).
+sort(ona).
 
+sort(onb).
 
 % fluent! On(ona,onb)
 fluent(on(ona, onb)).
 
-
 % event! PlaceOn(agent,ona,onb)
 event(placeOn(agent, ona, onb)).
-
 
 % event! TakeOffOf(agent,ona,onb)
 event(takeOffOf(agent, ona, onb)).
 
-
 % 
 % sort ordera, orderb, orderc
-sort([ordera, orderb, orderc]).
+sort(ordera).
 
+sort(orderb).
+
+sort(orderc).
 
 % ectest/ec_reader_test_ecnet.e:2622
 % event! Order(ordera,orderb,orderc)
 event(order(ordera, orderb, orderc)).
 
-
 % fluent! KnowOrder(orderb,ordera,orderc)
 fluent(knowOrder(orderb, ordera, orderc)).
 
-
 % 
 % sort requesta, requestb, requestc
-sort([requesta, requestb, requestc]).
+sort(requesta).
 
+sort(requestb).
+
+sort(requestc).
 
 % event! Request(requesta,requestb,requestc)
 event(request(requesta, requestb, requestc)).
 
-
 % fluent! KnowRequest(requestb,requesta,requestc)
 fluent(knowRequest(requestb, requesta, requestc)).
-
 
 % ectest/ec_reader_test_ecnet.e:2628
 % 
 % sort holda, holdb, holdc
-sort([holda, holdb, holdc]).
+sort(holda).
 
+sort(holdb).
+
+sort(holdc).
 
 % event! TakeOffOf(holda,holdb,holdc)
 event(takeOffOf(holda, holdb, holdc)).
 
-
 % event! PickUp(holda,holdb)
 event(pickUp(holda, holdb)).
-
 
 % event! LetGoOf(holda,holdb)
 event(letGoOf(holda, holdb)).
 
-
 % event! Hold(holda,holdb)
 event(hold(holda, holdb)).
-
 
 % ectest/ec_reader_test_ecnet.e:2634
 % fluent! Holding(holda,holdb)
 fluent(holding(holda, holdb)).
 
-
 % 
 % sort sita, sitb
-sort([sita, sitb]).
+sort(sita).
 
+sort(sitb).
 
 % event! LieOn(sita,sitb)
 event(lieOn(sita, sitb)).
 
-
 % event! SitOn(sita,sitb)
 event(sitOn(sita, sitb)).
 
-
 % event! RiseFrom(sita,sitb)
 event(riseFrom(sita, sitb)).
-
 
 % ectest/ec_reader_test_ecnet.e:2640
 % fluent! LyingOn(sita,sitb)
 fluent(lyingOn(sita, sitb)).
 
-
 % fluent! SittingOn(sita,sitb)
 fluent(sittingOn(sita, sitb)).
 
-
 % 
 % sort greeta, greetb
-sort([greeta, greetb]).
+sort(greeta).
 
+sort(greetb).
 
 % event! Greet(greeta,greetb)
 event(greet(greeta, greetb)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2646
 % ona! Menu1, Food1, Bill1
 t(ona, menu1).
 
-
 t(ona, food1).
 
-
 t(ona, bill1).
-
 
 % onb! Table1
 t(onb, table1).
 
-
 % ordera! Customer1, Waiter1
 t(ordera, customer1).
 
-
 t(ordera, waiter1).
-
 
 % orderb! Waiter1, Cook1
 t(orderb, waiter1).
 
-
 t(orderb, cook1).
-
 
 % orderc! Food1
 t(orderc, food1).
 
-
 % requesta! Customer1
 t(requesta, customer1).
-
 
 % ectest/ec_reader_test_ecnet.e:2652
 % requestb! Waiter1
 t(requestb, waiter1).
 
-
 % requestc! Bill1
 t(requestc, bill1).
-
 
 % holda! Customer1, Waiter1
 t(holda, customer1).
 
-
 t(holda, waiter1).
-
 
 % holdb! Menu1, Food1, Bill1
 t(holdb, menu1).
 
-
 t(holdb, food1).
 
-
 t(holdb, bill1).
-
 
 % holdc! Table1
 t(holdc, table1).
 
-
 % sita! Customer1
 t(sita, customer1).
-
 
 % ectest/ec_reader_test_ecnet.e:2658
 % sitb! Chair1
 t(sitb, chair1).
 
-
 % greeta! Customer1, Waiter1
 t(greeta, customer1).
 
-
 t(greeta, waiter1).
-
 
 % greetb! Customer1, Waiter1
 t(greetb, customer1).
 
-
 t(greetb, waiter1).
-
 
 % 
 % ; initial situation
 % HoldsAt(At(Waiter1,DiningRoom1),0).
 holds_at(at(waiter1, diningRoom1), 0).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:2664
 % HoldsAt(At(Cook1,Kitchen1),0).
 holds_at(at(cook1, kitchen1), 0).
 
-
 % 
 % HoldsAt(At(Table1,DiningRoom1),0).
 holds_at(at(table1, diningRoom1), 0).
-
 
 % 
 % !HoldsAt(On(Bill1,Table1),0).
 not(holds_at(on(bill1, table1), 0)).
 
-
 % 
 % HoldsAt(At(Bill1,DiningRoom1),0).
 holds_at(at(bill1, diningRoom1), 0).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2668
 % [agent] % HoldsAt(Standing(agent),0).
 holds_at(standing(Agent), 0).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:2669
 % [agent,object] % !HoldsAt(Holding(agent,object),0).
 not(holds_at(holding(Agent, Object), 0)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2670
 % [agent1,agent2,physobj] % !HoldsAt(KnowOrder(agent1,agent2,physobj),0).
 not(holds_at(knowOrder(Agent1, Agent2, Physobj), 0)).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:2671
 % [agent1,agent2,physobj] % !HoldsAt(KnowRequest(agent1,agent2,physobj),0).
 not(holds_at(knowRequest(Agent1, Agent2, Physobj), 0)).
 
-
 % 
 % HoldsAt(BeWaiter0(Waiter1),0).
 holds_at(beWaiter0(waiter1), 0).
 
-
 % 
 % HoldsAt(BeCook0(Cook1),0).
 holds_at(beCook0(cook1), 0).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2674
 % [food] % !HoldsAt(FoodPrepared(food),0).
 not(holds_at(foodPrepared(Food), 0)).
 
-
 % 
 % !HoldsAt(Hungry(Cook1),0).
 not(holds_at(hungry(cook1), 0)).
 
-
 % 
 % !HoldsAt(Hungry(Waiter1),0).
 not(holds_at(hungry(waiter1), 0)).
-
 
 % 
 % 
 % Happens(WalkThroughDoor12(Customer1,MainEntrance1),0).
 happens(walkThroughDoor12(customer1, mainEntrance1), 0).
 
-
 % 
 % Happens(Greet(Waiter1,Customer1),1).
 happens(greet(waiter1, customer1), 1).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2680
 % Happens(SitOn(Customer1,Chair1),2).
 happens(sitOn(customer1, chair1), 2).
 
-
 % 
 % Happens(TakeOffOf(Customer1,Menu1,Table1),3).
 happens(takeOffOf(customer1, menu1, table1), 3).
-
 
 % 
 % Happens(Order(Customer1,Waiter1,Food1),4).
 happens(order(customer1, waiter1, food1), 4).
 
-
 % 
 % Happens(PlaceOn(Customer1,Menu1,Table1),5).
 happens(placeOn(customer1, menu1, table1), 5).
-
 
 % 
 % Happens(Eat(Customer1,Food1),11).
 happens(eat(customer1, food1), 11).
 
-
 % 
 % Happens(Request(Customer1,Waiter1,Bill1),12).
 happens(request(customer1, waiter1, bill1), 12).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2686
 % Happens(Pay(Customer1,Waiter1),15).
 happens(pay(customer1, waiter1), 15).
 
-
 % 
 % Happens(Tip(Customer1,Waiter1),15).
 happens(tip(customer1, waiter1), 15).
-
 
 % 
 % Happens(RiseFrom(Customer1,Chair1),16).
 happens(riseFrom(customer1, chair1), 16).
 
-
 % 
 % Happens(SayGoodbye(Customer1,Waiter1),17).
 happens(sayGoodbye(customer1, waiter1), 17).
 
-
 % 
 % Happens(WalkThroughDoor21(Customer1,MainEntrance1),18).
 happens(walkThroughDoor21(customer1, mainEntrance1), 18).
-
 
 % 
 % 
@@ -5394,19 +4832,15 @@ happens(walkThroughDoor21(customer1, mainEntrance1), 18).
 % range time 0 19
 range(time, 0, 19).
 
-
 % range offset 0 0
 range(offset, 0, 0).
-
 
 % range diameter 0 0
 range(diameter, 0, 0).
 
-
 % 
 % completion Happens
 completion(happens).
-
 
 % 
 % ; End of file.
@@ -5526,21 +4960,17 @@ completion(happens).
 % fluent Holding(agent,physobj)
 fluent(holding(agent, physobj)).
 
-
 % event PickUp(agent,physobj)
 event(pickUp(agent, physobj)).
 
-
 % event LetGoOf(agent,physobj)
 event(letGoOf(agent, physobj)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2812
 % [agent,physobj,time]% 
 % Initiates(PickUp(agent,physobj),Holding(agent,physobj),time).
 initiates(pickUp(Agent, Physobj), holding(Agent, Physobj), Time).
-
 
 % 
 % 
@@ -5553,14 +4983,12 @@ initiates(pickUp(Agent, Physobj), holding(Agent, Physobj), Time).
 %   HoldsAt(At(physobj,location),time).
 exists([Location],  (happens(pickUp(Agent, Physobj), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Physobj, Location), Time))).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2821
 % [agent,physobj,time]% 
 % Terminates(LetGoOf(agent,physobj),Holding(agent,physobj),time).
 terminates(letGoOf(Agent, Physobj), holding(Agent, Physobj), Time).
-
 
 % 
 % 
@@ -5571,14 +4999,12 @@ terminates(letGoOf(Agent, Physobj), holding(Agent, Physobj), Time).
 happens(letGoOf(Agent, Physobj), Time) ->
 	holds_at(holding(Agent, Physobj), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2828
 % [agent,physobj,location,time]% 
 % Releases(PickUp(agent,physobj),At(physobj,location),time).
 releases(pickUp(Agent, Physobj), at(Physobj, Location), Time).
-
 
 % 
 % 
@@ -5589,7 +5015,6 @@ releases(pickUp(Agent, Physobj), at(Physobj, Location), Time).
 % HoldsAt(At(physobj,location),time).
 holds_at(holding(Agent, Physobj), Time), holds_at(at(Agent, Location), Time) ->
 	holds_at(at(Physobj, Location), Time).
-
 
 % 
 % 
@@ -5608,23 +5033,19 @@ holds_at(at(Agent, Location), Time) ->
 		  at(Physobj, Location),
 		  Time).
 
-
 % 
 % 
 % fluent On(physobj,physobj)
 fluent(on(physobj, physobj)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2847
 % event PlaceOn(agent,physobj,physobj)
 event(placeOn(agent, physobj, physobj)).
 
-
 % 
 % event TakeOffOf(agent,physobj,physobj)
 event(takeOffOf(agent, physobj, physobj)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2851
@@ -5633,7 +5054,6 @@ event(takeOffOf(agent, physobj, physobj)).
 % physobj1!=physobj2.
 holds_at(on(Physobj1, Physobj2), Time) ->
 	Physobj1\=Physobj2.
-
 
 % 
 % 
@@ -5644,7 +5064,6 @@ holds_at(on(Physobj1, Physobj2), Time) ->
 holds_at(on(Physobj1, Physobj2), Time) ->
 	not(holds_at(on(Physobj2, Physobj1), Time)).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2859
@@ -5653,7 +5072,6 @@ holds_at(on(Physobj1, Physobj2), Time) ->
 %           On(physobj1,physobj2),time).
 initiates(placeOn(Agent, Physobj1, Physobj2), on(Physobj1, Physobj2), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2863
@@ -5661,7 +5079,6 @@ initiates(placeOn(Agent, Physobj1, Physobj2), on(Physobj1, Physobj2), Time).
 % Terminates(PlaceOn(agent,physobj1,physobj2),
 %            Holding(agent,physobj1),time).
 terminates(placeOn(Agent, Physobj1, Physobj2), holding(Agent, Physobj1), Time).
-
 
 % 
 % 
@@ -5675,7 +5092,6 @@ terminates(placeOn(Agent, Physobj1, Physobj2), holding(Agent, Physobj1), Time).
 %  HoldsAt(At(physobj2,location),time).
 exists([Location],  (happens(placeOn(Agent, Physobj1, Physobj2), Time)->holds_at(holding(Agent, Physobj1), Time), holds_at(at(Agent, Location), Time), holds_at(at(Physobj2, Location), Time))).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2874
@@ -5683,7 +5099,6 @@ exists([Location],  (happens(placeOn(Agent, Physobj1, Physobj2), Time)->holds_at
 % Terminates(TakeOffOf(agent,physobj1,physobj2),
 %            On(physobj1,physobj2),time).
 terminates(takeOffOf(Agent, Physobj1, Physobj2), on(Physobj1, Physobj2), Time).
-
 
 % 
 % 
@@ -5693,7 +5108,6 @@ terminates(takeOffOf(Agent, Physobj1, Physobj2), on(Physobj1, Physobj2), Time).
 %           Holding(agent,physobj1),time).
 initiates(takeOffOf(Agent, Physobj1, Physobj2), holding(Agent, Physobj1), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2882
@@ -5702,7 +5116,6 @@ initiates(takeOffOf(Agent, Physobj1, Physobj2), holding(Agent, Physobj1), Time).
 %          At(physobj1,location),
 %          time).
 releases(takeOffOf(Agent, Physobj1, Physobj2), at(Physobj1, Location), Time).
-
 
 % 
 % 
@@ -5717,7 +5130,6 @@ releases(takeOffOf(Agent, Physobj1, Physobj2), at(Physobj1, Location), Time).
 %  HoldsAt(At(physobj2,location),time).
 exists([Location],  (happens(takeOffOf(Agent, Physobj1, Physobj2), Time)->holds_at(on(Physobj1, Physobj2), Time), holds_at(at(Agent, Location), Time), holds_at(at(Physobj1, Location), Time), holds_at(at(Physobj2, Location), Time))).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2895
@@ -5726,7 +5138,6 @@ exists([Location],  (happens(takeOffOf(Agent, Physobj1, Physobj2), Time)->holds_
 %          At(physobj1,location),
 %          time).
 releases(placeOn(Agent, Physobj1, Physobj2), at(Physobj1, Location), Time).
-
 
 % 
 % 
@@ -5738,12 +5149,10 @@ releases(placeOn(Agent, Physobj1, Physobj2), at(Physobj1, Location), Time).
 holds_at(on(Physobj1, Physobj2), Time), holds_at(at(Physobj2, Location), Time) ->
 	holds_at(at(Physobj1, Location), Time).
 
-
 % 
 % 
 % fluent At(object,location)
 fluent(at(object, location)).
-
 
 % ectest/ec_reader_test_ecnet.e:2906
 % 
@@ -5752,7 +5161,6 @@ fluent(at(object, location)).
 % ectest/ec_reader_test_ecnet.e:2908
 % {location} % HoldsAt(At(object,location),time).
 exists([Location], holds_at(at(Object, Location), Time)).
-
 
 % 
 % 
@@ -5764,26 +5172,21 @@ exists([Location], holds_at(at(Object, Location), Time)).
 holds_at(at(Object, Location1), Time), holds_at(at(Object, Location2), Time) ->
 	Location1=Location2.
 
-
 % 
 % 
 % function Side1(portal): location
 function(side1(portal), location).
 
-
 % ectest/ec_reader_test_ecnet.e:2916
 % function Side2(portal): location
 function(side2(portal), location).
-
 
 % 
 % fluent NearPortal(object,portal)
 fluent(nearPortal(object, portal)).
 
-
 % noninertial NearPortal
 noninertial(nearPortal).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2921
@@ -5796,17 +5199,14 @@ noninertial(nearPortal).
 %  HoldsAt(At(object,location),time).
 exists([Location],  (holds_at(nearPortal(Object, Portal), Time)<->(side1(Portal)=Location;side2(Portal)=Location), holds_at(at(Object, Location), Time))).
 
-
 % 
 % 
 % event WalkThroughDoor12(agent,door)
 event(walkThroughDoor12(agent, door)).
 
-
 % ectest/ec_reader_test_ecnet.e:2929
 % event WalkThroughDoor21(agent,door)
 event(walkThroughDoor21(agent, door)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2931
@@ -5817,7 +5217,6 @@ event(walkThroughDoor21(agent, door)).
 happens(walkThroughDoor12(Agent, Door), Time) ->
 	holds_at(standing(Agent), Time),
 	holds_at(at(Agent, side1(Door)), Time).
-
 
 % 
 % 
@@ -5830,7 +5229,6 @@ happens(walkThroughDoor21(Agent, Door), Time) ->
 	holds_at(standing(Agent), Time),
 	holds_at(at(Agent, side2(Door)), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2941
@@ -5841,7 +5239,6 @@ side2(Door)=Location ->
 	initiates(walkThroughDoor12(Agent, Door),
 		  at(Agent, Location),
 		  Time).
-
 
 % 
 % 
@@ -5854,7 +5251,6 @@ side1(Door)=Location ->
 		  at(Agent, Location),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2949
@@ -5865,7 +5261,6 @@ side1(Door)=Location ->
 	terminates(walkThroughDoor12(Agent, Door),
 		   at(Agent, Location),
 		   Time).
-
 
 % 
 % 
@@ -5878,22 +5273,18 @@ side2(Door)=Location ->
 		   at(Agent, Location),
 		   Time).
 
-
 % 
 % 
 % fluent Hungry(agent)
 fluent(hungry(agent)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2959
 % fluent Satiated(agent)
 fluent(satiated(agent)).
 
-
 % noninertial Satiated
 noninertial(satiated).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2962
@@ -5901,12 +5292,10 @@ noninertial(satiated).
 holds_at(hungry(Agent), Time) <->
 	not(holds_at(satiated(Agent), Time)).
 
-
 % 
 % 
 % event Eat(agent,food)
 event(eat(agent, food)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:2966
@@ -5918,7 +5307,6 @@ event(eat(agent, food)).
 % HoldsAt(At(food,location),time).
 exists([Location],  (happens(eat(Agent, Food), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Food, Location), Time))).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:2972
@@ -5926,101 +5314,81 @@ exists([Location],  (happens(eat(Agent, Food), Time)->holds_at(at(Agent, Locatio
 % Terminates(Eat(agent,food),Hungry(agent),time).
 terminates(eat(Agent, Food), hungry(Agent), Time).
 
-
 % 
 % 
 % sort restaurant: script
 subsort(restaurant, script).
 
-
 % sort waiter: agent
 subsort(waiter, agent).
 
-
 % sort cook: agent
 subsort(cook, agent).
-
 
 % ectest/ec_reader_test_ecnet.e:2978
 % 
 % function BillOf(restaurant): bill
 function(billOf(restaurant), bill).
 
-
 % function CookOf(restaurant): cook
 function(cookOf(restaurant), cook).
-
 
 % function TableOf(restaurant): table
 function(tableOf(restaurant), table).
 
-
 % function WaiterOf(restaurant): waiter
 function(waiterOf(restaurant), waiter).
 
-
 % function KitchenDoorOf(restaurant): door
 function(kitchenDoorOf(restaurant), door).
-
 
 % ectest/ec_reader_test_ecnet.e:2984
 % 
 % fluent BeWaiter0(waiter)
 fluent(beWaiter0(waiter)).
 
-
 % 
 % fluent BeWaiter1(waiter)
 fluent(beWaiter1(waiter)).
 
-
 % 
 % fluent BeWaiter2(waiter)
 fluent(beWaiter2(waiter)).
-
 
 % ectest/ec_reader_test_ecnet.e:2990
 % 
 % fluent BeWaiter3(waiter)
 fluent(beWaiter3(waiter)).
 
-
 % 
 % fluent BeWaiter4(waiter)
 fluent(beWaiter4(waiter)).
 
-
 % 
 % fluent BeWaiter5(waiter)
 fluent(beWaiter5(waiter)).
-
 
 % ectest/ec_reader_test_ecnet.e:2996
 % 
 % fluent BeWaiter6(waiter)
 fluent(beWaiter6(waiter)).
 
-
 % 
 % fluent BeWaiter7(waiter)
 fluent(beWaiter7(waiter)).
 
-
 % 
 % fluent BeWaiter8(waiter)
 fluent(beWaiter8(waiter)).
-
 
 % ectest/ec_reader_test_ecnet.e:3002
 % 
 % fluent BeWaiter9(waiter)
 fluent(beWaiter9(waiter)).
 
-
 % 
 % xor BeWaiter0, BeWaiter1, BeWaiter2, BeWaiter3, BeWaiter4, BeWaiter5, BeWaiter6, BeWaiter7, BeWaiter8, BeWaiter9
 xor([beWaiter0, beWaiter1, beWaiter2, beWaiter3, beWaiter4, beWaiter5, beWaiter6, beWaiter7, beWaiter8, beWaiter9]).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3007
@@ -6033,7 +5401,6 @@ holds_at(beWaiter0(Waiter), Time) ->
 	terminates(greet(Waiter, Agent),
 		   beWaiter0(Waiter),
 		   Time).
-
 
 % 
 % 
@@ -6048,7 +5415,6 @@ holds_at(beWaiter0(Waiter), Time) ->
 		  beWaiter1(Waiter),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3019
@@ -6061,7 +5427,6 @@ holds_at(beWaiter1(Waiter), Time) ->
 	terminates(order(Agent, Waiter, Food),
 		   beWaiter1(Waiter),
 		   Time).
-
 
 % 
 % 
@@ -6076,7 +5441,6 @@ holds_at(beWaiter1(Waiter), Time) ->
 		  beWaiter2(Waiter),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3031
@@ -6088,7 +5452,6 @@ waiterOf(Restaurant)=Waiter, holds_at(beWaiter2(Waiter), Time) ->
 	happens(walkThroughDoor12(Waiter,
 				  kitchenDoorOf(Restaurant)),
 		Time).
-
 
 % 
 % 
@@ -6104,7 +5467,6 @@ holds_at(beWaiter2(Waiter), Time), waiterOf(Restaurant)=Waiter, kitchenDoorOf(Re
 	terminates(walkThroughDoor12(Waiter, Door),
 		   beWaiter2(Waiter),
 		   Time).
-
 
 % ectest/ec_reader_test_ecnet.e:3042
 % 
@@ -6122,7 +5484,6 @@ holds_at(beWaiter2(Waiter), Time), waiterOf(Restaurant)=Waiter, kitchenDoorOf(Re
 		  beWaiter3(Waiter),
 		  Time).
 
-
 % ectest/ec_reader_test_ecnet.e:3050
 % 
 % 
@@ -6136,7 +5497,6 @@ holds_at(beWaiter3(waiterOf(Restaurant)), Time), exists([Agent], holds_at(knowOr
 		      cookOf(Restaurant),
 		      Food),
 		Time).
-
 
 % 
 % 
@@ -6152,7 +5512,6 @@ waiterOf(Restaurant)=Waiter, cookOf(Restaurant)=Cook, holds_at(beWaiter3(Waiter)
 	terminates(order(Waiter, Cook, Food),
 		   beWaiter3(Waiter),
 		   Time).
-
 
 % ectest/ec_reader_test_ecnet.e:3063
 % 
@@ -6170,7 +5529,6 @@ waiterOf(Restaurant)=Waiter, cookOf(Restaurant)=Cook, holds_at(beWaiter3(Waiter)
 		  beWaiter4(Waiter),
 		  Time).
 
-
 % ectest/ec_reader_test_ecnet.e:3071
 % 
 % 
@@ -6182,7 +5540,6 @@ waiterOf(Restaurant)=Waiter, cookOf(Restaurant)=Cook, holds_at(beWaiter3(Waiter)
 % Happens(PickUp(waiter,food),time).
 holds_at(beWaiter4(Waiter), Time), exists([Agent], holds_at(knowOrder(Waiter, Agent, Food), Time)), holds_at(foodPrepared(Food), Time) ->
 	happens(pickUp(Waiter, Food), Time).
-
 
 % 
 % 
@@ -6197,7 +5554,6 @@ holds_at(beWaiter4(Waiter), Time), exists([Agent], holds_at(knowOrder(Waiter, Ag
 	terminates(pickUp(Waiter, Food),
 		   beWaiter4(Waiter),
 		   Time).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3085
@@ -6214,7 +5570,6 @@ holds_at(beWaiter4(Waiter), Time), exists([Agent], holds_at(knowOrder(Waiter, Ag
 		  beWaiter5(Waiter),
 		  Time).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:3092
 % 
@@ -6227,7 +5582,6 @@ waiterOf(Restaurant)=Waiter, holds_at(beWaiter5(Waiter), Time) ->
 	happens(walkThroughDoor21(Waiter,
 				  kitchenDoorOf(Restaurant)),
 		Time).
-
 
 % 
 % 
@@ -6243,7 +5597,6 @@ holds_at(beWaiter5(Waiter), Time), waiterOf(Restaurant)=Waiter, kitchenDoorOf(Re
 	terminates(walkThroughDoor21(Waiter, Door),
 		   beWaiter5(Waiter),
 		   Time).
-
 
 % ectest/ec_reader_test_ecnet.e:3104
 % 
@@ -6261,7 +5614,6 @@ holds_at(beWaiter5(Waiter), Time), waiterOf(Restaurant)=Waiter, kitchenDoorOf(Re
 		  beWaiter6(Waiter),
 		  Time).
 
-
 % ectest/ec_reader_test_ecnet.e:3112
 % 
 % 
@@ -6274,7 +5626,6 @@ holds_at(beWaiter5(Waiter), Time), waiterOf(Restaurant)=Waiter, kitchenDoorOf(Re
 % Happens(PlaceOn(waiter,food,table),time).
 waiterOf(Restaurant)=Waiter, tableOf(Restaurant)=Table, holds_at(beWaiter6(Waiter), Time), holds_at(holding(Waiter, Food), Time) ->
 	happens(placeOn(Waiter, Food, Table), Time).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3120
@@ -6290,7 +5641,6 @@ holds_at(beWaiter6(Waiter), Time) ->
 		   beWaiter6(Waiter),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3127
@@ -6303,7 +5653,6 @@ holds_at(beWaiter6(Waiter), Time) ->
 	initiates(placeOn(Waiter, Food, Table),
 		  beWaiter7(Waiter),
 		  Time).
-
 
 % 
 % 
@@ -6318,7 +5667,6 @@ holds_at(beWaiter7(Waiter), Time) ->
 		   beWaiter7(Waiter),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3139
@@ -6332,7 +5680,6 @@ holds_at(beWaiter7(Waiter), Time) ->
 		  beWaiter8(Waiter),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3145
@@ -6343,7 +5690,6 @@ holds_at(beWaiter7(Waiter), Time) ->
 % Happens(PickUp(waiter,bill),time).
 waiterOf(Restaurant)=Waiter, billOf(Restaurant)=Bill, holds_at(beWaiter8(Waiter), Time) ->
 	happens(pickUp(Waiter, Bill), Time).
-
 
 % 
 % 
@@ -6358,7 +5704,6 @@ holds_at(beWaiter8(Waiter), Time) ->
 		   beWaiter8(Waiter),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3157
@@ -6372,7 +5717,6 @@ holds_at(beWaiter8(Waiter), Time) ->
 		  beWaiter9(Waiter),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3163
@@ -6384,7 +5728,6 @@ holds_at(beWaiter8(Waiter), Time) ->
 % Happens(PlaceOn(waiter,bill,table),time).
 waiterOf(Restaurant)=Waiter, billOf(Restaurant)=Bill, tableOf(Restaurant)=Table, holds_at(beWaiter9(Waiter), Time) ->
 	happens(placeOn(Waiter, Bill, Table), Time).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3169
@@ -6400,7 +5743,6 @@ holds_at(beWaiter9(Waiter), Time) ->
 		   beWaiter9(Waiter),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3176
@@ -6414,23 +5756,19 @@ holds_at(beWaiter9(Waiter), Time) ->
 		  beWaiter0(Waiter),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3182
 % fluent BeCook0(cook)
 fluent(beCook0(cook)).
 
-
 % 
 % fluent BeCook1(cook)
 fluent(beCook1(cook)).
 
-
 % 
 % xor BeCook0, BeCook1
 xor([beCook0, beCook1]).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3188
@@ -6443,7 +5781,6 @@ holds_at(beCook0(Cook), Time) ->
 	terminates(order(Agent, Cook, Food),
 		   beCook0(Cook),
 		   Time).
-
 
 % 
 % 
@@ -6458,18 +5795,15 @@ holds_at(beCook0(Cook), Time) ->
 		  beCook1(Cook),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3200
 % event FoodPrepare(agent,food)
 event(foodPrepare(agent, food)).
 
-
 % 
 % fluent FoodPrepared(food)
 fluent(foodPrepared(food)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3204
@@ -6478,7 +5812,6 @@ fluent(foodPrepared(food)).
 %           FoodPrepared(food),
 %           time).
 initiates(foodPrepare(Agent, Food), foodPrepared(Food), Time).
-
 
 % 
 % 
@@ -6491,7 +5824,6 @@ initiates(foodPrepare(Agent, Food), foodPrepared(Food), Time).
 % HoldsAt(At(food,location),time).
 exists([Location],  (happens(foodPrepare(Agent, Food), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Food, Location), Time))).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3215
@@ -6501,7 +5833,6 @@ exists([Location],  (happens(foodPrepare(Agent, Food), Time)->holds_at(at(Agent,
 % Happens(FoodPrepare(cook,food),time).
 holds_at(beCook1(Cook), Time), holds_at(knowOrder(Cook, Agent, Food), Time) ->
 	happens(foodPrepare(Cook, Food), Time).
-
 
 % 
 % 
@@ -6516,7 +5847,6 @@ holds_at(beCook1(Cook), Time) ->
 		   beCook1(Cook),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3226
@@ -6530,18 +5860,15 @@ holds_at(beCook1(Cook), Time) ->
 		  beCook0(Cook),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3232
 % event Pay(agent,agent)
 event(pay(agent, agent)).
 
-
 % 
 % event Tip(agent,agent)
 event(tip(agent, agent)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3236
@@ -6552,7 +5879,6 @@ event(tip(agent, agent)).
 %  HoldsAt(At(agent,room),time) &
 %  HoldsAt(At(physobj,room),time).
 exists([Room],  (happens(lieOn(Agent, Physobj), Time)->holds_at(at(Agent, Room), Time), holds_at(at(Physobj, Room), Time))).
-
 
 % 
 % 
@@ -6565,60 +5891,48 @@ exists([Room],  (happens(lieOn(Agent, Physobj), Time)->holds_at(at(Agent, Room),
 %  HoldsAt(At(physobj,room),time).
 exists([Room],  (happens(sitOn(Agent, Physobj), Time)->holds_at(at(Agent, Room), Time), holds_at(at(Physobj, Room), Time))).
 
-
 % 
 % 
 % event LieOn(agent,physobj)
 event(lieOn(agent, physobj)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3250
 % event SitOn(agent,physobj)
 event(sitOn(agent, physobj)).
 
-
 % 
 % event RiseFrom(agent,physobj)
 event(riseFrom(agent, physobj)).
-
 
 % 
 % fluent LyingOn(agent,physobj)
 fluent(lyingOn(agent, physobj)).
 
-
 % fluent SittingOn(agent,physobj)
 fluent(sittingOn(agent, physobj)).
-
 
 % ectest/ec_reader_test_ecnet.e:3256
 % fluent Standing(agent)
 fluent(standing(agent)).
 
-
 % 
 % fluent Lying(agent)
 fluent(lying(agent)).
 
-
 % fluent Sitting(agent)
 fluent(sitting(agent)).
-
 
 % noninertial Lying
 noninertial(lying).
 
-
 % noninertial Sitting
 noninertial(sitting).
-
 
 % ectest/ec_reader_test_ecnet.e:3262
 % 
 % xor Lying, Sitting, Standing
 xor([lying, sitting, standing]).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3265
@@ -6628,7 +5942,6 @@ xor([lying, sitting, standing]).
 holds_at(lyingOn(Agent, Physobj), Time) ->
 	holds_at(lying(Agent), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3269
@@ -6637,7 +5950,6 @@ holds_at(lyingOn(Agent, Physobj), Time) ->
 % HoldsAt(Sitting(agent),time).
 holds_at(sittingOn(Agent, Physobj), Time) ->
 	holds_at(sitting(Agent), Time).
-
 
 % 
 % 
@@ -6649,7 +5961,6 @@ holds_at(sittingOn(Agent, Physobj), Time) ->
 holds_at(lyingOn(Agent, Physobj1), Time), holds_at(lyingOn(Agent, Physobj2), Time) ->
 	Physobj1=Physobj2.
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3278
@@ -6659,7 +5970,6 @@ holds_at(lyingOn(Agent, Physobj1), Time), holds_at(lyingOn(Agent, Physobj2), Tim
 % physobj1=physobj2.
 holds_at(sittingOn(Agent, Physobj1), Time), holds_at(sittingOn(Agent, Physobj2), Time) ->
 	Physobj1=Physobj2.
-
 
 % 
 % 
@@ -6674,7 +5984,6 @@ holds_at(standing(Agent), Time) ->
 		  lyingOn(Agent, Physobj),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3289
@@ -6683,7 +5992,6 @@ holds_at(standing(Agent), Time) ->
 %            Standing(agent),
 %            time).
 terminates(lieOn(Agent, Physobj), standing(Agent), Time).
-
 
 % 
 % 
@@ -6698,7 +6006,6 @@ holds_at(standing(Agent), Time) ->
 		  sittingOn(Agent, Physobj),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3300
@@ -6707,7 +6014,6 @@ holds_at(standing(Agent), Time) ->
 %            Standing(agent),
 %            time).
 terminates(sitOn(Agent, Physobj), standing(Agent), Time).
-
 
 % 
 % 
@@ -6723,7 +6029,6 @@ holds_at(sittingOn(Agent, Physobj), Time);holds_at(lyingOn(Agent, Physobj), Time
 		  standing(Agent),
 		  Time).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:3311
 % 
@@ -6738,7 +6043,6 @@ holds_at(lyingOn(Agent, Physobj), Time) ->
 		   lyingOn(Agent, Physobj),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3318
@@ -6752,18 +6056,15 @@ holds_at(sittingOn(Agent, Physobj), Time) ->
 		   sittingOn(Agent, Physobj),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3324
 % event Greet(agent,agent)
 event(greet(agent, agent)).
 
-
 % 
 % event SayGoodbye(agent,agent)
 event(sayGoodbye(agent, agent)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3328
@@ -6774,7 +6075,6 @@ event(sayGoodbye(agent, agent)).
 % HoldsAt(At(agent1,location),time) &
 % HoldsAt(At(agent2,location),time).
 exists([Location],  (happens(greet(Agent1, Agent2), Time)->holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
-
 
 % 
 % 
@@ -6787,18 +6087,15 @@ exists([Location],  (happens(greet(Agent1, Agent2), Time)->holds_at(at(Agent1, L
 % HoldsAt(At(agent2,location),time).
 exists([Location],  (happens(sayGoodbye(Agent1, Agent2), Time)->holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
 
-
 % 
 % 
 % event Order(agent,agent,physobj)
 event(order(agent, agent, physobj)).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:3342
 % fluent KnowOrder(agent,agent,physobj)
 fluent(knowOrder(agent, agent, physobj)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3344
@@ -6807,7 +6104,6 @@ fluent(knowOrder(agent, agent, physobj)).
 %           KnowOrder(agent2,agent1,physobj),
 %           time).
 initiates(order(Agent1, Agent2, Physobj), knowOrder(Agent2, Agent1, Physobj), Time).
-
 
 % 
 % 
@@ -6820,18 +6116,15 @@ initiates(order(Agent1, Agent2, Physobj), knowOrder(Agent2, Agent1, Physobj), Ti
 % HoldsAt(At(agent2,location),time).
 exists([Location],  (happens(order(Agent1, Agent2, Physobj), Time)->holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
 
-
 % 
 % 
 % event Request(agent,agent,physobj)
 event(request(agent, agent, physobj)).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:3357
 % fluent KnowRequest(agent,agent,physobj)
 fluent(knowRequest(agent, agent, physobj)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3359
@@ -6840,7 +6133,6 @@ fluent(knowRequest(agent, agent, physobj)).
 %           KnowRequest(agent2,agent1,physobj),
 %           time).
 initiates(request(Agent1, Agent2, Physobj), knowRequest(Agent2, Agent1, Physobj), Time).
-
 
 % 
 % 
@@ -6852,7 +6144,6 @@ initiates(request(Agent1, Agent2, Physobj), knowRequest(Agent2, Agent1, Physobj)
 % HoldsAt(At(agent1,location),time) &
 % HoldsAt(At(agent2,location),time).
 exists([Location],  (happens(request(Agent1, Agent2, Physobj), Time)->holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
-
 
 % 
 % 
@@ -6882,22 +6173,17 @@ exists([Location],  (happens(request(Agent1, Agent2, Physobj), Time)->holds_at(a
 % sort object
 sort(object).
 
-
 % sort agent: object
 subsort(agent, object).
-
 
 % sort diver: agent
 subsort(diver, agent).
 
-
 % sort depth: integer
 subsort(depth, integer).
 
-
 % sort boat: object
 subsort(boat, object).
-
 
 % ectest/ec_reader_test_ecnet.e:3396
 % 
@@ -6905,24 +6191,19 @@ subsort(boat, object).
 % sort line: object
 subsort(line, object).
 
-
 % 
 % sort equipment: object
 subsort(equipment, object).
 
-
 % sort weight: equipment
 subsort(weight, equipment).
-
 
 % ectest/ec_reader_test_ecnet.e:3402
 % sort fin: equipment
 subsort(fin, equipment).
 
-
 % sort airtank: equipment
 subsort(airtank, equipment).
-
 
 % 
 % ; buoyancy compensator (BC)
@@ -6930,16 +6211,13 @@ subsort(airtank, equipment).
 % sort computer: equipment
 subsort(computer, equipment).
 
-
 % ectest/ec_reader_test_ecnet.e:3408
 % sort bc: equipment
 subsort(bc, equipment).
 
-
 % 
 % fluent AtDepth(object,depth)
 fluent(atDepth(object, depth)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3412
@@ -6950,18 +6228,15 @@ fluent(atDepth(object, depth)).
 holds_at(atDepth(Object, Depth1), Time), holds_at(atDepth(Object, Depth2), Time) ->
 	Depth1=Depth2.
 
-
 % 
 % 
 % event Ascend(diver,depth)
 event(ascend(diver, depth)).
 
-
 % ectest/ec_reader_test_ecnet.e:3418
 % 
 % event Descend(diver,depth)
 event(descend(diver, depth)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3421
@@ -6971,7 +6246,6 @@ event(descend(diver, depth)).
 % depth2>depth1.
 holds_at(atDepth(Diver, Depth1), Time), happens(descend(Diver, Depth2), Time) ->
 	Depth2>Depth1.
-
 
 % 
 % 
@@ -6983,14 +6257,12 @@ holds_at(atDepth(Diver, Depth1), Time), happens(descend(Diver, Depth2), Time) ->
 holds_at(atDepth(Diver, Depth1), Time), happens(ascend(Diver, Depth2), Time) ->
 	Depth2<Depth1.
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3431
 % [diver,depth,time]% 
 % Initiates(Descend(diver,depth),AtDepth(diver,depth),time).
 initiates(descend(Diver, Depth), atDepth(Diver, Depth), Time).
-
 
 % 
 % 
@@ -7003,14 +6275,12 @@ holds_at(atDepth(Diver, Depth1), Time) ->
 		   atDepth(Diver, Depth1),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3438
 % [diver,depth,time]% 
 % Initiates(Ascend(diver,depth),AtDepth(diver,depth),time).
 initiates(ascend(Diver, Depth), atDepth(Diver, Depth), Time).
-
 
 % 
 % 
@@ -7023,28 +6293,23 @@ holds_at(atDepth(Diver, Depth1), Time) ->
 		   atDepth(Diver, Depth1),
 		   Time).
 
-
 % 
 % 
 % fluent Wearing(diver,equipment)
 fluent(wearing(diver, equipment)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3447
 % event PutOn(diver,equipment)
 event(putOn(diver, equipment)).
 
-
 % 
 % event TakeOff(diver,equipment)
 event(takeOff(diver, equipment)).
 
-
 % 
 % event Lose(diver,equipment)
 event(lose(diver, equipment)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3453
@@ -7052,14 +6317,12 @@ event(lose(diver, equipment)).
 % Releases(PutOn(diver,equipment),AtDepth(equipment,depth),time).
 releases(putOn(Diver, Equipment), atDepth(Equipment, Depth), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3456
 % [diver,equipment,time]% 
 % Releases(PutOn(diver,equipment),UnderWater(equipment),time).
 releases(putOn(Diver, Equipment), underWater(Equipment), Time).
-
 
 % 
 % 
@@ -7070,7 +6333,6 @@ releases(putOn(Diver, Equipment), underWater(Equipment), Time).
 happens(putOn(Diver, Equipment), Time) ->
 	not(exists([Diver1],
 		   holds_at(wearing(Diver1, Equipment), Time))).
-
 
 % 
 % 
@@ -7083,7 +6345,6 @@ holds_at(wearing(Diver, Equipment), Time) ->
 	( holds_at(atDepth(Diver, Depth), Time)<->holds_at(atDepth(Equipment, Depth), Time)
 	).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3468
@@ -7094,7 +6355,6 @@ holds_at(wearing(Diver, Equipment), Time) ->
 holds_at(holding(Diver, Object), Time) ->
 	( holds_at(atDepth(Diver, Depth), Time)<->holds_at(atDepth(Object, Depth), Time)
 	).
-
 
 % 
 % 
@@ -7107,7 +6367,6 @@ holds_at(wearing(Diver, Equipment), Time) ->
 	( holds_at(underWater(Diver), Time)<->holds_at(underWater(Equipment), Time)
 	).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3478
@@ -7118,7 +6377,6 @@ holds_at(wearing(Diver, Equipment), Time) ->
 holds_at(holding(Diver, Object), Time) ->
 	( holds_at(underWater(Diver), Time)<->holds_at(underWater(Object), Time)
 	).
-
 
 % 
 % 
@@ -7132,7 +6390,6 @@ holds_at(atDepth(Diver, Depth), Time), holds_at(wearing(Diver, Equipment), Time)
 		  atDepth(Equipment, Depth),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3488
@@ -7145,7 +6402,6 @@ not(holds_at(atDepth(Diver, Depth), Time)), holds_at(wearing(Diver, Equipment), 
 		   atDepth(Equipment, Depth),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3493
@@ -7157,7 +6413,6 @@ holds_at(underWater(Diver), Time) ->
 		  underWater(Equipment),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3497
@@ -7168,7 +6423,6 @@ not(holds_at(underWater(Diver), Time)) ->
 	terminates(takeOff(Diver, Equipment),
 		   underWater(Equipment),
 		   Time).
-
 
 % 
 % 
@@ -7182,7 +6436,6 @@ holds_at(atDepth(Diver, Depth), Time), holds_at(wearing(Diver, Equipment), Time)
 		  atDepth(Equipment, Depth),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3506
@@ -7195,7 +6448,6 @@ not(holds_at(atDepth(Diver, Depth), Time)), holds_at(wearing(Diver, Equipment), 
 		   atDepth(Equipment, Depth),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3511
@@ -7206,7 +6458,6 @@ holds_at(underWater(Diver), Time) ->
 	initiates(lose(Diver, Equipment),
 		  underWater(Equipment),
 		  Time).
-
 
 % 
 % 
@@ -7219,12 +6470,10 @@ not(holds_at(underWater(Diver), Time)) ->
 		   underWater(Equipment),
 		   Time).
 
-
 % 
 % 
 % fluent Holding(diver,object)
 fluent(holding(diver, object)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3521
@@ -7234,25 +6483,21 @@ fluent(holding(diver, object)).
 holds_at(holding(Diver1, Diver2), Time) ->
 	not(holds_at(holding(Diver2, Diver1), Time)).
 
-
 % 
 % 
 % event Grab(diver,object)
 event(grab(diver, object)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3527
 % event LetGoOf(diver,object)
 event(letGoOf(diver, object)).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:3529
 % [diver,object,time]% 
 % Initiates(Grab(diver,object),Holding(diver,object),time).
 initiates(grab(Diver, Object), holding(Diver, Object), Time).
-
 
 % 
 % 
@@ -7261,7 +6506,6 @@ initiates(grab(Diver, Object), holding(Diver, Object), Time).
 % Terminates(LetGoOf(diver,object),Holding(diver,object),time).
 terminates(letGoOf(Diver, Object), holding(Diver, Object), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3535
@@ -7269,14 +6513,12 @@ terminates(letGoOf(Diver, Object), holding(Diver, Object), Time).
 % Releases(Grab(diver,object),AtDepth(object,depth),time).
 releases(grab(Diver, Object), atDepth(Object, Depth), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3538
 % [diver,object,time]% 
 % Releases(Grab(diver,object),UnderWater(object),time).
 releases(grab(Diver, Object), underWater(Object), Time).
-
 
 % 
 % 
@@ -7290,7 +6532,6 @@ holds_at(atDepth(Diver, Depth), Time), holds_at(holding(Diver, Object), Time) ->
 		  atDepth(Object, Depth),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3546
@@ -7303,7 +6544,6 @@ not(holds_at(atDepth(Diver, Depth), Time)), holds_at(holding(Diver, Object), Tim
 		   atDepth(Object, Depth),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3551
@@ -7314,7 +6554,6 @@ holds_at(underWater(Diver), Time) ->
 	initiates(letGoOf(Diver, Object),
 		  underWater(Object),
 		  Time).
-
 
 % 
 % 
@@ -7327,14 +6566,12 @@ not(holds_at(underWater(Diver), Time)) ->
 		   underWater(Object),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3559
 % [diver,equipment,time]% 
 % Initiates(PutOn(diver,equipment),Wearing(diver,equipment),time).
 initiates(putOn(Diver, Equipment), wearing(Diver, Equipment), Time).
-
 
 % 
 % 
@@ -7345,14 +6582,12 @@ initiates(putOn(Diver, Equipment), wearing(Diver, Equipment), Time).
 happens(putOn(Diver, Equipment), Time) ->
 	not(holds_at(underWater(Diver), Time)).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3566
 % [diver,equipment,time]% 
 % Terminates(TakeOff(diver,equipment),Wearing(diver,equipment),time).
 terminates(takeOff(Diver, Equipment), wearing(Diver, Equipment), Time).
-
 
 % 
 % 
@@ -7361,39 +6596,32 @@ terminates(takeOff(Diver, Equipment), wearing(Diver, Equipment), Time).
 % Terminates(Lose(diver,equipment),Wearing(diver,equipment),time).
 terminates(lose(Diver, Equipment), wearing(Diver, Equipment), Time).
 
-
 % 
 % 
 % fluent Vertical(diver)
 fluent(vertical(diver)).
 
-
 % 
 % fluent HorizontalDown(diver)
 fluent(horizontalDown(diver)).
-
 
 % ectest/ec_reader_test_ecnet.e:3575
 % 
 % fluent Inverted(diver)
 fluent(inverted(diver)).
 
-
 % 
 % fluent HorizontalUp(diver)
 fluent(horizontalUp(diver)).
-
 
 % 
 % xor Vertical, HorizontalDown, Inverted, HorizontalUp
 xor([vertical, horizontalDown, inverted, horizontalUp]).
 
-
 % ectest/ec_reader_test_ecnet.e:3581
 % 
 % event RotatePitch(diver)
 event(rotatePitch(diver)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3584
@@ -7405,7 +6633,6 @@ holds_at(vertical(Diver), Time) ->
 		  horizontalDown(Diver),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3588
@@ -7414,7 +6641,6 @@ holds_at(vertical(Diver), Time) ->
 % Initiates(RotatePitch(diver),Inverted(diver),time).
 holds_at(horizontalDown(Diver), Time) ->
 	initiates(rotatePitch(Diver), inverted(Diver), Time).
-
 
 % 
 % 
@@ -7427,7 +6653,6 @@ holds_at(horizontalDown(Diver), Time) ->
 		   horizontalDown(Diver),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3596
@@ -7439,7 +6664,6 @@ holds_at(inverted(Diver), Time) ->
 		  horizontalUp(Diver),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3600
@@ -7449,7 +6673,6 @@ holds_at(inverted(Diver), Time) ->
 holds_at(inverted(Diver), Time) ->
 	terminates(rotatePitch(Diver), inverted(Diver), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3604
@@ -7458,7 +6681,6 @@ holds_at(inverted(Diver), Time) ->
 % Initiates(RotatePitch(diver),Vertical(diver),time).
 holds_at(horizontalUp(Diver), Time) ->
 	initiates(rotatePitch(Diver), vertical(Diver), Time).
-
 
 % 
 % 
@@ -7471,12 +6693,10 @@ holds_at(horizontalUp(Diver), Time) ->
 		   horizontalUp(Diver),
 		   Time).
 
-
 % 
 % 
 % event RotateYaw(diver)
 event(rotateYaw(diver)).
-
 
 % 
 % ; try taking out Holding condition here
@@ -7489,13 +6709,11 @@ event(rotateYaw(diver)).
 happens(ascend1(Diver), Time), not(happens(rapidAscendToSurface(Diver), Time)), not(exists([Diver1], holds_at(holding(Diver, Diver1), Time))) ->
 	happens(rotateYaw(Diver), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3621
 % fluent UnderWater(object)
 fluent(underWater(object)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3623
@@ -7506,25 +6724,21 @@ fluent(underWater(object)).
 Depth>0, holds_at(atDepth(Object, Depth), Time) ->
 	holds_at(underWater(Object), Time).
 
-
 % 
 % 
 % event EnterWater(object)
 event(enterWater(object)).
-
 
 % ectest/ec_reader_test_ecnet.e:3629
 % 
 % event Surface(object)
 event(surface(object)).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:3632
 % [object,time]% 
 % Initiates(EnterWater(object),UnderWater(object),time).
 initiates(enterWater(Object), underWater(Object), Time).
-
 
 % 
 % 
@@ -7535,7 +6749,6 @@ initiates(enterWater(Object), underWater(Object), Time).
 happens(enterWater(Diver), Time) ->
 	not(exists([Diver1],
 		   holds_at(holding(Diver1, Diver), Time))).
-
 
 % 
 % 
@@ -7548,14 +6761,12 @@ Depth=0 ->
 		  atDepth(Object, Depth),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3643
 % [object,time]% 
 % Terminates(Surface(object),UnderWater(object),time).
 terminates(surface(Object), underWater(Object), Time).
-
 
 % 
 % 
@@ -7564,14 +6775,12 @@ terminates(surface(Object), underWater(Object), Time).
 % Terminates(Surface(diver),PositivelyBuoyant(diver),time).
 terminates(surface(Diver), positivelyBuoyant(Diver), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3649
 % [diver,time]% 
 % Terminates(Surface(diver),NegativelyBuoyant(diver),time).
 terminates(surface(Diver), negativelyBuoyant(Diver), Time).
-
 
 % 
 % 
@@ -7580,14 +6789,12 @@ terminates(surface(Diver), negativelyBuoyant(Diver), Time).
 % Terminates(Surface(diver),NeutrallyBuoyant(diver),time).
 terminates(surface(Diver), neutrallyBuoyant(Diver), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3655
 % [object,depth,time]% 
 % Terminates(Surface(object),AtDepth(object,depth),time).
 terminates(surface(Object), atDepth(Object, Depth), Time).
-
 
 % 
 % 
@@ -7597,17 +6804,14 @@ terminates(surface(Object), atDepth(Object, Depth), Time).
 happens(enterWater(Diver), Time) ->
 	holds_at(vertical(Diver), Time).
 
-
 % 
 % 
 % fluent StandingOn(diver,boat)
 fluent(standingOn(diver, boat)).
 
-
 % 
 % event StandOn(diver,boat)
 event(standOn(diver, boat)).
-
 
 % ectest/ec_reader_test_ecnet.e:3664
 % 
@@ -7616,7 +6820,6 @@ event(standOn(diver, boat)).
 % Terminates(EnterWater(diver),StandingOn(diver,boat),time).
 terminates(enterWater(Diver), standingOn(Diver, Boat), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3668
@@ -7624,28 +6827,27 @@ terminates(enterWater(Diver), standingOn(Diver, Boat), Time).
 % Initiates(StandOn(diver,boat),StandingOn(diver,boat),time).
 initiates(standOn(Diver, Boat), standingOn(Diver, Boat), Time).
 
-
 % 
 % 
 % fluent PositivelyBuoyant(diver)
 fluent(positivelyBuoyant(diver)).
 
-
 % 
 % fluent NeutrallyBuoyant(diver)
 fluent(neutrallyBuoyant(diver)).
-
 
 % ectest/ec_reader_test_ecnet.e:3674
 % 
 % fluent NegativelyBuoyant(diver)
 fluent(negativelyBuoyant(diver)).
 
-
 % 
 % mutex PositivelyBuoyant, NeutrallyBuoyant, NegativelyBuoyant
-mutex([positivelyBuoyant, neutrallyBuoyant, negativelyBuoyant]).
+mutex(positivelyBuoyant).
 
+mutex(neutrallyBuoyant).
+
+mutex(negativelyBuoyant).
 
 % 
 % ectest/ec_reader_test_ecnet.e:3679
@@ -7654,7 +6856,6 @@ mutex([positivelyBuoyant, neutrallyBuoyant, negativelyBuoyant]).
 % HoldsAt(UnderWater(diver),time).
 holds_at(positivelyBuoyant(Diver), Time) ->
 	holds_at(underWater(Diver), Time).
-
 
 % 
 % 
@@ -7665,7 +6866,6 @@ holds_at(positivelyBuoyant(Diver), Time) ->
 holds_at(neutrallyBuoyant(Diver), Time) ->
 	holds_at(underWater(Diver), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3687
@@ -7675,23 +6875,19 @@ holds_at(neutrallyBuoyant(Diver), Time) ->
 holds_at(negativelyBuoyant(Diver), Time) ->
 	holds_at(underWater(Diver), Time).
 
-
 % 
 % 
 % event PressDeflateButton(diver,bc)
 event(pressDeflateButton(diver, bc)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3693
 % event PressDumpButton(diver,bc)
 event(pressDumpButton(diver, bc)).
 
-
 % 
 % event PressInflateButton(diver,bc)
 event(pressInflateButton(diver, bc)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3697
@@ -7702,7 +6898,6 @@ event(pressInflateButton(diver, bc)).
 happens(pressDeflateButton(Diver, Bc), Time) ->
 	holds_at(vertical(Diver), Time),
 	holds_at(underWater(Bc), Time).
-
 
 % 
 % 
@@ -7715,7 +6910,6 @@ happens(pressDumpButton(Diver, Bc), Time) ->
 	holds_at(vertical(Diver), Time),
 	holds_at(underWater(Bc), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3707
@@ -7723,7 +6917,6 @@ happens(pressDumpButton(Diver, Bc), Time) ->
 % HoldsAt(UncontrolledBuoyancy(diver),time).
 happens(pressDumpButton(Diver, Bc), Time) ->
 	holds_at(uncontrolledBuoyancy(Diver), Time).
-
 
 % 
 % 
@@ -7736,7 +6929,6 @@ holds_at(wearing(Diver, Bc), Time) ->
 		  negativelyBuoyant(Diver),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3714
@@ -7747,7 +6939,6 @@ holds_at(wearing(Diver, Bc), Time) ->
 	terminates(pressDeflateButton(Diver, Bc),
 		   neutrallyBuoyant(Diver),
 		   Time).
-
 
 % 
 % 
@@ -7760,7 +6951,6 @@ holds_at(wearing(Diver, Bc), Time) ->
 		   positivelyBuoyant(Diver),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3722
@@ -7771,7 +6961,6 @@ holds_at(wearing(Diver, Bc), Time) ->
 	initiates(pressDumpButton(Diver, Bc),
 		  negativelyBuoyant(Diver),
 		  Time).
-
 
 % 
 % 
@@ -7784,7 +6973,6 @@ holds_at(wearing(Diver, Bc), Time) ->
 		   neutrallyBuoyant(Diver),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3730
@@ -7795,7 +6983,6 @@ holds_at(wearing(Diver, Bc), Time) ->
 	terminates(pressDumpButton(Diver, Bc),
 		   positivelyBuoyant(Diver),
 		   Time).
-
 
 % 
 % 
@@ -7808,7 +6995,6 @@ holds_at(wearing(Diver, Bc), Time) ->
 		  neutrallyBuoyant(Diver),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3738
@@ -7819,7 +7005,6 @@ holds_at(wearing(Diver, Bc), Time) ->
 	terminates(pressInflateButton(Diver, Bc),
 		   positivelyBuoyant(Diver),
 		   Time).
-
 
 % 
 % 
@@ -7832,7 +7017,6 @@ holds_at(wearing(Diver, Bc), Time) ->
 		   negativelyBuoyant(Diver),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3746
@@ -7843,7 +7027,6 @@ holds_at(wearing(Diver, Weight), Time) ->
 	initiates(takeOff(Diver, Weight),
 		  positivelyBuoyant(Diver),
 		  Time).
-
 
 % 
 % 
@@ -7856,7 +7039,6 @@ holds_at(wearing(Diver, Weight), Time) ->
 		   negativelyBuoyant(Diver),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3754
@@ -7868,23 +7050,19 @@ holds_at(wearing(Diver, Weight), Time) ->
 		   neutrallyBuoyant(Diver),
 		   Time).
 
-
 % 
 % 
 % fluent UncontrolledBuoyancy(diver)
 fluent(uncontrolledBuoyancy(diver)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3760
 % event LoseBuoyancyControl(diver)
 event(loseBuoyancyControl(diver)).
 
-
 % 
 % predicate IsInexperiencedDiver(diver)
 predicate(isInexperiencedDiver(diver)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3764
@@ -7894,14 +7072,12 @@ predicate(isInexperiencedDiver(diver)).
 happens(loseBuoyancyControl(Diver), Time) ->
 	isInexperiencedDiver(Diver).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3768
 % [diver,time]% 
 % Initiates(LoseBuoyancyControl(diver),UncontrolledBuoyancy(diver),time).
 initiates(loseBuoyancyControl(Diver), uncontrolledBuoyancy(Diver), Time).
-
 
 % 
 % 
@@ -7910,14 +7086,12 @@ initiates(loseBuoyancyControl(Diver), uncontrolledBuoyancy(Diver), Time).
 % Initiates(LoseBuoyancyControl(diver),PositivelyBuoyant(diver),time).
 initiates(loseBuoyancyControl(Diver), positivelyBuoyant(Diver), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3774
 % [diver,time]% 
 % Terminates(LoseBuoyancyControl(diver),NegativelyBuoyant(diver),time).
 terminates(loseBuoyancyControl(Diver), negativelyBuoyant(Diver), Time).
-
 
 % 
 % 
@@ -7926,17 +7100,14 @@ terminates(loseBuoyancyControl(Diver), negativelyBuoyant(Diver), Time).
 % Terminates(LoseBuoyancyControl(diver),NeutrallyBuoyant(diver),time).
 terminates(loseBuoyancyControl(Diver), neutrallyBuoyant(Diver), Time).
 
-
 % 
 % 
 % ; determining fluent
 % fluent AscendDescendAmount(diver,depth)
 fluent(ascendDescendAmount(diver, depth)).
 
-
 % noninertial AscendDescendAmount
 noninertial(ascendDescendAmount).
-
 
 % ectest/ec_reader_test_ecnet.e:3783
 % 
@@ -7947,7 +7118,6 @@ noninertial(ascendDescendAmount).
 % depth1=depth2.
 holds_at(ascendDescendAmount(Diver, Depth1), Time), holds_at(ascendDescendAmount(Diver, Depth2), Time) ->
 	Depth1=Depth2.
-
 
 % 
 % 
@@ -7963,13 +7133,11 @@ happens(descend(Diver, Depth), Time) ->
 	exists([Depth1],
 	       (holds_at(ascendDescendAmount(Diver, Depth1), Time), holds_at(atDepth(Diver, Depth-Depth1), Time))).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:3795
 % 
 % event KickUp(diver)
 event(kickUp(diver)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3798
@@ -7988,7 +7156,6 @@ happens(ascend(Diver, Depth), Time) ->
 	exists([Depth1],
 	       (holds_at(ascendDescendAmount(Diver, Depth1), Time), holds_at(atDepth(Diver, Depth+Depth1), Time))).
 
-
 % ectest/ec_reader_test_ecnet.e:3804
 % 
 % 
@@ -7999,12 +7166,10 @@ happens(ascend(Diver, Depth), Time) ->
 happens(kickUp(Diver), Time) ->
 	holds_at(vertical(Diver), Time).
 
-
 % 
 % 
 % event SwimAround(diver)
 event(swimAround(diver)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3812
@@ -8014,7 +7179,6 @@ event(swimAround(diver)).
 happens(swimAround(Diver), Time) ->
 	holds_at(horizontalDown(Diver), Time).
 
-
 % 
 % 
 % ; signaling
@@ -8023,16 +7187,13 @@ happens(swimAround(Diver), Time) ->
 % event SignalDescend(diver,diver)
 event(signalDescend(diver, diver)).
 
-
 % 
 % event SignalOutOfTime(diver,diver)
 event(signalOutOfTime(diver, diver)).
 
-
 % 
 % event SignalAscend(diver,diver)
 event(signalAscend(diver, diver)).
-
 
 % 
 % ;[diver1,diver2,time]
@@ -8074,11 +7235,9 @@ event(signalAscend(diver, diver)).
 % event Descend1(diver)
 event(descend1(diver)).
 
-
 % 
 % event Ascend1(diver)
 event(ascend1(diver)).
-
 
 % 
 % ;[diver,object,time]
@@ -8095,7 +7254,6 @@ event(ascend1(diver)).
 % event RapidAscendToSurface(diver)
 event(rapidAscendToSurface(diver)).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:3871
 % [diver,time]% 
@@ -8104,7 +7262,6 @@ event(rapidAscendToSurface(diver)).
 happens(descend1(Diver), Time) <->
 	exists([Depth],
 	       happens(descend(Diver, Depth), Time)).
-
 
 % 
 % 
@@ -8116,7 +7273,6 @@ happens(ascend1(Diver), Time) <->
 	exists([Depth],
 	       happens(ascend(Diver, Depth), Time)).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3879
@@ -8126,12 +7282,10 @@ happens(ascend1(Diver), Time) <->
 happens(rapidAscendToSurface(Diver), Time) ->
 	happens(ascend(Diver, 0), Time).
 
-
 % 
 % 
 % event AscendLine(diver,line)
 event(ascendLine(diver, line)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3885
@@ -8141,30 +7295,25 @@ event(ascendLine(diver, line)).
 happens(ascendLine(Diver, Line), Time) ->
 	happens(ascend1(Diver), Time).
 
-
 % 
 % 
 % fluent Disoriented(diver)
 fluent(disoriented(diver)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3891
 % event BecomeDisoriented(diver)
 event(becomeDisoriented(diver)).
 
-
 % 
 % event BecomeReoriented(diver)
 event(becomeReoriented(diver)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3895
 % [diver,time]% 
 % Initiates(BecomeDisoriented(diver),Disoriented(diver),time).
 initiates(becomeDisoriented(Diver), disoriented(Diver), Time).
-
 
 % 
 % 
@@ -8173,17 +7322,14 @@ initiates(becomeDisoriented(Diver), disoriented(Diver), Time).
 % Terminates(BecomeReoriented(diver),Disoriented(diver),time).
 terminates(becomeReoriented(Diver), disoriented(Diver), Time).
 
-
 % 
 % 
 % fluent DisturbedSilt()
 fluent(disturbedSilt()).
 
-
 % 
 % event DisturbSilt(diver)
 event(disturbSilt(diver)).
-
 
 % ectest/ec_reader_test_ecnet.e:3904
 % 
@@ -8191,7 +7337,6 @@ event(disturbSilt(diver)).
 % [diver,time]% 
 % Initiates(DisturbSilt(diver),DisturbedSilt(),time).
 initiates(disturbSilt(Diver), disturbedSilt(), Time).
-
 
 % 
 % 
@@ -8204,12 +7349,10 @@ happens(becomeDisoriented(Diver), Time) ->
 	not(holds_at(disturbedSilt(), Time-1)),
 	holds_at(disturbedSilt(), Time).
 
-
 % 
 % 
 % event Panic(diver)
 event(panic(diver)).
-
 
 % ectest/ec_reader_test_ecnet.e:3914
 % 
@@ -8227,13 +7370,11 @@ event(panic(diver)).
 ;   happens(vomit(Diver), Time-1)
 ).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3921
 % event Vomit(diver)
 event(vomit(diver)).
-
 
 % 
 % ; conditions
@@ -8241,17 +7382,14 @@ event(vomit(diver)).
 % fluent Unconscious(diver)
 fluent(unconscious(diver)).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:3927
 % event GoUnconscious(diver)
 event(goUnconscious(diver)).
 
-
 % 
 % event RegainConsciousness(diver)
 event(regainConsciousness(diver)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3931
@@ -8259,14 +7397,12 @@ event(regainConsciousness(diver)).
 % Initiates(GoUnconscious(diver),Unconscious(diver),time).
 initiates(goUnconscious(Diver), unconscious(Diver), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3934
 % [diver,time]% 
 % Terminates(RegainConsciousness(diver),Unconscious(diver),time).
 terminates(regainConsciousness(Diver), unconscious(Diver), Time).
-
 
 % 
 % 
@@ -8277,35 +7413,29 @@ terminates(regainConsciousness(Diver), unconscious(Diver), Time).
 happens(goUnconscious(Diver), Time) ->
 	happens(rapidAscendToSurface(Diver), Time).
 
-
 % 
 % 
 % fluent HasEarPain(diver)
 fluent(hasEarPain(diver)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3943
 % event StartEarPain(diver)
 event(startEarPain(diver)).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:3945
 % [diver,time] % Initiates(StartEarPain(diver),HasEarPain(diver),time).
 initiates(startEarPain(Diver), hasEarPain(Diver), Time).
-
 
 % 
 % 
 % fluent HasRupturedEardrum(diver)
 fluent(hasRupturedEardrum(diver)).
 
-
 % 
 % event RuptureEardrum(diver)
 event(ruptureEardrum(diver)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3951
@@ -8313,22 +7443,18 @@ event(ruptureEardrum(diver)).
 % Initiates(RuptureEardrum(diver),HasRupturedEardrum(diver),time).
 initiates(ruptureEardrum(Diver), hasRupturedEardrum(Diver), Time).
 
-
 % 
 % fluent ConditionOK(diver)
 fluent(conditionOK(diver)).
-
 
 % 
 % fluent HasDecompressionIllness(diver)
 fluent(hasDecompressionIllness(diver)).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:3957
 % event StartDecompressionIllness(diver)
 event(startDecompressionIllness(diver)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3959
@@ -8338,18 +7464,15 @@ event(startDecompressionIllness(diver)).
 %           time).
 initiates(startDecompressionIllness(Diver), hasDecompressionIllness(Diver), Time).
 
-
 % 
 % 
 % fluent SignalingDecompress(computer,diver)
 fluent(signalingDecompress(computer, diver)).
 
-
 % ectest/ec_reader_test_ecnet.e:3965
 % 
 % fluent SignalingLowOnAir(computer,airtank,diver)
 fluent(signalingLowOnAir(computer, airtank, diver)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3968
@@ -8358,7 +7481,6 @@ fluent(signalingLowOnAir(computer, airtank, diver)).
 % HoldsAt(LowOnAir(airtank),time).
 holds_at(signalingLowOnAir(Computer, Airtank, Diver), Time) ->
 	holds_at(lowOnAir(Airtank), Time).
-
 
 % 
 % 
@@ -8370,18 +7492,15 @@ holds_at(signalingDecompress(Computer, Diver), Time) ->
 	not(exists([Time1],
 		   (Time1<Time, happens(decompress(Diver), Time1)))).
 
-
 % 
 % 
 % event Decompress(diver)
 event(decompress(diver)).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:3978
 % event EqualizeEars(diver)
 event(equalizeEars(diver)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:3980
@@ -8394,7 +7513,6 @@ event(equalizeEars(diver)).
 	happens(startEarPain(Diver), Time),
 	happens(ruptureEardrum(Diver), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:3986
@@ -8404,7 +7522,6 @@ event(equalizeEars(diver)).
 % Happens(StartDecompressionIllness(diver),time).
 happens(ascend1(Diver), Time), not(happens(decompress(Diver), Time)) ->
 	happens(startDecompressionIllness(Diver), Time).
-
 
 % 
 % 
@@ -8416,7 +7533,6 @@ happens(ascend1(Diver), Time), not(happens(decompress(Diver), Time)) ->
 % Happens(StartDecompressionIllness(diver2),time).
 holds_at(holding(Diver1, Diver2), Time), happens(ascend1(Diver1), Time), not(happens(decompress(Diver2), Time)) ->
 	happens(startDecompressionIllness(Diver2), Time).
-
 
 % 
 % 
@@ -8430,12 +7546,10 @@ happens(decompress(Diver), Time) ->
 	       (Depth>0, holds_at(atDepth(Diver, Depth), Time))),
 	not(holds_at(uncontrolledBuoyancy(Diver), Time)).
 
-
 % 
 % 
 % fluent HasHeadache(diver)
 fluent(hasHeadache(diver)).
-
 
 % ectest/ec_reader_test_ecnet.e:4003
 % 
@@ -8454,36 +7568,30 @@ holds_at(conditionOK(Diver), Time) ->
 	not(holds_at(hasDecompressionIllness(Diver), Time)),
 	not(holds_at(hasHeadache(Diver), Time)).
 
-
 % ectest/ec_reader_test_ecnet.e:4010
 % 
 % 
 % event BeAirlifted(diver)
 event(beAirlifted(diver)).
 
-
 % 
 % event TakeInWater(diver)
 event(takeInWater(diver)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4016
 % fluent LowOnAir(airtank)
 fluent(lowOnAir(airtank)).
 
-
 % 
 % event BecomeLowOnAir(airtank)
 event(becomeLowOnAir(airtank)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4020
 % [airtank,time]% 
 % Initiates(BecomeLowOnAir(airtank),LowOnAir(airtank),time).
 initiates(becomeLowOnAir(Airtank), lowOnAir(Airtank), Time).
-
 
 % 
 % 
@@ -8492,29 +7600,24 @@ initiates(becomeLowOnAir(Airtank), lowOnAir(Airtank), Time).
 % [diver] % HoldsAt(ConditionOK(diver),0).
 holds_at(conditionOK(Diver), 0).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:4025
 % [diver] % HoldsAt(Vertical(diver),0).
 holds_at(vertical(Diver), 0).
 
-
 % 
 % !HoldsAt(DisturbedSilt(),0).
 not(holds_at(disturbedSilt(), 0)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4027
 % [diver] % !HoldsAt(UncontrolledBuoyancy(diver),0).
 not(holds_at(uncontrolledBuoyancy(Diver), 0)).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:4028
 % [diver] % !HoldsAt(Disoriented(diver),0).
 not(holds_at(disoriented(Diver), 0)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4029
@@ -8525,31 +7628,26 @@ not(holds_at(positivelyBuoyant(Diver), 0)),
 not(holds_at(neutrallyBuoyant(Diver), 0)),
 not(holds_at(negativelyBuoyant(Diver), 0)).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:4032
 % [diver,object] % !HoldsAt(Wearing(diver,object),0).
 not(holds_at(wearing(Diver, Object), 0)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4033
 % [diver,object] % !HoldsAt(Holding(diver,object),0).
 not(holds_at(holding(Diver, Object), 0)).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:4034
 % [diver1,diver2] % !HoldsAt(Separated(diver1,diver2),0).
 not(holds_at(separated(Diver1, Diver2), 0)).
-
 
 % 
 % ;[agent,object] !HoldsAt(See(agent,object),0).
 % 
 % fluent Separated(diver,diver)
 fluent(separated(diver, diver)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4039
@@ -8559,25 +7657,21 @@ fluent(separated(diver, diver)).
 holds_at(separated(Diver1, Diver2), Time) ->
 	holds_at(separated(Diver2, Diver1), Time).
 
-
 % 
 % 
 % event BecomeSeparated(diver,diver)
 event(becomeSeparated(diver, diver)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4045
 % event BeReunitedWith(diver,diver)
 event(beReunitedWith(diver, diver)).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:4047
 % [diver1,diver2,time]% 
 % Initiates(BecomeSeparated(diver1,diver2),Separated(diver1,diver2),time).
 initiates(becomeSeparated(Diver1, Diver2), separated(Diver1, Diver2), Time).
-
 
 % 
 % 
@@ -8586,7 +7680,6 @@ initiates(becomeSeparated(Diver1, Diver2), separated(Diver1, Diver2), Time).
 % Initiates(BecomeSeparated(diver1,diver2),Separated(diver2,diver1),time).
 initiates(becomeSeparated(Diver1, Diver2), separated(Diver2, Diver1), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:4053
@@ -8594,14 +7687,12 @@ initiates(becomeSeparated(Diver1, Diver2), separated(Diver2, Diver1), Time).
 % Terminates(BeReunitedWith(diver1,diver2),Separated(diver1,diver2),time).
 terminates(beReunitedWith(Diver1, Diver2), separated(Diver1, Diver2), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:4056
 % [diver1,diver2,time]% 
 % Terminates(BeReunitedWith(diver1,diver2),Separated(diver2,diver1),time).
 terminates(beReunitedWith(Diver1, Diver2), separated(Diver2, Diver1), Time).
-
 
 % 
 % 
@@ -8632,16 +7723,13 @@ terminates(beReunitedWith(Diver1, Diver2), separated(Diver2, Diver1), Time).
 % event PutOn(agent,clothing)
 event(putOn(agent, clothing)).
 
-
 % 
 % event TakeOff(agent,clothing)
 event(takeOff(agent, clothing)).
 
-
 % 
 % fluent Wearing(agent,clothing)
 fluent(wearing(agent, clothing)).
-
 
 % ectest/ec_reader_test_ecnet.e:4086
 % 
@@ -8651,7 +7739,6 @@ fluent(wearing(agent, clothing)).
 %           Wearing(agent,clothing),
 %           time).
 initiates(putOn(Agent, Clothing), wearing(Agent, Clothing), Time).
-
 
 % 
 % 
@@ -8664,7 +7751,6 @@ initiates(putOn(Agent, Clothing), wearing(Agent, Clothing), Time).
 %            HoldsAt(At(clothing,location),time).
 exists([Location],  (happens(putOn(Agent, Clothing), Time)->not(holds_at(wearing(Agent, Clothing), Time)), holds_at(at(Agent, Location), Time), holds_at(at(Clothing, Location), Time))).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:4098
@@ -8673,7 +7759,6 @@ exists([Location],  (happens(putOn(Agent, Clothing), Time)->not(holds_at(wearing
 %            Wearing(agent,clothing),
 %            time).
 terminates(takeOff(Agent, Clothing), wearing(Agent, Clothing), Time).
-
 
 % 
 % 
@@ -8684,14 +7769,12 @@ terminates(takeOff(Agent, Clothing), wearing(Agent, Clothing), Time).
 happens(takeOff(Agent, Clothing), Time) ->
 	holds_at(wearing(Agent, Clothing), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:4107
 % [agent,clothing,location,time]% 
 % Releases(PutOn(agent,clothing),At(clothing,location),time).
 releases(putOn(Agent, Clothing), at(Clothing, Location), Time).
-
 
 % 
 % 
@@ -8702,7 +7785,6 @@ releases(putOn(Agent, Clothing), at(Clothing, Location), Time).
 % HoldsAt(At(clothing,location),time).
 holds_at(wearing(Agent, Clothing), Time), holds_at(at(Agent, Location), Time) ->
 	holds_at(at(Clothing, Location), Time).
-
 
 % 
 % 
@@ -8720,7 +7802,6 @@ holds_at(at(Agent, Location), Time) ->
 	initiates(takeOff(Agent, Clothing),
 		  at(Clothing, Location),
 		  Time).
-
 
 % 
 % 
@@ -8750,15 +7831,12 @@ holds_at(at(Agent, Location), Time) ->
 % fluent Hungry(agent)
 fluent(hungry(agent)).
 
-
 % 
 % fluent Satiated(agent)
 fluent(satiated(agent)).
 
-
 % noninertial Satiated
 noninertial(satiated).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4150
@@ -8766,12 +7844,10 @@ noninertial(satiated).
 holds_at(hungry(Agent), Time) <->
 	not(holds_at(satiated(Agent), Time)).
 
-
 % 
 % 
 % event Eat(agent,food)
 event(eat(agent, food)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4154
@@ -8783,14 +7859,12 @@ event(eat(agent, food)).
 % HoldsAt(At(food,location),time).
 exists([Location],  (happens(eat(Agent, Food), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Food, Location), Time))).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:4160
 % [agent,food,time]% 
 % Terminates(Eat(agent,food),Hungry(agent),time).
 terminates(eat(Agent, Food), hungry(Agent), Time).
-
 
 % 
 % 
@@ -8817,42 +7891,33 @@ terminates(eat(Agent, Food), hungry(Agent), Time).
 % sort restaurant: script
 subsort(restaurant, script).
 
-
 % sort waiter: agent
 subsort(waiter, agent).
 
-
 % sort cook: agent
 subsort(cook, agent).
-
 
 % 
 % function BillOf(restaurant): bill
 function(billOf(restaurant), bill).
 
-
 % function CookOf(restaurant): cook
 function(cookOf(restaurant), cook).
-
 
 % ectest/ec_reader_test_ecnet.e:4187
 % function TableOf(restaurant): table
 function(tableOf(restaurant), table).
 
-
 % function WaiterOf(restaurant): waiter
 function(waiterOf(restaurant), waiter).
 
-
 % function KitchenDoorOf(restaurant): door
 function(kitchenDoorOf(restaurant), door).
-
 
 % 
 % ; awaiting customer/waiter has set down bill on customer's table
 % fluent BeWaiter0(waiter)
 fluent(beWaiter0(waiter)).
-
 
 % ectest/ec_reader_test_ecnet.e:4193
 % 
@@ -8860,12 +7925,10 @@ fluent(beWaiter0(waiter)).
 % fluent BeWaiter1(waiter)
 fluent(beWaiter1(waiter)).
 
-
 % 
 % ; has customer order
 % fluent BeWaiter2(waiter)
 fluent(beWaiter2(waiter)).
-
 
 % ectest/ec_reader_test_ecnet.e:4199
 % 
@@ -8873,12 +7936,10 @@ fluent(beWaiter2(waiter)).
 % fluent BeWaiter3(waiter)
 fluent(beWaiter3(waiter)).
 
-
 % 
 % ; awaiting preparation of order
 % fluent BeWaiter4(waiter)
 fluent(beWaiter4(waiter)).
-
 
 % ectest/ec_reader_test_ecnet.e:4205
 % 
@@ -8886,12 +7947,10 @@ fluent(beWaiter4(waiter)).
 % fluent BeWaiter5(waiter)
 fluent(beWaiter5(waiter)).
 
-
 % 
 % ; back in dining room
 % fluent BeWaiter6(waiter)
 fluent(beWaiter6(waiter)).
-
 
 % ectest/ec_reader_test_ecnet.e:4211
 % 
@@ -8899,12 +7958,10 @@ fluent(beWaiter6(waiter)).
 % fluent BeWaiter7(waiter)
 fluent(beWaiter7(waiter)).
 
-
 % 
 % ; customer has requested bill
 % fluent BeWaiter8(waiter)
 fluent(beWaiter8(waiter)).
-
 
 % ectest/ec_reader_test_ecnet.e:4217
 % 
@@ -8912,11 +7969,9 @@ fluent(beWaiter8(waiter)).
 % fluent BeWaiter9(waiter)
 fluent(beWaiter9(waiter)).
 
-
 % 
 % xor BeWaiter0, BeWaiter1, BeWaiter2, BeWaiter3, BeWaiter4, BeWaiter5, BeWaiter6, BeWaiter7, BeWaiter8, BeWaiter9
 xor([beWaiter0, beWaiter1, beWaiter2, beWaiter3, beWaiter4, beWaiter5, beWaiter6, beWaiter7, beWaiter8, beWaiter9]).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4223
@@ -8929,7 +7984,6 @@ holds_at(beWaiter0(Waiter), Time) ->
 	terminates(greet(Waiter, Agent),
 		   beWaiter0(Waiter),
 		   Time).
-
 
 % 
 % 
@@ -8944,7 +7998,6 @@ holds_at(beWaiter0(Waiter), Time) ->
 		  beWaiter1(Waiter),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:4235
@@ -8957,7 +8010,6 @@ holds_at(beWaiter1(Waiter), Time) ->
 	terminates(order(Agent, Waiter, Food),
 		   beWaiter1(Waiter),
 		   Time).
-
 
 % 
 % 
@@ -8972,7 +8024,6 @@ holds_at(beWaiter1(Waiter), Time) ->
 		  beWaiter2(Waiter),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:4247
@@ -8984,7 +8035,6 @@ waiterOf(Restaurant)=Waiter, holds_at(beWaiter2(Waiter), Time) ->
 	happens(walkThroughDoor12(Waiter,
 				  kitchenDoorOf(Restaurant)),
 		Time).
-
 
 % 
 % 
@@ -9000,7 +8050,6 @@ holds_at(beWaiter2(Waiter), Time), waiterOf(Restaurant)=Waiter, kitchenDoorOf(Re
 	terminates(walkThroughDoor12(Waiter, Door),
 		   beWaiter2(Waiter),
 		   Time).
-
 
 % ectest/ec_reader_test_ecnet.e:4258
 % 
@@ -9018,7 +8067,6 @@ holds_at(beWaiter2(Waiter), Time), waiterOf(Restaurant)=Waiter, kitchenDoorOf(Re
 		  beWaiter3(Waiter),
 		  Time).
 
-
 % ectest/ec_reader_test_ecnet.e:4266
 % 
 % 
@@ -9032,7 +8080,6 @@ holds_at(beWaiter3(waiterOf(Restaurant)), Time), exists([Agent], holds_at(knowOr
 		      cookOf(Restaurant),
 		      Food),
 		Time).
-
 
 % 
 % 
@@ -9048,7 +8095,6 @@ waiterOf(Restaurant)=Waiter, cookOf(Restaurant)=Cook, holds_at(beWaiter3(Waiter)
 	terminates(order(Waiter, Cook, Food),
 		   beWaiter3(Waiter),
 		   Time).
-
 
 % ectest/ec_reader_test_ecnet.e:4279
 % 
@@ -9066,7 +8112,6 @@ waiterOf(Restaurant)=Waiter, cookOf(Restaurant)=Cook, holds_at(beWaiter3(Waiter)
 		  beWaiter4(Waiter),
 		  Time).
 
-
 % ectest/ec_reader_test_ecnet.e:4287
 % 
 % 
@@ -9078,7 +8123,6 @@ waiterOf(Restaurant)=Waiter, cookOf(Restaurant)=Cook, holds_at(beWaiter3(Waiter)
 % Happens(PickUp(waiter,food),time).
 holds_at(beWaiter4(Waiter), Time), exists([Agent], holds_at(knowOrder(Waiter, Agent, Food), Time)), holds_at(foodPrepared(Food), Time) ->
 	happens(pickUp(Waiter, Food), Time).
-
 
 % 
 % 
@@ -9093,7 +8137,6 @@ holds_at(beWaiter4(Waiter), Time), exists([Agent], holds_at(knowOrder(Waiter, Ag
 	terminates(pickUp(Waiter, Food),
 		   beWaiter4(Waiter),
 		   Time).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4301
@@ -9110,7 +8153,6 @@ holds_at(beWaiter4(Waiter), Time), exists([Agent], holds_at(knowOrder(Waiter, Ag
 		  beWaiter5(Waiter),
 		  Time).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:4308
 % 
@@ -9123,7 +8165,6 @@ waiterOf(Restaurant)=Waiter, holds_at(beWaiter5(Waiter), Time) ->
 	happens(walkThroughDoor21(Waiter,
 				  kitchenDoorOf(Restaurant)),
 		Time).
-
 
 % 
 % 
@@ -9139,7 +8180,6 @@ holds_at(beWaiter5(Waiter), Time), waiterOf(Restaurant)=Waiter, kitchenDoorOf(Re
 	terminates(walkThroughDoor21(Waiter, Door),
 		   beWaiter5(Waiter),
 		   Time).
-
 
 % ectest/ec_reader_test_ecnet.e:4320
 % 
@@ -9157,7 +8197,6 @@ holds_at(beWaiter5(Waiter), Time), waiterOf(Restaurant)=Waiter, kitchenDoorOf(Re
 		  beWaiter6(Waiter),
 		  Time).
 
-
 % ectest/ec_reader_test_ecnet.e:4328
 % 
 % 
@@ -9170,7 +8209,6 @@ holds_at(beWaiter5(Waiter), Time), waiterOf(Restaurant)=Waiter, kitchenDoorOf(Re
 % Happens(PlaceOn(waiter,food,table),time).
 waiterOf(Restaurant)=Waiter, tableOf(Restaurant)=Table, holds_at(beWaiter6(Waiter), Time), holds_at(holding(Waiter, Food), Time) ->
 	happens(placeOn(Waiter, Food, Table), Time).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4336
@@ -9186,7 +8224,6 @@ holds_at(beWaiter6(Waiter), Time) ->
 		   beWaiter6(Waiter),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:4343
@@ -9199,7 +8236,6 @@ holds_at(beWaiter6(Waiter), Time) ->
 	initiates(placeOn(Waiter, Food, Table),
 		  beWaiter7(Waiter),
 		  Time).
-
 
 % 
 % 
@@ -9214,7 +8250,6 @@ holds_at(beWaiter7(Waiter), Time) ->
 		   beWaiter7(Waiter),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:4355
@@ -9228,7 +8263,6 @@ holds_at(beWaiter7(Waiter), Time) ->
 		  beWaiter8(Waiter),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:4361
@@ -9239,7 +8273,6 @@ holds_at(beWaiter7(Waiter), Time) ->
 % Happens(PickUp(waiter,bill),time).
 waiterOf(Restaurant)=Waiter, billOf(Restaurant)=Bill, holds_at(beWaiter8(Waiter), Time) ->
 	happens(pickUp(Waiter, Bill), Time).
-
 
 % 
 % 
@@ -9254,7 +8287,6 @@ holds_at(beWaiter8(Waiter), Time) ->
 		   beWaiter8(Waiter),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:4373
@@ -9268,7 +8300,6 @@ holds_at(beWaiter8(Waiter), Time) ->
 		  beWaiter9(Waiter),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:4379
@@ -9280,7 +8311,6 @@ holds_at(beWaiter8(Waiter), Time) ->
 % Happens(PlaceOn(waiter,bill,table),time).
 waiterOf(Restaurant)=Waiter, billOf(Restaurant)=Bill, tableOf(Restaurant)=Table, holds_at(beWaiter9(Waiter), Time) ->
 	happens(placeOn(Waiter, Bill, Table), Time).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4385
@@ -9296,7 +8326,6 @@ holds_at(beWaiter9(Waiter), Time) ->
 		   beWaiter9(Waiter),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:4392
@@ -9310,7 +8339,6 @@ holds_at(beWaiter9(Waiter), Time) ->
 		  beWaiter0(Waiter),
 		  Time).
 
-
 % 
 % 
 % ; awaiting next waiter order
@@ -9318,17 +8346,14 @@ holds_at(beWaiter9(Waiter), Time) ->
 % fluent BeCook0(cook)
 fluent(beCook0(cook)).
 
-
 % 
 % ; waiter order received
 % fluent BeCook1(cook)
 fluent(beCook1(cook)).
 
-
 % 
 % xor BeCook0, BeCook1
 xor([beCook0, beCook1]).
-
 
 % ectest/ec_reader_test_ecnet.e:4405
 % 
@@ -9343,7 +8368,6 @@ holds_at(beCook0(Cook), Time) ->
 		   beCook0(Cook),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:4412
@@ -9357,18 +8381,15 @@ holds_at(beCook0(Cook), Time) ->
 		  beCook1(Cook),
 		  Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:4418
 % event FoodPrepare(agent,food)
 event(foodPrepare(agent, food)).
 
-
 % 
 % fluent FoodPrepared(food)
 fluent(foodPrepared(food)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4422
@@ -9377,7 +8398,6 @@ fluent(foodPrepared(food)).
 %           FoodPrepared(food),
 %           time).
 initiates(foodPrepare(Agent, Food), foodPrepared(Food), Time).
-
 
 % 
 % 
@@ -9390,7 +8410,6 @@ initiates(foodPrepare(Agent, Food), foodPrepared(Food), Time).
 % HoldsAt(At(food,location),time).
 exists([Location],  (happens(foodPrepare(Agent, Food), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Food, Location), Time))).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:4433
@@ -9400,7 +8419,6 @@ exists([Location],  (happens(foodPrepare(Agent, Food), Time)->holds_at(at(Agent,
 % Happens(FoodPrepare(cook,food),time).
 holds_at(beCook1(Cook), Time), holds_at(knowOrder(Cook, Agent, Food), Time) ->
 	happens(foodPrepare(Cook, Food), Time).
-
 
 % 
 % 
@@ -9415,7 +8433,6 @@ holds_at(beCook1(Cook), Time) ->
 		   beCook1(Cook),
 		   Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_ecnet.e:4444
@@ -9428,7 +8445,6 @@ holds_at(beCook1(Cook), Time) ->
 	initiates(foodPrepare(Cook, Food),
 		  beCook0(Cook),
 		  Time).
-
 
 % 
 % 
@@ -9467,389 +8483,384 @@ holds_at(beCook1(Cook), Time) ->
 % option modeldiff on
 option(modeldiff, on).
 
-
 % option encoding 3
 option(encoding, 3).
-
 
 % option renaming off
 option(renaming, off).
 
-
 % 
 % ignore Love, ThreatenedBy
-ignore([love, threatenedBy]).
+ignore(love).
 
+ignore(threatenedBy).
 
 % ectest/ec_reader_test_ecnet.e:4484
 % ignore LookOutOnto, Floor, BuildingOf, SkyOf, GroundOf
-ignore([lookOutOnto, floor, buildingOf, skyOf, groundOf]).
+ignore(lookOutOnto).
 
+ignore(floor).
+
+ignore(buildingOf).
+
+ignore(skyOf).
+
+ignore(groundOf).
 
 % ignore Inside
 ignore(inside).
 
-
 % ignore Near, WalkFrom, WalkFromTo, RunFromTo
-ignore([near, walkFrom, walkFromTo, runFromTo]).
+ignore(near).
 
+ignore(walkFrom).
+
+ignore(walkFromTo).
+
+ignore(runFromTo).
 
 % ignore BillOf, CookOf, TableOf, WaiterOf, KitchenDoorOf
-ignore([billOf, cookOf, tableOf, waiterOf, kitchenDoorOf]).
+ignore(billOf).
 
+ignore(cookOf).
+
+ignore(tableOf).
+
+ignore(waiterOf).
+
+ignore(kitchenDoorOf).
 
 % ignore BeWaiter0, BeWaiter1, BeWaiter2, BeWaiter3, BeWaiter4
-ignore([beWaiter0, beWaiter1, beWaiter2, beWaiter3, beWaiter4]).
+ignore(beWaiter0).
 
+ignore(beWaiter1).
+
+ignore(beWaiter2).
+
+ignore(beWaiter3).
+
+ignore(beWaiter4).
 
 % ignore BeWaiter5, BeWaiter6, BeWaiter7, BeWaiter8, BeWaiter9
-ignore([beWaiter5, beWaiter6, beWaiter7, beWaiter8, beWaiter9]).
+ignore(beWaiter5).
 
+ignore(beWaiter6).
+
+ignore(beWaiter7).
+
+ignore(beWaiter8).
+
+ignore(beWaiter9).
 
 % ectest/ec_reader_test_ecnet.e:4490
 % ignore BeCook0, BeCook1
-ignore([beCook0, beCook1]).
+ignore(beCook0).
 
+ignore(beCook1).
 
 % ignore InviteIn, InvitedIn, IntendToWalkIn, IntentionToWalkIn
-ignore([inviteIn, invitedIn, intendToWalkIn, intentionToWalkIn]).
+ignore(inviteIn).
 
+ignore(invitedIn).
+
+ignore(intendToWalkIn).
+
+ignore(intentionToWalkIn).
 
 % ignore ActOnIntentionToWalkIn, Greet, SayGoodbye, CryForJoy
-ignore([actOnIntentionToWalkIn, greet, sayGoodbye, cryForJoy]).
+ignore(actOnIntentionToWalkIn).
 
+ignore(greet).
+
+ignore(sayGoodbye).
+
+ignore(cryForJoy).
 
 % ignore Threaten, ReleaseFromThreat, ThreatenedBy
-ignore([threaten, releaseFromThreat, threatenedBy]).
+ignore(threaten).
 
+ignore(releaseFromThreat).
+
+ignore(threatenedBy).
 
 % ignore Order, KnowOrder, Request, KnowRequest
-ignore([order, knowOrder, request, knowRequest]).
+ignore(order).
 
+ignore(knowOrder).
+
+ignore(request).
+
+ignore(knowRequest).
 
 % ignore PutInside, TakeOutOf
-ignore([putInside, takeOutOf]).
+ignore(putInside).
 
+ignore(takeOutOf).
 
 % ectest/ec_reader_test_ecnet.e:4496
 % ignore SayPleaseToMeet, Move
-ignore([sayPleaseToMeet, move]).
+ignore(sayPleaseToMeet).
 
+ignore(move).
 
 % 
 % load foundations/Root.e
-% loading('foundations/Root.e').
+load('foundations/Root.e').
 
-
-% foundations/Root.e:1
-% translate: unskipped  File: on_load_ele 
-% foundations/Root.e:17
-% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-% loading('foundations/EC.e').
+load('foundations/EC.e').
 
-
-% ectest/ec_reader_test_ecnet.e:4500
-% translate: unskipped  File: on_load_ele 
-% ectest/ec_reader_test_ecnet.e:4500
-% translate: ready  File: on_load_ele 
 % load answers/Mueller2003/Ontology.e
 load('answers/Mueller2003/Ontology.e').
-
 
 % load answers/Mueller2004c/RTSpaceM.e
 load('answers/Mueller2004c/RTSpaceM.e').
 
-
+% ectest/ec_reader_test_ecnet.e:4502
 % load answers/Mueller2004c/OTSpaceM.e
 load('answers/Mueller2004c/OTSpaceM.e').
-
 
 % load answers/Mueller2004c/HungerNeed.e
 load('answers/Mueller2004c/HungerNeed.e').
 
-
 % load answers/Mueller2004c/Restaurant.e
 load('answers/Mueller2004c/Restaurant.e').
-
 
 % load answers/Mueller2003/Sleep.e
 load('answers/Mueller2003/Sleep.e').
 
-
-% ectest/ec_reader_test_ecnet.e:4506
 % load answers/Mueller2003/SpeechAct.e
 load('answers/Mueller2003/SpeechAct.e').
-
 
 % load answers/Mueller2004c/Dress.e
 load('answers/Mueller2004c/Dress.e').
 
-
+% ectest/ec_reader_test_ecnet.e:4508
 % 
 % room Upstairs1
 t(room, upstairs1).
-
 
 % 
 % staircase Staircase1
 t(staircase, staircase1).
 
-
-% ectest/ec_reader_test_ecnet.e:4512
 % 
 % room Hallway1
 t(room, hallway1).
 
-
+% ectest/ec_reader_test_ecnet.e:4514
 % 
 % Side1(Staircase1)=Hallway1.
 side1(staircase1)=hallway1.
-
 
 % 
 % Side2(Staircase1)=Upstairs1.
 side2(staircase1)=upstairs1.
 
-
 % 
 % 
-% ectest/ec_reader_test_ecnet.e:4518
 % door DiningRoomDoor1
 t(door, diningRoomDoor1).
 
-
 % 
+% ectest/ec_reader_test_ecnet.e:4520
 % room DiningRoom1
 t(room, diningRoom1).
-
 
 % 
 % Side1(DiningRoomDoor1)=Hallway1.
 side1(diningRoomDoor1)=hallway1.
 
-
 % 
 % Side2(DiningRoomDoor1)=DiningRoom1.
 side2(diningRoomDoor1)=diningRoom1.
 
-
 % 
-% ectest/ec_reader_test_ecnet.e:4524
 % 
 % door KitchenDoor1
 t(door, kitchenDoor1).
 
-
+% ectest/ec_reader_test_ecnet.e:4526
 % 
 % room Kitchen1
 t(room, kitchen1).
-
 
 % 
 % Side1(KitchenDoor1)=DiningRoom1.
 side1(kitchenDoor1)=diningRoom1.
 
-
 % 
-% ectest/ec_reader_test_ecnet.e:4530
 % Side2(KitchenDoor1)=Kitchen1.
 side2(kitchenDoor1)=kitchen1.
 
-
 % 
 % 
+% ectest/ec_reader_test_ecnet.e:4532
 % agent Eater1
 t(agent, eater1).
-
 
 % 
 % agent Eater2
 t(agent, eater2).
 
-
 % 
-% ectest/ec_reader_test_ecnet.e:4536
 % clothing Clothing1
 t(clothing, clothing1).
 
-
 % 
+% ectest/ec_reader_test_ecnet.e:4538
 % clothing Clothing2
 t(clothing, clothing2).
-
 
 % 
 % chair Chair1
 t(chair, chair1).
 
-
 % 
-% ectest/ec_reader_test_ecnet.e:4542
 % chair Chair2
 t(chair, chair2).
 
-
 % 
+% ectest/ec_reader_test_ecnet.e:4544
 % food Food1
 t(food, food1).
-
 
 % 
 % agent Cook1
 t(agent, cook1).
 
-
 % 
-% ectest/ec_reader_test_ecnet.e:4548
 % table Table1
 t(table, table1).
 
-
 % 
+% ectest/ec_reader_test_ecnet.e:4550
 % content Content1
 t(content, content1).
-
 
 % 
 % content Content2
 t(content, content2).
 
-
 % 
-% ectest/ec_reader_test_ecnet.e:4554
 % outside DummyOutside1
 t(outside, dummyOutside1).
 
-
 % 
 % ; prune
+% ectest/ec_reader_test_ecnet.e:4557
 % sort ona, onb
-sort([ona, onb]).
+sort(ona).
 
+sort(onb).
 
 % fluent! On(ona,onb)
 fluent(on(ona, onb)).
 
-
 % event! PlaceOn(agent,ona,onb)
 event(placeOn(agent, ona, onb)).
 
-
-% ectest/ec_reader_test_ecnet.e:4560
 % event! TakeOffOf(agent,ona,onb)
 event(takeOffOf(agent, ona, onb)).
 
-
 % 
 % sort ordera, orderb, orderc
-sort([ordera, orderb, orderc]).
+sort(ordera).
 
+sort(orderb).
 
+sort(orderc).
+
+% ectest/ec_reader_test_ecnet.e:4563
 % event! Order(ordera,orderb,orderc)
 event(order(ordera, orderb, orderc)).
-
 
 % fluent! KnowOrder(orderb,ordera,orderc)
 fluent(knowOrder(orderb, ordera, orderc)).
 
-
 % 
-% ectest/ec_reader_test_ecnet.e:4566
 % sort requesta, requestb, requestc
-sort([requesta, requestb, requestc]).
+sort(requesta).
 
+sort(requestb).
+
+sort(requestc).
 
 % event! Request(requesta,requestb,requestc)
 event(request(requesta, requestb, requestc)).
 
-
 % fluent! KnowRequest(requestb,requesta,requestc)
 fluent(knowRequest(requestb, requesta, requestc)).
 
-
+% ectest/ec_reader_test_ecnet.e:4569
 % 
 % sort holda, holdb, holdc
-sort([holda, holdb, holdc]).
+sort(holda).
 
+sort(holdb).
+
+sort(holdc).
 
 % event! TakeOffOf(holda,holdb,holdc)
 event(takeOffOf(holda, holdb, holdc)).
 
-
-% ectest/ec_reader_test_ecnet.e:4572
 % event! PickUp(holda,holdb)
 event(pickUp(holda, holdb)).
-
 
 % event! LetGoOf(holda,holdb)
 event(letGoOf(holda, holdb)).
 
-
 % event! Hold(holda,holdb)
 event(hold(holda, holdb)).
 
-
+% ectest/ec_reader_test_ecnet.e:4575
 % fluent! Holding(holda,holdb)
 fluent(holding(holda, holdb)).
 
-
 % 
 % sort sita, sitb
-sort([sita, sitb]).
+sort(sita).
 
+sort(sitb).
 
-% ectest/ec_reader_test_ecnet.e:4578
 % event! LieOn(sita,sitb)
 event(lieOn(sita, sitb)).
-
 
 % event! SitOn(sita,sitb)
 event(sitOn(sita, sitb)).
 
-
 % event! RiseFrom(sita,sitb)
 event(riseFrom(sita, sitb)).
 
-
+% ectest/ec_reader_test_ecnet.e:4581
 % fluent! LyingOn(sita,sitb)
 fluent(lyingOn(sita, sitb)).
-
 
 % fluent! SittingOn(sita,sitb)
 fluent(sittingOn(sita, sitb)).
 
-
 % 
-% ectest/ec_reader_test_ecnet.e:4584
 % ona! Food1
 t(ona, food1).
-
 
 % onb! Table1
 t(onb, table1).
 
-
 % holda! Cook1
 t(holda, cook1).
 
-
+% ectest/ec_reader_test_ecnet.e:4587
 % holdb! Food1
 t(holdb, food1).
-
 
 % holdc! Table1
 t(holdc, table1).
 
-
 % sita! Eater1
 t(sita, eater1).
 
-
-% ectest/ec_reader_test_ecnet.e:4590
 % sitb! Chair1
 t(sitb, chair1).
-
 
 % 
 % ; initial situation
@@ -9857,88 +8868,73 @@ t(sitb, chair1).
 % [agent] % HoldsAt(Dressed(agent),0).
 holds_at(dressed(Agent), 0).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:4594
 % [agent] % HoldsAt(Awake(agent),0).
 holds_at(awake(Agent), 0).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4595
 % [agent] % HoldsAt(Sleep3(agent),0).
 holds_at(sleep3(Agent), 0).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:4596
 % [agent] % HoldsAt(Standing(agent),0).
 holds_at(standing(Agent), 0).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4597
 % [agent] % HoldsAt(Standing(agent),0).
 holds_at(standing(Agent), 0).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:4598
 % [agent,object] % !HoldsAt(Holding(agent,object),0).
 not(holds_at(holding(Agent, Object), 0)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4599
 % [food] % HoldsAt(At(food,Kitchen1),0).
 holds_at(at(Food, kitchen1), 0).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:4600
 % [food] % !HoldsAt(FoodPrepared(food),0).
 not(holds_at(foodPrepared(Food), 0)).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4601
 % [agent] % HoldsAt(Hungry(agent),0).
 holds_at(hungry(Agent), 0).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:4602
 % [door] % HoldsAt(DoorIsOpen(door),0).
 holds_at(doorIsOpen(Door), 0).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4603
 % [clothing] % HoldsAt(At(clothing,Upstairs1),0).
 holds_at(at(Clothing, upstairs1), 0).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:4604
 % [chair] % HoldsAt(At(chair,DiningRoom1),0).
 holds_at(at(Chair, diningRoom1), 0).
 
-
 % 
 % HoldsAt(At(Cook1,Kitchen1),0).
 holds_at(at(cook1, kitchen1), 0).
-
 
 % 
 % HoldsAt(At(Table1,DiningRoom1),0).
 holds_at(at(table1, diningRoom1), 0).
 
-
 % 
 % ectest/ec_reader_test_ecnet.e:4607
 % [agent,clothing] % !HoldsAt(Wearing(agent,clothing),0).
 not(holds_at(wearing(Agent, Clothing), 0)).
-
 
 % 
 % 
@@ -9946,140 +8942,113 @@ not(holds_at(wearing(Agent, Clothing), 0)).
 % HoldsAt(At(Cook1,Kitchen1),0).
 holds_at(at(cook1, kitchen1), 0).
 
-
 % 
 % HoldsAt(At(Eater1,Upstairs1),0).
 holds_at(at(eater1, upstairs1), 0).
 
-
 % 
 % HoldsAt(At(Eater2,Upstairs1),0).
 holds_at(at(eater2, upstairs1), 0).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4613
 % Happens(FoodPrepare(Cook1,Food1),0).
 happens(foodPrepare(cook1, food1), 0).
 
-
 % 
 % Happens(PutOn(Eater1,Clothing1),1).
 happens(putOn(eater1, clothing1), 1).
-
 
 % 
 % Happens(PutOn(Eater2,Clothing2),2).
 happens(putOn(eater2, clothing2), 2).
 
-
 % 
 % Happens(WalkDownStaircase(Eater1,Staircase1),3).
 happens(walkDownStaircase(eater1, staircase1), 3).
-
 
 % 
 % Happens(WalkDownStaircase(Eater2,Staircase1),4).
 happens(walkDownStaircase(eater2, staircase1), 4).
 
-
 % 
 % Happens(WalkThroughDoor12(Eater1,DiningRoomDoor1),5).
 happens(walkThroughDoor12(eater1, diningRoomDoor1), 5).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4619
 % Happens(WalkThroughDoor12(Eater2,DiningRoomDoor1),6).
 happens(walkThroughDoor12(eater2, diningRoomDoor1), 6).
 
-
 % 
 % Happens(SitOn(Eater1,Chair1),7).
 happens(sitOn(eater1, chair1), 7).
-
 
 % 
 % Happens(SitOn(Eater2,Chair2),8).
 happens(sitOn(eater2, chair2), 8).
 
-
 % 
 % Happens(PickUp(Cook1, Food1),9).
 happens(pickUp(cook1, food1), 9).
-
 
 % 
 % Happens(WalkThroughDoor21(Cook1, KitchenDoor1),10).
 happens(walkThroughDoor21(cook1, kitchenDoor1), 10).
 
-
 % 
 % Happens(PlaceOn(Cook1, Food1, Table1),11).
 happens(placeOn(cook1, food1, table1), 11).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4625
 % Happens(WalkThroughDoor12(Cook1, KitchenDoor1),12).
 happens(walkThroughDoor12(cook1, kitchenDoor1), 12).
 
-
 % 
 % Happens(Eat(Eater1,Food1),13).
 happens(eat(eater1, food1), 13).
-
 
 % 
 % Happens(Eat(Eater2,Food1),14).
 happens(eat(eater2, food1), 14).
 
-
 % 
 % Happens(Converse(Eater1,Eater2),15).
 happens(converse(eater1, eater2), 15).
-
 
 % 
 % Happens(TalkAbout(Eater1,Content1),16).
 happens(talkAbout(eater1, content1), 16).
 
-
 % 
 % Happens(TalkAbout(Eater2,Content2),17).
 happens(talkAbout(eater2, content2), 17).
-
 
 % 
 % ectest/ec_reader_test_ecnet.e:4631
 % Happens(RiseFrom(Eater1,Chair1),18).
 happens(riseFrom(eater1, chair1), 18).
 
-
 % 
 % Happens(RiseFrom(Eater2,Chair2),19).
 happens(riseFrom(eater2, chair2), 19).
-
 
 % 
 % 
 % range time 0 20
 range(time, 0, 20).
 
-
 % range offset 0 0
 range(offset, 0, 0).
 
-
 % range diameter 0 0
 range(diameter, 0, 0).
-
 
 % ectest/ec_reader_test_ecnet.e:4637
 % 
 % completion Happens
 completion(happens).
-
 
 % 
 % ; End of file.

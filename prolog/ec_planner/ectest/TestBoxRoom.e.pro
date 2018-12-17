@@ -26,76 +26,55 @@
  
 % ectest/TestBoxRoom.e:24
 % load foundations/Root.e
-% loading('foundations/Root.e').
+load('foundations/Root.e').
 
-
-% ectest/TestBoxRoom.e:25
-% translate: unskipped  File: on_load_ele 
-% ectest/TestBoxRoom.e:25
-% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-% loading('foundations/EC.e').
+load('foundations/EC.e').
 
-
-% ectest/TestBoxRoom.e:26
-% translate: unskipped  File: on_load_ele 
-% foundations/EC.e:42
-% translate: ready  File: on_load_ele 
 % % 
 % sort object
 sort(object).
 
-
 % sort agent: object
 subsort(agent, object).
-
 
 % sort physobj: object
 subsort(physobj, object).
 
-
+% ectest/TestBoxRoom.e:30
 % sort room: object
 subsort(room, object).
 
-
 % % 
-% ectest/TestBoxRoom.e:32
 % fluent directlyIn(object,object)fluent(directlyIn(object, object)).
-
 
 % 
 % fluent inRoom(object,room)fluent(inRoom(object, room)).
-
 
 % 
 % noninertial inRoom
 noninertial(inRoom).
 
-
 % % 
 % ;; executable(move(agent,object,object,object))
+% ectest/TestBoxRoom.e:37
 % % 
-% ectest/TestBoxRoom.e:38
 % agent Lisa
 t(agent, lisa).
-
 
 % physobj Box, Newspaper
 t(physobj, box).
 
-
 t(physobj, newspaper).
-
 
 % room Kitchen, LivingRoom
 t(room, kitchen).
 
-
 t(room, livingRoom).
-
 
 % % 
 % ; Sigma
+% ectest/TestBoxRoom.e:43
 % % 
 % ; RS10
 % ectest/TestBoxRoom.e:45
@@ -108,7 +87,6 @@ holds_at(directlyIn(Agent, Room), Time), holds_at(directlyIn(Physobj1, Room), Ti
 	initiates(move(Agent, Physobj1, Room, Physobj2),
 		  directlyIn(Physobj1, Physobj2),
 		  Time).
-
 
 % % 
 % % 
@@ -124,7 +102,6 @@ holds_at(directlyIn(Agent, Room), Time), holds_at(directlyIn(Physobj1, Room), Ti
 		   directlyIn(Physobj1, Room),
 		   Time).
 
-
 % % 
 % % 
 % ; RS12
@@ -136,7 +113,6 @@ holds_at(directlyIn(Agent, Room), Time) ->
 	initiates(move(Agent, Physobj1, Physobj2, Room),
 		  directlyIn(Physobj1, Room),
 		  Time).
-
 
 % % 
 % % 
@@ -150,7 +126,6 @@ holds_at(directlyIn(Agent, Room), Time) ->
 		   directlyIn(Physobj1, Physobj2),
 		   Time).
 
-
 % % 
 % % 
 % ; RS14
@@ -163,7 +138,6 @@ holds_at(directlyIn(Agent, Room1), Time) ->
 		  directlyIn(Agent, Room2),
 		  Time).
 
-
 % % 
 % % 
 % ; RS15
@@ -175,7 +149,6 @@ holds_at(directlyIn(Agent, Room1), Time) ->
 	terminates(move(Agent, Agent, Room1, Room2),
 		   directlyIn(Agent, Room1),
 		   Time).
-
 
 % % 
 % % 
@@ -190,7 +163,6 @@ holds_at(directlyIn(Agent, Room), Time), holds_at(directlyIn(Physobj, Room), Tim
 		  directlyIn(Physobj, Agent),
 		  Time).
 
-
 % % 
 % % 
 % ; RS17
@@ -203,7 +175,6 @@ holds_at(directlyIn(Agent, Room), Time), holds_at(directlyIn(Physobj, Room), Tim
 	terminates(move(Agent, Physobj, Room, Agent),
 		   directlyIn(Physobj, Room),
 		   Time).
-
 
 % % 
 % % 
@@ -218,7 +189,6 @@ holds_at(directlyIn(Physobj, Agent), Time), holds_at(directlyIn(Agent, Room), Ti
 		  directlyIn(Physobj, Room),
 		  Time).
 
-
 % % 
 % % 
 % ; RS19
@@ -232,7 +202,6 @@ holds_at(directlyIn(Physobj, Agent), Time), holds_at(directlyIn(Agent, Room), Ti
 		   directlyIn(Physobj, Agent),
 		   Time).
 
-
 % % 
 % % 
 % ; Delta
@@ -241,26 +210,21 @@ holds_at(directlyIn(Physobj, Agent), Time), holds_at(directlyIn(Agent, Room), Ti
 % Happens(move(Lisa,Newspaper,LivingRoom,Box),0).
 happens(move(lisa, newspaper, livingRoom, box), 0).
 
-
 % % 
 % Happens(move(Lisa,Box,LivingRoom,Lisa),1).
 happens(move(lisa, box, livingRoom, lisa), 1).
-
 
 % % 
 % Happens(move(Lisa,Lisa,LivingRoom,Kitchen),2).
 happens(move(lisa, lisa, livingRoom, kitchen), 2).
 
-
 % % 
 % Happens(move(Lisa,Box,Lisa,Kitchen),3).
 happens(move(lisa, box, lisa, kitchen), 3).
 
-
 % % 
 % Happens(move(Lisa,Lisa,Kitchen,LivingRoom),4).
 happens(move(lisa, lisa, kitchen, livingRoom), 4).
-
 
 % % 
 % ectest/TestBoxRoom.e:109
@@ -272,7 +236,6 @@ happens(move(lisa, lisa, kitchen, livingRoom), 4).
 % [object,time] % !HoldsAt(directlyIn(object,object),time).
 not(holds_at(directlyIn(Object, Object), Time)).
 
-
 % % 
 % % 
 % ; RS2
@@ -282,7 +245,6 @@ not(holds_at(directlyIn(Object, Object), Time)).
 % !HoldsAt(directlyIn(object2,object1),time).
 holds_at(directlyIn(Object1, Object2), Time) ->
 	not(holds_at(directlyIn(Object2, Object1), Time)).
-
 
 % % 
 % % 
@@ -295,7 +257,6 @@ holds_at(directlyIn(Object1, Object2), Time) ->
 holds_at(directlyIn(Object1, Object2), Time), holds_at(directlyIn(Object2, Object3), Time) ->
 	not(holds_at(directlyIn(Object1, Object3), Time)).
 
-
 % % 
 % % 
 % ; RS4
@@ -307,7 +268,6 @@ holds_at(directlyIn(Object1, Object2), Time), holds_at(directlyIn(Object2, Objec
 holds_at(directlyIn(Object, Object1), Time), holds_at(directlyIn(Object, Object2), Time) ->
 	Object1=Object2.
 
-
 % % 
 % % 
 % ; RS7
@@ -317,7 +277,6 @@ holds_at(directlyIn(Object, Object1), Time), holds_at(directlyIn(Object, Object2
 % HoldsAt(inRoom(object,room),time).
 holds_at(directlyIn(Object, Room), Time) ->
 	holds_at(inRoom(Object, Room), Time).
-
 
 % % 
 % % 
@@ -330,7 +289,6 @@ holds_at(directlyIn(Object, Room), Time) ->
 holds_at(directlyIn(Object1, Object2), Time), holds_at(inRoom(Object2, Room), Time) ->
 	holds_at(inRoom(Object1, Room), Time).
 
-
 % % 
 % % 
 % ; RS9
@@ -342,7 +300,6 @@ holds_at(directlyIn(Object1, Object2), Time), holds_at(inRoom(Object2, Room), Ti
 holds_at(inRoom(Object, Room1), Time), holds_at(inRoom(Object, Room2), Time) ->
 	Room1=Room2.
 
-
 % % 
 % % 
 % ; Gamma
@@ -351,16 +308,13 @@ holds_at(inRoom(Object, Room1), Time), holds_at(inRoom(Object, Room2), Time) ->
 % HoldsAt(directlyIn(Lisa,LivingRoom),0).
 holds_at(directlyIn(lisa, livingRoom), 0).
 
-
 % % 
 % HoldsAt(directlyIn(Newspaper,LivingRoom),0).
 holds_at(directlyIn(newspaper, livingRoom), 0).
 
-
 % % 
 % HoldsAt(directlyIn(Box,LivingRoom),0).
 holds_at(directlyIn(box, livingRoom), 0).
-
 
 % % 
 % % 
@@ -369,12 +323,10 @@ holds_at(directlyIn(box, livingRoom), 0).
 % [room1,room2,time] % !HoldsAt(inRoom(room1,room2),time).
 not(holds_at(inRoom(Room1, Room2), Time)).
 
-
 % % 
 % ectest/TestBoxRoom.e:157
 % [room,object,time] % !HoldsAt(directlyIn(room,object),time).
 not(holds_at(directlyIn(Room, Object), Time)).
-
 
 % % 
 % % 
@@ -387,15 +339,12 @@ not(holds_at(directlyIn(Room, Object), Time)).
 % completion Happens
 completion(happens).
 
-
 % % 
 % range time 0 5
 range(time, 0, 5).
 
-
 % range offset 1 1
 range(offset, 1, 1).
-
 
 % % 
 % ; End of file.

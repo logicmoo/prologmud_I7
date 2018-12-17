@@ -32,181 +32,133 @@
 % examples/Mueller2006/Chapter11/HungryCat.e:30
 % 
 % load foundations/Root.e
-% loading('foundations/Root.e').
+load('foundations/Root.e').
 
-
-% examples/Mueller2006/Chapter11/HungryCat.e:32
-% translate: unskipped  File: on_load_ele 
-% examples/Mueller2006/Chapter11/HungryCat.e:32
-% translate: ready  File: on_load_ele 
 % load foundations/EC.e
-% loading('foundations/EC.e').
+load('foundations/EC.e').
 
-
-% foundations/EC.e:1
-% translate: unskipped  File: on_load_ele 
-% foundations/EC.e:42
-% translate: ready  File: on_load_ele 
 % 
 % sort object
 sort(object).
 
-
 % sort agent: object
 subsort(agent, object).
 
-
+% examples/Mueller2006/Chapter11/HungryCat.e:36
 % sort food: object
 subsort(food, object).
-
 
 % sort surface
 sort(surface).
 
-
-% examples/Mueller2006/Chapter11/HungryCat.e:38
 % sort plan
 sort(plan).
-
 
 % 
 % reified sort belief
 reified_sort(belief).
 
-
 % 
+% examples/Mueller2006/Chapter11/HungryCat.e:42
 % agent Cat
 t(agent, cat).
-
 
 % surface Floor, Chair, Shelf, Table
 t(surface, floor).
 
-
 t(surface, chair).
-
 
 t(surface, shelf).
 
-
 t(surface, table).
 
-
-% examples/Mueller2006/Chapter11/HungryCat.e:44
 % food Food1, Food2
 t(food, food1).
 
-
 t(food, food2).
-
 
 % plan P1, P1a, P1b, P2, P2a
 t(plan, p1).
 
-
 t(plan, p1a).
-
 
 t(plan, p1b).
 
-
 t(plan, p2).
 
-
 t(plan, p2a).
-
 
 % 
 % predicate SelectedPlan(agent,belief,plan,time)
 predicate(selectedPlan(agent, belief, plan, time)).
 
-
+% examples/Mueller2006/Chapter11/HungryCat.e:48
 % predicate SoundPlan(agent,belief,plan,time)
 predicate(soundPlan(agent, belief, plan, time)).
 
-
 % 
-% examples/Mueller2006/Chapter11/HungryCat.e:50
 % fluent On(object,surface)
 fluent(on(object, surface)).
-
 
 % fluent Goal(agent,belief)
 fluent(goal(agent, belief)).
 
-
 % fluent CanJump(surface,surface)
 fluent(canJump(surface, surface)).
-
 
 % fluent Plan(agent,belief,plan)
 fluent(plan(agent, belief, plan)).
 
-
+% examples/Mueller2006/Chapter11/HungryCat.e:54
 % fluent Satiated(agent)
 fluent(satiated(agent)).
-
 
 % fluent Believe(agent,belief)
 fluent(believe(agent, belief)).
 
-
-% examples/Mueller2006/Chapter11/HungryCat.e:56
 % 
 % event AddPlan(agent,belief,plan)
 event(addPlan(agent, belief, plan)).
 
-
 % event DropPlan(agent,belief,plan)
 event(dropPlan(agent, belief, plan)).
-
 
 % event Jump(agent,surface,surface)
 event(jump(agent, surface, surface)).
 
-
+% examples/Mueller2006/Chapter11/HungryCat.e:60
 % event Move(surface,surface,surface)
 event(move(surface, surface, surface)).
-
 
 % event Eat(agent,food)
 event(eat(agent, food)).
 
-
-% examples/Mueller2006/Chapter11/HungryCat.e:62
 % event Wait(agent)
 event(wait(agent)).
-
 
 % 
 % belief BSatiated(agent)
 t(belief, 'bSatiated(agent)').
 
-
 % belief BCanJump(surface,surface)
 t(belief, 'bCanJump(surface').
 
-
 t(belief, 'surface)').
 
-
+% examples/Mueller2006/Chapter11/HungryCat.e:66
 % belief BOn(object,surface)
 t(belief, 'bOn(object').
 
-
 t(belief, 'surface)').
-
 
 % 
 % ; Sigma
-% examples/Mueller2006/Chapter11/HungryCat.e:69
 % 
 % ; A5
 % examples/Mueller2006/Chapter11/HungryCat.e:71
 % [agent,belief,plan,time]% 
 % Initiates(AddPlan(agent,belief,plan),Plan(agent,belief,plan),time).
 initiates(addPlan(Agent, Belief, Plan), plan(Agent, Belief, Plan), Time).
-
 
 % 
 % 
@@ -215,7 +167,6 @@ initiates(addPlan(Agent, Belief, Plan), plan(Agent, Belief, Plan), Time).
 % [agent,belief,plan,time]% 
 % Terminates(DropPlan(agent,belief,plan),Plan(agent,belief,plan),time).
 terminates(dropPlan(Agent, Belief, Plan), plan(Agent, Belief, Plan), Time).
-
 
 % 
 % 
@@ -229,7 +180,6 @@ holds_at(on(Agent, Surface1), Time), holds_at(canJump(Surface1, Surface2), Time)
 		  on(Agent, Surface2),
 		  Time).
 
-
 % 
 % 
 % examples/Mueller2006/Chapter11/HungryCat.e:83
@@ -242,7 +192,6 @@ holds_at(on(Agent, Surface1), Time), holds_at(canJump(Surface1, Surface2), Time)
 		   on(Agent, Surface1),
 		   Time).
 
-
 % 
 % 
 % examples/Mueller2006/Chapter11/HungryCat.e:88
@@ -250,14 +199,12 @@ holds_at(on(Agent, Surface1), Time), holds_at(canJump(Surface1, Surface2), Time)
 % Initiates(Move(surface1,surface2,surface3),CanJump(surface1,surface3),time).
 initiates(move(Surface1, Surface2, Surface3), canJump(Surface1, Surface3), Time).
 
-
 % 
 % 
 % examples/Mueller2006/Chapter11/HungryCat.e:91
 % [surface1,surface2,surface3,time]% 
 % Terminates(Move(surface1,surface2,surface3),CanJump(surface1,surface2),time).
 terminates(move(Surface1, Surface2, Surface3), canJump(Surface1, Surface2), Time).
-
 
 % 
 % 
@@ -271,7 +218,6 @@ holds_at(on(Agent, Surface), Time), holds_at(on(Food, Surface), Time) ->
 		  satiated(Agent),
 		  Time).
 
-
 % 
 % 
 % examples/Mueller2006/Chapter11/HungryCat.e:99
@@ -283,7 +229,6 @@ holds_at(on(Agent, Surface), Time), holds_at(on(Food, Surface), Time) ->
 	terminates(eat(Agent, Food),
 		   on(Food, Surface),
 		   Time).
-
 
 % 
 % 
@@ -299,7 +244,6 @@ holds_at(believe(Agent, bOn(Agent, Surface1)), Time), holds_at(believe(Agent, bC
 	initiates(jump(Agent, Surface1, Surface2),
 		  believe(Agent, Belief),
 		  Time).
-
 
 % examples/Mueller2006/Chapter11/HungryCat.e:110
 % 
@@ -317,7 +261,6 @@ holds_at(believe(Agent, bOn(Agent, Surface1)), Time), holds_at(believe(Agent, bC
 		   believe(Agent, Belief),
 		   Time).
 
-
 % examples/Mueller2006/Chapter11/HungryCat.e:118
 % 
 % 
@@ -332,7 +275,6 @@ Belief=bCanJump(Surface1, Surface3) ->
 		  believe(Agent, Belief),
 		  Time).
 
-
 % 
 % 
 % examples/Mueller2006/Chapter11/HungryCat.e:126
@@ -345,7 +287,6 @@ Belief=bCanJump(Surface1, Surface2) ->
 	terminates(move(Surface1, Surface2, Surface3),
 		   believe(Agent, Belief),
 		   Time).
-
 
 % 
 % 
@@ -360,7 +301,6 @@ holds_at(believe(Agent, bOn(Agent, Surface)), Time), holds_at(believe(Agent, bOn
 		  believe(Agent, Belief),
 		  Time).
 
-
 % 
 % 
 % examples/Mueller2006/Chapter11/HungryCat.e:138
@@ -373,7 +313,6 @@ holds_at(believe(Agent, bOn(Agent, Surface)), Time), holds_at(believe(Agent, bOn
 	terminates(eat(Agent, Food),
 		   believe(Agent, Belief),
 		   Time).
-
 
 % 
 % 
@@ -391,7 +330,6 @@ holds_at(believe(Agent, bOn(Agent, Surface)), Time), holds_at(believe(Agent, bOn
 holds_at(goal(Agent, Belief), Time), not(holds_at(believe(Agent, Belief), Time)), selectedPlan(Agent, Belief, Plan, Time), not(exists([Plan1], holds_at(plan(Agent, Belief, Plan1), Time))) ->
 	happens(addPlan(Agent, Belief, Plan), Time).
 
-
 % 
 % examples/Mueller2006/Chapter11/HungryCat.e:153
 % 
@@ -405,7 +343,6 @@ holds_at(goal(Agent, Belief), Time), not(holds_at(believe(Agent, Belief), Time))
 holds_at(plan(Agent, Belief, p1), Time), not(holds_at(believe(Agent, Belief), Time)), soundPlan(Agent, Belief, p1, Time) ->
 	happens(jump(cat, floor, chair), Time).
 
-
 % 
 % 
 % examples/Mueller2006/Chapter11/HungryCat.e:161
@@ -416,7 +353,6 @@ holds_at(plan(Agent, Belief, p1), Time), not(holds_at(believe(Agent, Belief), Ti
 % Happens(Wait(Cat),time).
 holds_at(plan(Agent, Belief, p1a), Time), not(holds_at(believe(Agent, Belief), Time)), soundPlan(Agent, Belief, p1a, Time) ->
 	happens(wait(cat), Time).
-
 
 % 
 % 
@@ -429,7 +365,6 @@ holds_at(plan(Agent, Belief, p1a), Time), not(holds_at(believe(Agent, Belief), T
 holds_at(plan(Agent, Belief, p2), Time), not(holds_at(believe(Agent, Belief), Time)), soundPlan(Agent, Belief, p2, Time) ->
 	happens(jump(cat, chair, shelf), Time).
 
-
 % 
 % 
 % ; A9
@@ -439,7 +374,6 @@ holds_at(plan(Agent, Belief, p2), Time), not(holds_at(believe(Agent, Belief), Ti
 % Happens(DropPlan(agent,belief,plan),time).
 holds_at(plan(Agent, Belief, Plan), Time) ->
 	happens(dropPlan(Agent, Belief, Plan), Time).
-
 
 % 
 % 
@@ -453,7 +387,6 @@ holds_at(plan(Agent, Belief, Plan), Time) ->
 holds_at(plan(Agent, Belief, p1), Time), not(holds_at(believe(Agent, Belief), Time)), soundPlan(Agent, Belief, p1, Time) ->
 	happens(addPlan(Agent, Belief, p1a), Time).
 
-
 % 
 % 
 % examples/Mueller2006/Chapter11/HungryCat.e:185
@@ -465,7 +398,6 @@ holds_at(plan(Agent, Belief, p1), Time), not(holds_at(believe(Agent, Belief), Ti
 holds_at(plan(Agent, Belief, p1a), Time), not(holds_at(believe(Agent, Belief), Time)), soundPlan(Agent, Belief, p1a, Time) ->
 	happens(addPlan(Agent, Belief, p1b), Time).
 
-
 % 
 % 
 % examples/Mueller2006/Chapter11/HungryCat.e:191
@@ -476,7 +408,6 @@ holds_at(plan(Agent, Belief, p1a), Time), not(holds_at(believe(Agent, Belief), T
 % Happens(AddPlan(agent,belief,P2a),time).
 holds_at(plan(Agent, Belief, p2), Time), not(holds_at(believe(Agent, Belief), Time)), soundPlan(Agent, Belief, p2, Time) ->
 	happens(addPlan(Agent, Belief, p2a), Time).
-
 
 % 
 % 
@@ -490,7 +421,6 @@ holds_at(plan(Agent, Belief, p2), Time), not(holds_at(believe(Agent, Belief), Ti
 not(holds_at(satiated(Agent), Time)), holds_at(on(Agent, Surface), Time), holds_at(on(Food, Surface), Time) ->
 	happens(eat(Agent, Food), Time).
 
-
 % 
 % 
 % ; narrative
@@ -498,7 +428,6 @@ not(holds_at(satiated(Agent), Time)), holds_at(on(Agent, Surface), Time), holds_
 % 
 % Happens(Move(Chair,Table,Shelf),2).
 happens(move(chair, table, shelf), 2).
-
 
 % 
 % 
@@ -541,7 +470,6 @@ selectedPlan(Agent, Belief, Plan, Time) <->
 		   (holds_at(believe(Agent, bOn(Agent, Surface18)), Time), holds_at(believe(Agent, bCanJump(Surface18, Surface29)), Time), holds_at(believe(Agent, bCanJump(Surface29, Surface310)), Time), holds_at(believe(Agent, bOn(Food11, Surface310)), Time), Belief=bSatiated(Agent), Plan=p2, Time=4))
 	).
 
-
 % examples/Mueller2006/Chapter11/HungryCat.e:232
 % 
 % 
@@ -562,7 +490,6 @@ soundPlan(Agent, Belief, Plan, Time) <->
 	( Plan=p1a;Plan=p1b->holds_at(believe(Agent, bCanJump(chair, table)), Time)
 	).
 
-
 % examples/Mueller2006/Chapter11/HungryCat.e:243
 % 
 % 
@@ -576,13 +503,11 @@ holds_at(goal(Agent, Belief), 0) <->
 	Agent=cat,
 	Belief=bSatiated(cat).
 
-
 % 
 % 
 % examples/Mueller2006/Chapter11/HungryCat.e:251
 % [agent,belief,plan] % !HoldsAt(Plan(agent,belief,plan),0).
 not(holds_at(plan(Agent, Belief, Plan), 0)).
-
 
 % 
 % 
@@ -600,7 +525,6 @@ holds_at(on(Object, Surface), 0) <->
 	    Surface=shelf
 	).
 
-
 % 
 % 
 % examples/Mueller2006/Chapter11/HungryCat.e:258
@@ -617,7 +541,6 @@ holds_at(canJump(Surface1, Surface2), 0) <->
 	    Surface2=table
 	).
 
-
 % 
 % 
 % examples/Mueller2006/Chapter11/HungryCat.e:263
@@ -633,7 +556,6 @@ holds_at(believe(Agent, bOn(Object, Surface)), 0) <->
 	    Object=food1,
 	    Surface=table
 	).
-
 
 % 
 % 
@@ -655,13 +577,11 @@ holds_at(believe(Agent, bCanJump(Surface1, Surface2)), 0) <->
 	    Surface2=table
 	).
 
-
 % 
 % 
 % examples/Mueller2006/Chapter11/HungryCat.e:274
 % !HoldsAt(Believe(Cat,BSatiated(Cat)),0).
 not(holds_at(believe(cat, bSatiated(cat)), 0)).
-
 
 % 
 % 
@@ -669,22 +589,18 @@ not(holds_at(believe(cat, bSatiated(cat)), 0)).
 % !HoldsAt(Satiated(Cat),0).
 not(holds_at(satiated(cat), 0)).
 
-
 % 
 % 
 % completion Happens
 completion(happens).
-
 
 % examples/Mueller2006/Chapter11/HungryCat.e:280
 % 
 % range time 0 7
 range(time, 0, 7).
 
-
 % range offset 1 1
 range(offset, 1, 1).
-
 
 % 
 % ; End of file.

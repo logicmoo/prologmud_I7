@@ -22,18 +22,14 @@
 % sort boolean
 sort(boolean).
 
-
 % sort integer
 sort(integer).
-
 
 % reified sort predicate
 reified_sort(predicate).
 
-
 % reified sort function
 reified_sort(function).
-
 
 % 
 % ; End of file.
@@ -76,50 +72,39 @@ reified_sort(function).
 % sort time: integer
 subsort(time, integer).
 
-
 % sort offset: integer
 subsort(offset, integer).
-
 
 % 
 % reified sort fluent
 reified_sort(fluent).
 
-
 % reified sort event
 reified_sort(event).
-
 
 % ectest/ec_reader_test_foundations.e:62
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
 
-
 % predicate HoldsAt(fluent,time)
 predicate(holds_at(fluent, time)).
-
 
 % predicate ReleasedAt(fluent,time)
 predicate(releasedAt(fluent, time)).
 
-
 % predicate Initiates(event,fluent,time)
 predicate(initiates(event, fluent, time)).
 
-
 % predicate Terminates(event,fluent,time)
 predicate(terminates(event, fluent, time)).
-
 
 % ectest/ec_reader_test_foundations.e:68
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
 
-
 % predicate Trajectory(fluent,time,fluent,offset)
 predicate(trajectory(fluent, time, fluent, offset)).
-
 
 % 
 % ; End of file.
@@ -158,47 +143,37 @@ predicate(trajectory(fluent, time, fluent, offset)).
 % sort time: integer
 subsort(time, integer).
 
-
 % sort offset: integer
 subsort(offset, integer).
-
 
 % 
 % reified sort fluent
 reified_sort(fluent).
 
-
 % reified sort event
 reified_sort(event).
-
 
 % ectest/ec_reader_test_foundations.e:107
 % 
 % predicate Happens(event,time)
 predicate(happens(event, time)).
 
-
 % predicate HoldsAt(fluent,time)
 predicate(holds_at(fluent, time)).
 
-
 % predicate ReleasedAt(fluent,time)
 predicate(releasedAt(fluent, time)).
-
 
 % 
 % predicate Initiates(event,fluent,time)
 predicate(initiates(event, fluent, time)).
 
-
 % ectest/ec_reader_test_foundations.e:113
 % predicate Terminates(event,fluent,time)
 predicate(terminates(event, fluent, time)).
 
-
 % predicate Releases(event,fluent,time)
 predicate(releases(event, fluent, time)).
-
 
 % 
 % ectest/ec_reader_test_foundations.e:116
@@ -209,7 +184,6 @@ predicate(releases(event, fluent, time)).
 % HoldsAt(fluent,time+1).
 holds_at(Fluent, Time), not(releasedAt(Fluent, Time+1)), not(exists([Event],  (happens(Event, Time), terminates(Event, Fluent, Time)))) ->
 	holds_at(Fluent, Time+1).
-
 
 % 
 % 
@@ -222,7 +196,6 @@ holds_at(Fluent, Time), not(releasedAt(Fluent, Time+1)), not(exists([Event],  (h
 not(holds_at(Fluent, Time)), not(releasedAt(Fluent, Time+1)), not(exists([Event],  (happens(Event, Time), initiates(Event, Fluent, Time)))) ->
 	not(holds_at(Fluent, Time+1)).
 
-
 % 
 % 
 % ectest/ec_reader_test_foundations.e:128
@@ -232,7 +205,6 @@ not(holds_at(Fluent, Time)), not(releasedAt(Fluent, Time+1)), not(exists([Event]
 % !ReleasedAt(fluent,time+1).
 not(releasedAt(Fluent, Time)), not(exists([Event],  (happens(Event, Time), releases(Event, Fluent, Time)))) ->
 	not(releasedAt(Fluent, Time+1)).
-
 
 % 
 % 
@@ -246,7 +218,6 @@ not(releasedAt(Fluent, Time)), not(exists([Event],  (happens(Event, Time), relea
 releasedAt(Fluent, Time), not(exists([Event],  (happens(Event, Time), (initiates(Event, Fluent, Time);terminates(Event, Fluent, Time))))) ->
 	releasedAt(Fluent, Time+1).
 
-
 % 
 % ectest/ec_reader_test_foundations.e:139
 % 
@@ -258,7 +229,6 @@ happens(Event, Time), initiates(Event, Fluent, Time) ->
 	holds_at(Fluent, Time+1),
 	not(releasedAt(Fluent, Time+1)).
 
-
 % 
 % 
 % ectest/ec_reader_test_foundations.e:144
@@ -269,7 +239,6 @@ happens(Event, Time), terminates(Event, Fluent, Time) ->
 	not(holds_at(Fluent, Time+1)),
 	not(releasedAt(Fluent, Time+1)).
 
-
 % 
 % 
 % ectest/ec_reader_test_foundations.e:148
@@ -278,7 +247,6 @@ happens(Event, Time), terminates(Event, Fluent, Time) ->
 % ReleasedAt(fluent,time+1).
 happens(Event, Time), releases(Event, Fluent, Time) ->
 	releasedAt(Fluent, Time+1).
-
 
 % 
 % 
@@ -318,10 +286,8 @@ happens(Event, Time), releases(Event, Fluent, Time) ->
 % predicate Started(fluent,time)
 predicate(started(fluent, time)).
 
-
 % predicate Stopped(fluent,time)
 predicate(stopped(fluent, time)).
-
 
 % 
 % ectest/ec_reader_test_foundations.e:186
@@ -334,7 +300,6 @@ started(Fluent, Time) <->
 	;   exists([Event],
 		   (happens(Event, Time), initiates(Event, Fluent, Time)))
 	).
-
 
 % 
 % 
@@ -349,17 +314,14 @@ stopped(Fluent, Time) <->
 		   (happens(Event, Time), terminates(Event, Fluent, Time)))
 	).
 
-
 % 
 % 
 % predicate Initiated(fluent,time)
 predicate(initiated(fluent, time)).
 
-
 % ectest/ec_reader_test_foundations.e:197
 % predicate Terminated(fluent,time)
 predicate(terminated(fluent, time)).
-
 
 % 
 % ectest/ec_reader_test_foundations.e:199
@@ -372,7 +334,6 @@ initiated(Fluent, Time) <->
 	not(exists([Event],
 		   (happens(Event, Time), terminates(Event, Fluent, Time)))).
 
-
 % 
 % 
 % ectest/ec_reader_test_foundations.e:204
@@ -384,7 +345,6 @@ terminated(Fluent, Time) <->
 	stopped(Fluent, Time),
 	not(exists([Event],
 		   (happens(Event, Time), initiates(Event, Fluent, Time)))).
-
 
 % 
 % 
@@ -426,19 +386,15 @@ terminated(Fluent, Time) <->
 % predicate Clipped(time,fluent,time)
 predicate(clipped(time, fluent, time)).
 
-
 % predicate Declipped(time,fluent,time)
 predicate(declipped(time, fluent, time)).
-
 
 % 
 % predicate Trajectory(fluent,time,fluent,offset)
 predicate(trajectory(fluent, time, fluent, offset)).
 
-
 % predicate AntiTrajectory(fluent,time,fluent,offset)
 predicate(antiTrajectory(fluent, time, fluent, offset)).
-
 
 % ectest/ec_reader_test_foundations.e:246
 % 
@@ -453,7 +409,6 @@ predicate(antiTrajectory(fluent, time, fluent, offset)).
 happens(Event, Time), initiates(Event, Fluent, Time), 0<Offset, trajectory(Fluent, Time, Fluent2, Offset), not(clipped(Time, Fluent, Time+Offset)) ->
 	holds_at(Fluent2, Time+Offset).
 
-
 % ectest/ec_reader_test_foundations.e:253
 % 
 % 
@@ -467,7 +422,6 @@ happens(Event, Time), initiates(Event, Fluent, Time), 0<Offset, trajectory(Fluen
 % HoldsAt(fluent2,time+offset).
 happens(Event, Time), terminates(Event, Fluent, Time), 0<Offset, antiTrajectory(Fluent, Time, Fluent2, Offset), not(declipped(Time, Fluent, Time+Offset)) ->
 	holds_at(Fluent2, Time+Offset).
-
 
 % ectest/ec_reader_test_foundations.e:261
 % 

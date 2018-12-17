@@ -24,216 +24,166 @@
 % sort position: integer
 subsort(position, integer).
 
-
 % sort location
 sort(location).
-
 
 % sort cage: location
 subsort(cage, location).
 
-
 % sort gate
 sort(gate).
 
-
 % sort animal
 sort(animal).
-
 
 % examples/AkmanEtAl2004/ZooWorld.e:26
 % sort elephant: animal
 subsort(elephant, animal).
 
-
 % sort horse: animal
 subsort(horse, animal).
-
 
 % sort dog: animal
 subsort(dog, animal).
 
-
 % sort human: animal
 subsort(human, animal).
 
-
 % sort species
 sort(species).
-
 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:32
 % function Loc(position): location
 function(loc(position), location).
 
-
 % function Side1(gate): position
 function(side1(gate), position).
-
 
 % function Side2(gate): position
 function(side2(gate), position).
 
-
 % function Species(animal): species
 function(species(animal), species).
-
 
 % 
 % predicate Accessible(position,position,time)
 predicate(accessible(position, position, time)).
 
-
 % examples/AkmanEtAl2004/ZooWorld.e:38
 % predicate Adult(animal)
 predicate(adult(animal)).
 
-
 % predicate Large(animal)
 predicate(large(animal)).
-
 
 % predicate LargeSpecies(species)
 predicate(largeSpecies(species)).
 
-
 % predicate Neighbor(position,position)
 predicate(neighbor(position, position)).
 
-
 % predicate Sides(position,position,gate)
 predicate(sides(position, position, gate)).
-
 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:44
 % event Close(human,gate)
 event(close(human, gate)).
 
-
 % event GetOff(human,animal)
 event(getOff(human, animal)).
-
 
 % event Mount(human,animal)
 event(mount(human, animal)).
 
-
 % event Move(animal,position)
 event(move(animal, position)).
-
 
 % event Open(human,gate)
 event(open(human, gate)).
 
-
 % event ThrowOff(animal,human)
 event(throwOff(animal, human)).
-
 
 % examples/AkmanEtAl2004/ZooWorld.e:50
 % 
 % fluent AbnormalEncroachment(human)
 fluent(abnormalEncroachment(human)).
 
-
 % noninertial AbnormalEncroachment
 noninertial(abnormalEncroachment).
-
 
 % fluent DoneBy(event,animal)
 fluent(doneBy(event, animal)).
 
-
 % noninertial DoneBy
 noninertial(doneBy).
 
-
 % fluent Mounted(human,animal)
 fluent(mounted(human, animal)).
-
 
 % examples/AkmanEtAl2004/ZooWorld.e:56
 % fluent MountFails(human)
 fluent(mountFails(human)).
 
-
 % noninertial MountFails
 noninertial(mountFails).
-
 
 % fluent Moves(animal)
 fluent(moves(animal)).
 
-
 % noninertial Moves
 noninertial(moves).
-
 
 % fluent Opened(gate)
 fluent(opened(gate)).
 
-
 % fluent Pos(animal,position)
 fluent(pos(animal, position)).
-
 
 % examples/AkmanEtAl2004/ZooWorld.e:62
 % fluent PosDeterminingFluent(human,position)
 fluent(posDeterminingFluent(human, position)).
 
-
 % noninertial PosDeterminingFluent
 noninertial(posDeterminingFluent).
-
 
 % fluent ThrowOffFails(animal,human)
 fluent(throwOffFails(animal, human)).
 
-
 % noninertial ThrowOffFails
 noninertial(throwOffFails).
-
 
 % 
 % species HumanSpecies, ElephantSpecies, HorseSpecies, DogSpecies
 t(species, humanSpecies).
 
-
 t(species, elephantSpecies).
-
 
 t(species, horseSpecies).
 
-
 t(species, dogSpecies).
-
 
 % examples/AkmanEtAl2004/ZooWorld.e:68
 % location Outside
 t(location, outside).
 
-
 % 
 % LargeSpecies(HumanSpecies).
 largeSpecies(humanSpecies).
-
 
 % 
 % LargeSpecies(ElephantSpecies).
 largeSpecies(elephantSpecies).
 
-
 % 
 % LargeSpecies(HorseSpecies).
 largeSpecies(horseSpecies).
 
-
 % 
 % !LargeSpecies(DogSpecies).
 not(largeSpecies(dogSpecies)).
-
 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:74
@@ -262,7 +212,6 @@ holds_at(doneBy(Event, Animal), Time) <->
 		   Event=throwOff(Animal, Human1))
 	).
 
-
 % examples/AkmanEtAl2004/ZooWorld.e:83
 % 
 % 
@@ -274,7 +223,6 @@ holds_at(doneBy(Event, Animal), Time) <->
 holds_at(doneBy(Event1, Animal), Time), holds_at(doneBy(Event2, Animal), Time) ->
 	Event1=Event2.
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:90
@@ -282,7 +230,6 @@ holds_at(doneBy(Event1, Animal), Time), holds_at(doneBy(Event2, Animal), Time) -
 large(Animal) <->
 	adult(Animal),
 	largeSpecies(species(Animal)).
-
 
 % 
 % 
@@ -292,13 +239,11 @@ large(Animal) <->
 % {position1} % position1!=% position & Neighbor(position,position1).
 exists([Position1],  (Position1\=Position, neighbor(Position, Position1))).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:94
 % [position] % !Neighbor(position,position).
 not(neighbor(Position, Position)).
-
 
 % 
 % 
@@ -309,13 +254,11 @@ not(neighbor(Position, Position)).
 neighbor(Position1, Position2) ->
 	neighbor(Position2, Position1).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:100
 % [cage] % cage!=% Outside.
 Cage\=outside.
-
 
 % 
 % 
@@ -333,14 +276,12 @@ sides(Position1, Position2, Gate) <->
 	    side1(Gate)=Position2
 	).
 
-
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:108
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:109
 % [gate] % Loc(Side1(gate))!=Loc(Side2(gate)).
 loc(side1(Gate))\=loc(side2(Gate)).
-
 
 % 
 % 
@@ -352,7 +293,6 @@ loc(side1(Gate))\=loc(side2(Gate)).
 sides(Position1, Position2, Gate1), sides(Position1, Position2, Gate2) ->
 	Gate1=Gate2.
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:116
@@ -361,7 +301,6 @@ sides(Position1, Position2, Gate1), sides(Position1, Position2, Gate2) ->
 % Neighbor(position1,position2).
 sides(Position1, Position2, Gate) ->
 	neighbor(Position1, Position2).
-
 
 % 
 % 
@@ -373,7 +312,6 @@ sides(Position1, Position2, Gate) ->
 % {gate}%  Sides(position1,position2,gate).
 exists([Gate],  (loc(Position1)\=loc(Position2), neighbor(Position1, Position2)->sides(Position1, Position2, Gate))).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:125
@@ -384,7 +322,6 @@ exists([Gate],  (loc(Position1)\=loc(Position2), neighbor(Position1, Position2)-
 holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time) ->
 	Position1=Position2.
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:130
@@ -392,7 +329,6 @@ holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time) -
 % examples/AkmanEtAl2004/ZooWorld.e:131
 % {position} % HoldsAt(Pos(animal,position),time).
 exists([Position], holds_at(pos(Animal, Position), Time)).
-
 
 % 
 % 
@@ -412,7 +348,6 @@ Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position
 		   (Human5=Animal2, holds_at(mounted(Human5, Animal1), Time)))
 	).
 
-
 % examples/AkmanEtAl2004/ZooWorld.e:140
 % 
 % 
@@ -424,14 +359,12 @@ Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position
 holds_at(posDeterminingFluent(Human, Position1), Time), holds_at(posDeterminingFluent(Human, Position2), Time) ->
 	Position1=Position2.
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:147
 % [animal,position,time]% 
 % Initiates(Move(animal,position),Pos(animal,position),time).
 initiates(move(Animal, Position), pos(Animal, Position), Time).
-
 
 % 
 % 
@@ -444,7 +377,6 @@ holds_at(pos(Animal, Position1), Time) ->
 		   pos(Animal, Position1),
 		   Time).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:154
@@ -453,7 +385,6 @@ holds_at(pos(Animal, Position1), Time) ->
 % !HoldsAt(Pos(animal,position),time).
 happens(move(Animal, Position), Time) ->
 	not(holds_at(pos(Animal, Position), Time)).
-
 
 % 
 % 
@@ -465,14 +396,12 @@ happens(move(Human, Position), Time) ->
 	not(exists([Animal],
 		   holds_at(mounted(Human, Animal), Time))).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:162
 % [human,gate,time]% 
 % Initiates(Open(human,gate),Opened(gate),time).
 initiates(open(Human, Gate), opened(Gate), Time).
-
 
 % 
 % 
@@ -491,7 +420,6 @@ happens(open(Human, Gate), Time) ->
 	exists([Position],
 	       ((side1(Gate)=Position;side2(Gate)=Position), holds_at(pos(Human, Position), Time))).
 
-
 % examples/AkmanEtAl2004/ZooWorld.e:171
 % 
 % 
@@ -499,7 +427,6 @@ happens(open(Human, Gate), Time) ->
 % [human,gate,time]% 
 % Terminates(Close(human,gate),Opened(gate),time).
 terminates(close(Human, Gate), opened(Gate), Time).
-
 
 % 
 % 
@@ -514,7 +441,6 @@ terminates(close(Human, Gate), opened(Gate), Time).
 % HoldsAt(Pos(human,position),time).
 exists([Position],  (happens(close(Human, Gate), Time)->holds_at(opened(Gate), Time), not(exists([Animal], holds_at(mounted(Human, Animal), Time))), (side1(Gate)=Position;side2(Gate)=Position), holds_at(pos(Human, Position), Time))).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:184
@@ -524,7 +450,6 @@ exists([Position],  (happens(close(Human, Gate), Time)->holds_at(opened(Gate), T
 % HoldsAt(Pos(human,position),time).
 holds_at(mounted(Human, Animal), Time), holds_at(pos(Animal, Position), Time) ->
 	holds_at(pos(Human, Position), Time).
-
 
 % 
 % 
@@ -538,7 +463,6 @@ holds_at(moves(Animal), Time) <->
 	exists([Position],
 	       (holds_at(pos(Animal, Position), Time), not(holds_at(pos(Animal, Position), Time+1)))).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:195
@@ -551,7 +475,6 @@ holds_at(mountFails(Human), Time) <->
 	exists([Animal],
 	       (happens(mount(Human, Animal), Time), holds_at(moves(Animal), Time))).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:201
@@ -563,7 +486,6 @@ not(holds_at(moves(Animal), Time)) ->
 		 pos(Human, Position),
 		 Time).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:205
@@ -574,7 +496,6 @@ not(holds_at(moves(Animal), Time)) ->
 	initiates(mount(Human, Animal),
 		  mounted(Human, Animal),
 		  Time).
-
 
 % 
 % 
@@ -588,7 +509,6 @@ holds_at(pos(Animal, Position), Time), holds_at(moves(Animal), Time) ->
 		  pos(Human, Position),
 		  Time).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:214
@@ -601,7 +521,6 @@ holds_at(pos(Human, Position), Time), holds_at(moves(Animal), Time) ->
 		   pos(Human, Position),
 		   Time).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:219
@@ -610,7 +529,6 @@ holds_at(pos(Human, Position), Time), holds_at(moves(Animal), Time) ->
 % Large(animal).
 happens(mount(Human, Animal), Time) ->
 	large(Animal).
-
 
 % 
 % 
@@ -621,7 +539,6 @@ happens(mount(Human, Animal), Time) ->
 holds_at(mounted(Human, Animal), Time) ->
 	large(Animal).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:227
@@ -631,7 +548,6 @@ holds_at(mounted(Human, Animal), Time) ->
 happens(mount(Human1, Human2), Time) ->
 	not(large(Human1)).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:231
@@ -640,7 +556,6 @@ happens(mount(Human1, Human2), Time) ->
 % !Large(human1).
 holds_at(mounted(Human1, Human2), Time) ->
 	not(large(Human1)).
-
 
 % 
 % 
@@ -652,7 +567,6 @@ happens(mount(Human, Animal), Time) ->
 	not(exists([Human1],
 		   (Human1\=Human, holds_at(mounted(Human1, Animal), Time)))).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:239
@@ -662,7 +576,6 @@ happens(mount(Human, Animal), Time) ->
 % human1=human2.
 holds_at(mounted(Human1, Animal), Time), holds_at(mounted(Human2, Animal), Time) ->
 	Human1=Human2.
-
 
 % 
 % 
@@ -674,7 +587,6 @@ happens(mount(Human, Animal), Time) ->
 	not(exists([Human1],
 		   (Human1\=Human, holds_at(mounted(Human1, Human), Time)))).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:248
@@ -683,7 +595,6 @@ happens(mount(Human, Animal), Time) ->
 % examples/AkmanEtAl2004/ZooWorld.e:250
 % {animal}%  HoldsAt(Mounted(human2,animal),time).
 exists([Animal],  (happens(mount(Human1, Human2), Time)->holds_at(mounted(Human2, Animal), Time))).
-
 
 % 
 % 
@@ -695,7 +606,6 @@ holds_at(mounted(Human1, Human2), Time) ->
 	not(exists([Animal],
 		   holds_at(mounted(Human2, Animal), Time))).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:256
@@ -705,7 +615,6 @@ holds_at(mounted(Human1, Human2), Time) ->
 happens(mount(Human, Animal), Time) ->
 	not(exists([Animal1],
 		   holds_at(mounted(Human, Animal1), Time))).
-
 
 % 
 % 
@@ -717,7 +626,6 @@ not(holds_at(moves(Animal), Time)) ->
 	terminates(getOff(Human, Animal),
 		   mounted(Human, Animal),
 		   Time).
-
 
 % 
 % 
@@ -731,7 +639,6 @@ not(holds_at(moves(Animal), Time)), holds_at(posDeterminingFluent(Human, Positio
 		  pos(Human, Position),
 		  Time).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:269
@@ -743,7 +650,6 @@ not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position), Time) ->
 	terminates(getOff(Human, Animal),
 		   pos(Human, Position),
 		   Time).
-
 
 % 
 % 
@@ -758,7 +664,6 @@ not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position1), Time), Posit
 		   pos(Human, Position2),
 		   Time).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:280
@@ -767,7 +672,6 @@ not(holds_at(moves(Animal), Time)), holds_at(pos(Human, Position1), Time), Posit
 % HoldsAt(Mounted(human,animal),time).
 happens(getOff(Human, Animal), Time) ->
 	holds_at(mounted(Human, Animal), Time).
-
 
 % 
 % 
@@ -783,7 +687,6 @@ holds_at(throwOffFails(Animal1, Human), Time) <->
 	exists([Position, Animal2],
 	       (Animal2\=Human, holds_at(posDeterminingFluent(Human, Position), Time), large(Animal2), holds_at(pos(Animal2, Position), Time+1))).
 
-
 % examples/AkmanEtAl2004/ZooWorld.e:290
 % 
 % 
@@ -797,7 +700,6 @@ holds_at(posDeterminingFluent(Human, Position), Time), not(holds_at(throwOffFail
 		  pos(Human, Position),
 		  Time).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:297
@@ -809,7 +711,6 @@ holds_at(pos(Human, Position), Time), not(holds_at(throwOffFails(Animal, Human),
 	terminates(throwOff(Animal, Human),
 		   pos(Human, Position),
 		   Time).
-
 
 % 
 % 
@@ -825,7 +726,6 @@ not(holds_at(throwOffFails(Animal, Human), Time)), holds_at(pos(Human, Position1
 		   pos(Human, Position2),
 		   Time).
 
-
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:308
 % 
@@ -836,7 +736,6 @@ not(holds_at(throwOffFails(Animal, Human), Time)), holds_at(pos(Human, Position1
 % HoldsAt(PosDeterminingFluent(human,1),time).
 not(exists([Animal], happens(throwOff(Animal, Human), Time)));happens(getOff(Human, animal), Time) ->
 	holds_at(posDeterminingFluent(Human, 1), Time).
-
 
 % 
 % 
@@ -851,7 +750,6 @@ holds_at(posDeterminingFluent(Human, Position), Time), holds_at(throwOffFails(An
 		  mounted(Human, Animal2),
 		  Time).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:320
@@ -863,7 +761,6 @@ not(holds_at(throwOffFails(Animal, Human), Time)) ->
 		   mounted(Human, Animal),
 		   Time).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:324
@@ -872,7 +769,6 @@ not(holds_at(throwOffFails(Animal, Human), Time)) ->
 % HoldsAt(Mounted(human,animal),time).
 happens(throwOff(Animal, Human), Time) ->
 	holds_at(mounted(Human, Animal), Time).
-
 
 % 
 % 
@@ -883,7 +779,6 @@ happens(throwOff(Animal, Human), Time) ->
 happens(throwOff(Animal, Human), Time) ->
 	not(happens(getOff(Human, Animal), Time)).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:332
@@ -892,7 +787,6 @@ happens(throwOff(Animal, Human), Time) ->
 % !Happens(ThrowOff(animal,human),time).
 happens(getOff(Human, Animal), Time) ->
 	not(happens(throwOff(Animal, Human), Time)).
-
 
 % 
 % 
@@ -906,7 +800,6 @@ accessible(Position1, Position2, Time) <->
 	thereExists((neighbor(Position1, Position2), not([gate])),
 		    (sides(Position1, Position2, gate), not(holds_at(opened(gate), Time)))).
 
-
 % 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:342
@@ -917,7 +810,6 @@ accessible(Position1, Position2, Time) <->
 % Accessible(position1,position2,time).
 Position1\=Position2, holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time+1) ->
 	accessible(Position1, Position2, Time).
-
 
 % 
 % 
@@ -939,7 +831,6 @@ holds_at(abnormalEncroachment(Human), Time) <->
 		   (holds_at(posDeterminingFluent(Human, Position), Time), not(holds_at(throwOffFails(Animal2, Human), Time)), happens(throwOff(Animal2, Human), Time), Animal1\=Human, large(Animal1), holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Time+1))))
 	).
 
-
 % examples/AkmanEtAl2004/ZooWorld.e:358
 % 
 % 
@@ -959,7 +850,6 @@ holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Tim
 		   (Human=Animal2, holds_at(abnormalEncroachment(Human), Time)))
 	).
 
-
 % examples/AkmanEtAl2004/ZooWorld.e:367
 % 
 % 
@@ -975,7 +865,6 @@ holds_at(pos(Animal1, Position), Time), not(holds_at(pos(Animal1, Position), Tim
 Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position1), Time), holds_at(pos(Animal1, Position2), Time+1), holds_at(pos(Animal2, Position1), Time), holds_at(pos(Animal2, Position2), Time+1) ->
 	not(exists([Gate],
 		   sides(Position1, Position2, Gate))).
-
 
 % examples/AkmanEtAl2004/ZooWorld.e:376
 % 
@@ -993,7 +882,6 @@ Animal1\=Animal2, large(Animal1), large(Animal2), holds_at(pos(Animal1, Position
 	not(exists([Gate],
 		   sides(Position1, Position2, Gate))).
 
-
 % examples/AkmanEtAl2004/ZooWorld.e:385
 % 
 % 
@@ -1009,59 +897,48 @@ holds_at(opened(Gate), Time), not(holds_at(opened(Gate), Time+1)), sides(Positio
 	not(exists([Animal],
 		   (holds_at(pos(Animal, Position1), Time), holds_at(pos(Animal, Position2), Time+1)))).
 
-
 % examples/AkmanEtAl2004/ZooWorld.e:393
 % 
 % 
 % gate GateAO
 t(gate, gateAO).
 
-
 % cage CageA
 t(cage, cageA).
-
 
 % 
 % Loc(1)=CageA.
 loc(1)=cageA.
-
 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:399
 % Loc(2)=CageA.
 loc(2)=cageA.
 
-
 % 
 % Loc(3)=CageA.
 loc(3)=cageA.
-
 
 % 
 % Loc(4)=CageA.
 loc(4)=cageA.
 
-
 % 
 % Loc(5)=Outside.
 loc(5)=outside.
-
 
 % 
 % Loc(6)=Outside.
 loc(6)=outside.
 
-
 % 
 % Loc(7)=Outside.
 loc(7)=outside.
-
 
 % 
 % examples/AkmanEtAl2004/ZooWorld.e:405
 % Loc(8)=Outside.
 loc(8)=outside.
-
 
 % 
 % 
@@ -1149,18 +1026,15 @@ neighbor(Position1, Position2) <->
 	    Position1=7
 	).
 
-
 % examples/AkmanEtAl2004/ZooWorld.e:434
 % 
 % 
 % Side1(GateAO)=4.
 side1(gateAO)=4.
 
-
 % 
 % Side2(GateAO)=7.
 side2(gateAO)=7.
-
 
 % 
 % 

@@ -30,24 +30,24 @@ set_ec_option(N,V):- retractall(etmp:ec_option(N,_)),asserta(etmp:ec_option(N,V)
 
 
 % used by ec_reader
-verbatum_functor(function). verbatum_functor(event). 
-verbatum_functor(predicate). verbatum_functor(fluent).
+verbatum_functor(function).  verbatum_functor(event). 
+verbatum_functor(predicate).  verbatum_functor(fluent).
 
-is_non_sort(P):- verbatum_functor(P).
+
+non_list_functor(ignore).
+non_list_functor(manualrelease).
+non_list_functor(sort).
+non_list_functor(reified_sort).
+non_list_functor(reified).
+non_list_functor(noninertial).
+non_list_functor(mutex).
+non_list_functor(completion).
 is_non_sort(range).
-is_non_sort(mutex).
-is_non_sort(ignore).
-is_non_sort(reified_sort).
-is_non_sort(noninertial).
-is_non_sort(sort).
 is_non_sort(option).
-is_non_sort(reified).
 is_non_sort(load).
-is_non_sort(completion).
 is_non_sort(xor).
-is_non_sort(manualrelease).
-is_non_sort(completion).
-is_non_sort(ignore).
+is_non_sort(P):- verbatum_functor(P).
+is_non_sort(NoListF):- non_list_functor(NoListF).
 
 builtin_pred(initiates).
 builtin_pred(terminates).
@@ -61,8 +61,9 @@ builtin_pred(after).
 builtin_pred(sort).
 builtin_pred(initially).
 
-is_quantifier_type(thereExists,exists).
+is_quantifier_type(thereExists,( & )):- use_some.
 is_quantifier_type(forAll,all).
+is_quantifier_type(thereExists,exists).
 
 % used by ec_loader
 
@@ -108,10 +109,17 @@ e_reader_testec:- with_e_sample_tests(load_e_pl).
 
 
 with_e_sample_tests(Out) :- 
-  call(Out, 'ectest/*.e'),  
-  call(Out, 'examples/AkmanEtAl2004/ZooWorld.e'),
+%  call(Out, 'ectest/*.e'),  
+%  call(Out, 'examples/AkmanEtAl2004/ZooWorld.e'),
+  call(Out, 'ectest/ec_reader_test_ecnet.e'),
   call(Out, 'ecnet/Kidnapping.e'),
-  call(Out, 'examples/Mueller2006/Chapter11/HungryCat.e').
+  call(Out, 'ecnet/SpeechAct.e'),
+   call(Out, 'ecnet/Diving.e'),
+   call(Out, 'examples/Mueller2006/Exercises/MixingPaints.e'),
+
+  
+%  call(Out, 'examples/Mueller2006/Chapter11/HungryCat.e'),
+  !.
 %:- initialization(e_reader_test, main).
 
 
@@ -146,14 +154,16 @@ resolve_file(S0,SS):- absolute_file_name(S0, SS, [expand(true), file_errors(fail
 resolve_file(S0,SS):- relative_from(F), absolute_file_name(S0, SS, [relative_to(F),file_errors(fail),access(read)]), !.
 resolve_file(S0,SS):- atom(S0), file_base_name(S0,S1), S0\==S1, resolve_file(S1,SS).
 */
-
+:- use_module(library('ec_planner/ec_planner_dmiles')).
+:- use_module(library('ec_planner/ec_loader')).
 
 needs_resolve_local_files(F, L):- \+ is_stream(F), \+ is_filename(F),
   resolve_local_files(F, L), !,  L \= [], L \= [F].
 
 :- export(load_e/1).
 load_e(F):- needs_resolve_local_files(F, L), !, maplist(load_e, L).  
-load_e(SS):- must_det_l((echo_format('~N% '), e_print(loading(SS)), convert_e(on_load_ele,SS))), !.
+load_e(SS):- must_det_l((echo_format('~N% '), pprint_ec(green, loading(SS)),
+  e_to_pl(on_load_ele, current_output, SS))), !.
 
 load_e_pl(F):- needs_resolve_local_files(F, L), !, maplist(load_e_pl, L).  
 load_e_pl(F):-
@@ -161,14 +171,35 @@ load_e_pl(F):-
   open(OutputName, write, Outs),
   format(Outs,'~n~q.~n',[:-(include(library('ec_planner/ec_test_incl')))]), 
   include_e(F), !,
-  close(Outs), consult(OutputName).
+  close(Outs), 
+  trace, 
+  consult(OutputName).
 
 
 on_load_ele(translate(Event, Outfile)):- !, mention_s_l, echo_format('~N% translate: ~w  File: ~w ~n',[Event, Outfile]).
 on_load_ele(load(S0)):- resolve_local_files(S0,SS), !, maplist(load_e, SS), !.
 on_load_ele(include(S0)):- resolve_local_files(S0,SS), !, maplist(load_e, SS), !.
-on_load_ele(SS):- echo_format('~N'), e_print(SS).
+on_load_ele(HB):- 
+  echo_format('~N'), pprint_ecp(yellow, HB),
+  must( get_linfo(lsvm(L,F,Vs,M))), 
+  must(convert_to_axiom_here(lsvm(L,F,Vs,M),HB,NEWHB)),
+  do_process_ec(assert_ele,M, NEWHB),
+  nl.
 
+convert_to_axiom_here(LSVM, ('->'(X,Y)), O):- !, convert_to_axiom_here(LSVM, '<-'(Y,X), O).
+convert_to_axiom_here(LSVM,XY,O):- convert_to_axiom(LSVM,XY,O).
+
+
+:- export(assert_ele/1).
+assert_ele(SS):- is_list(SS),!,maplist(assert_ele,SS).
+assert_ele(ec_current_domain_db(SS,_)):- !, assert_ele(ec_current_domain_db(SS)).
+assert_ele(ec_current_domain_db(SS)):- !, assert_ele((SS)).
+assert_ele(ec_axiom(H,B,_)):- !, assert_ele(axiom(H,B)).
+assert_ele(axiom(H,[])):- !, assert_ele(( H )).
+assert_ele(axiom(H,B)):- !, list_to_conjuncts(B,BC), assert_ele('<-'(H , BC)).
+assert_ele(SS):- echo_format('~N'), pprint_ecp(cyan, SS).
+
+include_e(F):- e_to_pl(do_convert_e, current_output, F).
 
 
 :- export(convert_e/1).
@@ -276,7 +307,6 @@ removed_n_chars(S, N):- get_code(S, _), Nm1 is N-1, removed_n_chars(S, Nm1).
 
 trim_off_whitepace(S):- repeat, \+ removed_one_ws(S).
 
-%process_stream_peeked213(S, " ;"):- !, till_eol(S).
 
 
 read_n_save_vars(Type, Codes):- read_some_vars(Codes, Vars),
@@ -303,10 +333,10 @@ upcased_functors(G):-
 % Process file stream input
 %
 process_stream_comment(S) :- (peek_string(S, 2, W);peek_string(S, 1, W)), clause(process_stream_peeked213(S, W),Body),!,call(Body).
-process_stream_peeked213(S, ";"):- !, read_line_to_string(S, Comment), echo_format('~N% ~s~n', [Comment]).
-process_stream_peeked213(S, "["):- mention_s_l, write('% '), !, read_stream_until(S, [], `]`, Codes), read_n_save_vars(universal, Codes).
-process_stream_peeked213(S, "{"):- mention_s_l, write('% '), !, read_stream_until(S, [], `}`, Codes), read_n_save_vars(existential, Codes).
-process_stream_peeked213(S, "#!"):- !, till_eol(S).
+process_stream_peeked213(S, "#!"):- !, echo_till_eol(S).
+process_stream_peeked213(S,  ";"):- !, echo_format('%'), echo_till_eol(S).
+process_stream_peeked213(S, "["):- mention_s_l, echo_format('% '), !, read_stream_until(S, [], `]`, Codes), read_n_save_vars(universal, Codes).
+process_stream_peeked213(S, "{"):- mention_s_l, echo_format('% '), !, read_stream_until(S, [], `}`, Codes), read_n_save_vars(existential, Codes).
 
 
 %process_e_stream(Why, S):- assertion(stream_property(S, input)).
@@ -316,21 +346,12 @@ process_e_stream(_, S):- process_stream_comment(S), !.
 
 process_e_stream(Why, S):- maybe_mention_s_l,    
    OR = [to_lower('.'), to_lower('('), end_of_line, to_lower('='),to_lower('>'), space, to_lower(':')], 
-   write('% '),
+   echo_format('% '),
    read_stream_until_true(S, [], char_type_inverse(Was, or(OR)), Text), 
    unpad_codes(Text, Codes), must(continue_process_e_stream(Why, S, Codes, Was)), !.
 process_e_stream(Why, S):- read_line_to_string(S, Comment), echo_format('~N%RROOR: ~w: ~s~n', [Why, Comment]), break.
 
-/*
-process_e_stream(Why, S):- must((read_term(S, T, [variable_names(Vs)]), put_variable_names( Vs))), 
-  call(b_setval, '$variable_names', Vs), b_setval('$term', T), 
-  (t_l:echo_mode(skip(items)) -> true ; write_stream_item(user_error, T)), !, 
-  flush_output(user_error), 
-  must(visit_script_term(T)), !, 
-  echo_format('~N', []), !.
 
-*/
-   
 % continue_process_e_stream(Why, _S, [], space):- !.
 continue_process_e_stream(_Why, _S, [], _):- !.
 continue_process_e_stream(_Why, _S, [], end_of_line):- !.
@@ -392,7 +413,7 @@ map_callables(Call, HT, HTTerm):- !,
  map_callables(Call, '$'(F, L), '$'(FF, LL)), 
  compound_name_arguments(HTTerm, FF, LL).
 
-
+compound_gt(P,GT):- compound(P), compound_name_arity(P, _, N), N > GT.
 
 fix_predname(!, not).
 fix_predname('|', ';').
@@ -455,7 +476,7 @@ e_to_ec(HT, HTTermO):- !,
  map_callables(my_unCamelcase, HTTerm, HTTermO).
 
 
-vars_verbatum(Term):- \+ compound(Term), !.
+vars_verbatum(Term):- \+ compound_gt(Term, 0), !.
 vars_verbatum(Term):- compound_name_arity(Term, F, A), (verbatum_functor(F);verbatum_functor(F/A)), !.
 
 add_ec_vars(Term0, Term, Vs):- vars_verbatum(Term0), !, Term0=Term, Vs=[].
@@ -466,10 +487,14 @@ add_ec_vars(Term0, Term, Vs):-
   add_ext_vars(VsA, ExtVars, Term1, Term, Vs), !.
 
 add_ext_vars(Vs, [], Term, Term, Vs):- !.
+add_ext_vars(VsA, LLS, Term0, Term, Vs):-  use_some,
+  insert_vars((some(LLS), Term0), LLS, Term, VsB), !,
+  append(VsA,VsB,Vs),!.
 add_ext_vars(VsA, LLS, Term0, Term, Vs):-  
   insert_vars(exists(LLS, Term0), LLS, Term, VsB), !,
   append(VsA,VsB,Vs),!.
 
+use_some :- fail.
 
 get_vars(Type,LLS):- findall(E, (etmp:temp_varnames(Type,L), member(E, L)), LL), sort(LL, LLS),!.
 
@@ -487,6 +512,10 @@ if_string_replace(T, B, A, NewT):-
 
 e_read2(Txt, Term):- \+ string(Txt), text_to_string(Txt, T),!, e_read2(T, Term).
 e_read2(T, Term):- if_string_replace(T, '!=', (\=), NewT), !, e_read2(NewT, Term).
+e_read2(T, Term):- use_some,
+  if_string_replace(T,  '{', ' some( ', T1), 
+  if_string_replace(T1, '}', ' ) & ', NewT), 
+  e_read2(NewT, Term).
 e_read2(T, Term):- 
   if_string_replace(T, '{', ' [ ', T1), 
   if_string_replace(T1, '}', ' ] thereExists ', NewT),    
@@ -528,7 +557,7 @@ cont_one_e_compound(_S, Text, Last, Term):- char_type(Last, to_lower(')')),
 
 cont_one_e_compound(S, InCodes, WasLast, Term):- process_stream_comment(S), !, cont_one_e_compound(S, InCodes, WasLast, Term).
 cont_one_e_compound(S, InCodes, WasLast, Term):- 
-   (WasLast\==40-> write('% ') ; true), 
+   (WasLast\==40-> echo_format('% ') ; true), 
    read_stream_until_true(S, InCodes, char_type_inverse(_Was, or([to_lower('.'), end_of_line])), Text), 
    unpad_codes(Text, Codes), last(Codes, Last), 
    cont_one_e_compound(S, Codes, Last, Term).
@@ -540,7 +569,7 @@ cont_one_e_compound(S, InCodes, WasLast, Term):-
 maybe_mention_s_l:- last_s_l(B,L),LLL is L+5,  s_l(BB,LL), B==BB, !, (LLL<LL -> mention_s_l; true).
 maybe_mention_s_l:- mention_s_l.                      
 
-mention_s_l:-  must_det_l((flush_output, format('~N'),
+mention_s_l:-  must_det_l((flush_output, echo_format('~N'),
   s_l(B,L), ansi_format([fg(green)], '% ~w~n', [B:L]), flush_output)),
   retractall(last_s_l(B,_)),asserta(last_s_l(B,L)).
 
@@ -561,58 +590,84 @@ any_line_count(_,0).
 
 %ec_on_read(S):- ec_on_read(on_load_ele, S).
 
+:- meta_predicate ec_on_each_read(1,*,*).
+
 ec_on_read(Why, EOF):- EOF == end_of_file, !,  must(call(Why, EOF)).
 ec_on_read(Why, SL):- e_to_ec(SL, SO) -> SL\=@=SO, !, ec_on_read(Why, SO).
+ec_on_read(Why, Cmp):- compound_gt(Cmp, 0), 
+  Cmp =.. [NonlistF, List], is_list(List), non_list_functor(NonlistF),!, 
+  maplist(ec_on_each_read(Why,NonlistF), List).
 ec_on_read(Why, S):- must(glean_data(Why, S)), must(call(Why, S)).
+
+
+
+ec_on_each_read(Why, NonlistF, E):- Cmp =.. [NonlistF, E], ec_on_read(Why, Cmp).
 
 %must(G):- tracing, !, notrace(G).
 %must(G):- call(G)->true;(trace,ignore(rtrace(G)),break).
 
 on_convert_ele(translate(Event, Outfile)):- !, must((mention_s_l, echo_format('~N% translate: ~w  File: ~w ~n',[Event, Outfile]))).
 on_convert_ele(include(S0)):- resolve_local_files(S0,SS), !, maplist(include_e, SS), !.
-on_convert_ele(load(S0)):- resolve_local_files(S0,SS), !, maplist(load_e, SS), !.  
+%on_convert_ele(load(S0)):- resolve_local_files(S0,SS), !, maplist(load_e, SS), !.  
 on_convert_ele(end_of_file).
-on_convert_ele(SS):- must(echo_format('~N')), must(e_print(SS)).
+on_convert_ele(SS):- must(echo_format('~N')), must(pprint_ecp([bold,fg(magenta)],SS)).
 
 
 do_convert_e(SS):- on_convert_ele(SS).
 
-
-e_print(SS):- 
-   must(pretty_numbervars(SS, SS1)), 
-   with_op_cleanup(1200,xfx,(<->),
-     with_op_cleanup(1200,xfx,(->),
-       ansi_format([fg(yellow)], '~@~n~n', [ec_reader:pprint_sf(SS1)]))), 
-    flush_output, !.
+:- meta_predicate with_op_cleanup(*,*,*,0).
 
 
-pprint_sf(T):-
-  format(string(S0), '~@', [ec_reader:pprint_e(T)]),
-  always_string_replace(S0,'<->','<->\n  ',S1),
-  always_string_replace(S1,':-','<->',S2),
-  always_string_replace(S2,'-->','->',S),
-  format('~s',[S]).
-
-always_string_replace(I,F,R,O):- if_string_replace(I,F,R,O),!.
-always_string_replace(I,_,_,I).
+str_repl(F,R,I,O):- if_string_replace(I,F,R,O),!.
+str_repl(_,_,I,I).
+replcterm(F,R,I,O):- subst(I,F,R,O),!.
 
 
-has_operators(T):- \+ compound(T),!, fail.
-has_operators(T):- compound_name_arity(T, _, 0), !, fail.
-has_operators(T):- functor(T,F,_),(current_op(_,_,F);F=( '<->' )).
-has_operators(T):- arg(_,T,F), has_operators(F).
+get_operators(P,[]):- \+ compound_gt(P, 0), !.
+get_operators([H|T],Ops):- !, get_operators(H,L),get_operators(T,R),append(L,R,Ops).
+get_operators(P,Ops):- P=..[F|List],get_operators(List,More),
+  (is_operator(F)->Ops=[F|More];Ops=More).
+
+is_operator('<->').
+is_operator('->').
+is_operator('-->').
+is_operator('<-').
+is_operator(F):- current_op(N,_,F),N>800.
+
+mid_pipe(In,[H|T],Out):- !,mid_pipe(In,H,Mid),mid_pipe(Mid,T,Out).
+mid_pipe(In,[],In):-!.
+mid_pipe(In,H,Out):- !, call(H,In,Out).
 
 
-pprint_e(T):- 
-   subst(T,('<->'),(':-'),T0),
-   subst(T0,('->'),('-->'),TT),
-   prolog_listing:portray_clause(TT),!.
 
-pprint_e(T):- % has_operators(T),
-   prolog_listing:portray_clause(T),!.
-pprint_e(SS1):- format('~p',[SS1]),!.
-pprint_e(SS1):- 
-        prolog_pretty_print:print_term(SS1, 
+trim_stop(S,O):- sub_string(S, N, 1, 0, Last), 
+  (Last = "." -> sub_string(S, 0, N, 1, O); 
+     ((Last="\n";Last="\r";Last=" ") -> (sub_string(S, 0, N, 1, Before),trim_stop(Before,O)) ; S=O)).
+
+clause_to_string(T,S):- 
+ with_output_to(string(S0), 
+  prolog_listing:portray_clause(current_output,T,
+    [portrayed(false),partial(true),nl(false),fullstop(false),singletons(false)])),!,
+ trim_stop(S0,S).
+
+print_e_to_string(T, Ops, S):- member(':-', Ops), !, clause_to_string(T,S).
+print_e_to_string(T, Ops, S):- member('-->', Ops), !, clause_to_string(T,S).
+print_e_to_string(T, Ops, S):- member('<-', Ops), !, 
+   subst(T,('<-'),(':-'),T0), 
+   clause_to_string(T0,S0), !,
+   mid_pipe(S0,str_repl(':-','<-'),S).
+print_e_to_string(T, Ops, S):-  Ops \== [], (member('->', Ops);member('<->', Ops)),
+   mid_pipe(T, [replcterm(('<->'),(':-')), replcterm(('->'),('-->'))],T0),
+   clause_to_string(T0,S0),!,
+   mid_pipe(S0, [str_repl(':-','<->'),str_repl('-->','->')],S).
+print_e_to_string(T, Ops, S):-  member('<->', Ops), sformat(S0, '~p',[T]),
+  mid_pipe(S0,str_repl('<->','<->\n  '),S).
+/*.
+ec_portray(','):-write(',').
+user:portray(Nonvar):- nonvar(Nonvar), ec_portray(Nonvar).   */
+print_e_to_string(T, _Ops, S):- 
+  sformat(S, '~@',
+    [(prolog_pretty_print:print_term(T, 
              [  % left_margin(1),
                                 write_options([numbervars(true),
                                    quoted(true),
@@ -620,7 +675,51 @@ pprint_e(SS1):-
                              %   max_length(120),
                  % indent_arguments(auto),
                   output(current_output)]),
-                  flush_output.
+                  flush_output)]).
+
+
+to_ansi(C, [fg(C)]):- atom(C),!.
+to_ansi([H|T],[H|T]):-!.
+to_ansi(H,[H]).
+
+pprint_ec(C, P):-
+  pprint_ec_and_f(C, P, '~n').
+pprint_ecp(C, P):-
+  pprint_ec_and_f(C, P, '.~n').
+
+pprint_ec_and_f(C, P, AndF):-
+  print_e_to_string(P, S), 
+  to_ansi(C, C0), !, 
+  ansi_format(C0, '~s', [S]),
+  format(AndF), !.
+
+user:portray(Term):- ec_portray_hook(Term).
+
+ec_portray_hook(Term):- 
+ setup_call_cleanup(flag(ec_portray, N, N+1), 
+  ec_portray(N, Term),
+  flag(ec_portray,_, N)).
+
+ec_portray(_,Var):- var(Var),!,fail. % format('~p',[Var]),!.
+ec_portray(_,'$VAR'(Atomic)):-  atom(Atomic), write(Atomic),!.
+ec_portray(_,Term):- notrace(is_list(Term)),!,Term\==[], notrace(catch(text_to_string(Term,Str),_,fail)),!,format('"~s"',[Str]).
+ec_portray(N,Term):- N=0, pprint_ec_no_newline(white, Term).
+
+
+pprint_ec_no_newline(C, P):-
+  print_e_to_string(P, S),
+  to_ansi(C, C0), ansi_format(C0, '~s', [S]),
+  flush_output.
+
+print_e_to_string(P, S):- 
+   get_operators(P, Ops),
+   must(pretty_numbervars(P, T)), 
+   with_op_cleanup(1200,xfx,(<->),
+     with_op_cleanup(1200,xfx,(->),
+       with_op_cleanup(1200,xfy,(<-),
+          print_e_to_string(T, Ops, S)))).
+   
+
 
 get_op_restore(OP,Restore):- 
    findall(op(E,YF,OP),(member(YF,[xfx,xfy,yfx,fy,fx,xf,yf]),current_op(E,YF,OP)),List),
@@ -638,10 +737,6 @@ with_op_cleanup(NewP,YF,OP,Goal):-
    Cleanup = (op(OldP,YF,OP),Restore),
    scce_orig(Setup,Goal,Cleanup).
 
-/*ec_portray('$VAR'(Atomic)):-  atom(Atomic), write(Atomic),!.
-ec_portray(','):-write(',').
-user:portray(Nonvar):- nonvar(Nonvar), ec_portray(Nonvar).
-*/
 glean_data(Why, SL):- \+ compound(SL), !, dmsg(warn(glean_data(Why, SL))).
 glean_data(Why, subsort(S1, S2)):- !, glean_data(Why, sort(S1)), glean_data(Why, sort(S2)), assert_gleaned(Why, subsort(S1, S2)).
 glean_data(Why, sort(S)):- !, assert_gleaned(Why, sort(S)).
@@ -681,11 +776,18 @@ process_e_token_with_string(_, _, ""):-!.
 process_e_token_with_string(Why, Type, String):- token_stringsss(String, Out), ec_on_read(Why, t(Type, Out)).
 
 token_stringsss("", []):-!.
+token_stringsss(T, Out) :- if_string_replace(T, '  ', ' ', NewT), !, token_stringsss(NewT, Out).
+token_stringsss(T, Out) :- if_string_replace(T, ': ', ':', NewT), !, token_stringsss(NewT, Out).
+token_stringsss(T, Out) :- if_string_replace(T, ' :', ':', NewT), !, token_stringsss(NewT, Out).
 token_stringsss(String, Out):- normalize_space(string(S), String), S\==String, !, token_stringsss(S, Out).
+token_stringsss(String, VVList):- atomics_to_string(VList, ',', String), VList \= [_], remove_blanks_col(VList, VVList), !.
 token_stringsss(String, col(VVList)):- atomics_to_string(VList, ':', String), VList \= [_], remove_blanks(VList, VVList), !.
-token_stringsss(String, VVList):- atomics_to_string(VList, ',', String), VList \= [_], remove_blanks(VList, VVList), !.
 token_stringsss(String, VVList):- atomics_to_string(VList, ' ', String), remove_blanks(VList, VVList), !.
-  
+
+remove_blanks_col(I, O):- remove_blanks(I, M),maplist(token_cols, M, O).
+
+token_cols(String, col(VVList)):- atomics_to_string(VList, ':', String), VList \= [_], remove_blanks(VList, VVList), !.
+token_cols(String,String).
 
 remove_blanks([], []).
 remove_blanks([''|I], O):- !, remove_blanks(I, O).
@@ -747,9 +849,9 @@ read_stream_until_true(S, Buffer, Pred, Codes):- get_code(S, Char),
 in_space_cmt(Goal):- setup_call_cleanup(echo_format('~N /*~n', []), Goal, echo_format('~N*/~n', [])).
 
 
-till_eol(S):- read_line_to_string(S, String), echo_format('~N% ~s~n', [String]).
+echo_till_eol(S):- read_line_to_string(S, String), echo_format('~s~n', [String]).
 
-read_line_to_string_echo(S, String):- read_line_to_string(S, String), format('~s',String).
+read_line_to_string_echo(S, String):- read_line_to_string(S, String), echo_format('~s',String).
   
 echo_flush:- flush_output.
 echo_format(S):- echo_flush, echo_format(S,[]).
@@ -761,6 +863,14 @@ echo_format(Fmt, Args):- format(Fmt, Args), flush_output, !.
 %echo_format(_Fmt, _Args).
 
 
+/*
+process_e_stream(Why, S):- must((read_term(S, T, [variable_names(Vs)]), put_variable_names( Vs))), 
+  call(b_setval, '$variable_names', Vs), b_setval('$term', T), 
+  (t_l:echo_mode(skip(items)) -> true ; write_stream_item(user_error, T)), !, 
+  flush_output(user_error), 
+  must(visit_script_term(T)), !, 
+  echo_format('~N', []), !.
+
 write_stream_item(Out, T):- 
   flush_output, 
   format(Out, '~N~n', []), 
@@ -768,6 +878,8 @@ write_stream_item(Out, T):-
   format(Out, '~N~n', []), !, flush_output(Out).
 
 
+*/
+   
 
 
 till_eof(In) :-

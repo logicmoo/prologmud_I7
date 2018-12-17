@@ -8,8 +8,19 @@
 % ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 % ectest/ec_reader_test_includes.e:7
 % sort rule,subject,object,action,ruleeffect,policy,policyset
-sort([rule, subject, object, action, ruleeffect, policy, policyset]).
+sort(rule).
 
+sort(subject).
+
+sort(object).
+
+sort(action).
+
+sort(ruleeffect).
+
+sort(policy).
+
+sort(policyset).
 
 % 
 % 
@@ -34,31 +45,25 @@ sort([rule, subject, object, action, ruleeffect, policy, policyset]).
 % fluent F_RuleDenied(rule)
 fluent(f_ruleDenied(rule)).
 
-
 % fluent F_RulePermitted(rule)
 fluent(f_rulePermitted(rule)).
-
 
 % 
 % event Epermit(rule)
 event(epermit(rule)).
 
-
 % event EDeny(rule)
 event(eDeny(rule)).
-
 
 % 
 % ectest/ec_reader_test_includes.e:31
 % [rule,time] % Initiates(EDeny(rule),F_RuleDenied(rule),time).
 initiates(eDeny(Rule), f_ruleDenied(Rule), Time).
 
-
 % 
 % ectest/ec_reader_test_includes.e:32
 % [rule,time] % Initiates(Epermit(rule),F_RulePermitted(rule),time).
 initiates(epermit(Rule), f_rulePermitted(Rule), Time).
-
 
 % 
 % 
@@ -67,12 +72,10 @@ initiates(epermit(Rule), f_rulePermitted(Rule), Time).
 % [rule] % !HoldsAt(F_RulePermitted(rule),0).
 not(holds_at(f_rulePermitted(Rule), 0)).
 
-
 % 
 % ectest/ec_reader_test_includes.e:36
 % [rule] % !HoldsAt(F_RuleDenied(rule),0).
 not(holds_at(f_ruleDenied(Rule), 0)).
-
 
 % 
 % 
@@ -101,31 +104,25 @@ not(holds_at(f_ruleDenied(Rule), 0)).
 % fluent F_TargetHolds(rule)
 fluent(f_targetHolds(rule)).
 
-
 % fluent F_TargetDoesntHolds(rule)
 fluent(f_targetDoesntHolds(rule)).
-
 
 % 
 % event E_MatchRuleParametters(rule)
 event(e_matchRuleParametters(rule)).
 
-
 % event E_DontMatchRuleParametters(rule)
 event(e_dontMatchRuleParametters(rule)).
-
 
 % 
 % ectest/ec_reader_test_includes.e:63
 % [rule,time] % Initiates(E_MatchRuleParametters(rule),F_TargetHolds(rule),time).
 initiates(e_matchRuleParametters(Rule), f_targetHolds(Rule), Time).
 
-
 % 
 % ectest/ec_reader_test_includes.e:64
 % [rule,time] % Initiates(E_DontMatchRuleParametters(rule),F_TargetDoesntHolds(rule),time).
 initiates(e_dontMatchRuleParametters(Rule), f_targetDoesntHolds(Rule), Time).
-
 
 % 
 % 
@@ -134,13 +131,11 @@ initiates(e_dontMatchRuleParametters(Rule), f_targetDoesntHolds(Rule), Time).
 happens(e_matchRuleParametters(Rule), Time) ->
 	not(holds_at(f_targetHolds(Rule), Time)).
 
-
 % 
 % ectest/ec_reader_test_includes.e:67
 % [rule,time] % Happens(E_DontMatchRuleParametters(rule), time) -> !HoldsAt(F_TargetDoesntHolds(rule),time).
 happens(e_dontMatchRuleParametters(Rule), Time) ->
 	not(holds_at(f_targetDoesntHolds(Rule), Time)).
-
 
 % 
 % 
@@ -149,12 +144,10 @@ happens(e_dontMatchRuleParametters(Rule), Time) ->
 % [rule] % !HoldsAt(F_TargetHolds(rule),0).
 not(holds_at(f_targetHolds(Rule), 0)).
 
-
 % 
 % ectest/ec_reader_test_includes.e:71
 % [rule] % !HoldsAt(F_TargetDoesntHolds(rule),0).
 not(holds_at(f_targetDoesntHolds(Rule), 0)).
-
 
 % 
 % 
@@ -166,7 +159,6 @@ not(holds_at(f_targetDoesntHolds(Rule), 0)).
 % ectest/ec_reader_test_includes.e:78
 % fluent F_ConditionSatisfied(rule)
 fluent(f_conditionSatisfied(rule)).
-
 
 % ;event E_ConditionSatisfied(rule)
 % 
@@ -183,7 +175,6 @@ fluent(f_conditionSatisfied(rule)).
 % [rule] % HoldsAt(F_ConditionSatisfied(rule),0).
 holds_at(f_conditionSatisfied(Rule), 0).
 
-
 % 
 % 
 % 
@@ -195,11 +186,9 @@ holds_at(f_conditionSatisfied(Rule), 0).
 % fluent F_RuleEffectPermitted(rule)
 fluent(f_ruleEffectPermitted(rule)).
 
-
 % ; prédéfinies
 % fluent F_RuleEffectNOTpermitted(rule) 
 fluent(f_ruleEffectNOTpermitted(rule)).
-
 
 % ;prédéfinies
 % 
@@ -208,14 +197,11 @@ fluent(f_ruleEffectNOTpermitted(rule)).
 % fluent F_RuleDenied(rule)
 fluent(f_ruleDenied(rule)).
 
-
 % fluent F_RulePermitted(rule)
 fluent(f_rulePermitted(rule)).
 
-
 % fluent F_RuleNotApplicable(rule)
 fluent(f_ruleNotApplicable(rule)).
-
 
 % 
 % 
@@ -224,14 +210,11 @@ fluent(f_ruleNotApplicable(rule)).
 % event Epermit(rule)
 event(epermit(rule)).
 
-
 % event EDeny(rule)
 event(eDeny(rule)).
 
-
 % event ERuleDoesNotApply(rule)
 event(eRuleDoesNotApply(rule)).
-
 
 % 
 % 
@@ -239,18 +222,15 @@ event(eRuleDoesNotApply(rule)).
 % [rule,time] % Initiates(EDeny(rule),F_RuleDenied(rule),time).
 initiates(eDeny(Rule), f_ruleDenied(Rule), Time).
 
-
 % 
 % ectest/ec_reader_test_includes.e:114
 % [rule,time] % Initiates(Epermit(rule),F_RulePermitted(rule),time).
 initiates(epermit(Rule), f_rulePermitted(Rule), Time).
 
-
 % 
 % ectest/ec_reader_test_includes.e:115
 % [rule,time] % Initiates(ERuleDoesNotApply(rule),F_RuleNotApplicable(rule),time).
 initiates(eRuleDoesNotApply(Rule), f_ruleNotApplicable(Rule), Time).
-
 
 % 
 % 
@@ -264,7 +244,6 @@ happens(eDeny(Rule), Time) ->
 	holds_at(f_conditionSatisfied(Rule), Time),
 	holds_at(f_ruleEffectNOTpermitted(Rule), Time).
 
-
 % 
 % 
 % 
@@ -277,14 +256,12 @@ happens(epermit(Rule), Time) ->
 	holds_at(f_conditionSatisfied(Rule), Time),
 	holds_at(f_ruleEffectPermitted(Rule), Time).
 
-
 % 
 % 
 % ectest/ec_reader_test_includes.e:127
 % [rule,time] % Happens(ERuleDoesNotApply(rule),time) -> HoldsAt(F_TargetDoesntHolds(rule),time).
 happens(eRuleDoesNotApply(Rule), Time) ->
 	holds_at(f_targetDoesntHolds(Rule), Time).
-
 
 % 
 % 
@@ -294,18 +271,15 @@ happens(eRuleDoesNotApply(Rule), Time) ->
 % [rule] % !HoldsAt(F_RulePermitted(rule),0).
 not(holds_at(f_rulePermitted(Rule), 0)).
 
-
 % 
 % ectest/ec_reader_test_includes.e:132
 % [rule] % !HoldsAt(F_RuleDenied(rule),0).
 not(holds_at(f_ruleDenied(Rule), 0)).
 
-
 % 
 % ectest/ec_reader_test_includes.e:133
 % [rule] % !HoldsAt(F_RuleNotApplicable(rule),0).
 not(holds_at(f_ruleNotApplicable(Rule), 0)).
-
 
 % 
 % 
@@ -352,7 +326,6 @@ not(holds_at(f_ruleNotApplicable(Rule), 0)).
 ->  Time=0
 ).
 
-
 % 
 % 
 % ectest/ec_reader_test_includes.e:165
@@ -364,7 +337,6 @@ not(holds_at(f_ruleNotApplicable(Rule), 0)).
 ;   happens(eRuleDoesNotApply(Rule), Time)
 ->  Time=1
 ).
-
 
 % 
 % 
@@ -383,33 +355,26 @@ not(holds_at(f_ruleNotApplicable(Rule), 0)).
 % event E_policysetPermit(policyset)
 event(e_policysetPermit(policyset)).
 
-
 % event E_policysetDeny(policyset)
 event(e_policysetDeny(policyset)).
 
-
 % event E_policysetDontApply(policyset)
 event(e_policysetDontApply(policyset)).
-
 
 % 
 % fluent F_policysetPermitted(policyset)
 fluent(f_policysetPermitted(policyset)).
 
-
 % fluent F_policysetDenied(policyset)
 fluent(f_policysetDenied(policyset)).
-
 
 % ectest/ec_reader_test_includes.e:183
 % fluent F_policySetNotApplicable(policyset)
 fluent(f_policySetNotApplicable(policyset)).
 
-
 % 
 % predicate PolicysetHaspolicies(policyset,policy)
 predicate(policysetHaspolicies(policyset, policy)).
-
 
 % 
 % 
@@ -417,18 +382,15 @@ predicate(policysetHaspolicies(policyset, policy)).
 % [policyset,time] % Initiates(E_policysetPermit(policyset),F_policysetPermitted(policyset),time).
 initiates(e_policysetPermit(Policyset), f_policysetPermitted(Policyset), Time).
 
-
 % 
 % ectest/ec_reader_test_includes.e:189
 % [policyset,time] % Initiates(E_policysetDeny(policyset),F_policysetDenied(policyset),time).
 initiates(e_policysetDeny(Policyset), f_policysetDenied(Policyset), Time).
 
-
 % 
 % ectest/ec_reader_test_includes.e:190
 % [policyset,time] % Initiates(E_policysetDontApply(policyset),F_policySetNotApplicable(policyset),time).
 initiates(e_policysetDontApply(Policyset), f_policySetNotApplicable(Policyset), Time).
-
 
 % 
 % 
@@ -440,7 +402,6 @@ initiates(e_policysetDontApply(Policyset), f_policySetNotApplicable(Policyset), 
 happens(e_policysetPermit(Policyset), Time), policysetHaspolicies(Policyset, Policy) ->
 	holds_at(f_policyPermitted(Policy), Time).
 
-
 % 
 % 
 % 
@@ -451,7 +412,6 @@ happens(e_policysetDeny(Policyset), Time) ->
 	exists([Policy],
 	       (policysetHaspolicies(Policyset, Policy), holds_at(f_policyDenied(Policy), Time))).
 
-
 % 
 % 
 % 
@@ -461,7 +421,6 @@ happens(e_policysetDeny(Policyset), Time) ->
 happens(e_policysetDontApply(Policyset), Time), policysetHaspolicies(Policyset, Policy) ->
 	holds_at(f_policyNotApplicable(Policy), Time).
 
-
 % 
 % 
 % 
@@ -469,18 +428,15 @@ happens(e_policysetDontApply(Policyset), Time), policysetHaspolicies(Policyset, 
 % [policyset]% !HoldsAt(F_policysetPermitted(policyset),0).
 not(holds_at(f_policysetPermitted(Policyset), 0)).
 
-
 % 
 % ectest/ec_reader_test_includes.e:207
 % [policyset]% !HoldsAt(F_policysetDenied(policyset),0).
 not(holds_at(f_policysetDenied(Policyset), 0)).
 
-
 % 
 % ectest/ec_reader_test_includes.e:208
 % [policyset]% !HoldsAt(F_policySetNotApplicable(policyset),0).
 not(holds_at(f_policySetNotApplicable(Policyset), 0)).
-
 
 % 
 % 
@@ -493,33 +449,26 @@ not(holds_at(f_policySetNotApplicable(Policyset), 0)).
 % event E_policyPermit(policy)
 event(e_policyPermit(policy)).
 
-
 % event E_policyDeny(policy)
 event(e_policyDeny(policy)).
 
-
 % event E_PolicyDoesNotApply(policy)
 event(e_policyDoesNotApply(policy)).
-
 
 % 
 % fluent F_policyPermitted(policy)
 fluent(f_policyPermitted(policy)).
 
-
 % fluent F_policyDenied(policy)
 fluent(f_policyDenied(policy)).
-
 
 % ectest/ec_reader_test_includes.e:221
 % fluent F_policyNotApplicable(policy)
 fluent(f_policyNotApplicable(policy)).
 
-
 % 
 % predicate PolicyHasRules(policy,rule)
 predicate(policyHasRules(policy, rule)).
-
 
 % 
 % 
@@ -527,18 +476,15 @@ predicate(policyHasRules(policy, rule)).
 % [policy,time] % Initiates(E_policyPermit(policy),F_policyPermitted(policy),time).
 initiates(e_policyPermit(Policy), f_policyPermitted(Policy), Time).
 
-
 % 
 % ectest/ec_reader_test_includes.e:227
 % [policy,time] % Initiates(E_policyDeny(policy),F_policyDenied(policy),time).
 initiates(e_policyDeny(Policy), f_policyDenied(Policy), Time).
 
-
 % 
 % ectest/ec_reader_test_includes.e:228
 % [policy,time] % Initiates(E_PolicyDoesNotApply(policy),F_policyNotApplicable(policy),time).
 initiates(e_policyDoesNotApply(Policy), f_policyNotApplicable(Policy), Time).
-
 
 % 
 % 
@@ -550,7 +496,6 @@ initiates(e_policyDoesNotApply(Policy), f_policyNotApplicable(Policy), Time).
 happens(e_policyPermit(Policy), Time), policyHasRules(Policy, Rule) ->
 	holds_at(f_rulePermitted(Rule), Time).
 
-
 % 
 % 
 % 
@@ -561,7 +506,6 @@ happens(e_policyDeny(Policy), Time) ->
 	exists([Rule],
 	       (policyHasRules(Policy, Rule), holds_at(f_ruleDenied(Rule), Time))).
 
-
 % 
 % 
 % 
@@ -571,7 +515,6 @@ happens(e_policyDeny(Policy), Time) ->
 happens(e_policyDoesNotApply(Policy), Time), policyHasRules(Policy, Rule) ->
 	holds_at(f_ruleNotApplicable(Rule), Time).
 
-
 % 
 % 
 % 
@@ -579,18 +522,15 @@ happens(e_policyDoesNotApply(Policy), Time), policyHasRules(Policy, Rule) ->
 % [policy]% !HoldsAt(F_policyPermitted(policy),0).
 not(holds_at(f_policyPermitted(Policy), 0)).
 
-
 % 
 % ectest/ec_reader_test_includes.e:245
 % [policy]% !HoldsAt(F_policyDenied(policy),0).
 not(holds_at(f_policyDenied(Policy), 0)).
 
-
 % 
 % ectest/ec_reader_test_includes.e:246
 % [policy]% !HoldsAt(F_policyNotApplicable(policy),0).
 not(holds_at(f_policyNotApplicable(Policy), 0)).
-
 
 % 
 % 
@@ -603,14 +543,11 @@ not(holds_at(f_policyNotApplicable(Policy), 0)).
 % subject Navas
 t(subject, navas).
 
-
 % object Gloves
 t(object, gloves).
 
-
 % action Get
 t(action, get).
-
 
 % 
 % ectest/ec_reader_test_includes.e:257
