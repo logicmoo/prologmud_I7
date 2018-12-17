@@ -15,7 +15,7 @@
 %
 */
 
-:- module(ec,[needs_proccess/2,process_ec/2,abdemo_special/3]).
+:- module(ec,[abdemo_special/3]).
 
 :- include(ec_common).
 

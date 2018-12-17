@@ -101,13 +101,9 @@ e_reader_test:- with_e_sample_tests(convert_e(user_output)).
 :- export(e_reader_testf/0).
 e_reader_testf:- with_e_sample_tests(convert_e(outdir('.'))).
 
-:- export(e_reader_teste/0).
-e_reader_teste:- with_e_sample_tests(load_e).
-
-:- export(e_reader_testec/0).
-e_reader_testec:- with_e_sample_tests(load_e_pl).
 
 
+:- export(with_e_sample_tests/1).
 with_e_sample_tests(Out) :- 
 %  call(Out, 'ectest/*.e'),  
 %  call(Out, 'examples/AkmanEtAl2004/ZooWorld.e'),
@@ -139,6 +135,7 @@ exists_all_filenames(S0, SL, Options):-
         [relative_to(D), file_type(txt), file_errors(fail), access(read), solutions(all)|Options])), SL0),
   dedupe_files(SL0,SL),!.
 
+:- export(resolve_local_files/2).
 resolve_local_files(S0,SL):- atom(S0), expand_file_name(S0,SL), SL \= [E|_], exists_file(E), !.
 resolve_local_files(S0,SL):- exists_all_filenames(S0,SL, [expand(false)]), SL \= [].
 resolve_local_files(S0,SL):- exists_all_filenames(S0,SL, [expand(true)]), SL \= [].
@@ -154,51 +151,20 @@ resolve_file(S0,SS):- absolute_file_name(S0, SS, [expand(true), file_errors(fail
 resolve_file(S0,SS):- relative_from(F), absolute_file_name(S0, SS, [relative_to(F),file_errors(fail),access(read)]), !.
 resolve_file(S0,SS):- atom(S0), file_base_name(S0,S1), S0\==S1, resolve_file(S1,SS).
 */
-:- use_module(library('ec_planner/ec_planner_dmiles')).
-:- use_module(library('ec_planner/ec_loader')).
 
+:- export(needs_resolve_local_files/2).
 needs_resolve_local_files(F, L):- \+ is_stream(F), \+ is_filename(F),
   resolve_local_files(F, L), !,  L \= [], L \= [F].
 
-:- export(load_e/1).
-load_e(F):- needs_resolve_local_files(F, L), !, maplist(load_e, L).  
-load_e(SS):- must_det_l((echo_format('~N% '), pprint_ec(green, loading(SS)),
-  e_to_pl(on_load_ele, current_output, SS))), !.
+:- export(calc_where_to/3).
+calc_where_to(InputName,_Dir,OutputName):- atom_concat(InputName, '.pro', OutputName).
 
-load_e_pl(F):- needs_resolve_local_files(F, L), !, maplist(load_e_pl, L).  
-load_e_pl(F):-
-  calc_where_to(F, outdir('.'), OutputName),
-  open(OutputName, write, Outs),
-  format(Outs,'~n~q.~n',[:-(include(library('ec_planner/ec_test_incl')))]), 
-  include_e(F), !,
-  close(Outs), 
-  trace, 
-  consult(OutputName).
+:- set_ec_option(overwrite_transated_files,always).
 
+should_update(OutputName):- \+ exists_file(OutputName),!.
+should_update(_):- etmp:ec_option(overwrite_transated_files,always),!.
 
-on_load_ele(translate(Event, Outfile)):- !, mention_s_l, echo_format('~N% translate: ~w  File: ~w ~n',[Event, Outfile]).
-on_load_ele(load(S0)):- resolve_local_files(S0,SS), !, maplist(load_e, SS), !.
-on_load_ele(include(S0)):- resolve_local_files(S0,SS), !, maplist(load_e, SS), !.
-on_load_ele(HB):- 
-  echo_format('~N'), pprint_ecp(yellow, HB),
-  must( get_linfo(lsvm(L,F,Vs,M))), 
-  must(convert_to_axiom_here(lsvm(L,F,Vs,M),HB,NEWHB)),
-  do_process_ec(assert_ele,M, NEWHB),
-  nl.
-
-convert_to_axiom_here(LSVM, ('->'(X,Y)), O):- !, convert_to_axiom_here(LSVM, '<-'(Y,X), O).
-convert_to_axiom_here(LSVM,XY,O):- convert_to_axiom(LSVM,XY,O).
-
-
-:- export(assert_ele/1).
-assert_ele(SS):- is_list(SS),!,maplist(assert_ele,SS).
-assert_ele(ec_current_domain_db(SS,_)):- !, assert_ele(ec_current_domain_db(SS)).
-assert_ele(ec_current_domain_db(SS)):- !, assert_ele((SS)).
-assert_ele(ec_axiom(H,B,_)):- !, assert_ele(axiom(H,B)).
-assert_ele(axiom(H,[])):- !, assert_ele(( H )).
-assert_ele(axiom(H,B)):- !, list_to_conjuncts(B,BC), assert_ele('<-'(H , BC)).
-assert_ele(SS):- echo_format('~N'), pprint_ecp(cyan, SS).
-
+:- export(include_e/1).
 include_e(F):- e_to_pl(do_convert_e, current_output, F).
 
 
@@ -272,13 +238,6 @@ e_to_pl(Why, Out, Ins):-
       e_io(Why, Ins).
 
 :- nb_setval(ec_input_file,[]).
-
-calc_where_to(InputName,_Dir,OutputName):- atom_concat(InputName, '.pro', OutputName).
-
-:- set_ec_option(overwrite_transated_files,always).
-
-should_update(OutputName):- \+ exists_file(OutputName),!.
-should_update(_):- etmp:ec_option(overwrite_transated_files,always),!.
         
 %e_io(Why, Ins):- dmsg(e_io(Why, Ins)), fail.
 e_io(Why, Ins):-  
@@ -569,6 +528,7 @@ cont_one_e_compound(S, InCodes, WasLast, Term):-
 maybe_mention_s_l:- last_s_l(B,L),LLL is L+5,  s_l(BB,LL), B==BB, !, (LLL<LL -> mention_s_l; true).
 maybe_mention_s_l:- mention_s_l.                      
 
+:- export(mention_s_l/0).
 mention_s_l:-  must_det_l((flush_output, echo_format('~N'),
   s_l(B,L), ansi_format([fg(green)], '% ~w~n', [B:L]), flush_output)),
   retractall(last_s_l(B,_)),asserta(last_s_l(B,L)).
@@ -682,8 +642,10 @@ to_ansi(C, [fg(C)]):- atom(C),!.
 to_ansi([H|T],[H|T]):-!.
 to_ansi(H,[H]).
 
+:- export(pprint_ec/2).
 pprint_ec(C, P):-
   pprint_ec_and_f(C, P, '~n').
+:- export(pprint_ecp/2).
 pprint_ecp(C, P):-
   pprint_ec_and_f(C, P, '.~n').
 
@@ -854,7 +816,9 @@ echo_till_eol(S):- read_line_to_string(S, String), echo_format('~s~n', [String])
 read_line_to_string_echo(S, String):- read_line_to_string(S, String), echo_format('~s',String).
   
 echo_flush:- flush_output.
+:- export(echo_format/1).
 echo_format(S):- echo_flush, echo_format(S,[]).
+:- export(echo_format/2).
 echo_format(_Fmt, _Args):- t_l:block_comment_mode(Was), Was==invisible, !.
 echo_format(Fmt, Args):- t_l:block_comment_mode(_), t_l:echo_mode(echo_file), !, format(Fmt, Args), flush_output.
 echo_format(Fmt, Args):- t_l:echo_mode(echo_file), !, format(Fmt, Args), flush_output.

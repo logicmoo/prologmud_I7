@@ -17,20 +17,72 @@
 % =========================================
 % Goal/Plan translating
 % =========================================
-:- module(ec_loader,[ec_load/1, op(1200,xfx,'<-'),op(1200,xfx,'<->')]).
+:- module(ec_loader,[load_e/1, needs_proccess/2,process_ec/2, op(1200,xfx,'<-'),op(1200,xfx,'<->')]).
 
-:- reexport('./ec_reader').
+:- reexport(library('ec_planner/ec_planner_dmiles')).
+:- reexport(library('ec_planner/ec_reader')).
 
-:- export(ec_load/1).
-ec_load(F):-
-  is_filename(F),  
+
+:- export(e_reader_teste/0).
+e_reader_teste:- with_e_sample_tests(load_e),e_reader_teste2.
+
+e_reader_teste2:- 
+     convert_to_axiom(fff,
+  ((holds_at(beWaiter3(waiterOf(Restaurant)), Time),
+    exists([Agent], holds_at(knowOrder(waiterOf(Restaurant), Agent, Food), Time))) ->
+       ( happens(order(waiterOf(Restaurant),
+                      cookOf(Restaurant),
+                      Food),
+                Time))),O),pprint_ecp(yellow,O).
+
+:- export(e_reader_testec/0).
+e_reader_testec:- with_e_sample_tests(load_e_pl).
+
+:- export(load_e/1).
+load_e(F):- needs_resolve_local_files(F, L), !, maplist(load_e, L).  
+load_e('foundations/EC.e').
+load_e('foundations/Root.e').
+load_e(F):-
+  is_filename(F), 
   \+ etmp:ec_option(load(F), _),
-  asserta(etmp:ec_option(load(F), ec_load)),
-  e_to_pl(process_ec, current_output, F).
+  set_ec_option(load(F), loaded),
+  must_det_l((echo_format('~N% '), pprint_ec(green, loading(F)),
+  e_to_pl(on_load_ele, current_output, F))), !.
+load_e(_).
+
+load_e_pl(F):- needs_resolve_local_files(F, L), !, maplist(load_e_pl, L).  
+load_e_pl(F):-
+  calc_where_to(F, outdir('.'), OutputName),
+  open(OutputName, write, Outs),
+  format(Outs,'~n~q.~n',[:-(include(library('ec_planner/ec_test_incl')))]), 
+  include_e(F), !,
+  close(Outs), 
+  trace, 
+  consult(OutputName).
+
+
+on_load_ele(translate(Event, Outfile)):- !, mention_s_l, echo_format('~N% translate: ~w  File: ~w ~n',[Event, Outfile]).
+on_load_ele(load(S0)):- resolve_local_files(S0,SS), !, maplist(load_e, SS), !.
+on_load_ele(include(S0)):- resolve_local_files(S0,SS), !, maplist(load_e, SS), !.
+on_load_ele(HB):- 
+  echo_format('~N'), pprint_ecp(yellow, HB),
+  must( get_linfo(lsvm(L,F,Vs,M))), 
+  must(convert_to_axiom(lsvm(L,F,Vs,M),HB,NEWHB)),
+  do_process_ec(assert_ele,M, NEWHB),
+  nl.
+
+
+:- export(assert_ele/1).
+assert_ele(SS):- is_list(SS),!,maplist(assert_ele,SS).
+assert_ele(SS):- syntx_term_check(SS),!.
+assert_ele(ec_axiom(H,B,_TM)):- !,  pprint_ecp(cyan, axiom(H,B)).
+assert_ele(ec_current_domain_db(P,_TM)):- assert_ele(P).
+assert_ele(SS):- echo_format('~N'), pprint_ecp(cyan, SS).
+
 
 
 :- export(ect/0).
-ect:- ec_load('examples/FrankEtAl2003/Story1.e').
+ect:- load_e('examples/FrankEtAl2003/Story1.e').
 
 
 
@@ -42,50 +94,76 @@ fix_goal_add_on_arg(T, G, G0, [b(T,T2),b(T2,end)]):- G =.. [F,A,B], already_good
 
 
 to_axiom_head(T,G,GG) :-  notrace(fix_axiom_head(T,G,GG)),!.
-to_axiom_head(_,G,G) :- fix_axiom_head(T,G,GG),!.
+to_axiom_head(T,G,GG) :- fix_axiom_head(T,G,GG),!.
 
-to_axiom_body(T,G,GGs) :-  fix_goal(T,G,GGs).
 
 fix_goal(_, Nil,[]):- Nil==[],!.
 fix_goal(T,[G|Gs],GGs):- !, fix_goal(T,G,G0),fix_goal(T,Gs,Gs0),append(G0,Gs0,GGs),!.
 fix_goal(T,(G,Gs),GGs):- !, fix_goal(T,G,G0),fix_goal(T,Gs,Gs0),append(G0,Gs0,GGs),!.
 fix_goal(T,{Gs},GGs):- !, fix_goal(T,Gs,GGs).
-fix_goal(T, G, [GGs]):- fix_axiom_head(T,G,GGs),!.
+fix_goal(T, G, GGs):- fix_axiom_head(T,G,GG),!, listify(GG,GGs).
 fix_goal(T, G, [Gs| TExtra]):- fix_goal_add_on_arg( T, G, Gs, TExtra),!.
 fix_goal(T, G, [GGs]):- to_axiom_head(T,G,GGs),!.
-fix_goal(T, not(happens(G,T)), [not(happens(G,T))]).
 fix_goal(T, G, [holds_at(G, T)]).
+
+
+ec_to_ax(_, X,Y):-  (\+ callable(X) ; \+ compound(X)), !, X=Y.
+ec_to_ax(T, (Pre -> '<->'(HB,BH)), HBO):- ec_to_ax(T, ('<->'((Pre,HB),(Pre,BH))), HBO).
+ec_to_ax(T, (H<-B),O):- !, into_axiom(T,H,B,O).
+ec_to_ax(T, (B->H),O):- !, into_axiom(T,H,B,O).
+ec_to_ax(T, (HB1<->HB2),[A,B]):- !, ec_to_ax(T, (HB1->HB2),A),ec_to_ax(T, (HB1<-HB2),B).
+ec_to_ax(T, axiom(H,B),O):- into_axiom(T,H,B,O), !.
+ec_to_ax(_, axiom(H,B), axiom(H,B)):- !.
+ec_to_ax(T, X,Y):- cvt1(T, X,Y),X=Y,!.
+ec_to_ax(T, X,Y):- cvt1(T, X,XY),ec_to_ax(T, XY,Y).
+ec_to_ax(_, X,X).
+
+to_axiom_body(T,G,GGs) :-  fix_goal(T,G,GGs).
+
+%into_axiom(T,H,happens(E,T),OUT):- into_axiom(T,not(happens(E,T)),not(H),OUT).
+into_axiom(T,H,B,axiom(AH,AB)):- to_axiom_head(T1,H,AH),to_axiom_body(T2,B,AB),!,ignore(T=T1),ignore(T2=T1).
 
 :- export(fix_axiom_head/3).
 
-fix_axiom_head(T, X,Y):-  \+ callable(X), !, X=Y.
-fix_axiom_head(T,'&'(A,B),(AABB)):- !, fix_axiom_head(T,(A,B),(AABB)).
-fix_axiom_head(T,(A,B),(AA,BB)):- !, fix_axiom_head(T,A,AA), fix_axiom_head(T,B,BB).
-fix_axiom_head(T,(A;B),(AA;BB)):- !, fix_axiom_head(T,A,AA), fix_axiom_head(T,B,BB).
+cvt1(_, X,Y):-  (\+ callable(X);\+ compound(X)), !, X=Y.
+cvt1(T, (Pre -> '<->'(HB,BH)), HBO):- cvt1(T, ('<->'((Pre,HB),(Pre,BH))), HBO).
+cvt1(T,'&'(A,B),(AABB)):- !, fix_axiom_head(T,(A,B),(AABB)).
+cvt1(T,(A,B),(AA,BB)):- !, fix_axiom_head(T,A,AA), fix_axiom_head(T,B,BB).
+cvt1(T,(A;B),(AA;BB)):- !, fix_axiom_head(T,A,AA), fix_axiom_head(T,B,BB).
+cvt1(_, X\=Y, diff(X,Y)).
+cvt1(T, X=Y, Term):- as_equals(X,Y,Equals), !, fix_axiom_head(T, Equals, Term),!.
 
-fix_axiom_head(_T, ec_option(X,Y),option(X,Y)):-!.
-fix_axiom_head(_T, option(X,Y),option(X,Y)):-!.
-fix_axiom_head(T, isa(E, C), List):- !, fix_axiom_head(T, t(C, E), List).
-fix_axiom_head(T, not(holds_at(N,AT)),O):- AT==0, fix_axiom_head(T, initially(neg(N)),O).
-fix_axiom_head(T, holds_at(N,AT),O):- AT==0, fix_axiom_head(T, initially(N),O).
-fix_axiom_head(T, neg(holds_at(N,AT)),O):- !, fix_axiom_head(T, holds_at(neg(N),AT),O).
-fix_axiom_head(T, neg(holds_at(N)),O):- !, fix_axiom_head(T, holds_at(neg(N),T),O).
-fix_axiom_head(T, not(happens(G,T2)),not(O)):- !, fix_axiom_head(T,happens(G,T2),O).
-fix_axiom_head(T, not(I),O):- !, fix_axiom_head(T, neg(I),O).
-fix_axiom_head(T, exists(Vars,Truth), O):- conjoin(Truth,some(Vars),NewTruth),fix_axiom_head(T, NewTruth, O).
-fix_axiom_head(T, happens(F, T1, T2), O):- T1==T2,!, fix_axiom_head(T, happens(F, T1), O).
-fix_axiom_head(_, X\=Y, diff(X,Y)).
-fix_axiom_head(T, equals(X,Y),equals(X,Y)).
-fix_axiom_head(T, X=Y, Term):- as_equals(X,Y,Equals), !, fix_axiom_head(T, Equals, Term),!.
+cvt1(T, HT, HTTermO):-  
+ compound_name_arguments(HT, F, L),
+ upcase_atom(F,U),downcase_atom(F,U),
+ maplist(fix_axiom_head(T),L,LL), LL\==L, !,
+ compound_name_arguments(HTTerm, F, LL),
+ fix_axiom_head(T, HTTerm, HTTermO).
 
-
-fix_axiom_head(T, G, G):- functor_skel(G,P), syntx_term_check(predicate(P)).
-fix_axiom_head(T, G, happens(G,T)):- functor_skel(G,P), (syntx_term_check(event(P));executable(P)).
-fix_axiom_head(T, G, holds_at(G,T)):- functor_skel(G,P), syntx_term_check(fluent(P)).
-
-fix_axiom_head(_, G, G):- functor(G,F,A), already_good(F,A),!.
+cvt1(_T, ec_option(X,Y),option(X,Y)):-!.
+cvt1(_T, option(X,Y),option(X,Y)):-!.
+cvt1(T, neg(exists(_Vars, holds_at(P, Time))),O):- cvt1(T, holds_at(neg(P), Time), O).
 
 
+cvt1(T, isa(E, C), List):- !, fix_axiom_head(T, t(C, E), List).
+cvt1(T, not(holds_at(N,AT)),O):- AT==0, fix_axiom_head(T, initially(neg(N)),O).
+cvt1(T, holds_at(N,AT),O):- AT==0, fix_axiom_head(T, initially(N),O).
+cvt1(T, not(holds_at(N,AT)),O):- !, fix_axiom_head(T, holds_at(neg(N),AT),O).
+cvt1(T, neg(holds_at(N)),O):- !, fix_axiom_head(T, holds_at(neg(N),T),O).
+cvt1(T, not(happens(G,T2)),not(O)):- !, fix_axiom_head(T,happens(G,T2),O).
+cvt1(T, not(I),O):- !, fix_axiom_head(T, neg(I),O).
+cvt1(T, not(exists(_Vars,I)),O):- !, fix_axiom_head(T, not(I),O).
+cvt1(_, exists(Vars,Truth), NewTruth):- conjoin(Truth,some(Vars),NewTruth).
+cvt1(T, happens(F, T1, T2), O):- T1==T2,!, fix_axiom_head(T, happens(F, T1), O).
+cvt1(_, equals(X,Y),equals(X,Y)).
+
+cvt1(_, G, G):- functor_skel(G,P), syntx_term_check(predicate(P)).
+cvt1(T, G, happens(G,T)):- functor_skel(G,P), (syntx_term_check(event(P));executable(P)).
+cvt1(T, G, holds_at(G,T)):- functor_skel(G,P), syntx_term_check(fluent(P)).
+cvt1(_, G, G):- functor(G,F,A), already_good(F,A),!.
+
+
+fix_axiom_head(T,X,Y):- ec_to_ax(T, X,Y).
 
 fix_axiom_head_2(T, G, Gs):- fix_goal_add_on_arg( T, G, Gs, _TExtra),!.
 fix_axiom_head_2(T, P,PP):- P =..[F|Args],functor(P,F,A), arg_info(AxH,F,Arity),!,
@@ -99,7 +177,7 @@ as_equals(X,Y,equals(X,Y)).
 
 
 syntx_term_check(G):- clause(G,_).
-syntx_term_check(G):- clause(ec_current_domain_db(G),_).
+syntx_term_check(G):- clause(ec_current_domain_db(G, _),_).
 
 functor_skel(G,P):- compound(G), compound_name_arity(G,F,A), compound_name_arity(P,F,A).
 functor_skel(G,P):- atom(G),P=G.
@@ -189,7 +267,7 @@ correct_time_arg(_Stem,In, TN, TN, In).
 
 lookup_time_val(TN,TpN,In):- copy_term(TN,TNS),member(ignore(TNS=TpN),In),TNS=@=TN,!.
 
-t_plus_or_minus_1(In, T+1, TN, In):- lookup_time_val(TN,TpN,In).
+t_plus_or_minus_1(In, TN, TpN, In):- lookup_time_val(TN,TpN,In).
 t_plus_or_minus_1(In, T+1, TN, In):- memberchk(b(T,TN),In),!.
 t_plus_or_minus_1(In, T-1, TN, In):- memberchk(b(TN,T),In),!.
 t_plus_or_minus_1(In, T-1, TN, [b(TN,T),ignore(T-1=TN)|In]):- next_t(TN,T),!.
@@ -207,36 +285,6 @@ next_t(aft,Aft_1):- var(Aft_1),!,gensym(aft_,Aft_1).
 fix_time_args1(T,G,Gs):- 
   visit_time_args(T,[],G,Gs,_Mid).
 
-
-:- export(make_falling_edges_v2/5).
-make_falling_edges_v2(_Stem,LastTime,[],[],LastTime):-!.
-make_falling_edges_v2(Stem,LastTime,
-              [happens(Event,When1)|HapsList],
-              [before(LastTime,ThisTime),happens(Event,ThisTime,NextTime)|Befores],Out):- 
-   atom_concat_gs(Stem, When1, ThisTime),
-   atom_concat_gs(Stem, When1, NextTime),
-  make_falling_edges_v2(Stem, NextTime, HapsList,Befores,Out).
-make_falling_edges_v2(Stem,LastTime,
-              [happens(Event,When1,When2)|HapsList],
-              [before(LastTime,ThisTime),happens(Event,ThisTime,NextTime)|Befores],Out):- 
-   atom_concat_gs(Stem, When1, ThisTime),
-   atom_concat_gs(Stem, When2, NextTime),
-  make_falling_edges_v2(Stem, NextTime, HapsList,Befores,Out).
-
-atom_concat_gs(Stem, When1, ThisTime):- atom_concat(Stem, When1, Lose1),gensym(Lose1,ThisTime).
-
-make_falling_edges(_Stem,LastTime,[],[],LastTime):-!.
-make_falling_edges(Stem, LastTime,
-              [happens(Event, When1)|HapsList],
-              [before(LastTime, ThisTime),holds_at(has_occured(Event),ThisTime)|Befores],Out):- 
-   atom_concat_gs(Stem, When1, ThisTime),
-  make_falling_edges(Stem,ThisTime, HapsList,Befores,Out).
-make_falling_edges(Stem,LastTime,
-              [happens(Event,When1,When2)|HapsList],
-              [before(LastTime,ThisTime),holds_at(has_occured(Event),ThisTime)|Befores],Out):- 
-   atom_concat_gs(Stem, When1, ThisTime),
-   atom_concat_gs(Stem, When2, NextTime),
-  make_falling_edges(Stem, NextTime, HapsList,Befores,Out).
 
 
 already_good(happens, 2).
@@ -267,24 +315,6 @@ already_good(F,A):- functor(P,F,A),syntx_term_check(predicate(PP)),compound(PP),
 
 
 
-%ec_to_ax(T, X=Y, Term):- as_equals(X,Y,Equals), !, ec_to_ax(T, Equals, Term),!.
-%ec_to_ax(T, exists(Vars,HB), exists(Vars,O)):- !, ec_to_ax(T, HB,O).
-%ec_to_ax(_T, range(X,Y,Z),range(X,Y,Z)):-!.
-ec_to_ax(T, H, AH):- fix_axiom_head(T,H,AH),!.
-ec_to_ax(T, (H<-B),O):- !, into_axiom(T,H,B,O).
-ec_to_ax(T, (B->H),O):- !,  into_axiom(T,H,B,O).
-ec_to_ax(T, (HB1<->HB2),[A,B]):- !, ec_to_ax(T, (HB1->HB2),A),ec_to_ax(T, (HB1<-HB2),B).
-ec_to_ax(T, axiom(H,B),O):- !, into_axiom(T,H,B,O).
-ec_to_ax(T, axiom(H,B), axiom(H,B)):- !.
-
-to_fact_head(H,List):- H=List.
-
-%into_axiom(T,H,happens(E,T),OUT):- into_axiom(T,not(happens(E,T)),not(H),OUT).
-into_axiom(T,H,B,axiom(AH,AB)):- to_axiom_head(T1,H,AH),to_axiom_body(T2,B,AB),!,ignore(T=T1),ignore(T2=T1).
-
-
-
-
 
 
 :- export(get_linfo/1).
@@ -296,9 +326,9 @@ get_linfo(lsvm(L,F,Vs,M)):-
 
 :- export(process_ec/1).
 :- module_transparent(process_ec/1).
-process_ec( HB ):- notrace(must(get_linfo(LSV))), process_ec( LSV, HB ).
+process_ec( HB ):- notrace(must(get_linfo(T))), process_ec( T, HB ).
 %:- export(process_ec/2).
-%process_ec( _, HB , LSV):- !,process_ec( LSV, HB ).
+%process_ec( _, HB , T):- !,process_ec( T, HB ).
 
 :- export(process_ec/2).
 :- module_transparent(process_ec/2).
@@ -310,55 +340,55 @@ merge_into_body(X,_Y,Z):- Z = X.
 
 :- export(do_process_ec/3).
 :- module_transparent(do_process_ec/3).
-do_process_ec(Why,M, NonCallable) :- assertion((current_module(M),callable(NonCallable))), fail.
-do_process_ec(Why,M, NEWHB):- is_list(NEWHB), !, maplist(do_process_ec(Why,M), NEWHB).
-do_process_ec(Why,M, (:- GOAL)):- !, must(M:GOAL).
-do_process_ec(Why,M, (?- GOAL)):- !, M:forall(GOAL, true).
+do_process_ec(_Why, M, NonCallable) :- assertion((current_module(M),callable(NonCallable))), fail.
+do_process_ec(Why, M, NEWHB):- is_list(NEWHB), !, maplist(do_process_ec(Why, M), NEWHB).
+do_process_ec(_Why, M, (:- GOAL)):- !, must(M:GOAL).
+do_process_ec(_Why, M, (?- GOAL)):- !, M:forall(GOAL, true).
 % How to? M:assertz('$source_location'(S, L):NEWHB),
-%do_process_ec(Why,M, NEWHB):- wdmsg(do_process_ec(Why,M, NEWHB)),fail.
-do_process_ec(Why,M, NEWHB):- M:call(Why,NEWHB).
+%do_process_ec(Why, M, NEWHB):- wdmsg(do_process_ec(Why, M, NEWHB)),fail.
+do_process_ec(Why, M, NEWHB):- M:call(Why, NEWHB).
 
 :- export(convert_to_axiom/3).
-convert_to_axiom(LSV,  I, O):- \+ callable(I),!, I = O.
-convert_to_axiom(_T, subsort(F, W), List):- !, to_fact_head([subsort(F, W),sort(F),sort(W)],List).
-convert_to_axiom(_LSV, option(X,Y), [(:- set_ec_option(X,Y))]).
-convert_to_axiom(LSV, M:H, [M:HH]):- !, convert_to_axiom(LSV, H, HH).
-convert_to_axiom(LSV, (H:-B),[(HH:- B)]):- !, convert_to_axiom(LSV, H,HH).
-convert_to_axiom(T, abducible(H), abducible(H)):- !.
-convert_to_axiom(_T, t(C, E), List):- !, to_fact_head([sort(C),t(C, E)],List).
+convert_to_axiom(_, I, O):- \+ callable(I),!, I = O.
+convert_to_axiom(_, subsort(F, W), List):- !, to_fact_head([subsort(F, W),sort(F),sort(W)],List).
+convert_to_axiom(_, option(X,Y), [(:- set_ec_option(X,Y))]).
+convert_to_axiom(T, M:H, [M:HH]):- !, convert_to_axiom(T, H, HH).
+convert_to_axiom(T, (H:-B),[(HH:- B)]):- !, convert_to_axiom(T, H,HH).
+convert_to_axiom(_, abducible(H), abducible(H)):- !.
+convert_to_axiom(_, t(C, E), List):- !, to_fact_head([sort(C),t(C, E)],List).
 
 convert_to_axiom(L,[H|T],ABC):- trace, 
    once((convert_to_axiom(L,H,A), convert_to_axiom(L,T,B),append(A,B,AB))), 
    AB\=@= [H|T],
    convert_to_axiom(L,AB,ABC).
 
-convert_to_axiom(LSV, (Pre -> '<->'(HB,BH)), HBO):-
-  convert_to_axiom(LSV, ('<->'((Pre,HB),(Pre,BH))), HBO).
+convert_to_axiom(T, (Pre -> '<->'(HB,BH)), HBO):-
+  convert_to_axiom(T, ('<->'((Pre,HB),(Pre,BH))), HBO),!.
 
-convert_to_axiom(LSV, '<->'(HB,BH), HBO):-
-  convert_to_axiom(LSV, '->'(HB,BH), HBO1),
-   convert_to_axiom(LSV, '<-'(HB,BH), HBO2),
+convert_to_axiom(T, '<->'(HB,BH), HBOO):-
+  convert_to_axiom(T, '->'(HB,BH), HBO1),
+   convert_to_axiom(T, '<-'(HB,BH), HBO2),
   flatten([HBO1,HBO2],HBO),
-  convert_to_axiom1(LSV,HBO,HBOO).
+  convert_to_axiom1(T,HBO,HBOO),!.
 
-convert_to_axiom(LSV, exists(Vars,B->H), HBO):- conjoin(H,some(Vars),Conj), !, convert_to_axiom(LSV, B -> Conj , HBO).
-convert_to_axiom(LSV, exists(Vars,Info), HBO):- !, convert_to_axiom(LSV, Info, HB), 
+convert_to_axiom(T, exists(Vars,B->H), HBO):- conjoin(H,some(Vars),Conj), !, convert_to_axiom(T, B -> Conj , HBO).
+convert_to_axiom(T, exists(Vars,Info), HBO):- !, convert_to_axiom(T, Info, HB), 
   merge_into_body(HB,some(Vars),HBO).
 
-%convert_to_axiom(LSV, event(P), [ec_current_domain_db(event(P),LSV),executable(PP)]):-
 %  compound_name_arity(P,F,A),compound_name_arity(PP,F,A).
 
 
-convert_to_axiom(LSV, X, O):- nop(debug_var('AxTime',Time)), ec_to_ax(Time, X,Y), 
-  (is_list(Y)->convert_to_axiom1(LSV, Y, O); (X\=Y -> convert_to_axiom(LSV, Y, O);convert_to_axiom1(LSV, Y, O))).
-convert_to_axiom(LSV, Y, O):- convert_to_axiom1(LSV, Y, O).
+convert_to_axiom(T, X, O):- nop(debug_var('AxTime',Time)), ec_to_ax(Time, X,Y), 
+  (is_list(Y)->convert_to_axiom1(T, Y, O); (X\=Y -> convert_to_axiom(T, Y, O);convert_to_axiom1(T, Y, O))), !.
+convert_to_axiom(T, Y, O):- convert_to_axiom1(T, Y, O).
 
-% convert_to_axiom1(LSV, '->'(E,B), HBO2):- convert_to_axiom(LSV, precond(B,E), HBO2).
+% convert_to_axiom1(T, '->'(E,B), HBO2):- convert_to_axiom(T, precond(B,E), HBO2).
+to_fact_head(H,List):- H=List.
 
-convert_to_axiom1(LSV, P, O):- is_axiom_head(P),!, convert_to_axiom1(LSV, axiom(P), O).
-convert_to_axiom1(LSV, axiom(P), O):- convert_to_axiom1(LSV, axiom(P ,[]), O).
-convert_to_axiom1(LSV, axiom(X,Y), [ec_axiom(X,Y)]).
-convert_to_axiom1(LSV, Pred, [Pred]).
+convert_to_axiom1(T, P, O):- is_axiom_head(P),!, convert_to_axiom1(T, axiom(P), O).
+convert_to_axiom1(T, axiom(P), O):- convert_to_axiom1(T, axiom(P ,[]), O).
+convert_to_axiom1(LSV, axiom(X,Y), [ec_axiom(X,Y,LSV)]).
+convert_to_axiom1(LSV, Pred, [ec_current_domain_db(Pred,LSV)]).
 
 
 is_axiom_head(P):- compound_name_arity(P,F,_), arg_info(axiom_head,F,_),!.
@@ -386,8 +416,8 @@ arg_info(axiom_head,releases,v(event,fluent,time)).
 arg_info(axiom_head,trajectory,v(fluent,time,fluent,offset)).
 %arg_info(axiom_head,releasesAt,v(fluent,time)).
 
-correct_ax_args(T,F,A,Args,axiom_head,Arity,N, PP):-  N is A +1 ,!, append(Args,[T],NewArgs), PP =.. [F|NewArgs].
-correct_ax_args(_T,F,A,Args,axiom_head,Arity,N,PP):- A=N, PP =.. [F|Args].
+correct_ax_args(T,F,A,Args,axiom_head,_Arity,N, PP):-  N is A +1 ,!, append(Args,[T],NewArgs), PP =.. [F|NewArgs].
+correct_ax_args(_T,F,A,Args,axiom_head,_Arity,N,PP):- A=N, PP =.. [F|Args].
 correct_ax_args(_T,F,1,Args,domain,arginfo,0,PP):- PP =.. [F|Args].
 correct_ax_args(_T,F,2,[P,R],domain,arginfo,0,PP):- append_term(P,R,AB),PP =.. [F,AB].
 %orrect_ax_args(_4456,function,2,[side1(portal),location],domain,arginfo,0,_4470))
@@ -418,8 +448,8 @@ needs_process_axiom_fa('->',2).
 :- export(needs_proccess/2).
 needs_proccess(PA,_):- \+ compound(PA),!,fail.
 needs_proccess(PA, process_ec):- needs_process_axiom(PA),!.
-needs_proccess((H :- B),How):- nonvar(H),!,needs_proccess(H,How).
-needs_proccess( M:H, How):- nonvar(H),!,needs_proccess(H,How).
+needs_proccess((H :- _B),How):- nonvar(H),!,needs_proccess(H,How).
+needs_proccess( _M:H, How):- nonvar(H),!,needs_proccess(H,How).
 
 
 
@@ -432,15 +462,15 @@ hook_ec_axioms(What, file(AbsFile)):- !, hook_ec_axioms(What, AbsFile).
 hook_ec_axioms(What, File):- fail, 
     prolog_load_context(module, M),
     dmsg(hook_ec_axioms(M, What, File)),fail.
-hook_ec_axioms(What, File):- atom(File), exists_file(File),
+hook_ec_axioms(_What, File):- atom(File), exists_file(File),
     forall((clause(ec_axiom(_, _, lsvm(_L,S,_Vs,_M)), _Body, Ref), File==S),
        erase(Ref)),!.
 
 :- multifile(user:message_hook/3).
 :- dynamic(user:message_hook/3).
 :- module_transparent(user:message_hook/3).
-user:message_hook(load_file(start(Level, File)),_,_):- hook_ec_axioms(load,File),fail.
-user:message_hook(include_file(start(Level, File)),_,_):- hook_ec_axioms(include,File),fail.
+user:message_hook(load_file(start(_Level, File)),_,_):- hook_ec_axioms(load,File),fail.
+user:message_hook(include_file(start(_Level, File)),_,_):- hook_ec_axioms(include,File),fail.
 :- multifile(prolog:make_hook/2).
 :- module_transparent(prolog:make_hook/2).
 prolog:make_hook(before, Files):-  maplist(hook_ec_axioms(make(before)),Files), fail.
@@ -461,5 +491,6 @@ user:term_expansion(In,P,Out,PO):-
   notrace((nonvar(P),compound(In), In\=(:- _), 
       needs_proccess(In, Type),PO=P)),
   Out = ( :- call(Type, In) ).
+
 
 
