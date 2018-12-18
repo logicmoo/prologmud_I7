@@ -77,7 +77,7 @@ assert_ele(SS):- is_list(SS),!,maplist(assert_ele,SS).
 assert_ele(SS):- syntx_term_check(SS),!.
 assert_ele(ec_axiom(H,B,_TM)):- !,  pprint_ecp(cyan, axiom(H,B)).
 assert_ele(ec_current_domain_db(P,_TM)):- assert_ele(P).
-assert_ele(SS):- echo_format('~N'), pprint_ecp(cyan, SS).
+assert_ele(SS):- echo_format('~N'), pprint_ecp(hfg(blue), SS).
 
 
 

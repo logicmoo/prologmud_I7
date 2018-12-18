@@ -570,7 +570,7 @@ on_convert_ele(translate(Event, Outfile)):- !, must((mention_s_l, echo_format('~
 on_convert_ele(include(S0)):- resolve_local_files(S0,SS), !, maplist(include_e, SS), !.
 %on_convert_ele(load(S0)):- resolve_local_files(S0,SS), !, maplist(load_e, SS), !.  
 on_convert_ele(end_of_file).
-on_convert_ele(SS):- must(echo_format('~N')), must(pprint_ecp([bold,fg(magenta)],SS)).
+on_convert_ele(SS):- must(echo_format('~N')), must(pprint_ecp([bold,fg(yellow)],SS)).
 
 
 do_convert_e(SS):- on_convert_ele(SS).
