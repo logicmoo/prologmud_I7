@@ -25,6 +25,8 @@
 */
 :- module(ec_reader,[convert_e/1, set_ec_option/2, verbatum_functor/1, builtin_pred/1, e_to_pl/3 ]).
 
+:- use_module(library(logicmoo/portray_vars)).
+
 
 set_ec_option(N,V):- retractall(etmp:ec_option(N,_)),asserta(etmp:ec_option(N,V)).
 
@@ -93,7 +95,7 @@ is_quantifier_type(thereExists,exists).
    raise_translation_event(1,*,*).
 
 :- use_module(library(logicmoo_common)).
-%:- use_module(library(file_utils/filestreams)).
+%:- use_module(library(logicmoo/filestreams)).
 
 :- export(e_reader_test/0).
 e_reader_test:- with_e_sample_tests(convert_e(user_output)).
@@ -340,7 +342,6 @@ e_read3(String, Term):-
    module(ecread)]), _, fail))), !, 
   maplist(ignore, Vars).
 
-:- use_module(library(hybrid_db/portray_vars)).
 :- dynamic(etmp:temp_varnames/2).
 :- dynamic(etmp:ec_option/2).
 
