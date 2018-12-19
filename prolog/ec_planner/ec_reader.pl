@@ -581,7 +581,7 @@ on_convert_ele(translate(Event, Outfile)):- !, must((mention_s_l, echo_format('~
 on_convert_ele(include(S0)):- resolve_local_files(S0,SS), !, maplist(include_e, SS), !.
 %on_convert_ele(load(S0)):- resolve_local_files(S0,SS), !, maplist(load_e, SS), !.  
 on_convert_ele(end_of_file).
-on_convert_ele(SS):- must(echo_format('~N')), must(pprint_ecp([bold,fg(yellow)],SS)).
+on_convert_ele(SS):- must(echo_format('~N')), must(pprint_ecp(e,SS)).
 
 
 do_convert_e(SS):- on_convert_ele(SS).
@@ -648,15 +648,30 @@ print_e_to_string(T, _Ops, S):-
                   output(current_output)]),
                   flush_output)]).
 
-
-to_ansi(C, [fg(C)]):- atom(C),!.
+to_ansi(C, [bold,hfg(C)]):- is_color(C),!.
+to_ansi(e,[bold,fg(yellow)]) :-!.
+to_ansi(ec,[bold,fg(cyan)]) :-!.
+to_ansi(pl,[bold,fg(blue)]) :-!.
 to_ansi([H|T],[H|T]):-!.
 to_ansi(H,[H]).
 
+is_color(white). is_color(black). 
+is_color(yellow). is_color(cyan).
+is_color(blue). is_color(red).
+is_color(green). is_color(orange).
+
+
+is_output_lang(Lang):- atom(Lang), Lang \==[],
+ \+ is_color(Lang), nb_current('$output_lang',E),E\==[], !,memberchk(Lang,E).
+is_output_lang(_).
+  
 :- export(pprint_ec/2).
 pprint_ec(C, P):-
   pprint_ec_and_f(C, P, '~n').
 :- export(pprint_ecp/2).
+
+pprint_ecp(C, P):- \+ is_output_lang(C), 
+  in_space_cmt(pprint_ec_and_f(C, P, '.~n')).
 pprint_ecp(C, P):-
   pprint_ec_and_f(C, P, '.~n').
 

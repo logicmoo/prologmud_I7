@@ -40,15 +40,21 @@ e_reader_teste2:-
        ( happens(order(waiterOf(Restaurant),
                       cookOf(Restaurant),
                       Food),
-                Time))),O),pprint_ecp(yellow,O).
+                Time))),O),pprint_ecp(e,O).
 
 :- export(e_reader_testec/0).
 e_reader_testec:- with_e_sample_tests(load_e_pl).
 
 :- export(load_e/1).
+
+
+load_e(F):- is_filename(F), \+ atom_concat(_,'.e',F), !.
 load_e(F):- needs_resolve_local_files(F, L), !, maplist(load_e, L).  
 load_e('foundations/EC.e').
 load_e('foundations/Root.e').
+load_e(F):- Req = [ec,pl],
+   \+ nb_current('$output_lang',Req), !,
+   locally(b_setval('$output_lang',Req), load_e(F)).
 load_e(F):-
   is_filename(F), 
   \+ etmp:ec_option(load(F), _),
@@ -62,17 +68,17 @@ load_e_pl(F):-
   calc_where_to(F, outdir('.'), OutputName),
   open(OutputName, write, Outs),
   format(Outs,'~n~q.~n',[:-(include(library('ec_planner/ec_test_incl')))]), 
-  include_e(F), !,
-  close(Outs), 
-  trace, 
-  consult(OutputName).
-
+  with_output_to(Outs, load_e(F)), !,
+  close(Outs),
+  %trace,
+  %consult(OutputName),
+  !.
 
 on_load_ele(translate(Event, Outfile)):- !, mention_s_l, echo_format('~N% translate: ~w  File: ~w ~n',[Event, Outfile]).
 on_load_ele(load(S0)):- resolve_local_files(S0,SS), !, maplist(load_e, SS), !.
 on_load_ele(include(S0)):- resolve_local_files(S0,SS), !, maplist(load_e, SS), !.
 on_load_ele(HB):- 
-  echo_format('~N'), pprint_ecp(yellow, HB),
+  echo_format('~N'), pprint_ecp(e, HB),
   must( get_linfo(lsvm(L,F,Vs,M))), 
   must(convert_to_axiom(lsvm(L,F,Vs,M),HB,NEWHB)),
   do_process_ec(assert_ele,M, NEWHB),
@@ -82,9 +88,9 @@ on_load_ele(HB):-
 :- export(assert_ele/1).
 assert_ele(SS):- is_list(SS),!,maplist(assert_ele,SS).
 assert_ele(SS):- syntx_term_check(SS),!.
-assert_ele(ec_axiom(H,B,_TM)):- !,  pprint_ecp(cyan, axiom(H,B)).
-assert_ele(ec_current_domain_db(P,_TM)):- assert_ele(P).
-assert_ele(SS):- echo_format('~N'), pprint_ecp(hfg(blue), SS).
+assert_ele(ec_axiom(H,B,_TM)):- !,  pprint_ecp(ec, axiom(H,B)).
+assert_ele(ec_current_domain_db(P,_TM)):- !, assert_ele(P).
+assert_ele(SS):- echo_format('~N'), pprint_ecp(pl, SS).
 
 
 
@@ -356,6 +362,7 @@ do_process_ec(_Why, M, (?- GOAL)):- !, M:forall(GOAL, true).
 do_process_ec(Why, M, NEWHB):- M:call(Why, NEWHB).
 
 :- export(convert_to_axiom/3).
+convert_to_axiom(_, EOF, EOF) :- EOF == end_of_file,!.
 convert_to_axiom(_, I, O):- \+ callable(I),!, I = O.
 convert_to_axiom(_, subsort(F, W), List):- !, to_fact_head([subsort(F, W),sort(F),sort(W)],List).
 convert_to_axiom(_, option(X,Y), [(:- set_ec_option(X,Y))]).
@@ -392,6 +399,8 @@ convert_to_axiom(T, Y, O):- convert_to_axiom1(T, Y, O).
 % convert_to_axiom1(T, '->'(E,B), HBO2):- convert_to_axiom(T, precond(B,E), HBO2).
 to_fact_head(H,List):- H=List.
 
+
+convert_to_axiom1(_, EOF, []) :- EOF = end_of_file,!.
 convert_to_axiom1(T, P, O):- is_axiom_head(P),!, convert_to_axiom1(T, axiom(P), O).
 convert_to_axiom1(T, axiom(P), O):- convert_to_axiom1(T, axiom(P ,[]), O).
 convert_to_axiom1(LSV, axiom(X,Y), [ec_axiom(X,Y,LSV)]).
