@@ -17,7 +17,14 @@
 % =========================================
 % Goal/Plan translating
 % =========================================
-:- module(ec_loader,[load_e/1, needs_proccess/2,process_ec/2, op(1200,xfx,'<-'),op(1200,xfx,'<->')]).
+:- module(ec_loader,[load_e/1, needs_proccess/2,process_ec/2, 
+          op(1200,xfx,'<-'),op(1200,xfx,'<->'),
+          op(900, fx, '!'),
+          op(999, xfy, '&'),
+          op(1050, xfy, '->'),
+          op(1100, xfy, '|'),
+          op(1150, xfy, 'quantz'),
+          op(1025, xfy, 'thereExists')]).
 
 :- reexport(library('ec_planner/ec_planner_dmiles')).
 :- reexport(library('ec_planner/ec_reader')).

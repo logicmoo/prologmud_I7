@@ -23,7 +23,15 @@
     
 
 */
-:- module(ec_reader,[convert_e/1, set_ec_option/2, verbatum_functor/1, builtin_pred/1, e_to_pl/3 ]).
+:- module(ec_reader,[convert_e/1, set_ec_option/2, verbatum_functor/1, builtin_pred/1, e_to_pl/3, 
+          op(1200,xfx,'<-'),op(1200,xfx,'<->'),
+          op(900, fx, '!'),
+          op(999, xfy, '&'),
+          op(1050, xfy, '->'),
+          op(1100, xfy, '|'),
+          op(1150, xfy, 'quantz'),
+          op(1025, xfy, 'thereExists')]).
+
 
 :- use_module(library(logicmoo/portray_vars)).
 
@@ -336,10 +344,15 @@ unpad_codes(Text, Codes):- text_to_string(Text, String), normalize_space(codes(C
   
 e_from_atom(String, Term):- e_read1(String, Term, _).   
 
+
 e_read3(String, Term):- 
- upcased_functors(notrace(catch(read_term_from_atom(String, Term, 
-  [var_prefix(true), variable_names(Vars), 
-   module(ecread)]), _, fail))), !, 
+   forall(current_op(_,fx,OP),
+     op(0,fx,(ecread:OP))),
+   op(1,fx,(ecread:($))),
+   op(900,fx,(ecread:(!))),
+       upcased_functors(notrace(((catch(
+        (read_term_from_atom(String, Term, 
+            [var_prefix(true),variable_names(Vars), module(ecread)])), _, fail))))), !, 
   maplist(ignore, Vars).
 
 :- dynamic(etmp:temp_varnames/2).
@@ -447,7 +460,7 @@ add_ec_vars(Term0, Term, Vs):-
   add_ext_vars(VsA, ExtVars, Term1, Term, Vs), !.
 
 add_ext_vars(Vs, [], Term, Term, Vs):- !.
-add_ext_vars(VsA, LLS, Term0, Term, Vs):-  use_some,
+add_ext_vars(VsA, LLS, Term0, Term, Vs):-  use_some,
   insert_vars((some(LLS), Term0), LLS, Term, VsB), !,
   append(VsA,VsB,Vs),!.
 add_ext_vars(VsA, LLS, Term0, Term, Vs):-  
@@ -482,10 +495,7 @@ e_read2(T, Term):-
   e_read2(NewT, Term).
 %e_read2(T, Term):- if_string_replace(T, '[', ' forAll( ', NewT), !, e_read2(NewT, Term).
 %e_read2(T, Term):- if_string_replace(T, ']', ') quantz ', NewT), !, e_read2(NewT, Term).
-e_read2(T, Term):- 
-   upcased_functors(read_term_from_atom(T, Term, 
-     [var_prefix(true), variable_names(Vars), module(ecread)])), !,
-  maplist(ignore, Vars).
+e_read2(T, Term):- e_read3(T, Term), !.
 e_read2(T, Term):- 
    must(e_read3(T, Term)), !.
    
@@ -676,13 +686,18 @@ pprint_ec_no_newline(C, P):-
 
 print_e_to_string(P, S):- 
    get_operators(P, Ops),
+   pretty_numbervars(P, T),
+   print_e_to_string(T, Ops, S).
+/*
+print_e_to_string(P, S):- 
+   get_operators(P, Ops),
    must(pretty_numbervars(P, T)), 
    with_op_cleanup(1200,xfx,(<->),
      with_op_cleanup(1200,xfx,(->),
        with_op_cleanup(1200,xfy,(<-),
           print_e_to_string(T, Ops, S)))).
-   
-
+ 
+*/
 
 get_op_restore(OP,Restore):- 
    findall(op(E,YF,OP),(member(YF,[xfx,xfy,yfx,fy,fx,xf,yf]),current_op(E,YF,OP)),List),
