@@ -438,7 +438,7 @@ check_clipping([G|Gs],R1,R2,N1,N2,D) :-
 
 ammed_preconds(A, T, Gs,Gss):- 
   findall(PrecondL, axiom(requires(A, T),PrecondL),PrecondLs), 
-  append([Gs|PrecondL],Gss).
+  append([Gs|PrecondLs],Gss).
 
 
 /* ABRESOLVE */
