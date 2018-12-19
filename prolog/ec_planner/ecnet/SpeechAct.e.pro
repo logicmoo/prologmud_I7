@@ -138,7 +138,7 @@ noninertial(actOnIntentionToWalkIn).
 holds_at(invitedIn(Agent1, Room, Agent2), Time), holds_at(like(Agent1, Agent2), Time), not(holds_at(intentionToWalkIn(Agent1, Room), Time)) ->
     happens(intendToWalkIn(Agent1, Room), Time).
 */
-axiom(happens(intendToWalkIn(Agent1,Room),Time),
+axiom(requires(intendToWalkIn(Agent1,Room),Time),
       [ holds_at(invitedIn(Agent1,Room,Agent2),
 		 Time),
 	holds_at(like(Agent1,Agent2),Time),
@@ -187,7 +187,7 @@ axiom(initiates(intendToWalkIn(Agent,Room),
 holds_at(intentionToWalkIn(Agent, Room), Time), holds_at(actOnIntentionToWalkIn(Agent, Room), Time), holds_at(at(Agent, Location), Time), side1(Door)=Room, side2(Door)=Location ->
     happens(walkThroughDoor21(Agent, Door), Time).
 */
-axiom(happens(walkThroughDoor21(Agent,Door),Time),
+axiom(requires(walkThroughDoor21(Agent,Door),Time),
       [ holds_at(intentionToWalkIn(Agent,Room),Time),
 	holds_at(actOnIntentionToWalkIn(Agent,Room),
 		 Time),
@@ -211,7 +211,7 @@ axiom(happens(walkThroughDoor21(Agent,Door),Time),
 holds_at(intentionToWalkIn(Agent, Room), Time), holds_at(actOnIntentionToWalkIn(Agent, Room), Time), holds_at(at(Agent, Location), Time), side2(Door)=Room, side1(Door)=Location ->
     happens(walkThroughDoor12(Agent, Door), Time).
 */
-axiom(happens(walkThroughDoor12(Agent,Door),Time),
+axiom(requires(walkThroughDoor12(Agent,Door),Time),
       [ holds_at(intentionToWalkIn(Agent,Room),Time),
 	holds_at(actOnIntentionToWalkIn(Agent,Room),
 		 Time),

@@ -954,7 +954,7 @@ event(rotateYaw(diver)).
 happens(ascend1(Diver), Time), not(happens(rapidAscendToSurface(Diver), Time)), not(exists([Diver1], holds_at(holding(Diver, Diver1), Time))) ->
     happens(rotateYaw(Diver), Time).
 */
-axiom(happens(rotateYaw(Diver),Time),
+axiom(requires(rotateYaw(Diver),Time),
       [ happens(ascend1(Diver),Time),
 	not(happens(rapidAscendToSurface(Diver),Time)),
 	holds_at(neg(holding(Diver,Diver1)),Time)
@@ -2295,7 +2295,7 @@ axiom(happens(startDecompressionIllness(Diver),Time),
 holds_at(holding(Diver1, Diver2), Time), happens(ascend1(Diver1), Time), not(happens(decompress(Diver2), Time)) ->
     happens(startDecompressionIllness(Diver2), Time).
 */
-axiom(happens(startDecompressionIllness(Diver2),Time),
+axiom(requires(startDecompressionIllness(Diver2),Time),
       [ holds_at(holding(Diver1,Diver2),Time),
 	happens(ascend1(Diver1),Time),
 	not(happens(decompress(Diver2),Time))

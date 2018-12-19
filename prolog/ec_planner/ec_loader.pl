@@ -85,9 +85,70 @@ on_load_ele(HB):-
   nl.
 
 
+/*
+ 
+ state constraints:  
+
+      holds_at(Fluent)
+          implies/equivalent_to
+      holds_at(Fluent)
+
+
+ effect axioms:  
+
+      happens(Event)
+           terminates/initiates/releases
+      holds_at(Fluent)
+       
+
+ trigger axioms: 
+  
+      holds_at(Fluent)/happens(Event)
+           triggers
+      happens(Event)
+
+
+ precondition axioms:  
+  
+      happens(Event)
+           implies
+      holds_at(Fluent)
+
+ 
+
+happens(doorLock(Agent,Door),Time) -> 
+  holds_at(awake(Agent),Time) &
+  holds_at(doorUnlocked(Door),Time) &
+  holds_at(nearPortal(Agent,Door),Time)
+
+
+
+
+   
+axiom(
+ terminates(doorLock(Agent,Door),
+            doorUnlocked(Door),Time), [])
+
+becomes 
+...
+
+axiom(
+ terminates(doorLock(Agent,Door),
+            doorUnlocked(Door),Time),
+   [ holds_at(awake(Agent),Time) &
+     holds_at(doorUnlocked(Door),Time) &
+     holds_at(nearPortal(Agent,Door),Time)]).
+ 
+*/
+
 :- export(assert_ele/1).
 assert_ele(SS):- is_list(SS),!,maplist(assert_ele,SS).
 assert_ele(SS):- syntx_term_check(SS),!.
+
+assert_ele(ec_axiom(happens(A,T), B,_TM)):- 
+  is_list(B), member(holds_at(_,_), B), !,
+  pprint_ecp(ec, axiom(requires(A,T),B)).
+
 assert_ele(ec_axiom(H,B,_TM)):- !,  pprint_ecp(ec, axiom(H,B)).
 assert_ele(ec_current_domain_db(P,_TM)):- !, assert_ele(P).
 assert_ele(SS):- echo_format('~N'), pprint_ecp(pl, SS).

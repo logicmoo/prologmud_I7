@@ -1023,7 +1023,7 @@ fluent(likeSnow(agent)).
 not(holds_at(happy(Agent), Time)), holds_at(awake(Agent), Time), holds_at(likeSnow(Agent), Time), holds_at(at(Agent, Room), Time), lookOutOnto(Room)=Outside, holds_at(snowing(Outside), Time) ->
     happens(becomeHappy(Agent), Time).
 */
-axiom(happens(becomeHappy(Agent),Time),
+axiom(requires(becomeHappy(Agent),Time),
       [ holds_at(neg(happy(Agent)),Time),
 	holds_at(awake(Agent),Time),
 	holds_at(likeSnow(Agent),Time),
@@ -1059,7 +1059,6 @@ event(smile(agent)).
 %; IBM - Initial implementation
 %;
 %; human health
-% ecnet/Condition.e:12
 % 
 % fluent Alive(agent)
  /*
@@ -1081,7 +1080,6 @@ noninertial(dead).
 noninertial(dead).
 
 % 
-% ecnet/Condition.e:18
 % fluent Injured(agent)
  /*
 fluent(injured(agent)).
@@ -1108,7 +1106,7 @@ event(healInjured(agent)).
 event(healInjured(agent)).
 
 % 
-% ecnet/Condition.e:24
+% ecnet/Kidnapping.e:42
 % [agent,time] % HoldsAt(Alive(agent),time) <-> !HoldsAt(Dead(agent),time).
  /*
 holds_at(alive(Agent), Time) <->
@@ -1120,7 +1118,7 @@ axiom(holds_at(alive(Agent),Time),
       [holds_at(neg(dead(Agent)),Time)]).
 
 % 
-% ecnet/Condition.e:25
+% ecnet/Kidnapping.e:42
 % [agent,time] % HoldsAt(Injured(agent),time) -> HoldsAt(Alive(agent),time).
  /*
 holds_at(injured(Agent), Time) ->
@@ -1131,7 +1129,7 @@ axiom(holds_at(alive(Agent),Time),
 
 % 
 % 
-% ecnet/Condition.e:27
+% ecnet/Kidnapping.e:42
 % [object,agent,time]% 
 % Terminates(Kill(object,agent),Alive(agent),time).
  /*
@@ -1146,7 +1144,7 @@ axiom(terminates(kill(Object,Agent),
 
 % 
 % 
-% ecnet/Condition.e:30
+% ecnet/Kidnapping.e:42
 % [object,agent,time]% 
 % Initiates(Injure(object,agent),Injured(agent),time).
  /*
@@ -1161,7 +1159,7 @@ axiom(initiates(injure(Object,Agent),
 
 % 
 % 
-% ecnet/Condition.e:33
+% ecnet/Kidnapping.e:42
 % [agent,time]% 
 % Terminates(HealInjured(agent),Injured(agent),time).
  /*
@@ -1187,7 +1185,6 @@ fluent(damaged(physobj)).
 */
 fluent(damaged(physobj)).
 
-% ecnet/Condition.e:39
 % 
 % fluent Destroyed(physobj)
  /*
@@ -1204,7 +1201,6 @@ xor([intact,damaged,destroyed]).
 xor([intact,damaged,destroyed]).
 
 % 
-% ecnet/Condition.e:45
 % event Damage(object,physobj)
  /*
 event(damage(object,physobj)).
@@ -1226,7 +1222,7 @@ event(repair(object,physobj)).
 event(repair(object,physobj)).
 
 % 
-% ecnet/Condition.e:51
+% ecnet/Kidnapping.e:42
 % [object,physobj,time]% 
 % Happens(Damage(object,physobj),time) ->
 % HoldsAt(Intact(physobj),time).
@@ -1239,7 +1235,7 @@ axiom(holds_at(intact(Physobj),Time),
 
 % 
 % 
-% ecnet/Condition.e:55
+% ecnet/Kidnapping.e:42
 % [object,physobj,time]% 
 % Initiates(Damage(object,physobj),Damaged(physobj),time).
  /*
@@ -1254,7 +1250,7 @@ axiom(initiates(damage(Object,Physobj),
 
 % 
 % 
-% ecnet/Condition.e:58
+% ecnet/Kidnapping.e:42
 % [object,physobj,time]% 
 % Terminates(Damage(object,physobj),Intact(physobj),time).
  /*
@@ -1269,7 +1265,7 @@ axiom(terminates(damage(Object,Physobj),
 
 % 
 % 
-% ecnet/Condition.e:61
+% ecnet/Kidnapping.e:42
 % [object,physobj,time]% 
 % Happens(Destroy(object,physobj),time) ->
 % (HoldsAt(Intact(physobj),time)|
@@ -1285,7 +1281,7 @@ axiom(holds_at(intact(Physobj),Time) ; holds_at(damaged(Physobj),Time),
 
 % 
 % 
-% ecnet/Condition.e:66
+% ecnet/Kidnapping.e:42
 % [object,physobj,time]% 
 % Initiates(Destroy(object,physobj),Destroyed(physobj),time).
  /*
@@ -1300,7 +1296,7 @@ axiom(initiates(destroy(Object,Physobj),
 
 % 
 % 
-% ecnet/Condition.e:69
+% ecnet/Kidnapping.e:42
 % [object,physobj,time]% 
 % Terminates(Destroy(object,physobj),Intact(physobj),time).
  /*
@@ -1315,7 +1311,7 @@ axiom(terminates(destroy(Object,Physobj),
 
 % 
 % 
-% ecnet/Condition.e:72
+% ecnet/Kidnapping.e:42
 % [object,physobj,time]% 
 % Terminates(Destroy(object,physobj),Damaged(physobj),time).
  /*
@@ -1330,7 +1326,7 @@ axiom(terminates(destroy(Object,Physobj),
 
 % 
 % 
-% ecnet/Condition.e:75
+% ecnet/Kidnapping.e:42
 % [object,physobj,time]% 
 % Initiates(Repair(object,physobj),Intact(physobj),time).
  /*
@@ -1530,7 +1526,7 @@ axiom(happens(shootInjure(Agent1,Gun,Agent2),
 holds_at(inside(Bullet, Gun), Time), happens(shootKill(Agent1, Gun, Agent2), Time) ->
     happens(kill(Bullet, Agent2), Time).
 */
-axiom(happens(kill(Bullet,Agent2),Time),
+axiom(requires(kill(Bullet,Agent2),Time),
       [ holds_at(inside(Bullet,Gun),Time),
 	happens(shootKill(Agent1,Gun,Agent2),
 		Time)
@@ -1547,7 +1543,7 @@ axiom(happens(kill(Bullet,Agent2),Time),
 holds_at(inside(Bullet, Gun), Time), happens(shootInjure(Agent1, Gun, Agent2), Time) ->
     happens(injure(Bullet, Agent2), Time).
 */
-axiom(happens(injure(Bullet,Agent2),Time),
+axiom(requires(injure(Bullet,Agent2),Time),
       [ holds_at(inside(Bullet,Gun),Time),
 	happens(shootInjure(Agent1,Gun,Agent2),
 		Time)
@@ -1581,7 +1577,7 @@ axiom(happens(shootDamage(Agent,Gun,Physobj),
 holds_at(inside(Bullet, Gun), Time), happens(shootDamage(Agent, Gun, Physobj), Time) ->
     happens(damage(Bullet, Physobj), Time).
 */
-axiom(happens(damage(Bullet,Physobj),Time),
+axiom(requires(damage(Bullet,Physobj),Time),
       [ holds_at(inside(Bullet,Gun),Time),
 	happens(shootDamage(Agent,Gun,Physobj),
 		Time)
@@ -1598,7 +1594,7 @@ axiom(happens(damage(Bullet,Physobj),Time),
 holds_at(inside(Bullet, Gun), Time), happens(shootDestroy(Agent, Gun, Physobj), Time) ->
     happens(destroy(Bullet, Physobj), Time).
 */
-axiom(happens(destroy(Bullet,Physobj),Time),
+axiom(requires(destroy(Bullet,Physobj),Time),
       [ holds_at(inside(Bullet,Gun),Time),
 	happens(shootDestroy(Agent,Gun,Physobj),
 		Time)
@@ -1632,7 +1628,6 @@ axiom(happens(destroy(Bullet,Physobj),Time),
 %;   publisher = "Signiform",
 %; }
 %;
-% ecnet/Sleep.e:24
 % 
 %; sleep
 % 
@@ -1645,7 +1640,6 @@ event(wakeUp(agent)).
 
 % 
 %; agent gets tired.
-% ecnet/Sleep.e:31
 % event GetTired(agent)
  /*
 event(getTired(agent)).
@@ -1662,7 +1656,6 @@ event(fallAsleep(agent)).
 
 % 
 %; agent is asleep.
-% ecnet/Sleep.e:37
 % fluent Sleep0(agent)
  /*
 fluent(sleep0(agent)).
@@ -1684,7 +1677,6 @@ fluent(sleep2(agent)).
 fluent(sleep2(agent)).
 
 %; agent is awake and dressed.
-% ecnet/Sleep.e:43
 % fluent Sleep3(agent)
  /*
 fluent(sleep3(agent)).
@@ -1706,7 +1698,6 @@ fluent(sleep5(agent)).
 fluent(sleep5(agent)).
 
 %; agent is in bed, waiting to fall asleep.
-% ecnet/Sleep.e:49
 % fluent Sleep6(agent)
  /*
 fluent(sleep6(agent)).
@@ -1723,7 +1714,6 @@ xor([sleep0,sleep1,sleep2,sleep3,sleep4,sleep5,sleep6]).
 
 % 
 %; constraints
-% ecnet/Sleep.e:55
 % 
 %; agent is asleep.
 % fluent Asleep(agent)
@@ -1745,7 +1735,6 @@ noninertial(asleep).
 */
 noninertial(asleep).
 
-% ecnet/Sleep.e:61
 % noninertial Awake
  /*
 noninertial(awake).
@@ -1754,7 +1743,7 @@ noninertial(awake).
 
 % 
 %; Sleep0 indicates that the agent is asleep:
-% ecnet/Sleep.e:64
+% ecnet/Kidnapping.e:44
 % [agent,time] % HoldsAt(Asleep(agent),time) <-> HoldsAt(Sleep0(agent),time).
  /*
 holds_at(asleep(Agent), Time) <->
@@ -1768,7 +1757,7 @@ axiom(holds_at(asleep(Agent),Time),
 % 
 % 
 %; In all other sleep states, the agent is awake:
-% ecnet/Sleep.e:67
+% ecnet/Kidnapping.e:44
 % [agent,time]% 
 % HoldsAt(Awake(agent),time) <->
 % HoldsAt(Sleep1(agent),time) |
@@ -1793,7 +1782,6 @@ axiom(holds_at(awake(Agent),Time),
       [ holds_at(sleep1(Agent),Time) ; holds_at(sleep2(Agent),Time) ; holds_at(sleep3(Agent),Time) ; holds_at(sleep4(Agent),Time) ; holds_at(sleep5(Agent),Time) ; holds_at(sleep6(Agent),Time)
       ]).
 
-% ecnet/Sleep.e:74
 % 
 % 
 %; A number of axioms are used to specify the transitions of
@@ -1802,7 +1790,7 @@ axiom(holds_at(awake(Agent),Time),
 % 
 %; Waking up causes a transition from Sleep0
 %; to Sleep1:
-% ecnet/Sleep.e:82
+% ecnet/Kidnapping.e:44
 % [agent,time] % Terminates(WakeUp(agent),Sleep0(agent),time).
  /*
 terminates(wakeUp(Agent),sleep0(Agent),Time).
@@ -1812,7 +1800,7 @@ axiom(terminates(wakeUp(Agent),sleep0(Agent),Time),
 
 % 
 % 
-% ecnet/Sleep.e:84
+% ecnet/Kidnapping.e:44
 % [agent,time] % Initiates(WakeUp(agent),Sleep1(agent),time).
  /*
 initiates(wakeUp(Agent),sleep1(Agent),Time).
@@ -1821,7 +1809,7 @@ axiom(initiates(wakeUp(Agent),sleep1(Agent),Time),[]).
 
 % 
 % 
-% ecnet/Sleep.e:86
+% ecnet/Kidnapping.e:44
 % [agent,time] % Happens(WakeUp(agent),time) -> HoldsAt(Sleep0(agent),time).
  /*
 happens(wakeUp(Agent), Time) ->
@@ -1836,7 +1824,7 @@ axiom(holds_at(sleep0(Agent),Time),
 % 
 %; Getting out of bed causes a transition from Sleep1
 %; to Sleep2:
-% ecnet/Sleep.e:92
+% ecnet/Kidnapping.e:44
 % [agent,bed,time] % Terminates(RiseFrom(agent,bed),Sleep1(agent),time).
  /*
 terminates(riseFrom(Agent,Bed),
@@ -1850,7 +1838,7 @@ axiom(terminates(riseFrom(Agent,Bed),
 
 % 
 % 
-% ecnet/Sleep.e:94
+% ecnet/Kidnapping.e:44
 % [agent,bed,time] % Initiates(RiseFrom(agent,bed),Sleep2(agent),time).
  /*
 initiates(riseFrom(Agent,Bed),
@@ -1864,7 +1852,7 @@ axiom(initiates(riseFrom(Agent,Bed),
 
 % 
 % 
-% ecnet/Sleep.e:96
+% ecnet/Kidnapping.e:44
 % [agent,bed,time]% 
 % Happens(RiseFrom(agent,bed),time) -> HoldsAt(Sleep1(agent),time).
  /*
@@ -1880,7 +1868,7 @@ axiom(holds_at(sleep1(Agent),Time),
 % 
 %; Getting dressed causes a transition from Sleep2
 %; to Sleep3, the normal state of awakeness:
-% ecnet/Sleep.e:103
+% ecnet/Kidnapping.e:44
 % [agent,time] % Terminates(GetDressed(agent),Sleep2(agent),time).
  /*
 terminates(getDressed(Agent),sleep2(Agent),Time).
@@ -1892,7 +1880,7 @@ axiom(terminates(getDressed(Agent),
 
 % 
 % 
-% ecnet/Sleep.e:105
+% ecnet/Kidnapping.e:44
 % [agent,time] % Initiates(GetDressed(agent),Sleep3(agent),time).
  /*
 initiates(getDressed(Agent),sleep3(Agent),Time).
@@ -1902,7 +1890,7 @@ axiom(initiates(getDressed(Agent),sleep3(Agent),Time),
 
 % 
 % 
-% ecnet/Sleep.e:107
+% ecnet/Kidnapping.e:44
 % [agent,time] % Happens(GetDressed(agent),time) -> HoldsAt(Sleep2(agent),time).
  /*
 happens(getDressed(Agent), Time) ->
@@ -1917,7 +1905,7 @@ axiom(holds_at(sleep2(Agent),Time),
 % 
 %; Getting tired causes a transition from Sleep3
 %; to Sleep4:
-% ecnet/Sleep.e:113
+% ecnet/Kidnapping.e:44
 % [agent,time] % Terminates(GetTired(agent),Sleep3(agent),time).
  /*
 terminates(getTired(Agent),sleep3(Agent),Time).
@@ -1927,7 +1915,7 @@ axiom(terminates(getTired(Agent),sleep3(Agent),Time),
 
 % 
 % 
-% ecnet/Sleep.e:115
+% ecnet/Kidnapping.e:44
 % [agent,time] % Initiates(GetTired(agent),Sleep4(agent),time).
  /*
 initiates(getTired(Agent),sleep4(Agent),Time).
@@ -1937,7 +1925,7 @@ axiom(initiates(getTired(Agent),sleep4(Agent),Time),
 
 % 
 % 
-% ecnet/Sleep.e:117
+% ecnet/Kidnapping.e:44
 % [agent,time] % Happens(GetTired(agent),time) -> HoldsAt(Sleep3(agent),time).
  /*
 happens(getTired(Agent), Time) ->
@@ -1952,7 +1940,7 @@ axiom(holds_at(sleep3(Agent),Time),
 % 
 %; Getting undressed causes a transition from Sleep4
 %; to Sleep5:
-% ecnet/Sleep.e:123
+% ecnet/Kidnapping.e:44
 % [agent,time] % Terminates(GetUndressed(agent),Sleep4(agent),time).
  /*
 terminates(getUndressed(Agent),sleep4(Agent),Time).
@@ -1964,7 +1952,7 @@ axiom(terminates(getUndressed(Agent),
 
 % 
 % 
-% ecnet/Sleep.e:125
+% ecnet/Kidnapping.e:44
 % [agent,time] % Initiates(GetUndressed(agent),Sleep5(agent),time).
  /*
 initiates(getUndressed(Agent),sleep5(Agent),Time).
@@ -1976,7 +1964,7 @@ axiom(initiates(getUndressed(Agent),
 
 % 
 % 
-% ecnet/Sleep.e:127
+% ecnet/Kidnapping.e:44
 % [agent,time] % Happens(GetUndressed(agent),time) -> HoldsAt(Sleep4(agent),time).
  /*
 happens(getUndressed(Agent), Time) ->
@@ -1991,7 +1979,7 @@ axiom(holds_at(sleep4(Agent),Time),
 % 
 %; Lying on a bed causes a transition from Sleep5
 %; to Sleep6:
-% ecnet/Sleep.e:133
+% ecnet/Kidnapping.e:44
 % [agent,bed,time] % Terminates(LieOn(agent,bed),Sleep5(agent),time).
  /*
 terminates(lieOn(Agent,Bed),sleep5(Agent),Time).
@@ -2003,7 +1991,7 @@ axiom(terminates(lieOn(Agent,Bed),
 
 % 
 % 
-% ecnet/Sleep.e:135
+% ecnet/Kidnapping.e:44
 % [agent,bed,time] % Initiates(LieOn(agent,bed),Sleep6(agent),time).
  /*
 initiates(lieOn(Agent,Bed),sleep6(Agent),Time).
@@ -2015,7 +2003,7 @@ axiom(initiates(lieOn(Agent,Bed),
 
 % 
 % 
-% ecnet/Sleep.e:137
+% ecnet/Kidnapping.e:44
 % [agent,bed,time] % Happens(LieOn(agent,bed),time) -> HoldsAt(Sleep5(agent),time).
  /*
 happens(lieOn(Agent, Bed), Time) ->
@@ -2030,7 +2018,7 @@ axiom(holds_at(sleep5(Agent),Time),
 % 
 %; Falling asleep causes a transition from Sleep6
 %; to Sleep0:
-% ecnet/Sleep.e:143
+% ecnet/Kidnapping.e:44
 % [agent,time] % Terminates(FallAsleep(agent),Sleep6(agent),time).
  /*
 terminates(fallAsleep(Agent),sleep6(Agent),Time).
@@ -2042,7 +2030,7 @@ axiom(terminates(fallAsleep(Agent),
 
 % 
 % 
-% ecnet/Sleep.e:145
+% ecnet/Kidnapping.e:44
 % [agent,time] % Initiates(FallAsleep(agent),Sleep0(agent),time).
  /*
 initiates(fallAsleep(Agent),sleep0(Agent),Time).
@@ -2052,7 +2040,7 @@ axiom(initiates(fallAsleep(Agent),sleep0(Agent),Time),
 
 % 
 % 
-% ecnet/Sleep.e:147
+% ecnet/Kidnapping.e:44
 % [agent,time] % Happens(FallAsleep(agent),time) -> HoldsAt(Sleep6(agent),time).
  /*
 happens(fallAsleep(Agent), Time) ->
@@ -2072,7 +2060,6 @@ fluent(actOnSleep5(agent)).
 */
 fluent(actOnSleep5(agent)).
 
-% ecnet/Sleep.e:153
 % noninertial ActOnSleep5
  /*
 noninertial(actOnSleep5).
@@ -2083,7 +2070,7 @@ noninertial(actOnSleep5).
 %; We reduce the number of models by asserting that
 %; an agent only acts on being in state Sleep5 while in
 %; that state:
-% ecnet/Sleep.e:158
+% ecnet/Kidnapping.e:44
 % [agent,time]% 
 % !HoldsAt(Sleep5(agent),time) ->
 % !HoldsAt(ActOnSleep5(agent),time).
@@ -2098,12 +2085,11 @@ axiom(holds_at(neg(actOnSleep5(Agent)),Time),
 % 
 %; Undressed is like IntentionToPlay
 %; ActOnSleep5 is like ActOnIntentionToPlay
-% ecnet/Sleep.e:164
 % 
 %; A trigger axiom states that if an agent is in state Sleep5,
 %; the agent acts on this state, the agent is in a room, and
 %; a bed is at the room, the agent lies on the bed:
-% ecnet/Sleep.e:168
+% ecnet/Kidnapping.e:44
 % [agent,room,bed,time]% 
 % HoldsAt(Sleep5(agent),time) &
 % HoldsAt(ActOnSleep5(agent),time) &
@@ -2114,7 +2100,7 @@ axiom(holds_at(neg(actOnSleep5(Agent)),Time),
 holds_at(sleep5(Agent), Time), holds_at(actOnSleep5(Agent), Time), holds_at(at(Agent, Room), Time), holds_at(at(Bed, Room), Time) ->
     happens(lieOn(Agent, Bed), Time).
 */
-axiom(happens(lieOn(Agent,Bed),Time),
+axiom(requires(lieOn(Agent,Bed),Time),
       [ holds_at(sleep5(Agent),Time),
 	holds_at(actOnSleep5(Agent),Time),
 	holds_at(at(Agent,Room),Time),
@@ -2122,7 +2108,6 @@ axiom(happens(lieOn(Agent,Bed),Time),
       ]).
 
 % 
-% ecnet/Sleep.e:174
 % 
 %; A precondition axiom states that for
 %; an agent to lie on a bed,
@@ -2130,12 +2115,12 @@ axiom(happens(lieOn(Agent,Bed),Time),
 %; the agent must act on this state, and
 %; there must be a room such that
 %; the agent is in the room and the bed is in the room:
-% ecnet/Sleep.e:181
+% ecnet/Kidnapping.e:44
 % [agent,bed,time]% 
 % Happens(LieOn(agent,bed),time) ->
 % HoldsAt(Sleep5(agent),time) &
 % HoldsAt(ActOnSleep5(agent),time) &
-% ecnet/Sleep.e:185
+% ecnet/Kidnapping.e:44
 % {room}% 
 %  HoldsAt(At(agent,room),time) &
 %  HoldsAt(At(bed,room),time).
@@ -2150,7 +2135,6 @@ axiom(holds_at(sleep5(Agent),Time) ',' holds_at(actOnSleep5(Agent),Time) ',' hol
 %; (body) posture
 % 
 %; agent lies on physobj.
-% ecnet/Sleep.e:192
 % event LieOn(agent,physobj)
  /*
 event(lieOn(agent,physobj)).
@@ -2166,10 +2150,10 @@ event(sitOn(agent,physobj)).
 event(sitOn(agent,physobj)).
 
 % 
-% ecnet/Sleep.e:197
+% ecnet/Kidnapping.e:44
 % [agent,physobj,time]% 
 % Happens(SitOn(agent,physobj),time) ->
-% ecnet/Sleep.e:199
+% ecnet/Kidnapping.e:44
 % {location}% 
 %  HoldsAt(At(agent,location),time) &
 %  HoldsAt(At(physobj,location),time).
@@ -2188,7 +2172,6 @@ event(riseFrom(agent,physobj)).
 */
 event(riseFrom(agent,physobj)).
 
-% ecnet/Sleep.e:205
 % 
 %; agent is lying on physobj.
 % fluent LyingOn(agent,physobj)
@@ -2205,7 +2188,6 @@ fluent(sittingOn(agent,physobj)).
 fluent(sittingOn(agent,physobj)).
 
 %; agent is standing.
-% ecnet/Sleep.e:211
 % fluent Standing(agent)
  /*
 fluent(standing(agent)).
@@ -2227,7 +2209,6 @@ fluent(sitting(agent)).
 */
 fluent(sitting(agent)).
 
-% ecnet/Sleep.e:217
 % noninertial Lying
  /*
 noninertial(lying).
@@ -2249,7 +2230,7 @@ xor([lying,sitting,standing]).
 xor([lying,sitting,standing]).
 
 % 
-% ecnet/Sleep.e:223
+% ecnet/Kidnapping.e:44
 % [agent,physobj,time]% 
 % HoldsAt(LyingOn(agent,physobj),time) ->
 % HoldsAt(Lying(agent),time).
@@ -2262,7 +2243,7 @@ axiom(holds_at(lying(Agent),Time),
 
 % 
 % 
-% ecnet/Sleep.e:227
+% ecnet/Kidnapping.e:44
 % [agent,physobj,time]% 
 % HoldsAt(SittingOn(agent,physobj),time) ->
 % HoldsAt(Sitting(agent),time).
@@ -2277,7 +2258,7 @@ axiom(holds_at(sitting(Agent),Time),
 % 
 %; State constraints represent that an agent can lie or sit
 %; on at most one object at a time:
-% ecnet/Sleep.e:233
+% ecnet/Kidnapping.e:44
 % [agent,physobj1,physobj2,time]% 
 % HoldsAt(LyingOn(agent,physobj1),time) &
 % HoldsAt(LyingOn(agent,physobj2),time) ->
@@ -2293,7 +2274,7 @@ axiom(equals(Physobj1,Physobj2),
 
 % 
 % 
-% ecnet/Sleep.e:238
+% ecnet/Kidnapping.e:44
 % [agent,physobj1,physobj2,time]% 
 % HoldsAt(SittingOn(agent,physobj1),time) &
 % HoldsAt(SittingOn(agent,physobj2),time) ->
@@ -2312,7 +2293,7 @@ axiom(equals(Physobj1,Physobj2),
 %; An effect axiom states that if an agent is standing and
 %; lies on a physical object, the agent will be lying on
 %; the physical object:
-% ecnet/Sleep.e:246
+% ecnet/Kidnapping.e:44
 % [agent,physobj,time]% 
 % HoldsAt(Standing(agent),time) ->
 % Initiates(LieOn(agent,physobj),
@@ -2334,7 +2315,7 @@ axiom(initiates(lieOn(Agent,Physobj),
 %; An effect axiom states that if an agent
 %; lies on a physical object, the agent will no longer
 %; be standing:
-% ecnet/Sleep.e:255
+% ecnet/Kidnapping.e:44
 % [agent,physobj,time]% 
 % Terminates(LieOn(agent,physobj),
 %            Standing(agent),
@@ -2354,7 +2335,7 @@ axiom(terminates(lieOn(Agent,Physobj),
 %; An effect axiom states that if an agent is standing and
 %; sits on a physical object, the agent will be sitting on
 %; the physical object:
-% ecnet/Sleep.e:263
+% ecnet/Kidnapping.e:44
 % [agent,physobj,time]% 
 % HoldsAt(Standing(agent),time) ->
 % Initiates(SitOn(agent,physobj),
@@ -2376,7 +2357,7 @@ axiom(initiates(sitOn(Agent,Physobj),
 %; An effect axiom states that if an agent
 %; sits on a physical object, the agent will no longer
 %; be standing:
-% ecnet/Sleep.e:272
+% ecnet/Kidnapping.e:44
 % [agent,physobj,time]% 
 % Terminates(SitOn(agent,physobj),
 %            Standing(agent),
@@ -2397,7 +2378,7 @@ axiom(terminates(sitOn(Agent,Physobj),
 %; is sitting or lying on a physical object and
 %; the agent rises from the physical object,
 %; the agent will be standing:
-% ecnet/Sleep.e:281
+% ecnet/Kidnapping.e:44
 % [agent,physobj,time]% 
 % (HoldsAt(SittingOn(agent,physobj),time) |
 %  HoldsAt(LyingOn(agent,physobj),time)) ->
@@ -2417,13 +2398,12 @@ axiom(initiates(riseFrom(Agent,Physobj),
       ]).
 
 % 
-% ecnet/Sleep.e:287
 % 
 %; An effect axiom states that if an agent is sitting on
 %; a physical object and the agent rises from the physical
 %; object, the agent will no longer be sitting on the
 %; physical object:
-% ecnet/Sleep.e:292
+% ecnet/Kidnapping.e:44
 % [agent,physobj,time]% 
 % HoldsAt(SittingOn(agent,physobj),time) ->
 % Terminates(RiseFrom(agent,physobj),
@@ -2446,7 +2426,7 @@ axiom(terminates(riseFrom(Agent,Physobj),
 %; a physical object and the agent rises from the physical
 %; object, the agent will no longer be lying on the
 %; physical object:
-% ecnet/Sleep.e:302
+% ecnet/Kidnapping.e:44
 % [agent,physobj,time]% 
 % HoldsAt(LyingOn(agent,physobj),time) ->
 % Terminates(RiseFrom(agent,physobj),
@@ -2466,7 +2446,6 @@ axiom(terminates(riseFrom(Agent,Physobj),
 % 
 % 
 %; dressing
-% ecnet/Sleep.e:309
 % 
 %; agent gets undressed.
 % event GetDressed(agent)
@@ -2483,7 +2462,6 @@ event(getUndressed(agent)).
 event(getUndressed(agent)).
 
 %; agent is dressed.
-% ecnet/Sleep.e:315
 % fluent Dressed(agent)
  /*
 fluent(dressed(agent)).
@@ -2492,7 +2470,7 @@ fluent(dressed(agent)).
 
 % 
 %; Effect axioms deal with getting dressed and undressed:
-% ecnet/Sleep.e:318
+% ecnet/Kidnapping.e:44
 % [agent,time] % Initiates(GetDressed(agent),Dressed(agent),time).
  /*
 initiates(getDressed(Agent),dressed(Agent),Time).
@@ -2503,7 +2481,7 @@ axiom(initiates(getDressed(Agent),
       []).
 
 % 
-% ecnet/Sleep.e:319
+% ecnet/Kidnapping.e:44
 % [agent,time] % Terminates(GetUndressed(agent),Dressed(agent),time).
  /*
 terminates(getUndressed(Agent),dressed(Agent),Time).
@@ -2538,7 +2516,6 @@ holds_at(intact(gun1),0).
 axiom(holds_at(intact(gun1),0),[]).
 
 % 
-% ecnet/Kidnapping.e:49
 % HoldsAt(Intact(Bullet1),0).
  /*
 holds_at(intact(bullet1),0).
@@ -2546,6 +2523,7 @@ holds_at(intact(bullet1),0).
 axiom(holds_at(intact(bullet1),0),[]).
 
 % 
+% ecnet/Kidnapping.e:50
 % 
 % agent Perp1
  /*
@@ -2569,7 +2547,6 @@ holds_at(calm(humanTarget1),0).
 axiom(holds_at(calm(humanTarget1),0),[]).
 
 % 
-% ecnet/Kidnapping.e:55
 % HoldsAt(Alive(HumanTarget1),0).
  /*
 holds_at(alive(humanTarget1),0).
@@ -2577,6 +2554,7 @@ holds_at(alive(humanTarget1),0).
 axiom(holds_at(alive(humanTarget1),0),[]).
 
 % 
+% ecnet/Kidnapping.e:56
 % HoldsAt(Awake(HumanTarget1),0).
  /*
 holds_at(awake(humanTarget1),0).

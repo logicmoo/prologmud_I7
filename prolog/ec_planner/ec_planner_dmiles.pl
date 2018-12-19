@@ -425,7 +425,7 @@ check_sub_action_nafs([happens(A,T1,T2)|Hs],N1,R1,R3,N2,N4,D) :-
 check_clipping([],R,R,N,N,D) :- !.
 
 check_clipping([not(Clipped)|Gs],R1,R3,N1,N3,D) :- 
-  % Will we need copy_term ?
+  % Dmiules asks:  Will we need copy_term ?
   (Clipped= clipped(T1,F,T2); Clipped=declipped(T1,F,T2)),
      !, abdemo_naf_cons(Clipped,[],R1,R2,N1,N2,D),
      check_clipping(Gs,R2,R3,N2,N3,D).
@@ -434,6 +434,11 @@ check_clipping([G|Gs],R1,R2,N1,N2,D) :-
      check_clipping(Gs,R1,R2,N1,N2,D).
 
 
+
+
+ammed_preconds(A, T, Gs,Gss):- 
+  findall(PrecondL, axiom(requires(A, T),PrecondL),PrecondLs), 
+  append([Gs|PrecondL],Gss).
 
 
 /* ABRESOLVE */
@@ -448,13 +453,14 @@ check_clipping([G|Gs],R1,R2,N1,N2,D) :-
    if a happens fact has been added to the residue.
 */
 
-abresolve(terms_or_rels(A,F,T),R,Gs,R,false) :- axiom(releases(A,F,T),Gs).
+abresolve(terms_or_rels(A,F,T),R,Gss,R,false) :- axiom(releases(A,F,T),Gs), ammed_preconds(A,T,Gs,Gss).
 
-abresolve(terms_or_rels(A,F,T),R,Gs,R,false) :- !, axiom(terminates(A,F,T),Gs).
+abresolve(terms_or_rels(A,F,T),R,Gss,R,false) :- !, axiom(terminates(A,F,T),Gs), ammed_preconds(A,T,Gs,Gss).
 
-abresolve(inits_or_rels(A,F,T),R,Gs,R,false) :- axiom(releases(A,F,T),Gs).
+abresolve(inits_or_rels(A,F,T),R,Gss,R,false) :- axiom(releases(A,F,T),Gs), ammed_preconds(A,T,Gs,Gss).
 
-abresolve(inits_or_rels(A,F,T),R,Gs,R,false) :- !, axiom(initiates(A,F,T),Gs).
+abresolve(inits_or_rels(A,F,T),R,Gss,R,false) :- !, axiom(initiates(A,F,T),Gs), ammed_preconds(A,T,Gs,Gss).
+
 
 /*
    happens goals get checked to see if they are already in the residue.
