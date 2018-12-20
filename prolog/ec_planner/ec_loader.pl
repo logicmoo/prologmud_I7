@@ -159,13 +159,34 @@ assert_ele(SS):- is_list(SS),!,maplist(assert_ele,SS).
 assert_ele(ec_current_domain_db(P,_TMI_)):- !, assert_ele(P).
 assert_ele(ec_axiom(H,B,_TMI_)):- !,  assert_axiom(H,B).
 
-assert_ele((H,B)):-  !,  assert_m_axiom((H,B),[]).
-assert_ele((H;B)):-  !,  assert_m_axiom((H;B),[]).
-assert_ele(not(H)):-  !,  assert_m_axiom(not(H),[]).
-assert_ele(happens(H,T)):-  !,  assert_m_axiom(happens(H,T),[]).
+assert_ele((H :- B)):- !, conjuncts_to_list(B,BL), assert_axiom(H,BL).
+
+assert_ele(if(happens(A,T),Holds)):- 
+  conjuncts_to_list(Holds, Conds ), 
+  functors_are(\+ happens, Conds), !,
+  assert_axiom(requires(A,T),Conds),
+  debug_var(tWhen,T),
+  assert_m_axiom(if(not(Holds),not(happens(A,T)))).
+/*
+assert_ele(if(happens(A,T),Holds)):- 
+  assert_m_axiom(if(not(Holds),not(happens(A,T)))).
+*/
+
+
+assert_ele((H,B)):-  !,  assert_m_axiom((H,B)).
+assert_ele((H;B)):-  !,  assert_m_axiom((H;B)).
+assert_ele(if(B,H)):-  !,  assert_m_axiom(if(B,H)).
+assert_ele(iff(B,H)):-  !,  assert_m_axiom(iff(B,H)).
+assert_ele(exists(B,H)):-  !,  assert_m_axiom(exists(B,H)).
+assert_ele(all(B,H)):-  !,  assert_m_axiom(all(B,H)).
+assert_ele('&'(B,H)):-  !,  assert_m_axiom('&'(B,H)).
+assert_ele(xor(B,H)):-  !,  assert_m_axiom(xor(B,H)).
+assert_ele(or(B,H)):-  !,  assert_m_axiom(or(B,H)).
+assert_ele(not(H)):-  !,  assert_m_axiom(not(H)).
+assert_ele(happens(H,T)):-  !,  assert_m_axiom(happens(H,T)).
 assert_ele(EffectAx):- EffectAx=..[Effect|_],
   member(Effect,[initiates,terminates,releases]),
-  assert_m_axiom(EffectAx,[]).
+  assert_m_axiom(EffectAx).
 
 
 assert_ele(axiom(H,B)):- echo_format('~N'), !,
@@ -175,17 +196,21 @@ assert_ele(SS):- echo_format('~N'),
 
 
 
-assert_m_axiom(X,Y):- clausify(X,X0), trace, assert_axiom(X0,Y).
+assert_m_axiom(X):- clausify_pnf(X,Conds), 
+  conjuncts_to_list(Conds,CondsL),
+  maplist(assert_ele,CondsL),
+  nop(trace).
 
-
-
+assert_axiom(Conds, []):- is_list(Conds),!,
+   maplist(assert_ele,Conds).
+assert_axiom(happens(A,T), []):- !,
+   assert_axiom(happens(A,T), [is_time(T)]).  
+  
 assert_axiom(Conds, [happens(A,T)]):-
    conjuncts_to_list(Conds, B ), 
    functors_are(\+ happens, B), !,
+   %trace,
    assert_axiom(requires(A,T),B).
-
-assert_axiom(happens(A,T), []):- !,
-   assert_axiom(happens(A,T), [is_time(T)]).  
 
 assert_axiom(EffectAx, B):- 
   EffectAx=..[Effect,Event,Fluent,T],
@@ -218,252 +243,7 @@ assert_effect(Effect,Event,Fluent,T,B):-
 :- export(ect/0).
 ect:- load_e('examples/FrankEtAl2003/Story1.e').
 
-/* In addition:
-
-   all(X,P)     denotes "for all X, P holds"
-   exists(X,P)  denotes "there is an X such that P holds"
-
-   For both of these X must be a PROLOG VARIABLE
-   (note that this diverges from what Clocksin & Mellishs program requires)
-*/
-
-/* The main procedure */
-
-clausify(X,Y) :-
-   implout(X,X1),
-   negin(X1,X2),
-   skolem(X2,X3,[]),
-   univout(X3,X4),
-   conjn(X4,X5),
-   clauses(X5,Y,0,_),
-   %toclauses(X5,_Y,[]),
-   !.
-
-/* Removing Implications */
-
-implout((P <-> Q),((P11 , Q11) ; (not(P1) , not(Q1)))) :- !,
-   implout(P,P11), rename_vars(P11,P1,[]), implout(Q,Q11),
-   rename_vars(Q11,Q1,[]).
-implout((P -> Q),(not(P1) , Q1)) :- !,
-   implout(P,P1), implout(Q,Q1).
-implout(all(X,P),all(X,P1)) :- !,
-   implout(P,P1).
-implout(exists(X,P),exists(X,P1)) :- !,
-   implout(P,P1).
-implout((P , Q),(P1 , Q1)) :- !,
-   implout(P,P1), implout(Q,Q1).
-implout((P ; Q),(P1 ; Q1)) :- !,
-   implout(P,P1), implout(Q,Q1).
-implout(not(P),not(P1)) :- !,
-   implout(P,P1).
-implout(P,P).
-
-/* Moving negation inwards */
-
-negin(not(P),P1) :- !, neg(P,P1).
-negin(all(X,P),all(X,P1)) :- !, negin(P,P1).
-negin(exists(X,P), exists(X,P1)) :- !, negin(P,P1).
-negin((P , Q),(P1 , Q1)) :- !, negin(P,P1), negin(Q,Q1).
-negin((P ; Q),(P1 ; Q1)) :- !, negin(P,P1), negin(Q,Q1).
-negin(P,P).
-
-neg(not(P),P1) :- !, negin(P,P1).
-neg(all(X,P),exists(X,P1)) :- !, neg(P,P1).
-neg(exists(X,P),all(X,P1)) :- !, neg(P,P1).
-neg((P , Q),(P1 ; Q1)) :- !, neg(P,P1), neg(Q,Q1).
-neg((P ; Q),(P1 , Q1)) :- !, neg(P,P1), neg(Q,Q1).
-neg(P,not(P)).
-
-/* Skolemising */
-
-skolem(all(X,P),all(X,P1),Vars) :- !,
-   var(X),
-   skolem(P,P1,[X|Vars]).
-skolem(exists(X,P),P1,Vars) :- !,
-   var(X),
-   gensym(f,F),
-   X =.. [F|Vars],
-   skolem(P,P1,Vars).
-skolem((P , Q),(P1 , Q1),Vars) :- !,
-   skolem(P,P1,Vars), skolem(Q,Q1,Vars).
-skolem((P ; Q),(P1 ; Q1),Vars) :- !,
-   skolem(P,P1,Vars), skolem(Q,Q1,Vars).
-skolem(P,P,_).
-
-/* Mo;ing uni;ersal quantifiers outwards */
-
-univout(all(_X,P),P1) :- !, univout(P,P1).
-univout((P , Q),(P1 , Q1)) :- !,
-   univout(P,P1), univout(Q,Q1).
-univout((P ; Q),(P1 ; Q1)) :- !,
-   univout(P,P1), univout(Q,Q1).
-univout(P,P).
-
-/* Distributing and over or */
-
-conjn((P ; Q),R) :- !,
-   conjn(P,P1), conjn(Q,Q1),
-   conjn1((P1 ; Q1),R).
-conjn((P , Q),(P1 , Q1)) :- !,
-   conjn(P,P1), conjn(Q,Q1).
-conjn(P,P).
-
-conjn1(((P , Q) ; R),(P1 , Q1)) :- !,
-   conjn((P ; R),P1), conjn((Q ; R),Q1).
-conjn1((P ; (Q , R)),(P1 , Q1)) :- !,
-/*   conjn((P ; Q),P1), conjn((P1 ; R),Q1). */
-   conjn((P ; Q),P1), conjn((P ; R),Q1).
-conjn1(P,P).
-
-/* Putting into clauses */
-
-toclauses((P , Q),C1,C2) :- !,
-   toclauses(P,C1,C3), toclauses(Q,C3,C2).
-toclauses(P,[fact(C)|Cs],Cs) :- inclause(P,C,[]), !.
-toclauses(_P,C,C).
-
-inclause((P ; Q),A,A1) :- !,
-   inclause(P,A2,A1), inclause(Q,A,A2).
-inclause(not(P),A1,A) :- !,
-   notin(P,A), putin(not(P),A,A1).
-inclause(P,A1,A) :- !,
-   notin(not(P),A), putin(P,A,A1).
-
-
-list_union([X|L1],L2,L3) :-
-	identical_member(X,L2),
-	!,
-	list_union(L1,L2,L3).
-list_union([X|L1],L2,[X|L3]) :-
-	list_union(L1,L2,L3).
-list_union([],L,L).
-
-
-clauses((A , B),L,WffNum1,WffNum2) :-
-	!,
-	clauses(A,L1,WffNum1,W),
-	clauses(B,L2,W,WffNum2),
-	conjoin(L1,L2,L).
-
-clauses(NNF,L,WffNum1,WffNum2):- 
-   %save_wid(WffNum1,pttp_in,PNF),
-   %once(pttp_nnf(PNF,OUT)),
-   %save_wid(WffNum1,pttp_nnf,OUT),
-   clauses1(NNF,L,WffNum1,WffNum2).
-
-
-clauses1(A,L,WffNum1,WffNum2) :-
-	write_clause_with_number(A,WffNum1),
-	head_literals(A,Lits),
-	clauses2(A,Lits,L,WffNum1),
-	WffNum2 is  WffNum1 + 1.
-
-clauses2(A,[Lit|Lits],L,WffNum) :-
-	body_for_head_literal(Lit,A,Body1),
-	(Body1 == false ->
-		L = true;
-	%true ->
-		conjoin(infer_by(WffNum),Body1,Body),
-		clauses2(A,Lits,L1,WffNum),
-		conjoin((Lit :- Body),L1,L)).
-clauses2(_,[],true,_).
-
-head_literals(Wff,L) :-
-	Wff = (A :- _B) ->	% contrapositives not made for A :- ... inputs
-		head_literals(A,L);
-	Wff = (A , B) ->
-		(head_literals(A,L1),
-		 head_literals(B,L2),
-		 list_union(L1,L2,L));
-	Wff = (A ; B) ->
-		(head_literals(A,L1),
-		 head_literals(B,L2),
-		 list_union(L1,L2,L));
-	%true ->
-		L = [Wff].
-
-body_for_head_literal(Head,Wff,Body) :-
-	Wff = (A :- B) ->
-		(body_for_head_literal(Head,A,A1),
-		 conjoin(A1,B,Body));
-	Wff = (A , B) ->
-		(body_for_head_literal(Head,A,A1),
-		 body_for_head_literal(Head,B,B1),
-		 pttp_disjoin(A1,B1,Body));
-	Wff = (A ; B) ->
-		(body_for_head_literal(Head,A,A1),
-		 body_for_head_literal(Head,B,B1),
-		 conjoin(A1,B1,Body));
-	Wff == Head ->
-		Body = true;
-	(once(negated_literal(Wff,Was)),Head=@=Was) ->
-		Body = false;
-	%true ->
-		negated_literal(Wff,Body).
-
-negated_literal(Lit,not(Lit)).
-
-pttp_disjoin(A,B,C) :-
-	A == true ->
-		C = true;
-	B == true ->
-		C = true;
-	A == false ->
-		C = B;
-	B == false ->
-		C = A;
-	%true ->
-		C = (A ; B).
-
-write_clause_with_number(A,WffNum) :-
-	nl,
-	write_indent_for_number(WffNum),
-	write(WffNum),
-	write('  '),
-        copy_term(A,AA),
-        numbervars(AA,0,_,[attvar(bind),singletons(true)]),
-	write(AA),
-	write(.).
-
-write_indent_for_number(N) :-
-	((number(N) , N <  100) -> write(' ') ; true),
-	((number(N) , N <   10) -> write(' ') ; true).
-
-
-identical_member(E,L):- member(EE,L),EE==E.
-
-notin(X,[Y|_]) :- X == Y, !, fail.
-notin(X,[_|L]) :- !, notin(X,L).
-notin(_,[]).
-
-putin(X,[],[X]) :- !.
-putin(X,[Y|L],L) :- X == Y, !.
-putin(X,[Y|L],[Y|L1]) :- putin(X,L,L1).
-
-%;;; Renaming variables, when a quantified proposition is split into
-%;;; two. This avoids nasty problems where the same variable is both
-%;;; existentially and uni;ersally quantified over.
-
-rename_vars(X,Y,Assocs) :- var(X), !, assoc(X,Y,Assocs).
-rename_vars(X,X,_) :- atomic(X), !.
-rename_vars(all(X,Y),all(X1,Y1),Ass) :- !,
-   rename_vars(Y,Y1,[[X|X1]|Ass]).
-rename_vars(exists(X,Y),exists(X1,Y1),Ass) :- !,
-   rename_vars(Y,Y1,[[X|X1]|Ass]).
-rename_vars(X,Y,Ass) :-
-   functor(X,F,N), functor(Y,F,N),
-   rename_vars_args(N,X,Y,Ass).
-
-rename_vars_args(0,_,_,_) :- !.
-rename_vars_args(N,X,Y,Ass) :-
-   arg(N,X,X1), arg(N,Y,Y1),
-   rename_vars(X1,Y1,Ass),
-   N1 is N - 1, rename_vars_args(N1,X,Y,Ass).
-
-assoc(X,Y,[]) :- !, X=Y.
-assoc(X,Y,[[X1|Y1]|_]) :- X == X1, !, Y=Y1.
-assoc(X,Y,[_|L]) :- assoc(X,Y,L).
-
+:- include(ec_nnf).
 
 
 
@@ -489,11 +269,11 @@ fix_goal(T, G, [holds_at(G, T)]).
 
 
 ec_to_ax(_, X,Y):-  (\+ callable(X) ; \+ compound(X)), !, X=Y.
-ec_to_ax(T, (Pre -> '<->'(HB,BH)), HBO):- ec_to_ax(T, ('<->'((Pre,HB),(Pre,BH))), HBO).
-ec_to_ax(T, (Pre ; '->'(HB,BH)), HBO):- ec_to_ax(T, '->'((Pre ; HB),BH), HBO).
-ec_to_ax(T, (H<-B),O):- !, into_axiom(T,H,B,O).
-ec_to_ax(T, (B->H),O):- !, into_axiom(T,H,B,O).
-ec_to_ax(T, (HB1<->HB2),[A,B]):- !, ec_to_ax(T, (HB1->HB2),A),ec_to_ax(T, (HB1<-HB2),B).
+%ec_to_ax(T, (Pre -> iff(HB,BH)), HBO):- ec_to_ax(T, (iff((Pre,HB),(Pre,BH))), HBO).
+%ec_to_ax(T, or(Pre , '->'(HB,BH)), HBO):- ec_to_ax(T, '->'(or(Pre , HB),BH), HBO).
+%ec_to_ax(T, (H<-B),O):- !, into_axiom(T,H,B,O).
+ec_to_ax(T, if(B,H),O):- !, into_axiom(T,H,B,O).
+ec_to_ax(T, iff(HB1,HB2),[A,B]):- !, ec_to_ax(T, if(HB1,HB2),A),ec_to_ax(T, if(HB2,HB1),B).
 ec_to_ax(T, axiom(H,B),O):- into_axiom(T,H,B,O), !.
 ec_to_ax(_, axiom(H,B), axiom(H,B)):- !.
 ec_to_ax(T, X,Y):- cvt1(T, X,Y),X=Y,!.
@@ -503,17 +283,21 @@ ec_to_ax(_, X,X).
 to_axiom_body(T,G,GGs) :-  fix_goal(T,G,GGs).
 
 %into_axiom(T,H,happens(E,T),OUT):- into_axiom(T,not(happens(E,T)),not(H),OUT).
-into_axiom(T,H,B,axiom(AH,AB)):- to_axiom_head(T1,H,AH),to_axiom_body(T2,B,AB),!,ignore(T=T1),ignore(T2=T1).
+into_axiom(T,H,B,if(ABNonList,AH)):- to_axiom_head(T1,H,AH),
+  to_axiom_body(T2,B,AB),!,ignore(T=T1),ignore(T2=T1),
+  list_to_conjuncts(AB, ABNonList),!.
+
 
 :- export(fix_axiom_head/3).
 
 cvt1(_, X,Y):-  (\+ callable(X);\+ compound(X)), !, X=Y.
-cvt1(T, (Pre -> '<->'(HB,BH)), HBO):- cvt1(T, ('<->'((Pre,HB),(Pre,BH))), HBO).
-cvt1(T,'&'(A,B),(AABB)):- !, fix_axiom_head(T,(A,B),(AABB)).
-cvt1(T,(A,B),(AA,BB)):- !, fix_axiom_head(T,A,AA), fix_axiom_head(T,B,BB).
-cvt1(T,(A;B),(AA;BB)):- !, fix_axiom_head(T,A,AA), fix_axiom_head(T,B,BB).
+%cvt1(T, (Pre -> iff(HB,BH)), HBO):- cvt1(T, (iff((Pre,HB),(Pre,BH))), HBO).
+%cvt1(T,','(A,B),(AABB)):- !, fix_axiom_head(T,(A,B),(AABB)).
+%cvt1(T,(A,B),(AA,BB)):- !, fix_axiom_head(T,A,AA), fix_axiom_head(T,B,BB).
+%cvt1(T,(A;B),(AA;BB)):- !, fix_axiom_head(T,A,AA), fix_axiom_head(T,B,BB).
 cvt1(_, X\=Y, diff(X,Y)).
 cvt1(T, X=Y, Term):- as_equals(X,Y,Equals), !, fix_axiom_head(T, Equals, Term),!.
+cvt1(T, P, Term):- predicate_property(P,foreign),!, fix_axiom_head(T, call(P), Term),!.
 
 cvt1(T, HT, HTTermO):-  
  compound_name_arguments(HT, F, L),
@@ -524,18 +308,18 @@ cvt1(T, HT, HTTermO):-
 
 cvt1(_T, ec_option(X,Y),option(X,Y)):-!.
 cvt1(_T, option(X,Y),option(X,Y)):-!.
-cvt1(T, neg(exists(_Vars, holds_at(P, Time))),O):- cvt1(T, holds_at(neg(P), Time), O).
+%cvt1(T, neg(exists(_Vars, holds_at(P, Time))),O):- cvt1(T, holds_at(neg(P), Time), O).
 
 
 cvt1(T, isa(E, C), List):- !, fix_axiom_head(T, t(C, E), List).
-cvt1(T, not(holds_at(N,AT)),O):- AT==0, fix_axiom_head(T, initially(neg(N)),O).
+%cvt1(T, not(holds_at(N,AT)),O):- AT==0, fix_axiom_head(T, initially(neg(N)),O).
 cvt1(T, holds_at(N,AT),O):- AT==0, fix_axiom_head(T, initially(N),O).
-cvt1(T, not(holds_at(N,AT)),O):- !, fix_axiom_head(T, holds_at(neg(N),AT),O).
-cvt1(T, neg(holds_at(N)),O):- !, fix_axiom_head(T, holds_at(neg(N),T),O).
-cvt1(T, not(happens(G,T2)),not(O)):- !, fix_axiom_head(T,happens(G,T2),O).
-cvt1(T, not(I),O):- !, fix_axiom_head(T, neg(I),O).
+cvt1(T, holds_at(NEG,AT),O):- compound(NEG),NEG=neg(N),!, fix_axiom_head(T, not(holds_at(N,AT)),O).
+%cvt1(T, neg(holds_at(N)),O):- !, fix_axiom_head(T, holds_at(neg(N),T),O).
+%cvt1(T, not(happens(G,T2)),not(O)):- !, fix_axiom_head(T,happens(G,T2),O).
+cvt1(T, not(I),not(O)):- !, fix_axiom_head(T, I,O).
 cvt1(T, not(exists(_Vars,I)),O):- !, fix_axiom_head(T, not(I),O).
-cvt1(_, exists(Vars,Truth), NewTruth):- conjoin(Truth,some(Vars),NewTruth).
+%cvt1(_, exists(Vars,Truth), NewTruth):- conjoin(Truth,some(Vars),NewTruth).
 cvt1(T, happens(F, T1, T2), O):- T1==T2,!, fix_axiom_head(T, happens(F, T1), O).
 cvt1(_, equals(X,Y),equals(X,Y)).
 
@@ -725,7 +509,7 @@ merge_into_body(X,_Y,Z):- Z = X.
 do_process_ec(_Why, M, NonCallable) :- assertion((current_module(M),callable(NonCallable))), fail.
 do_process_ec(Why, M, NEWHB):- is_list(NEWHB), !, maplist(do_process_ec(Why, M), NEWHB).
 do_process_ec(_Why, M, (:- GOAL)):- !, must(M:GOAL).
-do_process_ec(_Why, M, (?- GOAL)):- !, M:forall(GOAL, true).
+do_process_ec(_Why, M, (?- GOAL)):- !, (M:forall(GOAL, true)).
 % How to? M:assertz('$source_location'(S, L):NEWHB),
 %do_process_ec(Why, M, NEWHB):- wdmsg(do_process_ec(Why, M, NEWHB)),fail.
 do_process_ec(Why, M, NEWHB):- M:call(Why, NEWHB).
@@ -740,23 +524,23 @@ convert_to_axiom(T, (H:-B),[(HH:- B)]):- !, convert_to_axiom(T, H,HH).
 convert_to_axiom(_, abducible(H), abducible(H)):- !.
 convert_to_axiom(_, t(C, E), List):- !, to_fact_head([sort(C),t(C, E)],List).
 
-convert_to_axiom(L,[H|T],ABC):- trace, 
+convert_to_axiom(L,[H|T],ABC):- % trace, 
    once((convert_to_axiom(L,H,A), convert_to_axiom(L,T,B),append(A,B,AB))), 
    AB\=@= [H|T],
    convert_to_axiom(L,AB,ABC).
 
-convert_to_axiom(T, (Pre -> '<->'(HB,BH)), HBO):-
-  convert_to_axiom(T, ('<->'((Pre,HB),(Pre,BH))), HBO),!.
+convert_to_axiom(T, (Pre -> iff(HB,BH)), HBO):-
+  convert_to_axiom(T, (iff((Pre,HB),(Pre,BH))), HBO),!.
 
-convert_to_axiom(T, '<->'(HB,BH), HBOO):-
+convert_to_axiom(T, iff(HB,BH), HBOO):-
   convert_to_axiom(T, '->'(HB,BH), HBO1),
    convert_to_axiom(T, '<-'(HB,BH), HBO2),
   flatten([HBO1,HBO2],HBO),
   convert_to_axiom1(T,HBO,HBOO),!.
 
 convert_to_axiom(T, exists(Vars,B->H), HBO):- conjoin(H,some(Vars),Conj), !, convert_to_axiom(T, B -> Conj , HBO).
-convert_to_axiom(T, exists(Vars,Info), HBO):- !, convert_to_axiom(T, Info, HB), 
-  merge_into_body(HB,some(Vars),HBO).
+%convert_to_axiom(T, exists(Vars,Info), HBO):- !, convert_to_axiom(T, Info, HB), 
+%  merge_into_body(HB,some(Vars),HBO).
 
 %  compound_name_arity(P,F,A),compound_name_arity(PP,F,A).
 
@@ -825,7 +609,7 @@ needs_process_axiom(executable(_)).
 needs_process_axiom(P):- compound_name_arity(P,F,A),needs_process_axiom_fa(F,A).
 
 needs_process_axiom_fa(F,_):- arg_info(_,F,_).
-needs_process_axiom_fa('<->',2).
+needs_process_axiom_fa(iff,2).
 needs_process_axiom_fa('<-',2).
 needs_process_axiom_fa('->',2).
 
@@ -840,7 +624,9 @@ needs_proccess( _M:H, How):- nonvar(H),!,needs_proccess(H,How).
 
 :- module_transparent(hook_ec_axioms/2).
 :- export(hook_ec_axioms/2).
-:- prolog:import(hook_ec_axioms/2).
+
+:- (prolog:(import(hook_ec_axioms/2))).
+
 hook_ec_axioms(What, File):- var(File), !, current_input(Input), hook_ec_axioms(What, Input).
 hook_ec_axioms(What, file(_File,AbsFile)):- !, hook_ec_axioms(What, file(AbsFile)).
 hook_ec_axioms(What, file(AbsFile)):- !, hook_ec_axioms(What, AbsFile).

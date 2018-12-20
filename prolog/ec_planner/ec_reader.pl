@@ -111,7 +111,8 @@ e_reader_testf:- with_e_sample_tests(convert_e(outdir('.'))).
 with_e_sample_tests(Out) :- 
   retractall(etmp:ec_option(load(_), _)),
 %  call(Out, 'ectest/*.e'),  
-%  call(Out, 'examples/AkmanEtAl2004/ZooWorld.e'),
+%  call(Out, 'examples/AkmanEtAl2004/ZooWorld.e'),  
+  call(Out, 'ecnet/RTSpace.e'),
   call(Out, 'ectest/ec_reader_test_ecnet.e'),
   call(Out, 'ecnet/Kidnapping.e'),
   call(Out, 'ecnet/SpeechAct.e'),
@@ -251,25 +252,6 @@ e_io(Why, Ins):-
   notrace(at_end_of_stream(Ins)), !.
   
 
-:- op(1150, yfx, ecread:'->').
-:- op(1150, xfx, ecread:'->').
-:- op(1150, xfy, ecread:'->').
-      :- op(1125, xfy, ecread:'thereExists').
-:- op(1150, xfy, ecread:'thereExists').
-:- op(1100, xfy, ecread:'<->').
-:- op(1050, xfy, ecread:'|').
-:- op(1000, xfy, ecread:'&').
-:- op(900, fx, ecread:'!').
-
-/*
-op(1200,xfx,'<-'),op(1200,xfx,'<->'),
-          op(900, fx, '!'),
-          op(999, xfy, '&'),
-          op(1050, xfy, '->'),
-          op(1100, xfy, '|'),
-          op(1025, xfy, 'thereExists')*/
-%:- op(1150, xfx, '<->').
-
 
 removed_one_ws(S):-
   peek_code(S, W), char_type(W, white), get_code(S, W), echo_format('~s', [[W]]).
@@ -347,15 +329,26 @@ unpad_codes(Text, Codes):- text_to_string(Text, String), normalize_space(codes(C
   
 e_from_atom(String, Term):- e_read1(String, Term, _).   
 
+set_e_ops(M):- 
+   op(1150, yfx, M:'->'),
+   op(1150, xfx, M:'->'),
+   op(1150, xfy, M:'->'),
+   % op(1125, xfy, M:'thereExists'), 
+   op(1150, xfy, M:'thereExists'),
+   op(1100, xfy, M:'<->'),
+   op(1050, xfy, M:'|'),
+   op(950, xfy, M:'&'),
+   op(900, fx, M:'!'),
+   op(1,fx,(M:($))).
 
 e_read3(String, Term):- 
+   M = ecread,
    forall(current_op(_,fx,OP),
-     op(0,fx,(ecread:OP))),
-   op(1,fx,(ecread:($))),
-   op(900,fx,(ecread:(!))),
+    op(0,fx,(M:OP))),    
+    set_e_ops(M),
        upcased_functors(notrace(((catch(
         (read_term_from_atom(String, Term, 
-            [var_prefix(true),variable_names(Vars), module(ecread)])), _, fail))))), !, 
+            [var_prefix(true),variable_names(Vars), module(M)])), _, fail))))), !, 
   maplist(ignore, Vars).
 
 :- dynamic(etmp:temp_varnames/2).
@@ -391,14 +384,34 @@ map_callables(Call, HT, HTTerm):- !,
 
 compound_gt(P,GT):- compound(P), compound_name_arity(P, _, N), N > GT.
 
-fix_predname(!, not).
+
+fix_predname('!', 'not').
+fix_predname('not', 'not').
+
+fix_predname(';', ';').
 fix_predname('|', ';').
+fix_predname('or', ';').
+
+fix_predname(',', ',').
+fix_predname('and', ',').
 fix_predname('&', ',').
-%fix_predname('|', 'or').
-%fix_predname('&', '&').
-fix_predname(F, not):- downcase_atom(F, not).
-fix_predname(F, holds_at):- downcase_atom(F, holdsat).
-fix_predname(F, Happens):- builtin_pred(Happens), downcase_atom(F, Happens), !.
+
+fix_predname('equiv', 'equiv').
+fix_predname('iff', 'equiv').
+fix_predname('<->', 'equiv').
+
+fix_predname('->', 'if').
+fix_predname('implies', 'if').
+fix_predname('=>', 'if').
+
+fix_predname(holds_at, holds_at).
+fix_predname(holdsat, holds_at).
+
+fix_predname(Happens, Happens):- builtin_pred(Happens).
+
+fix_predname(F, New):- downcase_atom(F, DC), F\==DC, !, fix_predname(DC, New).
+
+
 
 
 my_unCamelcase(X, Y):- atom(X), fix_predname(X, Y), !.
@@ -646,14 +659,15 @@ print_e_to_string(T, _Ops, S):-
                                 write_options([numbervars(true),
                                    quoted(true),
                                   portray(true)]),
+                                right_margin(200),
                              %   max_length(120),
                  % indent_arguments(auto),
                   output(current_output)]),
                   flush_output)]).
 
 to_ansi(e,[bold,fg(yellow)]) :-!.
-to_ansi(ec,[bold,fg(cyan)]) :-!.
-to_ansi(pl,[bold,fg(blue)]) :-!.
+to_ansi(ec,[bold,fg(green)]) :-!.
+to_ansi(pl,[bold,fg(cyan)]) :-!.
 to_ansi([H|T],[H|T]):-!.
 to_ansi(C, [bold,hfg(C)]):- assertion(nonvar(C)), is_color(C),!.
 to_ansi(H,[H]).
@@ -691,9 +705,14 @@ ec_portray_hook(Term):-
   flag(ec_portray,_, N)).
 
 ec_portray(_,Var):- var(Var),!,fail. % format('~p',[Var]),!.
-ec_portray(_,'$VAR'(Atomic)):-  atom(Atomic), write(Atomic),!.
-ec_portray(_,Term):- notrace(is_list(Term)),!,Term\==[], notrace(catch(text_to_string(Term,Str),_,fail)),!,format('"~s"',[Str]).
-ec_portray(N,Term):- N=0, pprint_ec_no_newline(white, Term).
+ec_portray(_,'$VAR'(Atomic)):-  atom(Atomic), name(Atomic,[C|_]), !,
+   (code_type(C,prolog_var_start)->write(Atomic);writeq('$VAR'(Atomic))).
+ec_portray(_,Term):- notrace(is_list(Term)),!,Term\==[], fail, notrace(catch(text_to_string(Term,Str),_,fail)),!,format('"~s"',[Str]).
+ec_portray(_,Term):- compound(Term),compound_name_arity(Term, F, 0), !,ansi_format([bold,hfg(red)],'~q()',[F]),!.
+ec_portray(N,Term):- N < 2, 
+  % flush_output,
+  ttyflush,
+  catch(pprint_ec_no_newline(white, Term),_,fail),!.
 
 
 pprint_ec_no_newline(C, P):-

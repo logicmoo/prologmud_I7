@@ -1,15 +1,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% $Id: tom.pl,v 1.3 1994/05/31 20:03:48 gerd Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-:- module_interface(tom). /*%--------------------------------------
+:- module(tom , []). 
+/*%--------------------------------------
 
 \input{tom_man}
 
 \PL*/
 
-:- export tom/2.
+:- export(tom/2).
 
-:- begin_module(tom).
+:- module(tom).
 
 /*PL%^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -31,7 +32,8 @@ A few general options are set...
 
 :-       set_flag(syntax_option,nl_in_quotes).
 
-:-	lib(lists),
+other_prolog_libs:-
+	lib(lists),
 	lib(options),
 	lib(op_def),
 	lib(numbervars).
@@ -45,7 +47,7 @@ the filter will be written to a log file, the name of which results from
 the original name of the problem. This happens additionally to sending the
 output to a stream.
 \PL*/
-:- define_option 'Tom:log_file' = on.
+:- define_option('Tom:log_file' = on).
 
 /*PL%^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

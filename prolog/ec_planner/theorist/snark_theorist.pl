@@ -1440,37 +1440,44 @@ if parity is even and the negation normal form of $Fla$ if parity is odd.
 \begin{verbatim} */
 
 
-nnf((X equiv Y), P,B) :- !,
+nnf(equiv(X , Y), P,B) :- !,
    nnf(((Y or not X) and (X or not Y)),P,B).
-nnf((X == Y), P,B) :- !,
-   nnf(((Y or not X) and (X or not Y)),P,B).
-nnf('<=>'(X , Y), P,B) :- !,
-   nnf(((Y or not X) and (X or not Y)),P,B).
+nnf((X == Y), P,B) :- compound(X), compound(Y), !, nnf(equiv(X , Y), P,B).
+nnf('<=>'(X , Y), P,B) :- !, nnf(equiv(X , Y), P,B).
+
 nnf(all(_, Y), P,B) :- !,nnf(Y, P,B).
-nnf(exists(E, Y), P,exists(E, B)) :- !,nnf(Y, P,B).
+nnf(exists(E, Y), P, exists(E, B)) :- !,nnf(Y, P,B).
 nnf(if(X , Y), P,B) :- !,
    nnf((Y or not X),P,B).
-nnf((X => Y), P,B) :- !,
+nnf(=>(X,Y), P,B) :- !, nnf(if(X , Y), P,B).
+nnf(->(X,Y), P,B) :- !, nnf(if(X , Y), P,B).
+
+nnf((Y <- X), P,B) :-  !,
    nnf((Y or not X),P,B).
-nnf((Y <- X), P,B) :- !,
-   nnf((Y or not X),P,B).
-nnf((X & Y), P,B) :- !,
-   nnf((X and Y),P,B).
-nnf((X , Y), P,B) :- !,
-   nnf((X and Y),P,B).
-nnf((X ; Y), P,B) :- !,
-   nnf((X or Y),P,B).
-nnf((X and Y),P,B) :- !,
+
+nnf(^(X, Y), P,B) :- !, nnf(and(X, Y),P,B).
+nnf((X & Y), P,B) :- !, nnf(and(X, Y),P,B).
+nnf((X , Y), P,B) :- !, nnf(and(X, Y),P,B).
+nnf(and(X, Y),P,B) :- !,
    opposite_parity(P,OP),
    nnf((not X or not Y),OP,B).
-nnf((X or Y),even,(XB,YB)) :- !,
+
+nnf((X | Y), P,B) :- !, nnf(xor(X,Y),P,B).
+nnf(xor(X, Y), P,B) :- !, nnf(or(and(not(X),Y),and(X,not(Y))),P,B).
+
+nnf((X ; Y), P,B) :- !, nnf(or(X,Y),P,B).
+nnf(v(X, Y), P,B) :- !, nnf(or(X,Y),P,B).
+
+nnf(or(X,Y),even,(XB,YB)) :- !,
    nnf(X,even,XB),
    nnf(Y,even,YB).
-nnf((X or Y),odd,(XB;YB)) :- !,
+nnf(or(X,Y),odd,(XB;YB)) :- !,
    nnf(X,odd,XB),
    nnf(Y,odd,YB).
+
 nnf((~ X),P,B) :- !,
    nnf((not X),P,B).
+
 nnf((not X),P,B) :- !,
    opposite_parity(P,OP),
    nnf(X,OP,B).
