@@ -23,14 +23,8 @@
     
 
 */
-:- module(ec_reader,[convert_e/1, set_ec_option/2, verbatum_functor/1, builtin_pred/1, e_to_pl/3, 
-          op(1200,xfx,'<-'),op(1200,xfx,'<->'),
-          op(900, fx, '!'),
-          op(999, xfy, '&'),
-          op(1050, xfy, '->'),
-          op(1100, xfy, '|'),
-          op(1150, xfy, 'quantz'),
-          op(1025, xfy, 'thereExists')]).
+:- module(ec_reader,[convert_e/1, set_ec_option/2, verbatum_functor/1, builtin_pred/1, e_to_pl/3]).
+
 
 
 :- use_module(library(logicmoo/portray_vars)).
@@ -115,6 +109,7 @@ e_reader_testf:- with_e_sample_tests(convert_e(outdir('.'))).
 
 :- export(with_e_sample_tests/1).
 with_e_sample_tests(Out) :- 
+  retractall(etmp:ec_option(load(_), _)),
 %  call(Out, 'ectest/*.e'),  
 %  call(Out, 'examples/AkmanEtAl2004/ZooWorld.e'),
   call(Out, 'ectest/ec_reader_test_ecnet.e'),
@@ -256,16 +251,24 @@ e_io(Why, Ins):-
   notrace(at_end_of_stream(Ins)), !.
   
 
-
-:- op(900, fx, ecread:'!').
+:- op(1150, yfx, ecread:'->').
+:- op(1150, xfx, ecread:'->').
+:- op(1150, xfy, ecread:'->').
+      :- op(1125, xfy, ecread:'thereExists').
+:- op(1150, xfy, ecread:'thereExists').
+:- op(1100, xfy, ecread:'<->').
+:- op(1050, xfy, ecread:'|').
 :- op(1000, xfy, ecread:'&').
-:- op(1050, xfy, ecread:'->').
-:- op(1150, xfy, ecread:'<->').
-:- op(1100, xfy, ecread:'|').
-:- op(1150, xfy, ecread:'quantz').
-:- op(1025, xfy, ecread:'thereExists').
+:- op(900, fx, ecread:'!').
 
-:- op(1150, xfx, '<->').
+/*
+op(1200,xfx,'<-'),op(1200,xfx,'<->'),
+          op(900, fx, '!'),
+          op(999, xfy, '&'),
+          op(1050, xfy, '->'),
+          op(1100, xfy, '|'),
+          op(1025, xfy, 'thereExists')*/
+%:- op(1150, xfx, '<->').
 
 
 removed_one_ws(S):-
@@ -302,8 +305,8 @@ upcased_functors(G):-
 % Process file stream input
 %
 process_stream_comment(S) :- (peek_string(S, 2, W);peek_string(S, 1, W)), clause(process_stream_peeked213(S, W),Body),!,call(Body).
-process_stream_peeked213(S, "#!"):- !, echo_till_eol(S).
-process_stream_peeked213(S,  ";"):- !, echo_format('%'), echo_till_eol(S).
+process_stream_peeked213(S, "#!"):- !, read_line_to_string_echo(S, _).
+process_stream_peeked213(S,  ";"):- !, echo_format('%'), read_line_to_string_echo(S, _).
 process_stream_peeked213(S, "["):- mention_s_l, echo_format('% '), !, read_stream_until(S, [], `]`, Codes), read_n_save_vars(universal, Codes).
 process_stream_peeked213(S, "{"):- mention_s_l, echo_format('% '), !, read_stream_until(S, [], `}`, Codes), read_n_save_vars(existential, Codes).
 
@@ -540,8 +543,8 @@ maybe_mention_s_l:- last_s_l(B,L),LLL is L+5,  s_l(BB,LL), B==BB, !, (LLL<LL -> 
 maybe_mention_s_l:- mention_s_l.                      
 
 :- export(mention_s_l/0).
-mention_s_l:-  must_det_l((flush_output, echo_format('~N'),
-  s_l(B,L), ansi_format([fg(green)], '% ~w~n', [B:L]), flush_output)),
+mention_s_l:-  must_det_l(( flush_output,
+  s_l(B,L), real_ansi_format([fg(green)], '~N% ~w~n', [B:L]), flush_output)),
   retractall(last_s_l(B,_)),asserta(last_s_l(B,L)).
 
 :- export(s_l/2).
@@ -648,38 +651,37 @@ print_e_to_string(T, _Ops, S):-
                   output(current_output)]),
                   flush_output)]).
 
-to_ansi(C, [bold,hfg(C)]):- is_color(C),!.
 to_ansi(e,[bold,fg(yellow)]) :-!.
 to_ansi(ec,[bold,fg(cyan)]) :-!.
 to_ansi(pl,[bold,fg(blue)]) :-!.
 to_ansi([H|T],[H|T]):-!.
+to_ansi(C, [bold,hfg(C)]):- assertion(nonvar(C)), is_color(C),!.
 to_ansi(H,[H]).
 
 is_color(white). is_color(black). 
 is_color(yellow). is_color(cyan).
 is_color(blue). is_color(red).
-is_color(green). is_color(orange).
+is_color(green). is_color(magenta).
 
 
 is_output_lang(Lang):- atom(Lang), Lang \==[],
- \+ is_color(Lang), nb_current('$output_lang',E),E\==[], !,memberchk(Lang,E).
+ \+ is_color(Lang), nb_current('$output_lang',E),E\==[], !, memberchk(Lang,E).
 is_output_lang(_).
   
 :- export(pprint_ec/2).
 pprint_ec(C, P):-
   pprint_ec_and_f(C, P, '~n').
-:- export(pprint_ecp/2).
 
+:- export(pprint_ecp/2).
 pprint_ecp(C, P):- \+ is_output_lang(C), 
   in_space_cmt(pprint_ec_and_f(C, P, '.~n')).
 pprint_ecp(C, P):-
   pprint_ec_and_f(C, P, '.~n').
 
 pprint_ec_and_f(C, P, AndF):-
-  print_e_to_string(P, S), 
-  to_ansi(C, C0), !, 
-  ansi_format(C0, '~s', [S]),
-  format(AndF), !.
+  pprint_ec_no_newline(C, P), 
+  echo_format(AndF), !,
+  flush_output.
 
 user:portray(Term):- ec_portray_hook(Term).
 
@@ -696,8 +698,9 @@ ec_portray(N,Term):- N=0, pprint_ec_no_newline(white, Term).
 
 pprint_ec_no_newline(C, P):-
   print_e_to_string(P, S),
-  to_ansi(C, C0), ansi_format(C0, '~s', [S]),
-  flush_output.
+  to_ansi(C, C0),
+  real_ansi_format(C0, '~s', [S]).
+  
 
 print_e_to_string(P, S):- 
    get_operators(P, Ops),
@@ -788,27 +791,7 @@ remove_blanks([E|I], O):- string(E), normalize_space(string(EE), E), E\==EE, !, 
 remove_blanks([E|I], O):- atom(E), normalize_space(atom(EE), E), E\==EE, !, remove_blanks([EE|I], O).
 remove_blanks([E|I], O):- to_atomic_value(E, EE), E\==EE, !, remove_blanks([EE|I], O).
 remove_blanks([E|I], [E|O]):- remove_blanks(I, O).
-%process_e_stream_token(Why, Sort, S):- read_tokens_til_eol(S, ' ', Value), ec_on_read(Why, t(Sort, Value)).
-%process_e_stream_token(Why, reified, " sort", S):- read_tokens_til_eol(S, Value), ec_on_read(Why, reified_sort(Value)).
 
-/*
-*/
-read_tokens_til_eol(S, Splitter, Value):-
-  trim_off_whitepace(S), !, read_line_to_string_echo(S, String), 
-   text_to_string(String, SS), 
-   subsplit(Splitter, SS, Value).
-
-subsplit([], String, Value):- to_atomic_value(String, Value).
-subsplit([A|B], String, Value):-  
-   normalize_space(string(SS), String), 
-   atomic_list_concat(ValueS, A, SS), 
-   maplist(subsplit(B), ValueS, Value).
-
-
-subsplit(SS, Splitter, Value):- 
-   atomic_list_concat(ValueA, Splitter, SS), 
-   maplist(to_atomic_value, ValueA, Value).%, ec_on_read(Why, option(List)).
-   %atomics_to_string(['[', SS, ']'], ' ', NewList), e_from_atom(NewList, Value).
 
 to_atomic_value(A, N):- number(A), !, N=A.
 to_atomic_value(A, N):- normalize_space(atom(S), A), S\==A, !, to_atomic_value(S, N).
@@ -831,31 +814,43 @@ char_type_inverse(Type, Spec, Code):- char_type(Code, Spec), Type=Spec.
 
 read_stream_until_true(S, Buffer, Pred, Buffer):- at_end_of_stream(S), !, ignore(call(Pred, 10)).
 read_stream_until_true(S, Buffer, Pred, Codes):- get_code(S, Char), 
-  (nb_current(e_echo,nil) -> true; put(Char)),
+  (nb_current(e_echo,nil) -> true; put_out(Char)),
   (call(Pred, Char) -> notrace(append(Buffer, [Char], Codes)) ; 
   (notrace(append(Buffer, [Char], NextBuffer)), read_stream_until_true(S, NextBuffer, Pred, Codes))).
-  
-
 
 
 % in_space_cmt(Goal):- call_cleanup(prepend_each_line(' % ', Goal), echo_format('~N', [])).
 in_space_cmt(Goal):- setup_call_cleanup(echo_format('~N /*~n', []), Goal, echo_format('~N*/~n', [])).
 
 
-echo_till_eol(S):- read_line_to_string(S, String), echo_format('~s~n', [String]).
-
-read_line_to_string_echo(S, String):- read_line_to_string(S, String), echo_format('~s',String).
+read_line_to_string_echo(S, String):- read_line_to_string(S, String), real_ansi_format([bold, hfg(black)], '~s~n',[String]).
   
 echo_flush:- flush_output.
 :- export(echo_format/1).
-echo_format(S):- echo_flush, echo_format(S,[]).
+echo_format(S):- echo_flush, echo_format(S, []).
 :- export(echo_format/2).
 echo_format(_Fmt, _Args):- t_l:block_comment_mode(Was), Was==invisible, !.
-echo_format(Fmt, Args):- t_l:block_comment_mode(_), t_l:echo_mode(echo_file), !, format(Fmt, Args), flush_output.
-echo_format(Fmt, Args):- t_l:echo_mode(echo_file), !, format(Fmt, Args), flush_output.
+echo_format(Fmt, Args):- t_l:block_comment_mode(_), t_l:echo_mode(echo_file), !, real_format(Fmt, Args), flush_output.
+echo_format(Fmt, Args):- t_l:echo_mode(echo_file), !, real_format(Fmt, Args), flush_output.
 echo_format(_Fmt, _Args):- t_l:echo_mode(skip(_)), !.
-echo_format(Fmt, Args):- format(Fmt, Args), flush_output, !.
+echo_format(Fmt, Args):- real_format(Fmt, Args), flush_output, !.
 %echo_format(_Fmt, _Args).
+
+is_outputing_to_file:- 
+  current_output(S),
+  stream_property(S,file_name(_)).
+
+put_out(Char):- put(Char),
+  (is_outputing_to_file-> put(user_error,Char);true).
+
+real_format(Fmt, Args):- 
+  (is_outputing_to_file -> with_output_to(user_error, (ansi_format([hfg(magenta)], Fmt, Args),flush_output)) ; true),
+  format(Fmt, Args),!.
+   
+  
+real_ansi_format(Ansi, Fmt, Args) :-  
+   (is_outputing_to_file -> format(Fmt, Args) ; true),
+   with_output_to(user_error,(ansi_format(Ansi, Fmt, Args),flush_output)).
 
 
 /*

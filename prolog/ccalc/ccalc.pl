@@ -69,7 +69,9 @@ loadf(Files) :-
    common_statistics(_),
 
    read_file(Files), 
+   loadf_Files2, !.
 
+loadf_Files2:- 
    instantiate_sorts,   % construct domain/2, which is a database of 
                         %  sort vs ground instances 
    ( show_spec(S) 
@@ -1791,6 +1793,9 @@ process_include1(A) :-
 %% process_show
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+show_all :-
+  forall(valid_show_spec(B), process_show(B)).
+
 process_show(B) :-
    retractall(show_spec(_)),
    process_show_internal(B).
@@ -1838,7 +1843,8 @@ valid_show_spec(negative).
 valid_show_spec(all).
 valid_show_spec(ab).
 valid_show_spec(none).
-valid_show_spec(Term) :- 
+valid_show_spec(Term) :- \+ callable(Term), !, fail.
+valid_show_spec(Term) :-
 	functor(Term,_F,_N).
 valid_show_spec(-Term) :- 
 	functor(Term,_F,_N).
@@ -1959,7 +1965,7 @@ check_bounds(T1,T2,Label) :-
            -> fatal_error("In query ~w, the upper bound for maxstep must be at least large as the lower bound ",[Label])
          ; true)
       ; ( T2 \== 'infinity' 
-          -> fatal_errort("In query ~w, the upper bound for maxstep must be a nonnegative integer or infinity.~n",[Label]) 
+          -> fatal_error("In query ~w, the upper bound for maxstep must be a nonnegative integer or infinity.~n",[Label]) 
         ; true))).
 
 
@@ -3338,7 +3344,8 @@ make_quantified_formula(Formula,[],Formula).
 % used in macro expansion 
 %^ by additive fluent in 'by' clause
 %^ doesn't work for now
-decode_by(A,Val,CVs,T) :-
+decode_by(A,Val,CVs,T) :- trace, decode_by_1(A,Val,CVs,T).
+decode_by_1(A,Val,CVs,T) :-
    ( is_constant(A) 
      -> unfold_nested_constants_inside(A,Val,[],CVList,T)
    ; (expr(A); is_constant(A) ; test(A))
@@ -4166,9 +4173,9 @@ set(Term,Value) :-
      Value1 = Value
    ; member(Term,[timed,verbose,compact,optimize,eliminate_tautologies,file_io,
 		  debug])
-     -> ( member(Value,[on,yes,y,true])
+     -> ( member(Value,[on,yes,y,true,t])
 	  -> Value1 = true
-	; member(Value,[off,no,n,false])
+	; member(Value,[off,no,n,false,f,[],nil])
 	  -> Value1 = false
 	; format("Error: value must be 'true' or 'false' for option \'~w\'.~n",
 		 [Term]),
@@ -4626,7 +4633,7 @@ check_compact_ans(Ans) :-
 % The user level query and planning procedures.
 % - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -%
 
-output :- extract_info("SAT",M,_,_), show_models(M,sat).
+output :- extract_info("SAT",M,_,_,_DMIKLESTODO1,_DMIKLESTODO2,_DMIKLESTODO3), show_models(M,sat).
 
 % sat/0 tests the causal theory for satisfiability.  No facts are used.
 sat :-
@@ -6210,11 +6217,11 @@ replace_comma_with_and((A,As),(A & Bs)) :-
 replace_comma_with_and(A,A).
 
 % list to tuple: also conjoin one more level deep
+*/
 replace_comma_with_and_1([],true).
 replace_comma_with_and_1([A|As],(B & Bs)) :-
    conjoin_tuple(A,B),
    replace_comma_with_and_1(As,Bs). 
-*/
    
 conjoin_tuple((A,As),Wff) :-
    conjoin_tuple(As,Wff1),
@@ -7120,6 +7127,7 @@ show_atoms.
 show_problems :- show_problem(_).
 
 show_problem(Label) :-
+ % dmiles - TODO (define)
 	show_plan(Label),
 	fail.
 show_problem(Label) :-

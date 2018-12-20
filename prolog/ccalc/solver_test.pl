@@ -1,3 +1,6 @@
+
+:- ensure_loaded(ccalc).
+
 solver_test :-
    initialize,
    format("Testing all SAT solvers and utility programs.~n~n",[]),

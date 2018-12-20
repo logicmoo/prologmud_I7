@@ -17,14 +17,7 @@
 % =========================================
 % Goal/Plan translating
 % =========================================
-:- module(ec_loader,[load_e/1, needs_proccess/2,process_ec/2, 
-          op(1200,xfx,'<-'),op(1200,xfx,'<->'),
-          op(900, fx, '!'),
-          op(999, xfy, '&'),
-          op(1050, xfy, '->'),
-          op(1100, xfy, '|'),
-          op(1150, xfy, 'quantz'),
-          op(1025, xfy, 'thereExists')]).
+:- module(ec_loader,[load_e/1, needs_proccess/2,process_ec/2]).
 
 :- reexport(library('ec_planner/ec_planner_dmiles')).
 :- reexport(library('ec_planner/ec_reader')).
@@ -40,7 +33,8 @@ e_reader_teste2:-
        ( happens(order(waiterOf(Restaurant),
                       cookOf(Restaurant),
                       Food),
-                Time))),O),pprint_ecp(e,O).
+                Time))),O),
+     pprint_ecp(e,O).
 
 :- export(e_reader_testec/0).
 e_reader_testec:- with_e_sample_tests(load_e_pl).
@@ -141,12 +135,12 @@ axiom(
  
 */
 functors_are(F,E):- \+ is_list(E), conjuncts_to_list(E, L), !, functors_are(F, L).
-functors_are(\+ F,P):-  nonvar(F), !, forall(member(E,P), \+ functor_is(F,P)).
-functors_are((F1,F2),P):- !,  
-  partition(functors_are(F1),P,[_|_],RestOf),
+functors_are(\+ F,L):-  nonvar(F), !, forall(member(E,L), \+ functor_is(F, E)).
+functors_are((F1,F2),L):- !,  
+  partition(functors_are(F1),L,[_|_],RestOf),
   functors_are(F2,RestOf).
-%functors_are((F1;F2),P):-  !, nonvar(F1), (functors_are(F1,P);functors_are(F2,P)).
-functors_are(F,P):- maplist(functor_is(F),P).
+%functors_are((F1;F2),L):-  !, nonvar(F1), (functors_are(F1,L);functors_are(F2,L)).
+functors_are(F,L):- maplist(functor_is(F),L).
 
 
 functor_is(F, not(E)):- !, compound(E), functor_is(F, E).
@@ -164,8 +158,26 @@ assert_ele(SS):- is_list(SS),!,maplist(assert_ele,SS).
 %assert_ele(SS):- syntx_term_check(SS),!.
 assert_ele(ec_current_domain_db(P,_TMI_)):- !, assert_ele(P).
 assert_ele(ec_axiom(H,B,_TMI_)):- !,  assert_axiom(H,B).
+
+assert_ele((H,B)):-  !,  assert_m_axiom((H,B),[]).
+assert_ele((H;B)):-  !,  assert_m_axiom((H;B),[]).
+assert_ele(not(H)):-  !,  assert_m_axiom(not(H),[]).
+assert_ele(happens(H,T)):-  !,  assert_m_axiom(happens(H,T),[]).
+assert_ele(EffectAx):- EffectAx=..[Effect|_],
+  member(Effect,[initiates,terminates,releases]),
+  assert_m_axiom(EffectAx,[]).
+
+
+assert_ele(axiom(H,B)):- echo_format('~N'), !,
+  pprint_ecp(pl, axiom(H,B)).
 assert_ele(SS):- echo_format('~N'), 
-  pprint_ecp(pl, SS).
+  pprint_ecp(ec, SS).
+
+
+
+assert_m_axiom(X,Y):- clausify(X,X0), trace, assert_axiom(X0,Y).
+
+
 
 assert_axiom(Conds, [happens(A,T)]):-
    conjuncts_to_list(Conds, B ), 
@@ -179,10 +191,6 @@ assert_axiom(EffectAx, B):-
   EffectAx=..[Effect,Event,Fluent,T],
   member(Effect,[initiates,terminates,releases]),
   assert_effect(Effect,Event,Fluent,T,B).
-
-assert_axiom(happens(A,T), B):- 
-  is_list(B), member(holds_at(_,_), B), !,
-  assert_axiom(requires(A,T),B).
 /*
 assert_axiom((A1,A2), B):- 
   assert_axiom(A1, [possible(A2)|B]),
@@ -210,6 +218,253 @@ assert_effect(Effect,Event,Fluent,T,B):-
 :- export(ect/0).
 ect:- load_e('examples/FrankEtAl2003/Story1.e').
 
+/* In addition:
+
+   all(X,P)     denotes "for all X, P holds"
+   exists(X,P)  denotes "there is an X such that P holds"
+
+   For both of these X must be a PROLOG VARIABLE
+   (note that this diverges from what Clocksin & Mellishs program requires)
+*/
+
+/* The main procedure */
+
+clausify(X,Y) :-
+   implout(X,X1),
+   negin(X1,X2),
+   skolem(X2,X3,[]),
+   univout(X3,X4),
+   conjn(X4,X5),
+   clauses(X5,Y,0,_),
+   %toclauses(X5,_Y,[]),
+   !.
+
+/* Removing Implications */
+
+implout((P <-> Q),((P11 , Q11) ; (not(P1) , not(Q1)))) :- !,
+   implout(P,P11), rename_vars(P11,P1,[]), implout(Q,Q11),
+   rename_vars(Q11,Q1,[]).
+implout((P -> Q),(not(P1) , Q1)) :- !,
+   implout(P,P1), implout(Q,Q1).
+implout(all(X,P),all(X,P1)) :- !,
+   implout(P,P1).
+implout(exists(X,P),exists(X,P1)) :- !,
+   implout(P,P1).
+implout((P , Q),(P1 , Q1)) :- !,
+   implout(P,P1), implout(Q,Q1).
+implout((P ; Q),(P1 ; Q1)) :- !,
+   implout(P,P1), implout(Q,Q1).
+implout(not(P),not(P1)) :- !,
+   implout(P,P1).
+implout(P,P).
+
+/* Moving negation inwards */
+
+negin(not(P),P1) :- !, neg(P,P1).
+negin(all(X,P),all(X,P1)) :- !, negin(P,P1).
+negin(exists(X,P), exists(X,P1)) :- !, negin(P,P1).
+negin((P , Q),(P1 , Q1)) :- !, negin(P,P1), negin(Q,Q1).
+negin((P ; Q),(P1 ; Q1)) :- !, negin(P,P1), negin(Q,Q1).
+negin(P,P).
+
+neg(not(P),P1) :- !, negin(P,P1).
+neg(all(X,P),exists(X,P1)) :- !, neg(P,P1).
+neg(exists(X,P),all(X,P1)) :- !, neg(P,P1).
+neg((P , Q),(P1 ; Q1)) :- !, neg(P,P1), neg(Q,Q1).
+neg((P ; Q),(P1 , Q1)) :- !, neg(P,P1), neg(Q,Q1).
+neg(P,not(P)).
+
+/* Skolemising */
+
+skolem(all(X,P),all(X,P1),Vars) :- !,
+   var(X),
+   skolem(P,P1,[X|Vars]).
+skolem(exists(X,P),P1,Vars) :- !,
+   var(X),
+   gensym(f,F),
+   X =.. [F|Vars],
+   skolem(P,P1,Vars).
+skolem((P , Q),(P1 , Q1),Vars) :- !,
+   skolem(P,P1,Vars), skolem(Q,Q1,Vars).
+skolem((P ; Q),(P1 ; Q1),Vars) :- !,
+   skolem(P,P1,Vars), skolem(Q,Q1,Vars).
+skolem(P,P,_).
+
+/* Mo;ing uni;ersal quantifiers outwards */
+
+univout(all(_X,P),P1) :- !, univout(P,P1).
+univout((P , Q),(P1 , Q1)) :- !,
+   univout(P,P1), univout(Q,Q1).
+univout((P ; Q),(P1 ; Q1)) :- !,
+   univout(P,P1), univout(Q,Q1).
+univout(P,P).
+
+/* Distributing and over or */
+
+conjn((P ; Q),R) :- !,
+   conjn(P,P1), conjn(Q,Q1),
+   conjn1((P1 ; Q1),R).
+conjn((P , Q),(P1 , Q1)) :- !,
+   conjn(P,P1), conjn(Q,Q1).
+conjn(P,P).
+
+conjn1(((P , Q) ; R),(P1 , Q1)) :- !,
+   conjn((P ; R),P1), conjn((Q ; R),Q1).
+conjn1((P ; (Q , R)),(P1 , Q1)) :- !,
+/*   conjn((P ; Q),P1), conjn((P1 ; R),Q1). */
+   conjn((P ; Q),P1), conjn((P ; R),Q1).
+conjn1(P,P).
+
+/* Putting into clauses */
+
+toclauses((P , Q),C1,C2) :- !,
+   toclauses(P,C1,C3), toclauses(Q,C3,C2).
+toclauses(P,[fact(C)|Cs],Cs) :- inclause(P,C,[]), !.
+toclauses(_P,C,C).
+
+inclause((P ; Q),A,A1) :- !,
+   inclause(P,A2,A1), inclause(Q,A,A2).
+inclause(not(P),A1,A) :- !,
+   notin(P,A), putin(not(P),A,A1).
+inclause(P,A1,A) :- !,
+   notin(not(P),A), putin(P,A,A1).
+
+
+list_union([X|L1],L2,L3) :-
+	identical_member(X,L2),
+	!,
+	list_union(L1,L2,L3).
+list_union([X|L1],L2,[X|L3]) :-
+	list_union(L1,L2,L3).
+list_union([],L,L).
+
+
+clauses((A , B),L,WffNum1,WffNum2) :-
+	!,
+	clauses(A,L1,WffNum1,W),
+	clauses(B,L2,W,WffNum2),
+	conjoin(L1,L2,L).
+
+clauses(NNF,L,WffNum1,WffNum2):- 
+   %save_wid(WffNum1,pttp_in,PNF),
+   %once(pttp_nnf(PNF,OUT)),
+   %save_wid(WffNum1,pttp_nnf,OUT),
+   clauses1(NNF,L,WffNum1,WffNum2).
+
+
+clauses1(A,L,WffNum1,WffNum2) :-
+	write_clause_with_number(A,WffNum1),
+	head_literals(A,Lits),
+	clauses2(A,Lits,L,WffNum1),
+	WffNum2 is  WffNum1 + 1.
+
+clauses2(A,[Lit|Lits],L,WffNum) :-
+	body_for_head_literal(Lit,A,Body1),
+	(Body1 == false ->
+		L = true;
+	%true ->
+		conjoin(infer_by(WffNum),Body1,Body),
+		clauses2(A,Lits,L1,WffNum),
+		conjoin((Lit :- Body),L1,L)).
+clauses2(_,[],true,_).
+
+head_literals(Wff,L) :-
+	Wff = (A :- _B) ->	% contrapositives not made for A :- ... inputs
+		head_literals(A,L);
+	Wff = (A , B) ->
+		(head_literals(A,L1),
+		 head_literals(B,L2),
+		 list_union(L1,L2,L));
+	Wff = (A ; B) ->
+		(head_literals(A,L1),
+		 head_literals(B,L2),
+		 list_union(L1,L2,L));
+	%true ->
+		L = [Wff].
+
+body_for_head_literal(Head,Wff,Body) :-
+	Wff = (A :- B) ->
+		(body_for_head_literal(Head,A,A1),
+		 conjoin(A1,B,Body));
+	Wff = (A , B) ->
+		(body_for_head_literal(Head,A,A1),
+		 body_for_head_literal(Head,B,B1),
+		 pttp_disjoin(A1,B1,Body));
+	Wff = (A ; B) ->
+		(body_for_head_literal(Head,A,A1),
+		 body_for_head_literal(Head,B,B1),
+		 conjoin(A1,B1,Body));
+	Wff == Head ->
+		Body = true;
+	(once(negated_literal(Wff,Was)),Head=@=Was) ->
+		Body = false;
+	%true ->
+		negated_literal(Wff,Body).
+
+negated_literal(Lit,not(Lit)).
+
+pttp_disjoin(A,B,C) :-
+	A == true ->
+		C = true;
+	B == true ->
+		C = true;
+	A == false ->
+		C = B;
+	B == false ->
+		C = A;
+	%true ->
+		C = (A ; B).
+
+write_clause_with_number(A,WffNum) :-
+	nl,
+	write_indent_for_number(WffNum),
+	write(WffNum),
+	write('  '),
+        copy_term(A,AA),
+        numbervars(AA,0,_,[attvar(bind),singletons(true)]),
+	write(AA),
+	write(.).
+
+write_indent_for_number(N) :-
+	((number(N) , N <  100) -> write(' ') ; true),
+	((number(N) , N <   10) -> write(' ') ; true).
+
+
+identical_member(E,L):- member(EE,L),EE==E.
+
+notin(X,[Y|_]) :- X == Y, !, fail.
+notin(X,[_|L]) :- !, notin(X,L).
+notin(_,[]).
+
+putin(X,[],[X]) :- !.
+putin(X,[Y|L],L) :- X == Y, !.
+putin(X,[Y|L],[Y|L1]) :- putin(X,L,L1).
+
+%;;; Renaming variables, when a quantified proposition is split into
+%;;; two. This avoids nasty problems where the same variable is both
+%;;; existentially and uni;ersally quantified over.
+
+rename_vars(X,Y,Assocs) :- var(X), !, assoc(X,Y,Assocs).
+rename_vars(X,X,_) :- atomic(X), !.
+rename_vars(all(X,Y),all(X1,Y1),Ass) :- !,
+   rename_vars(Y,Y1,[[X|X1]|Ass]).
+rename_vars(exists(X,Y),exists(X1,Y1),Ass) :- !,
+   rename_vars(Y,Y1,[[X|X1]|Ass]).
+rename_vars(X,Y,Ass) :-
+   functor(X,F,N), functor(Y,F,N),
+   rename_vars_args(N,X,Y,Ass).
+
+rename_vars_args(0,_,_,_) :- !.
+rename_vars_args(N,X,Y,Ass) :-
+   arg(N,X,X1), arg(N,Y,Y1),
+   rename_vars(X1,Y1,Ass),
+   N1 is N - 1, rename_vars_args(N1,X,Y,Ass).
+
+assoc(X,Y,[]) :- !, X=Y.
+assoc(X,Y,[[X1|Y1]|_]) :- X == X1, !, Y=Y1.
+assoc(X,Y,[_|L]) :- assoc(X,Y,L).
+
+
 
 
 fix_goal_add_on_arg(T, G, G0, [b(T,T2),b(T2,end)]):- G =.. [F,A], already_good(F,2), G0 =.. [F,A,T].%, next_t(T,T2).
@@ -235,6 +490,7 @@ fix_goal(T, G, [holds_at(G, T)]).
 
 ec_to_ax(_, X,Y):-  (\+ callable(X) ; \+ compound(X)), !, X=Y.
 ec_to_ax(T, (Pre -> '<->'(HB,BH)), HBO):- ec_to_ax(T, ('<->'((Pre,HB),(Pre,BH))), HBO).
+ec_to_ax(T, (Pre ; '->'(HB,BH)), HBO):- ec_to_ax(T, '->'((Pre ; HB),BH), HBO).
 ec_to_ax(T, (H<-B),O):- !, into_axiom(T,H,B,O).
 ec_to_ax(T, (B->H),O):- !, into_axiom(T,H,B,O).
 ec_to_ax(T, (HB1<->HB2),[A,B]):- !, ec_to_ax(T, (HB1->HB2),A),ec_to_ax(T, (HB1<-HB2),B).

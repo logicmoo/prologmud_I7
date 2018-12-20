@@ -1,6 +1,6 @@
 
 :-include(library('ec_planner/ec_test_incl')).
-% loading('ecnet/Diving.e')
+% 
 %;
 %; Copyright (c) 2005 IBM Corporation and others.
 %; All rights reserved. This program and the accompanying materials
@@ -17,113 +17,113 @@
 % 
 % sort object
  /*
-sort(object).
+.
 */
-sort(object).
+.
 
 % sort agent: object
  /*
-subsort(agent,object).
+.
 */
-subsort(agent,object).
-sort(agent).
-sort(object).
+.
+.
+.
 
 % sort diver: agent
  /*
-subsort(diver,agent).
+.
 */
-subsort(diver,agent).
-sort(diver).
-sort(agent).
+.
+.
+.
 
 % sort depth: integer
  /*
-subsort(depth,integer).
+.
 */
-subsort(depth,integer).
-sort(depth).
-sort(integer).
+.
+.
+.
 
 % sort boat: object
  /*
-subsort(boat,object).
+.
 */
-subsort(boat,object).
-sort(boat).
-sort(object).
+.
+.
+.
 
 % ecnet/Diving.e:19
 % 
 %; reference line, anchor line, shotline, SMB line, ...
 % sort line: object
  /*
-subsort(line,object).
+.
 */
-subsort(line,object).
-sort(line).
-sort(object).
+.
+.
+.
 
 % 
 % sort equipment: object
  /*
-subsort(equipment,object).
+.
 */
-subsort(equipment,object).
-sort(equipment).
-sort(object).
+.
+.
+.
 
 % sort weight: equipment
  /*
-subsort(weight,equipment).
+.
 */
-subsort(weight,equipment).
-sort(weight).
-sort(equipment).
+.
+.
+.
 
 % ecnet/Diving.e:25
 % sort fin: equipment
  /*
-subsort(fin,equipment).
+.
 */
-subsort(fin,equipment).
-sort(fin).
-sort(equipment).
+.
+.
+.
 
 % sort airtank: equipment
  /*
-subsort(airtank,equipment).
+.
 */
-subsort(airtank,equipment).
-sort(airtank).
-sort(equipment).
+.
+.
+.
 
 % 
 %; buoyancy compensator (BC)
 %; buoyancy control device (BCD)
 % sort computer: equipment
  /*
-subsort(computer,equipment).
+.
 */
-subsort(computer,equipment).
-sort(computer).
-sort(equipment).
+.
+.
+.
 
 % ecnet/Diving.e:31
 % sort bc: equipment
  /*
-subsort(bc,equipment).
+.
 */
-subsort(bc,equipment).
-sort(bc).
-sort(equipment).
+.
+.
+.
 
 % 
 % fluent AtDepth(object,depth)
  /*
-fluent(atDepth(object,depth)).
+.
 */
-fluent(atDepth(object,depth)).
+.
 
 % 
 % ecnet/Diving.e:35
@@ -135,26 +135,23 @@ fluent(atDepth(object,depth)).
 holds_at(atDepth(Object, Depth1), Time), holds_at(atDepth(Object, Depth2), Time) ->
     Depth1=Depth2.
 */
-axiom(equals(Depth1,Depth2),
-      [ holds_at(atDepth(Object,Depth1),Time),
-	holds_at(atDepth(Object,Depth2),Time)
-      ]).
+.
 
 % 
 % 
 % event Ascend(diver,depth)
  /*
-event(ascend(diver,depth)).
+.
 */
-event(ascend(diver,depth)).
+.
 
 % ecnet/Diving.e:41
 % 
 % event Descend(diver,depth)
  /*
-event(descend(diver,depth)).
+.
 */
-event(descend(diver,depth)).
+.
 
 % 
 % ecnet/Diving.e:44
@@ -166,10 +163,7 @@ event(descend(diver,depth)).
 holds_at(atDepth(Diver, Depth1), Time), happens(descend(Diver, Depth2), Time) ->
     Depth2>Depth1.
 */
-axiom(Depth2 > Depth1,
-      [ holds_at(atDepth(Diver,Depth1),Time),
-	happens(descend(Diver,Depth2),Time)
-      ]).
+.
 
 % 
 % 
@@ -182,10 +176,7 @@ axiom(Depth2 > Depth1,
 holds_at(atDepth(Diver, Depth1), Time), happens(ascend(Diver, Depth2), Time) ->
     Depth2<Depth1.
 */
-axiom(Depth2 < Depth1,
-      [ holds_at(atDepth(Diver,Depth1),Time),
-	happens(ascend(Diver,Depth2),Time)
-      ]).
+.
 
 % 
 % 
@@ -193,14 +184,9 @@ axiom(Depth2 < Depth1,
 % [diver,depth,time]% 
 % Initiates(Descend(diver,depth),AtDepth(diver,depth),time).
  /*
-initiates(descend(Diver,Depth),
-	  atDepth(Diver,Depth),
-	  Time).
+.
 */
-axiom(initiates(descend(Diver,Depth),
-		atDepth(Diver,Depth),
-		Time),
-      []).
+.
 
 % 
 % 
@@ -214,10 +200,7 @@ holds_at(atDepth(Diver, Depth1), Time) ->
                atDepth(Diver, Depth1),
                Time).
 */
-axiom(terminates(descend(Diver,Depth2),
-		 atDepth(Diver,Depth1),
-		 Time),
-      [holds_at(atDepth(Diver,Depth1),Time)]).
+.
 
 % 
 % 
@@ -225,14 +208,9 @@ axiom(terminates(descend(Diver,Depth2),
 % [diver,depth,time]% 
 % Initiates(Ascend(diver,depth),AtDepth(diver,depth),time).
  /*
-initiates(ascend(Diver,Depth),
-	  atDepth(Diver,Depth),
-	  Time).
+.
 */
-axiom(initiates(ascend(Diver,Depth),
-		atDepth(Diver,Depth),
-		Time),
-      []).
+.
 
 % 
 % 
@@ -246,54 +224,46 @@ holds_at(atDepth(Diver, Depth1), Time) ->
                atDepth(Diver, Depth1),
                Time).
 */
-axiom(terminates(ascend(Diver,Depth2),
-		 atDepth(Diver,Depth1),
-		 Time),
-      [holds_at(atDepth(Diver,Depth1),Time)]).
+.
 
 % 
 % 
 % fluent Wearing(diver,equipment)
  /*
-fluent(wearing(diver,equipment)).
+.
 */
-fluent(wearing(diver,equipment)).
+.
 
 % 
 % ecnet/Diving.e:70
 % event PutOn(diver,equipment)
  /*
-event(putOn(diver,equipment)).
+.
 */
-event(putOn(diver,equipment)).
+.
 
 % 
 % event TakeOff(diver,equipment)
  /*
-event(takeOff(diver,equipment)).
+.
 */
-event(takeOff(diver,equipment)).
+.
 
 % 
 % event Lose(diver,equipment)
  /*
-event(lose(diver,equipment)).
+.
 */
-event(lose(diver,equipment)).
+.
 
 % 
 % ecnet/Diving.e:76
 % [diver,equipment,depth,time]% 
 % Releases(PutOn(diver,equipment),AtDepth(equipment,depth),time).
  /*
-releases(putOn(Diver,Equipment),
-	 atDepth(Equipment,Depth),
-	 Time).
+.
 */
-axiom(releases(putOn(Diver,Equipment),
-	       atDepth(Equipment,Depth),
-	       Time),
-      []).
+.
 
 % 
 % 
@@ -301,14 +271,9 @@ axiom(releases(putOn(Diver,Equipment),
 % [diver,equipment,time]% 
 % Releases(PutOn(diver,equipment),UnderWater(equipment),time).
  /*
-releases(putOn(Diver,Equipment),
-	 underWater(Equipment),
-	 Time).
+.
 */
-axiom(releases(putOn(Diver,Equipment),
-	       underWater(Equipment),
-	       Time),
-      []).
+.
 
 % 
 % 
@@ -321,8 +286,7 @@ happens(putOn(Diver, Equipment), Time) ->
     not(exists([Diver1],
                holds_at(wearing(Diver1, Equipment), Time))).
 */
-axiom(requires(putOn(Diver,Equipment),Time),
-      [holds_at(neg(wearing(Diver1,Equipment)),Time)]).
+.
 
 % 
 % 
@@ -336,14 +300,8 @@ holds_at(wearing(Diver, Equipment), Time) ->
     ( holds_at(atDepth(Diver, Depth), Time)<->holds_at(atDepth(Equipment, Depth), Time)
     ).
 */
-axiom(holds_at(wearing(Diver,Equipment),Time) ',' holds_at(atDepth(Equipment,Depth),Time),
-      [ holds_at(wearing(Diver,Equipment),Time),
-	holds_at(atDepth(Diver,Depth),Time)
-      ]).
-axiom(holds_at(wearing(Diver,Equipment),Time) ',' holds_at(atDepth(Diver,Depth),Time),
-      [ holds_at(wearing(Diver,Equipment),Time),
-	holds_at(atDepth(Equipment,Depth),Time)
-      ]).
+.
+.
 
 % 
 % 
@@ -357,14 +315,8 @@ holds_at(holding(Diver, Object), Time) ->
     ( holds_at(atDepth(Diver, Depth), Time)<->holds_at(atDepth(Object, Depth), Time)
     ).
 */
-axiom(holds_at(holding(Diver,Object),Time) ',' holds_at(atDepth(Object,Depth),Time),
-      [ holds_at(holding(Diver,Object),Time),
-	holds_at(atDepth(Diver,Depth),Time)
-      ]).
-axiom(holds_at(holding(Diver,Object),Time) ',' holds_at(atDepth(Diver,Depth),Time),
-      [ holds_at(holding(Diver,Object),Time),
-	holds_at(atDepth(Object,Depth),Time)
-      ]).
+.
+.
 
 % 
 % 
@@ -378,14 +330,8 @@ holds_at(wearing(Diver, Equipment), Time) ->
     ( holds_at(underWater(Diver), Time)<->holds_at(underWater(Equipment), Time)
     ).
 */
-axiom(holds_at(wearing(Diver,Equipment),Time) ',' holds_at(underWater(Equipment),Time),
-      [ holds_at(wearing(Diver,Equipment),Time),
-	holds_at(underWater(Diver),Time)
-      ]).
-axiom(holds_at(wearing(Diver,Equipment),Time) ',' holds_at(underWater(Diver),Time),
-      [ holds_at(wearing(Diver,Equipment),Time),
-	holds_at(underWater(Equipment),Time)
-      ]).
+.
+.
 
 % 
 % 
@@ -399,14 +345,8 @@ holds_at(holding(Diver, Object), Time) ->
     ( holds_at(underWater(Diver), Time)<->holds_at(underWater(Object), Time)
     ).
 */
-axiom(holds_at(holding(Diver,Object),Time) ',' holds_at(underWater(Object),Time),
-      [ holds_at(holding(Diver,Object),Time),
-	holds_at(underWater(Diver),Time)
-      ]).
-axiom(holds_at(holding(Diver,Object),Time) ',' holds_at(underWater(Diver),Time),
-      [ holds_at(holding(Diver,Object),Time),
-	holds_at(underWater(Object),Time)
-      ]).
+.
+.
 
 % 
 % 
@@ -421,12 +361,7 @@ holds_at(atDepth(Diver, Depth), Time), holds_at(wearing(Diver, Equipment), Time)
               atDepth(Equipment, Depth),
               Time).
 */
-axiom(initiates(takeOff(Diver,Equipment),
-		atDepth(Equipment,Depth),
-		Time),
-      [ holds_at(atDepth(Diver,Depth),Time),
-	holds_at(wearing(Diver,Equipment),Time)
-      ]).
+.
 
 % 
 % 
@@ -441,12 +376,7 @@ not(holds_at(atDepth(Diver, Depth), Time)), holds_at(wearing(Diver, Equipment), 
                atDepth(Equipment, Depth),
                Time).
 */
-axiom(terminates(takeOff(Diver,Equipment),
-		 atDepth(Equipment,Depth),
-		 Time),
-      [ holds_at(neg(atDepth(Diver,Depth)),Time),
-	holds_at(wearing(Diver,Equipment),Time)
-      ]).
+.
 
 % 
 % 
@@ -460,10 +390,7 @@ holds_at(underWater(Diver), Time) ->
               underWater(Equipment),
               Time).
 */
-axiom(initiates(takeOff(Diver,Equipment),
-		underWater(Equipment),
-		Time),
-      [holds_at(underWater(Diver),Time)]).
+.
 
 % 
 % 
@@ -477,10 +404,7 @@ not(holds_at(underWater(Diver), Time)) ->
                underWater(Equipment),
                Time).
 */
-axiom(terminates(takeOff(Diver,Equipment),
-		 underWater(Equipment),
-		 Time),
-      [holds_at(neg(underWater(Diver)),Time)]).
+.
 
 % 
 % 
@@ -495,12 +419,7 @@ holds_at(atDepth(Diver, Depth), Time), holds_at(wearing(Diver, Equipment), Time)
               atDepth(Equipment, Depth),
               Time).
 */
-axiom(initiates(lose(Diver,Equipment),
-		atDepth(Equipment,Depth),
-		Time),
-      [ holds_at(atDepth(Diver,Depth),Time),
-	holds_at(wearing(Diver,Equipment),Time)
-      ]).
+.
 
 % 
 % 
@@ -515,12 +434,7 @@ not(holds_at(atDepth(Diver, Depth), Time)), holds_at(wearing(Diver, Equipment), 
                atDepth(Equipment, Depth),
                Time).
 */
-axiom(terminates(lose(Diver,Equipment),
-		 atDepth(Equipment,Depth),
-		 Time),
-      [ holds_at(neg(atDepth(Diver,Depth)),Time),
-	holds_at(wearing(Diver,Equipment),Time)
-      ]).
+.
 
 % 
 % 
@@ -534,10 +448,7 @@ holds_at(underWater(Diver), Time) ->
               underWater(Equipment),
               Time).
 */
-axiom(initiates(lose(Diver,Equipment),
-		underWater(Equipment),
-		Time),
-      [holds_at(underWater(Diver),Time)]).
+.
 
 % 
 % 
@@ -551,18 +462,15 @@ not(holds_at(underWater(Diver), Time)) ->
                underWater(Equipment),
                Time).
 */
-axiom(terminates(lose(Diver,Equipment),
-		 underWater(Equipment),
-		 Time),
-      [holds_at(neg(underWater(Diver)),Time)]).
+.
 
 % 
 % 
 % fluent Holding(diver,object)
  /*
-fluent(holding(diver,object)).
+.
 */
-fluent(holding(diver,object)).
+.
 
 % 
 % ecnet/Diving.e:144
@@ -573,38 +481,32 @@ fluent(holding(diver,object)).
 holds_at(holding(Diver1, Diver2), Time) ->
     not(holds_at(holding(Diver2, Diver1), Time)).
 */
-axiom(holds_at(neg(holding(Diver2,Diver1)),Time),
-      [holds_at(holding(Diver1,Diver2),Time)]).
+.
 
 % 
 % 
 % event Grab(diver,object)
  /*
-event(grab(diver,object)).
+.
 */
-event(grab(diver,object)).
+.
 
 % 
 % ecnet/Diving.e:150
 % event LetGoOf(diver,object)
  /*
-event(letGoOf(diver,object)).
+.
 */
-event(letGoOf(diver,object)).
+.
 
 % 
 % ecnet/Diving.e:152
 % [diver,object,time]% 
 % Initiates(Grab(diver,object),Holding(diver,object),time).
  /*
-initiates(grab(Diver,Object),
-	  holding(Diver,Object),
-	  Time).
+.
 */
-axiom(initiates(grab(Diver,Object),
-		holding(Diver,Object),
-		Time),
-      []).
+.
 
 % 
 % 
@@ -612,14 +514,9 @@ axiom(initiates(grab(Diver,Object),
 % [diver,object,time]% 
 % Terminates(LetGoOf(diver,object),Holding(diver,object),time).
  /*
-terminates(letGoOf(Diver,Object),
-	   holding(Diver,Object),
-	   Time).
+.
 */
-axiom(terminates(letGoOf(Diver,Object),
-		 holding(Diver,Object),
-		 Time),
-      []).
+.
 
 % 
 % 
@@ -627,14 +524,9 @@ axiom(terminates(letGoOf(Diver,Object),
 % [diver,object,depth,time]% 
 % Releases(Grab(diver,object),AtDepth(object,depth),time).
  /*
-releases(grab(Diver,Object),
-	 atDepth(Object,Depth),
-	 Time).
+.
 */
-axiom(releases(grab(Diver,Object),
-	       atDepth(Object,Depth),
-	       Time),
-      []).
+.
 
 % 
 % 
@@ -642,14 +534,9 @@ axiom(releases(grab(Diver,Object),
 % [diver,object,time]% 
 % Releases(Grab(diver,object),UnderWater(object),time).
  /*
-releases(grab(Diver,Object),
-	 underWater(Object),
-	 Time).
+.
 */
-axiom(releases(grab(Diver,Object),
-	       underWater(Object),
-	       Time),
-      []).
+.
 
 % 
 % 
@@ -664,12 +551,7 @@ holds_at(atDepth(Diver, Depth), Time), holds_at(holding(Diver, Object), Time) ->
               atDepth(Object, Depth),
               Time).
 */
-axiom(initiates(letGoOf(Diver,Object),
-		atDepth(Object,Depth),
-		Time),
-      [ holds_at(atDepth(Diver,Depth),Time),
-	holds_at(holding(Diver,Object),Time)
-      ]).
+.
 
 % 
 % 
@@ -684,12 +566,7 @@ not(holds_at(atDepth(Diver, Depth), Time)), holds_at(holding(Diver, Object), Tim
                atDepth(Object, Depth),
                Time).
 */
-axiom(terminates(letGoOf(Diver,Object),
-		 atDepth(Object,Depth),
-		 Time),
-      [ holds_at(neg(atDepth(Diver,Depth)),Time),
-	holds_at(holding(Diver,Object),Time)
-      ]).
+.
 
 % 
 % 
@@ -703,10 +580,7 @@ holds_at(underWater(Diver), Time) ->
               underWater(Object),
               Time).
 */
-axiom(initiates(letGoOf(Diver,Object),
-		underWater(Object),
-		Time),
-      [holds_at(underWater(Diver),Time)]).
+.
 
 % 
 % 
@@ -720,10 +594,7 @@ not(holds_at(underWater(Diver), Time)) ->
                underWater(Object),
                Time).
 */
-axiom(terminates(letGoOf(Diver,Object),
-		 underWater(Object),
-		 Time),
-      [holds_at(neg(underWater(Diver)),Time)]).
+.
 
 % 
 % 
@@ -731,14 +602,9 @@ axiom(terminates(letGoOf(Diver,Object),
 % [diver,equipment,time]% 
 % Initiates(PutOn(diver,equipment),Wearing(diver,equipment),time).
  /*
-initiates(putOn(Diver,Equipment),
-	  wearing(Diver,Equipment),
-	  Time).
+.
 */
-axiom(initiates(putOn(Diver,Equipment),
-		wearing(Diver,Equipment),
-		Time),
-      []).
+.
 
 % 
 % 
@@ -750,8 +616,7 @@ axiom(initiates(putOn(Diver,Equipment),
 happens(putOn(Diver, Equipment), Time) ->
     not(holds_at(underWater(Diver), Time)).
 */
-axiom(requires(putOn(Diver,Equipment),Time),
-      [holds_at(neg(underWater(Diver)),Time)]).
+.
 
 % 
 % 
@@ -759,14 +624,9 @@ axiom(requires(putOn(Diver,Equipment),Time),
 % [diver,equipment,time]% 
 % Terminates(TakeOff(diver,equipment),Wearing(diver,equipment),time).
  /*
-terminates(takeOff(Diver,Equipment),
-	   wearing(Diver,Equipment),
-	   Time).
+.
 */
-axiom(terminates(takeOff(Diver,Equipment),
-		 wearing(Diver,Equipment),
-		 Time),
-      []).
+.
 
 % 
 % 
@@ -774,59 +634,54 @@ axiom(terminates(takeOff(Diver,Equipment),
 % [diver,equipment,time]% 
 % Terminates(Lose(diver,equipment),Wearing(diver,equipment),time).
  /*
-terminates(lose(Diver,Equipment),
-	   wearing(Diver,Equipment),
-	   Time).
+.
 */
-axiom(terminates(lose(Diver,Equipment),
-		 wearing(Diver,Equipment),
-		 Time),
-      []).
+.
 
 % 
 % 
 % fluent Vertical(diver)
  /*
-fluent(vertical(diver)).
+.
 */
-fluent(vertical(diver)).
+.
 
 % 
 % fluent HorizontalDown(diver)
  /*
-fluent(horizontalDown(diver)).
+.
 */
-fluent(horizontalDown(diver)).
+.
 
 % ecnet/Diving.e:198
 % 
 % fluent Inverted(diver)
  /*
-fluent(inverted(diver)).
+.
 */
-fluent(inverted(diver)).
+.
 
 % 
 % fluent HorizontalUp(diver)
  /*
-fluent(horizontalUp(diver)).
+.
 */
-fluent(horizontalUp(diver)).
+.
 
 % 
 % xor Vertical, HorizontalDown, Inverted, HorizontalUp
  /*
-xor([vertical,horizontalDown,inverted,horizontalUp]).
+.
 */
-xor([vertical,horizontalDown,inverted,horizontalUp]).
+.
 
 % ecnet/Diving.e:204
 % 
 % event RotatePitch(diver)
  /*
-event(rotatePitch(diver)).
+.
 */
-event(rotatePitch(diver)).
+.
 
 % 
 % ecnet/Diving.e:207
@@ -837,10 +692,7 @@ event(rotatePitch(diver)).
 holds_at(vertical(Diver), Time) ->
     initiates(rotatePitch(Diver), horizontalDown(Diver), Time).
 */
-axiom(initiates(rotatePitch(Diver),
-		horizontalDown(Diver),
-		Time),
-      [holds_at(vertical(Diver),Time)]).
+.
 
 % 
 % 
@@ -852,10 +704,7 @@ axiom(initiates(rotatePitch(Diver),
 holds_at(horizontalDown(Diver), Time) ->
     initiates(rotatePitch(Diver), inverted(Diver), Time).
 */
-axiom(initiates(rotatePitch(Diver),
-		inverted(Diver),
-		Time),
-      [holds_at(horizontalDown(Diver),Time)]).
+.
 
 % 
 % 
@@ -869,10 +718,7 @@ holds_at(horizontalDown(Diver), Time) ->
                horizontalDown(Diver),
                Time).
 */
-axiom(terminates(rotatePitch(Diver),
-		 horizontalDown(Diver),
-		 Time),
-      [holds_at(horizontalDown(Diver),Time)]).
+.
 
 % 
 % 
@@ -884,10 +730,7 @@ axiom(terminates(rotatePitch(Diver),
 holds_at(inverted(Diver), Time) ->
     initiates(rotatePitch(Diver), horizontalUp(Diver), Time).
 */
-axiom(initiates(rotatePitch(Diver),
-		horizontalUp(Diver),
-		Time),
-      [holds_at(inverted(Diver),Time)]).
+.
 
 % 
 % 
@@ -899,10 +742,7 @@ axiom(initiates(rotatePitch(Diver),
 holds_at(inverted(Diver), Time) ->
     terminates(rotatePitch(Diver), inverted(Diver), Time).
 */
-axiom(terminates(rotatePitch(Diver),
-		 inverted(Diver),
-		 Time),
-      [holds_at(inverted(Diver),Time)]).
+.
 
 % 
 % 
@@ -914,10 +754,7 @@ axiom(terminates(rotatePitch(Diver),
 holds_at(horizontalUp(Diver), Time) ->
     initiates(rotatePitch(Diver), vertical(Diver), Time).
 */
-axiom(initiates(rotatePitch(Diver),
-		vertical(Diver),
-		Time),
-      [holds_at(horizontalUp(Diver),Time)]).
+.
 
 % 
 % 
@@ -929,18 +766,15 @@ axiom(initiates(rotatePitch(Diver),
 holds_at(horizontalUp(Diver), Time) ->
     terminates(rotatePitch(Diver), horizontalUp(Diver), Time).
 */
-axiom(terminates(rotatePitch(Diver),
-		 horizontalUp(Diver),
-		 Time),
-      [holds_at(horizontalUp(Diver),Time)]).
+.
 
 % 
 % 
 % event RotateYaw(diver)
  /*
-event(rotateYaw(diver)).
+.
 */
-event(rotateYaw(diver)).
+.
 
 % 
 %; try taking out Holding condition here
@@ -954,20 +788,16 @@ event(rotateYaw(diver)).
 happens(ascend1(Diver), Time), not(happens(rapidAscendToSurface(Diver), Time)), not(exists([Diver1], holds_at(holding(Diver, Diver1), Time))) ->
     happens(rotateYaw(Diver), Time).
 */
-axiom(requires(rotateYaw(Diver),Time),
-      [ happens(ascend1(Diver),Time),
-	not(happens(rapidAscendToSurface(Diver),Time)),
-	holds_at(neg(holding(Diver,Diver1)),Time)
-      ]).
+.
 
 % 
 % 
 % ecnet/Diving.e:244
 % fluent UnderWater(object)
  /*
-fluent(underWater(object)).
+.
 */
-fluent(underWater(object)).
+.
 
 % 
 % ecnet/Diving.e:246
@@ -979,38 +809,32 @@ fluent(underWater(object)).
 Depth>0, holds_at(atDepth(Object, Depth), Time) ->
     holds_at(underWater(Object), Time).
 */
-axiom(holds_at(underWater(Object),Time),
-      [ Depth > 0,
-	holds_at(atDepth(Object,Depth),Time)
-      ]).
+.
 
 % 
 % 
 % event EnterWater(object)
  /*
-event(enterWater(object)).
+.
 */
-event(enterWater(object)).
+.
 
 % ecnet/Diving.e:252
 % 
 % event Surface(object)
  /*
-event(surface(object)).
+.
 */
-event(surface(object)).
+.
 
 % 
 % ecnet/Diving.e:255
 % [object,time]% 
 % Initiates(EnterWater(object),UnderWater(object),time).
  /*
-initiates(enterWater(Object),underWater(Object),Time).
+.
 */
-axiom(initiates(enterWater(Object),
-		underWater(Object),
-		Time),
-      []).
+.
 
 % 
 % 
@@ -1023,8 +847,7 @@ happens(enterWater(Diver), Time) ->
     not(exists([Diver1],
                holds_at(holding(Diver1, Diver), Time))).
 */
-axiom(requires(enterWater(Diver),Time),
-      [holds_at(neg(holding(Diver1,Diver)),Time)]).
+.
 
 % 
 % 
@@ -1038,10 +861,7 @@ Depth=0 ->
               atDepth(Object, Depth),
               Time).
 */
-axiom(initiates(enterWater(Object),
-		atDepth(Object,Depth),
-		Time),
-      [equals(Depth,0)]).
+.
 
 % 
 % 
@@ -1049,12 +869,9 @@ axiom(initiates(enterWater(Object),
 % [object,time]% 
 % Terminates(Surface(object),UnderWater(object),time).
  /*
-terminates(surface(Object),underWater(Object),Time).
+.
 */
-axiom(terminates(surface(Object),
-		 underWater(Object),
-		 Time),
-      []).
+.
 
 % 
 % 
@@ -1062,14 +879,9 @@ axiom(terminates(surface(Object),
 % [diver,time]% 
 % Terminates(Surface(diver),PositivelyBuoyant(diver),time).
  /*
-terminates(surface(Diver),
-	   positivelyBuoyant(Diver),
-	   Time).
+.
 */
-axiom(terminates(surface(Diver),
-		 positivelyBuoyant(Diver),
-		 Time),
-      []).
+.
 
 % 
 % 
@@ -1077,14 +889,9 @@ axiom(terminates(surface(Diver),
 % [diver,time]% 
 % Terminates(Surface(diver),NegativelyBuoyant(diver),time).
  /*
-terminates(surface(Diver),
-	   negativelyBuoyant(Diver),
-	   Time).
+.
 */
-axiom(terminates(surface(Diver),
-		 negativelyBuoyant(Diver),
-		 Time),
-      []).
+.
 
 % 
 % 
@@ -1092,14 +899,9 @@ axiom(terminates(surface(Diver),
 % [diver,time]% 
 % Terminates(Surface(diver),NeutrallyBuoyant(diver),time).
  /*
-terminates(surface(Diver),
-	   neutrallyBuoyant(Diver),
-	   Time).
+.
 */
-axiom(terminates(surface(Diver),
-		 neutrallyBuoyant(Diver),
-		 Time),
-      []).
+.
 
 % 
 % 
@@ -1107,14 +909,9 @@ axiom(terminates(surface(Diver),
 % [object,depth,time]% 
 % Terminates(Surface(object),AtDepth(object,depth),time).
  /*
-terminates(surface(Object),
-	   atDepth(Object,Depth),
-	   Time).
+.
 */
-axiom(terminates(surface(Object),
-		 atDepth(Object,Depth),
-		 Time),
-      []).
+.
 
 % 
 % 
@@ -1125,23 +922,22 @@ axiom(terminates(surface(Object),
 happens(enterWater(Diver), Time) ->
     holds_at(vertical(Diver), Time).
 */
-axiom(requires(enterWater(Diver),Time),
-      [holds_at(vertical(Diver),Time)]).
+.
 
 % 
 % 
 % fluent StandingOn(diver,boat)
  /*
-fluent(standingOn(diver,boat)).
+.
 */
-fluent(standingOn(diver,boat)).
+.
 
 % 
 % event StandOn(diver,boat)
  /*
-event(standOn(diver,boat)).
+.
 */
-event(standOn(diver,boat)).
+.
 
 % ecnet/Diving.e:287
 % 
@@ -1149,14 +945,9 @@ event(standOn(diver,boat)).
 % [diver,boat,time]% 
 % Terminates(EnterWater(diver),StandingOn(diver,boat),time).
  /*
-terminates(enterWater(Diver),
-	   standingOn(Diver,Boat),
-	   Time).
+.
 */
-axiom(terminates(enterWater(Diver),
-		 standingOn(Diver,Boat),
-		 Time),
-      []).
+.
 
 % 
 % 
@@ -1164,54 +955,49 @@ axiom(terminates(enterWater(Diver),
 % [diver,boat,time]% 
 % Initiates(StandOn(diver,boat),StandingOn(diver,boat),time).
  /*
-initiates(standOn(Diver,Boat),
-	  standingOn(Diver,Boat),
-	  Time).
+.
 */
-axiom(initiates(standOn(Diver,Boat),
-		standingOn(Diver,Boat),
-		Time),
-      []).
+.
 
 % 
 % 
 % fluent PositivelyBuoyant(diver)
  /*
-fluent(positivelyBuoyant(diver)).
+.
 */
-fluent(positivelyBuoyant(diver)).
+.
 
 % 
 % fluent NeutrallyBuoyant(diver)
  /*
-fluent(neutrallyBuoyant(diver)).
+.
 */
-fluent(neutrallyBuoyant(diver)).
+.
 
 % ecnet/Diving.e:297
 % 
 % fluent NegativelyBuoyant(diver)
  /*
-fluent(negativelyBuoyant(diver)).
+.
 */
-fluent(negativelyBuoyant(diver)).
+.
 
 % 
 % mutex PositivelyBuoyant, NeutrallyBuoyant, NegativelyBuoyant
  /*
-mutex(positivelyBuoyant).
+.
 */
-mutex(positivelyBuoyant).
+.
 
  /*
-mutex(neutrallyBuoyant).
+.
 */
-mutex(neutrallyBuoyant).
+.
 
  /*
-mutex(negativelyBuoyant).
+.
 */
-mutex(negativelyBuoyant).
+.
 
 % 
 % ecnet/Diving.e:302
@@ -1222,8 +1008,7 @@ mutex(negativelyBuoyant).
 holds_at(positivelyBuoyant(Diver), Time) ->
     holds_at(underWater(Diver), Time).
 */
-axiom(holds_at(underWater(Diver),Time),
-      [holds_at(positivelyBuoyant(Diver),Time)]).
+.
 
 % 
 % 
@@ -1235,8 +1020,7 @@ axiom(holds_at(underWater(Diver),Time),
 holds_at(neutrallyBuoyant(Diver), Time) ->
     holds_at(underWater(Diver), Time).
 */
-axiom(holds_at(underWater(Diver),Time),
-      [holds_at(neutrallyBuoyant(Diver),Time)]).
+.
 
 % 
 % 
@@ -1248,31 +1032,30 @@ axiom(holds_at(underWater(Diver),Time),
 holds_at(negativelyBuoyant(Diver), Time) ->
     holds_at(underWater(Diver), Time).
 */
-axiom(holds_at(underWater(Diver),Time),
-      [holds_at(negativelyBuoyant(Diver),Time)]).
+.
 
 % 
 % 
 % event PressDeflateButton(diver,bc)
  /*
-event(pressDeflateButton(diver,bc)).
+.
 */
-event(pressDeflateButton(diver,bc)).
+.
 
 % 
 % ecnet/Diving.e:316
 % event PressDumpButton(diver,bc)
  /*
-event(pressDumpButton(diver,bc)).
+.
 */
-event(pressDumpButton(diver,bc)).
+.
 
 % 
 % event PressInflateButton(diver,bc)
  /*
-event(pressInflateButton(diver,bc)).
+.
 */
-event(pressInflateButton(diver,bc)).
+.
 
 % 
 % ecnet/Diving.e:320
@@ -1285,10 +1068,7 @@ happens(pressDeflateButton(Diver, Bc), Time) ->
     holds_at(vertical(Diver), Time),
     holds_at(underWater(Bc), Time).
 */
-axiom(requires(pressDeflateButton(Diver,Bc),Time),
-      [ holds_at(vertical(Diver),Time),
-	holds_at(underWater(Bc),Time)
-      ]).
+.
 
 % 
 % 
@@ -1302,10 +1082,7 @@ happens(pressDumpButton(Diver, Bc), Time) ->
     holds_at(vertical(Diver), Time),
     holds_at(underWater(Bc), Time).
 */
-axiom(requires(pressDumpButton(Diver,Bc),Time),
-      [ holds_at(vertical(Diver),Time),
-	holds_at(underWater(Bc),Time)
-      ]).
+.
 
 % 
 % 
@@ -1316,8 +1093,7 @@ axiom(requires(pressDumpButton(Diver,Bc),Time),
 happens(pressDumpButton(Diver, Bc), Time) ->
     holds_at(uncontrolledBuoyancy(Diver), Time).
 */
-axiom(requires(pressDumpButton(Diver,Bc),Time),
-      [holds_at(uncontrolledBuoyancy(Diver),Time)]).
+.
 
 % 
 % 
@@ -1331,10 +1107,7 @@ holds_at(wearing(Diver, Bc), Time) ->
               negativelyBuoyant(Diver),
               Time).
 */
-axiom(initiates(pressDeflateButton(Diver,Bc),
-		negativelyBuoyant(Diver),
-		Time),
-      [holds_at(wearing(Diver,Bc),Time)]).
+.
 
 % 
 % 
@@ -1348,10 +1121,7 @@ holds_at(wearing(Diver, Bc), Time) ->
                neutrallyBuoyant(Diver),
                Time).
 */
-axiom(terminates(pressDeflateButton(Diver,Bc),
-		 neutrallyBuoyant(Diver),
-		 Time),
-      [holds_at(wearing(Diver,Bc),Time)]).
+.
 
 % 
 % 
@@ -1365,10 +1135,7 @@ holds_at(wearing(Diver, Bc), Time) ->
                positivelyBuoyant(Diver),
                Time).
 */
-axiom(terminates(pressDeflateButton(Diver,Bc),
-		 positivelyBuoyant(Diver),
-		 Time),
-      [holds_at(wearing(Diver,Bc),Time)]).
+.
 
 % 
 % 
@@ -1382,10 +1149,7 @@ holds_at(wearing(Diver, Bc), Time) ->
               negativelyBuoyant(Diver),
               Time).
 */
-axiom(initiates(pressDumpButton(Diver,Bc),
-		negativelyBuoyant(Diver),
-		Time),
-      [holds_at(wearing(Diver,Bc),Time)]).
+.
 
 % 
 % 
@@ -1399,10 +1163,7 @@ holds_at(wearing(Diver, Bc), Time) ->
                neutrallyBuoyant(Diver),
                Time).
 */
-axiom(terminates(pressDumpButton(Diver,Bc),
-		 neutrallyBuoyant(Diver),
-		 Time),
-      [holds_at(wearing(Diver,Bc),Time)]).
+.
 
 % 
 % 
@@ -1416,10 +1177,7 @@ holds_at(wearing(Diver, Bc), Time) ->
                positivelyBuoyant(Diver),
                Time).
 */
-axiom(terminates(pressDumpButton(Diver,Bc),
-		 positivelyBuoyant(Diver),
-		 Time),
-      [holds_at(wearing(Diver,Bc),Time)]).
+.
 
 % 
 % 
@@ -1433,10 +1191,7 @@ holds_at(wearing(Diver, Bc), Time) ->
               neutrallyBuoyant(Diver),
               Time).
 */
-axiom(initiates(pressInflateButton(Diver,Bc),
-		neutrallyBuoyant(Diver),
-		Time),
-      [holds_at(wearing(Diver,Bc),Time)]).
+.
 
 % 
 % 
@@ -1450,10 +1205,7 @@ holds_at(wearing(Diver, Bc), Time) ->
                positivelyBuoyant(Diver),
                Time).
 */
-axiom(terminates(pressInflateButton(Diver,Bc),
-		 positivelyBuoyant(Diver),
-		 Time),
-      [holds_at(wearing(Diver,Bc),Time)]).
+.
 
 % 
 % 
@@ -1467,10 +1219,7 @@ holds_at(wearing(Diver, Bc), Time) ->
                negativelyBuoyant(Diver),
                Time).
 */
-axiom(terminates(pressInflateButton(Diver,Bc),
-		 negativelyBuoyant(Diver),
-		 Time),
-      [holds_at(wearing(Diver,Bc),Time)]).
+.
 
 % 
 % 
@@ -1484,10 +1233,7 @@ holds_at(wearing(Diver, Weight), Time) ->
               positivelyBuoyant(Diver),
               Time).
 */
-axiom(initiates(takeOff(Diver,Weight),
-		positivelyBuoyant(Diver),
-		Time),
-      [holds_at(wearing(Diver,Weight),Time)]).
+.
 
 % 
 % 
@@ -1501,10 +1247,7 @@ holds_at(wearing(Diver, Weight), Time) ->
                negativelyBuoyant(Diver),
                Time).
 */
-axiom(terminates(takeOff(Diver,Weight),
-		 negativelyBuoyant(Diver),
-		 Time),
-      [holds_at(wearing(Diver,Weight),Time)]).
+.
 
 % 
 % 
@@ -1518,33 +1261,30 @@ holds_at(wearing(Diver, Weight), Time) ->
                neutrallyBuoyant(Diver),
                Time).
 */
-axiom(terminates(takeOff(Diver,Weight),
-		 neutrallyBuoyant(Diver),
-		 Time),
-      [holds_at(wearing(Diver,Weight),Time)]).
+.
 
 % 
 % 
 % fluent UncontrolledBuoyancy(diver)
  /*
-fluent(uncontrolledBuoyancy(diver)).
+.
 */
-fluent(uncontrolledBuoyancy(diver)).
+.
 
 % 
 % ecnet/Diving.e:383
 % event LoseBuoyancyControl(diver)
  /*
-event(loseBuoyancyControl(diver)).
+.
 */
-event(loseBuoyancyControl(diver)).
+.
 
 % 
 % predicate IsInexperiencedDiver(diver)
  /*
-predicate(isInexperiencedDiver(diver)).
+.
 */
-predicate(isInexperiencedDiver(diver)).
+.
 
 % 
 % ecnet/Diving.e:387
@@ -1555,8 +1295,7 @@ predicate(isInexperiencedDiver(diver)).
 happens(loseBuoyancyControl(Diver), Time) ->
     isInexperiencedDiver(Diver).
 */
-axiom(requires(loseBuoyancyControl(Diver),Time),
-      [isInexperiencedDiver(Diver)]).
+.
 
 % 
 % 
@@ -1564,14 +1303,9 @@ axiom(requires(loseBuoyancyControl(Diver),Time),
 % [diver,time]% 
 % Initiates(LoseBuoyancyControl(diver),UncontrolledBuoyancy(diver),time).
  /*
-initiates(loseBuoyancyControl(Diver),
-	  uncontrolledBuoyancy(Diver),
-	  Time).
+.
 */
-axiom(initiates(loseBuoyancyControl(Diver),
-		uncontrolledBuoyancy(Diver),
-		Time),
-      []).
+.
 
 % 
 % 
@@ -1579,14 +1313,9 @@ axiom(initiates(loseBuoyancyControl(Diver),
 % [diver,time]% 
 % Initiates(LoseBuoyancyControl(diver),PositivelyBuoyant(diver),time).
  /*
-initiates(loseBuoyancyControl(Diver),
-	  positivelyBuoyant(Diver),
-	  Time).
+.
 */
-axiom(initiates(loseBuoyancyControl(Diver),
-		positivelyBuoyant(Diver),
-		Time),
-      []).
+.
 
 % 
 % 
@@ -1594,14 +1323,9 @@ axiom(initiates(loseBuoyancyControl(Diver),
 % [diver,time]% 
 % Terminates(LoseBuoyancyControl(diver),NegativelyBuoyant(diver),time).
  /*
-terminates(loseBuoyancyControl(Diver),
-	   negativelyBuoyant(Diver),
-	   Time).
+.
 */
-axiom(terminates(loseBuoyancyControl(Diver),
-		 negativelyBuoyant(Diver),
-		 Time),
-      []).
+.
 
 % 
 % 
@@ -1609,29 +1333,24 @@ axiom(terminates(loseBuoyancyControl(Diver),
 % [diver,time]% 
 % Terminates(LoseBuoyancyControl(diver),NeutrallyBuoyant(diver),time).
  /*
-terminates(loseBuoyancyControl(Diver),
-	   neutrallyBuoyant(Diver),
-	   Time).
+.
 */
-axiom(terminates(loseBuoyancyControl(Diver),
-		 neutrallyBuoyant(Diver),
-		 Time),
-      []).
+.
 
 % 
 % 
 %; determining fluent
 % fluent AscendDescendAmount(diver,depth)
  /*
-fluent(ascendDescendAmount(diver,depth)).
+.
 */
-fluent(ascendDescendAmount(diver,depth)).
+.
 
 % noninertial AscendDescendAmount
  /*
-noninertial(ascendDescendAmount).
+.
 */
-noninertial(ascendDescendAmount).
+.
 
 % ecnet/Diving.e:406
 % 
@@ -1644,12 +1363,7 @@ noninertial(ascendDescendAmount).
 holds_at(ascendDescendAmount(Diver, Depth1), Time), holds_at(ascendDescendAmount(Diver, Depth2), Time) ->
     Depth1=Depth2.
 */
-axiom(equals(Depth1,Depth2),
-      [ holds_at(ascendDescendAmount(Diver,Depth1),
-		 Time),
-	holds_at(ascendDescendAmount(Diver,Depth2),
-		 Time)
-      ]).
+.
 
 % 
 % 
@@ -1666,22 +1380,16 @@ happens(descend(Diver, Depth), Time) ->
     exists([Depth1],
             (holds_at(ascendDescendAmount(Diver, Depth1), Time), holds_at(atDepth(Diver, Depth-Depth1), Time))).
 */
-axiom(requires(descend(Diver,Depth),Time),
-      [ holds_at(negativelyBuoyant(Diver),Time),
-	exists([Depth1],
-	       holds_at(ascendDescendAmount(Diver,Depth1),
-			Time) ',' holds_at(atDepth(Diver,Depth-Depth1),
-			Time))
-      ]).
+.
 
 % 
 % ecnet/Diving.e:418
 % 
 % event KickUp(diver)
  /*
-event(kickUp(diver)).
+.
 */
-event(kickUp(diver)).
+.
 
 % 
 % ecnet/Diving.e:421
@@ -1701,13 +1409,7 @@ happens(ascend(Diver, Depth), Time) ->
     exists([Depth1],
             (holds_at(ascendDescendAmount(Diver, Depth1), Time), holds_at(atDepth(Diver, Depth+Depth1), Time))).
 */
-axiom(requires(ascend(Diver,Depth),Time),
-      [ holds_at(positivelyBuoyant(Diver),Time) ; holds_at(neutrallyBuoyant(Diver),Time) ',' happens(kickUp(Diver),Time),
-	exists([Depth1],
-	       holds_at(ascendDescendAmount(Diver,Depth1),
-			Time) ',' holds_at(atDepth(Diver,Depth+Depth1),
-			Time))
-      ]).
+.
 
 % ecnet/Diving.e:427
 % 
@@ -1720,16 +1422,15 @@ axiom(requires(ascend(Diver,Depth),Time),
 happens(kickUp(Diver), Time) ->
     holds_at(vertical(Diver), Time).
 */
-axiom(requires(kickUp(Diver),Time),
-      [holds_at(vertical(Diver),Time)]).
+.
 
 % 
 % 
 % event SwimAround(diver)
  /*
-event(swimAround(diver)).
+.
 */
-event(swimAround(diver)).
+.
 
 % 
 % ecnet/Diving.e:435
@@ -1740,8 +1441,7 @@ event(swimAround(diver)).
 happens(swimAround(Diver), Time) ->
     holds_at(horizontalDown(Diver), Time).
 */
-axiom(requires(swimAround(Diver),Time),
-      [holds_at(horizontalDown(Diver),Time)]).
+.
 
 % 
 % 
@@ -1750,23 +1450,23 @@ axiom(requires(swimAround(Diver),Time),
 % ecnet/Diving.e:441
 % event SignalDescend(diver,diver)
  /*
-event(signalDescend(diver,diver)).
+.
 */
-event(signalDescend(diver,diver)).
+.
 
 % 
 % event SignalOutOfTime(diver,diver)
  /*
-event(signalOutOfTime(diver,diver)).
+.
 */
-event(signalOutOfTime(diver,diver)).
+.
 
 % 
 % event SignalAscend(diver,diver)
  /*
-event(signalAscend(diver,diver)).
+.
 */
-event(signalAscend(diver,diver)).
+.
 
 % 
 %;[diver1,diver2,time]
@@ -1807,16 +1507,16 @@ event(signalAscend(diver,diver)).
 % 
 % event Descend1(diver)
  /*
-event(descend1(diver)).
+.
 */
-event(descend1(diver)).
+.
 
 % 
 % event Ascend1(diver)
  /*
-event(ascend1(diver)).
+.
 */
-event(ascend1(diver)).
+.
 
 % 
 %;[diver,object,time]
@@ -1832,9 +1532,9 @@ event(ascend1(diver)).
 % 
 % event RapidAscendToSurface(diver)
  /*
-event(rapidAscendToSurface(diver)).
+.
 */
-event(rapidAscendToSurface(diver)).
+.
 
 % 
 % ecnet/Diving.e:494
@@ -1845,14 +1545,8 @@ event(rapidAscendToSurface(diver)).
 happens(descend1(Diver), Time) <->
     exists([Depth], happens(descend(Diver, Depth), Time)).
 */
-axiom(requires(descend1(Diver),Time),
-      [ happens(descend(Diver,Depth),Time),
-	some([Depth])
-      ]).
-axiom(happens(descend1(Diver),Time),
-      [ happens(descend(Diver,Depth),Time),
-	some([Depth])
-      ]).
+.
+.
 
 % 
 % 
@@ -1864,14 +1558,8 @@ axiom(happens(descend1(Diver),Time),
 happens(ascend1(Diver), Time) <->
     exists([Depth], happens(ascend(Diver, Depth), Time)).
 */
-axiom(requires(ascend1(Diver),Time),
-      [ happens(ascend(Diver,Depth),Time),
-	some([Depth])
-      ]).
-axiom(happens(ascend1(Diver),Time),
-      [ happens(ascend(Diver,Depth),Time),
-	some([Depth])
-      ]).
+.
+.
 
 % 
 % 
@@ -1883,16 +1571,15 @@ axiom(happens(ascend1(Diver),Time),
 happens(rapidAscendToSurface(Diver), Time) ->
     happens(ascend(Diver, 0), Time).
 */
-axiom(requires(ascend(Diver,0),Time),
-      [requires(rapidAscendToSurface(Diver),Time)]).
+.
 
 % 
 % 
 % event AscendLine(diver,line)
  /*
-event(ascendLine(diver,line)).
+.
 */
-event(ascendLine(diver,line)).
+.
 
 % 
 % ecnet/Diving.e:508
@@ -1903,45 +1590,39 @@ event(ascendLine(diver,line)).
 happens(ascendLine(Diver, Line), Time) ->
     happens(ascend1(Diver), Time).
 */
-axiom(requires(ascend1(Diver),Time),
-      [requires(ascendLine(Diver,Line),Time)]).
+.
 
 % 
 % 
 % fluent Disoriented(diver)
  /*
-fluent(disoriented(diver)).
+.
 */
-fluent(disoriented(diver)).
+.
 
 % 
 % ecnet/Diving.e:514
 % event BecomeDisoriented(diver)
  /*
-event(becomeDisoriented(diver)).
+.
 */
-event(becomeDisoriented(diver)).
+.
 
 % 
 % event BecomeReoriented(diver)
  /*
-event(becomeReoriented(diver)).
+.
 */
-event(becomeReoriented(diver)).
+.
 
 % 
 % ecnet/Diving.e:518
 % [diver,time]% 
 % Initiates(BecomeDisoriented(diver),Disoriented(diver),time).
  /*
-initiates(becomeDisoriented(Diver),
-	  disoriented(Diver),
-	  Time).
+.
 */
-axiom(initiates(becomeDisoriented(Diver),
-		disoriented(Diver),
-		Time),
-      []).
+.
 
 % 
 % 
@@ -1949,29 +1630,24 @@ axiom(initiates(becomeDisoriented(Diver),
 % [diver,time]% 
 % Terminates(BecomeReoriented(diver),Disoriented(diver),time).
  /*
-terminates(becomeReoriented(Diver),
-	   disoriented(Diver),
-	   Time).
+.
 */
-axiom(terminates(becomeReoriented(Diver),
-		 disoriented(Diver),
-		 Time),
-      []).
+.
 
 % 
 % 
 % fluent DisturbedSilt()
  /*
-fluent(disturbedSilt()).
+.
 */
-fluent(disturbedSilt()).
+.
 
 % 
 % event DisturbSilt(diver)
  /*
-event(disturbSilt(diver)).
+.
 */
-event(disturbSilt(diver)).
+.
 
 % ecnet/Diving.e:527
 % 
@@ -1979,10 +1655,9 @@ event(disturbSilt(diver)).
 % [diver,time]% 
 % Initiates(DisturbSilt(diver),DisturbedSilt(),time).
  /*
-initiates(disturbSilt(Diver),disturbedSilt(),Time).
+.
 */
-axiom(initiates(disturbSilt(Diver),disturbedSilt(),Time),
-      []).
+.
 
 % 
 % 
@@ -1996,18 +1671,15 @@ happens(becomeDisoriented(Diver), Time) ->
     not(holds_at(disturbedSilt(), Time-1)),
     holds_at(disturbedSilt(), Time).
 */
-axiom(requires(becomeDisoriented(Diver),Time),
-      [ not(holds_at(disturbedSilt(),Time-1)),
-	holds_at(disturbedSilt(),Time)
-      ]).
+.
 
 % 
 % 
 % event Panic(diver)
  /*
-event(panic(diver)).
+.
 */
-event(panic(diver)).
+.
 
 % ecnet/Diving.e:537
 % 
@@ -2026,56 +1698,49 @@ event(panic(diver)).
 ;   happens(vomit(Diver), Time-1)
 ).
 */
-axiom(holds_at(disoriented(Diver),Time),
-      [happens(panic(Diver),Time)]) ; holds_at(uncontrolledBuoyancy(Diver),Time) ; exists([Equipment],
-       happens(lose(Diver,Equipment),Time-1)) ; happens(vomit(Diver),Time-1).
+.
 
 % 
 % 
 % ecnet/Diving.e:544
 % event Vomit(diver)
  /*
-event(vomit(diver)).
+.
 */
-event(vomit(diver)).
+.
 
 % 
 %; conditions
 % 
 % fluent Unconscious(diver)
  /*
-fluent(unconscious(diver)).
+.
 */
-fluent(unconscious(diver)).
+.
 
 % 
 % ecnet/Diving.e:550
 % event GoUnconscious(diver)
  /*
-event(goUnconscious(diver)).
+.
 */
-event(goUnconscious(diver)).
+.
 
 % 
 % event RegainConsciousness(diver)
  /*
-event(regainConsciousness(diver)).
+.
 */
-event(regainConsciousness(diver)).
+.
 
 % 
 % ecnet/Diving.e:554
 % [diver,time]% 
 % Initiates(GoUnconscious(diver),Unconscious(diver),time).
  /*
-initiates(goUnconscious(Diver),
-	  unconscious(Diver),
-	  Time).
+.
 */
-axiom(initiates(goUnconscious(Diver),
-		unconscious(Diver),
-		Time),
-      []).
+.
 
 % 
 % 
@@ -2083,14 +1748,9 @@ axiom(initiates(goUnconscious(Diver),
 % [diver,time]% 
 % Terminates(RegainConsciousness(diver),Unconscious(diver),time).
  /*
-terminates(regainConsciousness(Diver),
-	   unconscious(Diver),
-	   Time).
+.
 */
-axiom(terminates(regainConsciousness(Diver),
-		 unconscious(Diver),
-		 Time),
-      []).
+.
 
 % 
 % 
@@ -2102,86 +1762,77 @@ axiom(terminates(regainConsciousness(Diver),
 happens(goUnconscious(Diver), Time) ->
     happens(rapidAscendToSurface(Diver), Time).
 */
-axiom(requires(rapidAscendToSurface(Diver),Time),
-      [requires(goUnconscious(Diver),Time)]).
+.
 
 % 
 % 
 % fluent HasEarPain(diver)
  /*
-fluent(hasEarPain(diver)).
+.
 */
-fluent(hasEarPain(diver)).
+.
 
 % 
 % ecnet/Diving.e:566
 % event StartEarPain(diver)
  /*
-event(startEarPain(diver)).
+.
 */
-event(startEarPain(diver)).
+.
 
 % 
 % ecnet/Diving.e:568
 % [diver,time] % Initiates(StartEarPain(diver),HasEarPain(diver),time).
  /*
-initiates(startEarPain(Diver),hasEarPain(Diver),Time).
+.
 */
-axiom(initiates(startEarPain(Diver),
-		hasEarPain(Diver),
-		Time),
-      []).
+.
 
 % 
 % 
 % fluent HasRupturedEardrum(diver)
  /*
-fluent(hasRupturedEardrum(diver)).
+.
 */
-fluent(hasRupturedEardrum(diver)).
+.
 
 % 
 % event RuptureEardrum(diver)
  /*
-event(ruptureEardrum(diver)).
+.
 */
-event(ruptureEardrum(diver)).
+.
 
 % 
 % ecnet/Diving.e:574
 % [diver,time]% 
 % Initiates(RuptureEardrum(diver),HasRupturedEardrum(diver),time).
  /*
-initiates(ruptureEardrum(Diver),
-	  hasRupturedEardrum(Diver),
-	  Time).
+.
 */
-axiom(initiates(ruptureEardrum(Diver),
-		hasRupturedEardrum(Diver),
-		Time),
-      []).
+.
 
 % 
 % fluent ConditionOK(diver)
  /*
-fluent(conditionOK(diver)).
+.
 */
-fluent(conditionOK(diver)).
+.
 
 % 
 % fluent HasDecompressionIllness(diver)
  /*
-fluent(hasDecompressionIllness(diver)).
+.
 */
-fluent(hasDecompressionIllness(diver)).
+.
 
 % 
 % ecnet/Diving.e:580
 % event StartDecompressionIllness(diver)
  /*
-event(startDecompressionIllness(diver)).
+.
 */
-event(startDecompressionIllness(diver)).
+.
 
 % 
 % ecnet/Diving.e:582
@@ -2190,30 +1841,25 @@ event(startDecompressionIllness(diver)).
 %           HasDecompressionIllness(diver),
 %           time).
  /*
-initiates(startDecompressionIllness(Diver),
-	  hasDecompressionIllness(Diver),
-	  Time).
+.
 */
-axiom(initiates(startDecompressionIllness(Diver),
-		hasDecompressionIllness(Diver),
-		Time),
-      []).
+.
 
 % 
 % 
 % fluent SignalingDecompress(computer,diver)
  /*
-fluent(signalingDecompress(computer,diver)).
+.
 */
-fluent(signalingDecompress(computer,diver)).
+.
 
 % ecnet/Diving.e:588
 % 
 % fluent SignalingLowOnAir(computer,airtank,diver)
  /*
-fluent(signalingLowOnAir(computer,airtank,diver)).
+.
 */
-fluent(signalingLowOnAir(computer,airtank,diver)).
+.
 
 % 
 % ecnet/Diving.e:591
@@ -2224,12 +1870,7 @@ fluent(signalingLowOnAir(computer,airtank,diver)).
 holds_at(signalingLowOnAir(Computer, Airtank, Diver), Time) ->
     holds_at(lowOnAir(Airtank), Time).
 */
-axiom(holds_at(lowOnAir(Airtank),Time),
-      [ holds_at(signalingLowOnAir(Computer,
-				   Airtank,
-				   Diver),
-		 Time)
-      ]).
+.
 
 % 
 % 
@@ -2242,27 +1883,23 @@ holds_at(signalingDecompress(Computer, Diver), Time) ->
     not(exists([Time1],
                 (Time1<Time, happens(decompress(Diver), Time1)))).
 */
-axiom(neg(exists([Time1],
-		 Time1 < Time ',' happens(decompress(Diver),Time1))),
-      [ holds_at(signalingDecompress(Computer,Diver),
-		 Time)
-      ]).
+.
 
 % 
 % 
 % event Decompress(diver)
  /*
-event(decompress(diver)).
+.
 */
-event(decompress(diver)).
+.
 
 % 
 % ecnet/Diving.e:601
 % event EqualizeEars(diver)
  /*
-event(equalizeEars(diver)).
+.
 */
-event(equalizeEars(diver)).
+.
 
 % 
 % ecnet/Diving.e:603
@@ -2276,10 +1913,7 @@ event(equalizeEars(diver)).
     happens(startEarPain(Diver), Time),
     happens(ruptureEardrum(Diver), Time).
 */
-axiom(happens(startEarPain(Diver),Time) ',' happens(ruptureEardrum(Diver),Time),
-      [ happens(descend1(Diver),Time) ; happens(ascend1(Diver),Time),
-	not(happens(equalizeEars(Diver),Time))
-      ]).
+.
 
 % 
 % 
@@ -2292,10 +1926,7 @@ axiom(happens(startEarPain(Diver),Time) ',' happens(ruptureEardrum(Diver),Time),
 happens(ascend1(Diver), Time), not(happens(decompress(Diver), Time)) ->
     happens(startDecompressionIllness(Diver), Time).
 */
-axiom(happens(startDecompressionIllness(Diver),Time),
-      [ happens(ascend1(Diver),Time),
-	not(happens(decompress(Diver),Time))
-      ]).
+.
 
 % 
 % 
@@ -2309,11 +1940,7 @@ axiom(happens(startDecompressionIllness(Diver),Time),
 holds_at(holding(Diver1, Diver2), Time), happens(ascend1(Diver1), Time), not(happens(decompress(Diver2), Time)) ->
     happens(startDecompressionIllness(Diver2), Time).
 */
-axiom(requires(startDecompressionIllness(Diver2),Time),
-      [ holds_at(holding(Diver1,Diver2),Time),
-	happens(ascend1(Diver1),Time),
-	not(happens(decompress(Diver2),Time))
-      ]).
+.
 
 % 
 % 
@@ -2328,19 +1955,15 @@ happens(decompress(Diver), Time) ->
             (Depth>0, holds_at(atDepth(Diver, Depth), Time))),
     not(holds_at(uncontrolledBuoyancy(Diver), Time)).
 */
-axiom(requires(decompress(Diver),Time),
-      [ exists([Depth],
-	       Depth > 0 ',' holds_at(atDepth(Diver,Depth),Time)),
-	not(holds_at(uncontrolledBuoyancy(Diver),Time))
-      ]).
+.
 
 % 
 % 
 % fluent HasHeadache(diver)
  /*
-fluent(hasHeadache(diver)).
+.
 */
-fluent(hasHeadache(diver)).
+.
 
 % ecnet/Diving.e:626
 % 
@@ -2360,53 +1983,47 @@ holds_at(conditionOK(Diver), Time) ->
     not(holds_at(hasDecompressionIllness(Diver), Time)),
     not(holds_at(hasHeadache(Diver), Time)).
 */
-axiom(not(holds_at(unconscious(Diver),Time)) ',' not(holds_at(hasEarPain(Diver),Time)) ',' not(holds_at(hasRupturedEardrum(Diver),Time)) ',' not(holds_at(hasDecompressionIllness(Diver),Time)) ',' not(holds_at(hasHeadache(Diver),Time)),
-      [holds_at(conditionOK(Diver),Time)]).
+.
 
 % ecnet/Diving.e:633
 % 
 % 
 % event BeAirlifted(diver)
  /*
-event(beAirlifted(diver)).
+.
 */
-event(beAirlifted(diver)).
+.
 
 % 
 % event TakeInWater(diver)
  /*
-event(takeInWater(diver)).
+.
 */
-event(takeInWater(diver)).
+.
 
 % 
 % ecnet/Diving.e:639
 % fluent LowOnAir(airtank)
  /*
-fluent(lowOnAir(airtank)).
+.
 */
-fluent(lowOnAir(airtank)).
+.
 
 % 
 % event BecomeLowOnAir(airtank)
  /*
-event(becomeLowOnAir(airtank)).
+.
 */
-event(becomeLowOnAir(airtank)).
+.
 
 % 
 % ecnet/Diving.e:643
 % [airtank,time]% 
 % Initiates(BecomeLowOnAir(airtank),LowOnAir(airtank),time).
  /*
-initiates(becomeLowOnAir(Airtank),
-	  lowOnAir(Airtank),
-	  Time).
+.
 */
-axiom(initiates(becomeLowOnAir(Airtank),
-		lowOnAir(Airtank),
-		Time),
-      []).
+.
 
 % 
 % 
@@ -2414,40 +2031,40 @@ axiom(initiates(becomeLowOnAir(Airtank),
 % ecnet/Diving.e:647
 % [diver] % HoldsAt(ConditionOK(diver),0).
  /*
-holds_at(conditionOK(Diver),0).
+.
 */
-axiom(holds_at(conditionOK(Diver),0),[]).
+.
 
 % 
 % ecnet/Diving.e:648
 % [diver] % HoldsAt(Vertical(diver),0).
  /*
-holds_at(vertical(Diver),0).
+.
 */
-axiom(holds_at(vertical(Diver),0),[]).
+.
 
 % 
 % !HoldsAt(DisturbedSilt(),0).
  /*
-not(holds_at(disturbedSilt(),0)).
+.
 */
-axiom(initially(neg(disturbedSilt())),[]).
+.
 
 % 
 % ecnet/Diving.e:650
 % [diver] % !HoldsAt(UncontrolledBuoyancy(diver),0).
  /*
-not(holds_at(uncontrolledBuoyancy(Diver),0)).
+.
 */
-axiom(initially(neg(uncontrolledBuoyancy(Diver))),[]).
+.
 
 % 
 % ecnet/Diving.e:651
 % [diver] % !HoldsAt(Disoriented(diver),0).
  /*
-not(holds_at(disoriented(Diver),0)).
+.
 */
-axiom(initially(neg(disoriented(Diver))),[]).
+.
 
 % 
 % ecnet/Diving.e:652
@@ -2455,42 +2072,42 @@ axiom(initially(neg(disoriented(Diver))),[]).
 %         !HoldsAt(NeutrallyBuoyant(diver),0) &
 %         !HoldsAt(NegativelyBuoyant(diver),0).
  /*
-not(holds_at(positivelyBuoyant(Diver),0)) ',' not(holds_at(neutrallyBuoyant(Diver),0)) ',' not(holds_at(negativelyBuoyant(Diver),0)).
+.
 */
-not(holds_at(positivelyBuoyant(Diver),0)) ',' not(holds_at(neutrallyBuoyant(Diver),0)) ',' not(holds_at(negativelyBuoyant(Diver),0)).
+.
 
 % 
 % ecnet/Diving.e:655
 % [diver,object] % !HoldsAt(Wearing(diver,object),0).
  /*
-not(holds_at(wearing(Diver,Object),0)).
+.
 */
-axiom(initially(neg(wearing(Diver,Object))),[]).
+.
 
 % 
 % ecnet/Diving.e:656
 % [diver,object] % !HoldsAt(Holding(diver,object),0).
  /*
-not(holds_at(holding(Diver,Object),0)).
+.
 */
-axiom(initially(neg(holding(Diver,Object))),[]).
+.
 
 % 
 % ecnet/Diving.e:657
 % [diver1,diver2] % !HoldsAt(Separated(diver1,diver2),0).
  /*
-not(holds_at(separated(Diver1,Diver2),0)).
+.
 */
-axiom(initially(neg(separated(Diver1,Diver2))),[]).
+.
 
 % 
 %;[agent,object] !HoldsAt(See(agent,object),0).
 % 
 % fluent Separated(diver,diver)
  /*
-fluent(separated(diver,diver)).
+.
 */
-fluent(separated(diver,diver)).
+.
 
 % 
 % ecnet/Diving.e:662
@@ -2501,38 +2118,32 @@ fluent(separated(diver,diver)).
 holds_at(separated(Diver1, Diver2), Time) ->
     holds_at(separated(Diver2, Diver1), Time).
 */
-axiom(holds_at(separated(Diver2,Diver1),Time),
-      [holds_at(separated(Diver1,Diver2),Time)]).
+.
 
 % 
 % 
 % event BecomeSeparated(diver,diver)
  /*
-event(becomeSeparated(diver,diver)).
+.
 */
-event(becomeSeparated(diver,diver)).
+.
 
 % 
 % ecnet/Diving.e:668
 % event BeReunitedWith(diver,diver)
  /*
-event(beReunitedWith(diver,diver)).
+.
 */
-event(beReunitedWith(diver,diver)).
+.
 
 % 
 % ecnet/Diving.e:670
 % [diver1,diver2,time]% 
 % Initiates(BecomeSeparated(diver1,diver2),Separated(diver1,diver2),time).
  /*
-initiates(becomeSeparated(Diver1,Diver2),
-	  separated(Diver1,Diver2),
-	  Time).
+.
 */
-axiom(initiates(becomeSeparated(Diver1,Diver2),
-		separated(Diver1,Diver2),
-		Time),
-      []).
+.
 
 % 
 % 
@@ -2540,14 +2151,9 @@ axiom(initiates(becomeSeparated(Diver1,Diver2),
 % [diver1,diver2,time]% 
 % Initiates(BecomeSeparated(diver1,diver2),Separated(diver2,diver1),time).
  /*
-initiates(becomeSeparated(Diver1,Diver2),
-	  separated(Diver2,Diver1),
-	  Time).
+.
 */
-axiom(initiates(becomeSeparated(Diver1,Diver2),
-		separated(Diver2,Diver1),
-		Time),
-      []).
+.
 
 % 
 % 
@@ -2555,14 +2161,9 @@ axiom(initiates(becomeSeparated(Diver1,Diver2),
 % [diver1,diver2,time]% 
 % Terminates(BeReunitedWith(diver1,diver2),Separated(diver1,diver2),time).
  /*
-terminates(beReunitedWith(Diver1,Diver2),
-	   separated(Diver1,Diver2),
-	   Time).
+.
 */
-axiom(terminates(beReunitedWith(Diver1,Diver2),
-		 separated(Diver1,Diver2),
-		 Time),
-      []).
+.
 
 % 
 % 
@@ -2570,14 +2171,9 @@ axiom(terminates(beReunitedWith(Diver1,Diver2),
 % [diver1,diver2,time]% 
 % Terminates(BeReunitedWith(diver1,diver2),Separated(diver2,diver1),time).
  /*
-terminates(beReunitedWith(Diver1,Diver2),
-	   separated(Diver2,Diver1),
-	   Time).
+.
 */
-axiom(terminates(beReunitedWith(Diver1,Diver2),
-		 separated(Diver2,Diver1),
-		 Time),
-      []).
+.
 
 % 
 % 

@@ -1,6 +1,6 @@
 
 :-include(library('ec_planner/ec_test_incl')).
-% loading('ecnet/SpeechAct.e')
+% 
 %;
 %; Copyright (c) 2005 IBM Corporation and others.
 %; All rights reserved. This program and the accompanying materials
@@ -35,17 +35,17 @@
 %; agent1 invites agent2 into room.
 % event InviteIn(agent,agent,room)
  /*
-event(inviteIn(agent,agent,room)).
+.
 */
-event(inviteIn(agent,agent,room)).
+.
 
 %; agent1 is invited into room by agent2.
 % ecnet/SpeechAct.e:34
 % fluent InvitedIn(agent,room,agent)
  /*
-fluent(invitedIn(agent,room,agent)).
+.
 */
-fluent(invitedIn(agent,room,agent)).
+.
 
 % 
 %; A precondition axiom states that for
@@ -65,13 +65,7 @@ fluent(invitedIn(agent,room,agent)).
  /*
 exists([Outside],  (happens(inviteIn(Agent1, Agent2, Room), Time)->holds_at(at(Agent1, Room), Time), holds_at(at(Agent2, Outside), Time), adjacent(Room, Outside))).
 */
-axiom(requires(inviteIn(Agent1,Agent2,Room),
-	       Time),
-      [ holds_at(at(Agent1,Room),Time),
-	holds_at(at(Agent2,Outside),Time),
-	adjacent(Room,Outside),
-	some([Outside])
-      ]).
+.
 
 % 
 % 
@@ -84,14 +78,9 @@ axiom(requires(inviteIn(Agent1,Agent2,Room),
 %           InvitedIn(agent2,room,agent1),
 %           time).
  /*
-initiates(inviteIn(Agent1,Agent2,Room),
-	  invitedIn(Agent2,Room,Agent1),
-	  Time).
+.
 */
-axiom(initiates(inviteIn(Agent1,Agent2,Room),
-		invitedIn(Agent2,Room,Agent1),
-		Time),
-      []).
+.
 
 % 
 % 
@@ -99,29 +88,29 @@ axiom(initiates(inviteIn(Agent1,Agent2,Room),
 % ecnet/SpeechAct.e:58
 % event IntendToWalkIn(agent,room)
  /*
-event(intendToWalkIn(agent,room)).
+.
 */
-event(intendToWalkIn(agent,room)).
+.
 
 %; agent has the intention to walk into room.
 % fluent IntentionToWalkIn(agent,room)
  /*
-fluent(intentionToWalkIn(agent,room)).
+.
 */
-fluent(intentionToWalkIn(agent,room)).
+.
 
 %; agent acts on the intention to walk into room.
 % fluent ActOnIntentionToWalkIn(agent,room)
  /*
-fluent(actOnIntentionToWalkIn(agent,room)).
+.
 */
-fluent(actOnIntentionToWalkIn(agent,room)).
+.
 
 % noninertial ActOnIntentionToWalkIn
  /*
-noninertial(actOnIntentionToWalkIn).
+.
 */
-noninertial(actOnIntentionToWalkIn).
+.
 
 % ecnet/SpeechAct.e:64
 % 
@@ -141,13 +130,7 @@ noninertial(actOnIntentionToWalkIn).
 holds_at(invitedIn(Agent1, Room, Agent2), Time), holds_at(like(Agent1, Agent2), Time), not(holds_at(intentionToWalkIn(Agent1, Room), Time)) ->
     happens(intendToWalkIn(Agent1, Room), Time).
 */
-axiom(requires(intendToWalkIn(Agent1,Room),Time),
-      [ holds_at(invitedIn(Agent1,Room,Agent2),
-		 Time),
-	holds_at(like(Agent1,Agent2),Time),
-	holds_at(neg(intentionToWalkIn(Agent1,Room)),
-		 Time)
-      ]).
+.
 
 % 
 % 
@@ -160,14 +143,9 @@ axiom(requires(intendToWalkIn(Agent1,Room),Time),
 %           IntentionToWalkIn(agent,room),
 %           time).
  /*
-initiates(intendToWalkIn(Agent,Room),
-	  intentionToWalkIn(Agent,Room),
-	  Time).
+.
 */
-axiom(initiates(intendToWalkIn(Agent,Room),
-		intentionToWalkIn(Agent,Room),
-		Time),
-      []).
+.
 
 % 
 % 
@@ -190,14 +168,7 @@ axiom(initiates(intendToWalkIn(Agent,Room),
 holds_at(intentionToWalkIn(Agent, Room), Time), holds_at(actOnIntentionToWalkIn(Agent, Room), Time), holds_at(at(Agent, Location), Time), side1(Door)=Room, side2(Door)=Location ->
     happens(walkThroughDoor21(Agent, Door), Time).
 */
-axiom(requires(walkThroughDoor21(Agent,Door),Time),
-      [ holds_at(intentionToWalkIn(Agent,Room),Time),
-	holds_at(actOnIntentionToWalkIn(Agent,Room),
-		 Time),
-	holds_at(at(Agent,Location),Time),
-	equals(side1(Door),Room),
-	equals(side2(Door),Location)
-      ]).
+.
 
 % ecnet/SpeechAct.e:98
 % 
@@ -214,14 +185,7 @@ axiom(requires(walkThroughDoor21(Agent,Door),Time),
 holds_at(intentionToWalkIn(Agent, Room), Time), holds_at(actOnIntentionToWalkIn(Agent, Room), Time), holds_at(at(Agent, Location), Time), side2(Door)=Room, side1(Door)=Location ->
     happens(walkThroughDoor12(Agent, Door), Time).
 */
-axiom(requires(walkThroughDoor12(Agent,Door),Time),
-      [ holds_at(intentionToWalkIn(Agent,Room),Time),
-	holds_at(actOnIntentionToWalkIn(Agent,Room),
-		 Time),
-	holds_at(at(Agent,Location),Time),
-	equals(side2(Door),Room),
-	equals(side1(Door),Location)
-      ]).
+.
 
 % ecnet/SpeechAct.e:106
 % 
@@ -243,10 +207,7 @@ side1(Door)=Room ->
                intentionToWalkIn(Agent, Room),
                Time).
 */
-axiom(terminates(walkThroughDoor21(Agent,Door),
-		 intentionToWalkIn(Agent,Room),
-		 Time),
-      [equals(side1(Door),Room)]).
+.
 
 % 
 % 
@@ -262,10 +223,7 @@ side2(Door)=Room ->
                intentionToWalkIn(Agent, Room),
                Time).
 */
-axiom(terminates(walkThroughDoor12(Agent,Door),
-		 intentionToWalkIn(Agent,Room),
-		 Time),
-      [equals(side2(Door),Room)]).
+.
 
 % 
 % 
@@ -273,39 +231,39 @@ axiom(terminates(walkThroughDoor12(Agent,Door),
 % ecnet/SpeechAct.e:126
 % event Greet(agent,object)
  /*
-event(greet(agent,object)).
+.
 */
-event(greet(agent,object)).
+.
 
 % 
 % event SayPleasedToMeet(agent,agent)
  /*
-event(sayPleasedToMeet(agent,agent)).
+.
 */
-event(sayPleasedToMeet(agent,agent)).
+.
 
 % 
 %; agent says goodbye to object.
 % event SayGoodbye(agent,object)
  /*
-event(sayGoodbye(agent,object)).
+.
 */
-event(sayGoodbye(agent,object)).
+.
 
 % ecnet/SpeechAct.e:132
 % 
 % event TalkAbout(agent,content)
  /*
-event(talkAbout(agent,content)).
+.
 */
-event(talkAbout(agent,content)).
+.
 
 % 
 % event Converse(agent,agent)
  /*
-event(converse(agent,agent)).
+.
 */
-event(converse(agent,agent)).
+.
 
 % 
 % ecnet/SpeechAct.e:137
@@ -318,11 +276,7 @@ event(converse(agent,agent)).
  /*
 exists([Location],  (happens(converse(Agent1, Agent2), Time)->holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
 */
-axiom(requires(converse(Agent1,Agent2),Time),
-      [ holds_at(at(Agent1,Location),Time),
-	holds_at(at(Agent2,Location),Time),
-	some([Location])
-      ]).
+.
 
 % 
 % 
@@ -341,11 +295,7 @@ axiom(requires(converse(Agent1,Agent2),Time),
  /*
 exists([Location],  (happens(greet(Agent, Object), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Object, Location), Time))).
 */
-axiom(requires(greet(Agent,Object),Time),
-      [ holds_at(at(Agent,Location),Time),
-	holds_at(at(Object,Location),Time),
-	some([Location])
-      ]).
+.
 
 % 
 % 
@@ -359,11 +309,7 @@ axiom(requires(greet(Agent,Object),Time),
  /*
 exists([Location],  (happens(sayGoodbye(Agent, Object), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Object, Location), Time))).
 */
-axiom(requires(sayGoodbye(Agent,Object),Time),
-      [ holds_at(at(Agent,Location),Time),
-	holds_at(at(Object,Location),Time),
-	some([Location])
-      ]).
+.
 
 % 
 % 
@@ -373,9 +319,9 @@ axiom(requires(sayGoodbye(Agent,Object),Time),
 % ecnet/SpeechAct.e:163
 % event CryForJoy(agent)
  /*
-event(cryForJoy(agent)).
+.
 */
-event(cryForJoy(agent)).
+.
 
 % 
 %; A precondition axiom states that for
@@ -389,31 +335,30 @@ event(cryForJoy(agent)).
 happens(cryForJoy(Agent), Time) ->
     holds_at(happy(Agent), Time).
 */
-axiom(requires(cryForJoy(Agent),Time),
-      [holds_at(happy(Agent),Time)]).
+.
 
 % 
 % 
 % event Threaten(agent,agent,weapon)
  /*
-event(threaten(agent,agent,weapon)).
+.
 */
-event(threaten(agent,agent,weapon)).
+.
 
 % 
 % ecnet/SpeechAct.e:174
 % event ReleaseFromThreat(agent,agent)
  /*
-event(releaseFromThreat(agent,agent)).
+.
 */
-event(releaseFromThreat(agent,agent)).
+.
 
 % 
 % fluent ThreatenedBy(agent,agent)
  /*
-fluent(threatenedBy(agent,agent)).
+.
 */
-fluent(threatenedBy(agent,agent)).
+.
 
 % 
 % ecnet/SpeechAct.e:178
@@ -427,13 +372,7 @@ fluent(threatenedBy(agent,agent)).
  /*
 exists([Location],  (happens(threaten(Agent1, Agent2, Weapon), Time)->holds_at(holding(Agent1, Weapon), Time), holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
 */
-axiom(requires(threaten(Agent1,Agent2,Weapon),
-	       Time),
-      [ holds_at(holding(Agent1,Weapon),Time),
-	holds_at(at(Agent1,Location),Time),
-	holds_at(at(Agent2,Location),Time),
-	some([Location])
-      ]).
+.
 
 % 
 % 
@@ -445,10 +384,7 @@ axiom(requires(threaten(Agent1,Agent2,Weapon),
 happens(threaten(Agent1, Agent2, Weapon), Time) ->
     happens(becomeAngryAt(Agent2, Agent1), Time).
 */
-axiom(requires(becomeAngryAt(Agent2,Agent1),Time),
-      [ requires(threaten(Agent1,Agent2,Weapon),
-		 Time)
-      ]).
+.
 
 % 
 % 
@@ -458,14 +394,9 @@ axiom(requires(becomeAngryAt(Agent2,Agent1),Time),
 %           ThreatenedBy(agent2,agent1),
 %           time).
  /*
-initiates(threaten(Agent1,Agent2,Weapon),
-	  threatenedBy(Agent2,Agent1),
-	  Time).
+.
 */
-axiom(initiates(threaten(Agent1,Agent2,Weapon),
-		threatenedBy(Agent2,Agent1),
-		Time),
-      []).
+.
 
 % 
 % 
@@ -475,30 +406,25 @@ axiom(initiates(threaten(Agent1,Agent2,Weapon),
 %            ThreatenedBy(agent2,agent1),
 %            time).
  /*
-terminates(releaseFromThreat(Agent1,Agent2),
-	   threatenedBy(Agent2,Agent1),
-	   Time).
+.
 */
-axiom(terminates(releaseFromThreat(Agent1,Agent2),
-		 threatenedBy(Agent2,Agent1),
-		 Time),
-      []).
+.
 
 % 
 % 
 % event Order(agent,agent,physobj)
  /*
-event(order(agent,agent,physobj)).
+.
 */
-event(order(agent,agent,physobj)).
+.
 
 % ecnet/SpeechAct.e:200
 % 
 % fluent KnowOrder(agent,agent,physobj)
  /*
-fluent(knowOrder(agent,agent,physobj)).
+.
 */
-fluent(knowOrder(agent,agent,physobj)).
+.
 
 % 
 % ecnet/SpeechAct.e:203
@@ -507,14 +433,9 @@ fluent(knowOrder(agent,agent,physobj)).
 %           KnowOrder(agent2,agent1,physobj),
 %           time).
  /*
-initiates(order(Agent1,Agent2,Physobj),
-	  knowOrder(Agent2,Agent1,Physobj),
-	  Time).
+.
 */
-axiom(initiates(order(Agent1,Agent2,Physobj),
-		knowOrder(Agent2,Agent1,Physobj),
-		Time),
-      []).
+.
 
 % 
 % 
@@ -528,28 +449,23 @@ axiom(initiates(order(Agent1,Agent2,Physobj),
  /*
 exists([Location],  (happens(order(Agent1, Agent2, Physobj), Time)->holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
 */
-axiom(requires(order(Agent1,Agent2,Physobj),
-	       Time),
-      [ holds_at(at(Agent1,Location),Time),
-	holds_at(at(Agent2,Location),Time),
-	some([Location])
-      ]).
+.
 
 % 
 % 
 % event Request(agent,agent,physobj)
  /*
-event(request(agent,agent,physobj)).
+.
 */
-event(request(agent,agent,physobj)).
+.
 
 % 
 % ecnet/SpeechAct.e:216
 % fluent KnowRequest(agent,agent,physobj)
  /*
-fluent(knowRequest(agent,agent,physobj)).
+.
 */
-fluent(knowRequest(agent,agent,physobj)).
+.
 
 % 
 % ecnet/SpeechAct.e:218
@@ -558,14 +474,9 @@ fluent(knowRequest(agent,agent,physobj)).
 %           KnowRequest(agent2,agent1,physobj),
 %           time).
  /*
-initiates(request(Agent1,Agent2,Physobj),
-	  knowRequest(Agent2,Agent1,Physobj),
-	  Time).
+.
 */
-axiom(initiates(request(Agent1,Agent2,Physobj),
-		knowRequest(Agent2,Agent1,Physobj),
-		Time),
-      []).
+.
 
 % 
 % 
@@ -579,12 +490,7 @@ axiom(initiates(request(Agent1,Agent2,Physobj),
  /*
 exists([Location],  (happens(request(Agent1, Agent2, Physobj), Time)->holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
 */
-axiom(requires(request(Agent1,Agent2,Physobj),
-	       Time),
-      [ holds_at(at(Agent1,Location),Time),
-	holds_at(at(Agent2,Location),Time),
-	some([Location])
-      ]).
+.
 
 % 
 % 

@@ -1,6 +1,6 @@
 
 :-include(library('ec_planner/ec_test_incl')).
-% loading('examples/Mueller2006/Exercises/MixingPaints.e')
+% 
 %;
 %; Copyright (c) 2005 IBM Corporation and others.
 %; All rights reserved. This program and the accompanying materials
@@ -21,65 +21,67 @@
 %;
 % examples/Mueller2006/Exercises/MixingPaints.e:19
 % 
-% load foundations/Root.e% load foundations/EC.e% 
+% load foundations/Root.e
+% load foundations/EC.e
+% 
 % sort palette
  /*
-sort(palette).
+.
 */
-sort(palette).
+.
 
 % sort color
  /*
-sort(color).
+.
 */
-sort(color).
+.
 
 % examples/Mueller2006/Exercises/MixingPaints.e:25
 % 
 % palette Palette1
  /*
-t(palette,palette1).
+.
 */
-sort(palette).
-t(palette,palette1).
+.
+.
 
 % color Red, Yellow, Blue, Green
  /*
-t(color,red).
+.
 */
-sort(color).
-t(color,red).
+.
+.
 
  /*
-t(color,yellow).
+.
 */
-sort(color).
-t(color,yellow).
+.
+.
 
  /*
-t(color,blue).
+.
 */
-sort(color).
-t(color,blue).
+.
+.
 
  /*
-t(color,green).
+.
 */
-sort(color).
-t(color,green).
+.
+.
 
 % 
 % event PlaceOnPalette(palette,color)
  /*
-event(placeOnPalette(palette,color)).
+.
 */
-event(placeOnPalette(palette,color)).
+.
 
 % fluent OnPalette(palette,color)
  /*
-fluent(onPalette(palette,color)).
+.
 */
-fluent(onPalette(palette,color)).
+.
 
 % examples/Mueller2006/Exercises/MixingPaints.e:31
 % 
@@ -89,14 +91,9 @@ fluent(onPalette(palette,color)).
 % !Happens(PlaceOnPalette(palette,Blue),time) ->
 % Initiates(PlaceOnPalette(palette,color),OnPalette(palette,color),time).
  /*
-not(happens(placeOnPalette(Palette,yellow),Time)) ; not(happens(placeOnPalette(Palette,blue),Time)) -> initiates(placeOnPalette(Palette,Color),
-	  onPalette(Palette,Color),
-	  Time).
+.
 */
-not(happens(placeOnPalette(Palette,yellow),Time)) ; axiom(initiates(placeOnPalette(Palette,Color),
-		onPalette(Palette,Color),
-		Time),
-      [not(happens(placeOnPalette(Palette,blue),Time))]).
+.
 
 % 
 % 
@@ -112,13 +109,7 @@ happens(placeOnPalette(Palette, yellow), Time), Color1=blue, Color2=green ->
               onPalette(Palette, Color2),
               Time).
 */
-axiom(initiates(placeOnPalette(Palette,Color1),
-		onPalette(Palette,Color2),
-		Time),
-      [ happens(placeOnPalette(Palette,yellow),Time),
-	equals(Color1,blue),
-	equals(Color2,green)
-      ]).
+.
 
 % 
 % 
@@ -135,13 +126,7 @@ not((happens(placeOnPalette(Palette, yellow), Time), happens(placeOnPalette(Pale
                onPalette(Palette, Color1),
                Time).
 */
-axiom(terminates(placeOnPalette(Palette,Color2),
-		 onPalette(Palette,Color1),
-		 Time),
-      [ neg(happens(placeOnPalette(Palette,yellow),Time) ',' happens(placeOnPalette(Palette,blue),Time)),
-	holds_at(onPalette(Palette,Color1),Time),
-	diff(Color1,Color2)
-      ]).
+.
 
 % 
 % examples/Mueller2006/Exercises/MixingPaints.e:49
@@ -159,14 +144,7 @@ happens(placeOnPalette(Palette, yellow), Time), holds_at(onPalette(Palette, Colo
                onPalette(Palette, Color2),
                Time).
 */
-axiom(terminates(placeOnPalette(Palette,Color1),
-		 onPalette(Palette,Color2),
-		 Time),
-      [ happens(placeOnPalette(Palette,yellow),Time),
-	holds_at(onPalette(Palette,Color2),Time),
-	equals(Color1,blue),
-	diff(Color2,green)
-      ]).
+.
 
 % 
 % examples/Mueller2006/Exercises/MixingPaints.e:56
@@ -182,10 +160,7 @@ axiom(terminates(placeOnPalette(Palette,Color1),
 holds_at(onPalette(Palette, Color1), Time), holds_at(onPalette(Palette, Color2), Time) ->
     Color1=Color2.
 */
-axiom(equals(Color1,Color2),
-      [ holds_at(onPalette(Palette,Color1),Time),
-	holds_at(onPalette(Palette,Color2),Time)
-      ]).
+.
 
 % 
 % 
@@ -193,50 +168,50 @@ axiom(equals(Color1,Color2),
 % examples/Mueller2006/Exercises/MixingPaints.e:65
 % HoldsAt(OnPalette(Palette1,Red),0).
  /*
-holds_at(onPalette(palette1,red),0).
+.
 */
-axiom(holds_at(onPalette(palette1,red),0),[]).
+.
 
 % 
 % Delta:
  /*
-directive(delta).
+.
 */
-directive(delta).
+.
 
  % Happens(PlaceOnPalette(Palette1,Green),0).
  /*
-happens(placeOnPalette(palette1,green),0).
+.
 */
-axiom(happens(placeOnPalette(palette1,green),0),[is_time(0)]).
+.
 
 % 
 % 
 %; (2) place yellow+blue over green
 % Delta:
  /*
-directive(delta).
+.
 */
-directive(delta).
+.
 
  % Happens(PlaceOnPalette(Palette1,Yellow),1).
  /*
-happens(placeOnPalette(palette1,yellow),1).
+.
 */
-axiom(happens(placeOnPalette(palette1,yellow),1),[is_time(1)]).
+.
 
 % 
 % Delta:
  /*
-directive(delta).
+.
 */
-directive(delta).
+.
 
  % Happens(PlaceOnPalette(Palette1,Blue),1).
  /*
-happens(placeOnPalette(palette1,blue),1).
+.
 */
-axiom(happens(placeOnPalette(palette1,blue),1),[is_time(1)]).
+.
 
 % 
 % examples/Mueller2006/Exercises/MixingPaints.e:71
@@ -244,30 +219,30 @@ axiom(happens(placeOnPalette(palette1,blue),1),[is_time(1)]).
 %; (3) place yellow
 % Delta:
  /*
-directive(delta).
+.
 */
-directive(delta).
+.
 
  % Happens(PlaceOnPalette(Palette1,Yellow),2).
  /*
-happens(placeOnPalette(palette1,yellow),2).
+.
 */
-axiom(happens(placeOnPalette(palette1,yellow),2),[is_time(2)]).
+.
 
 % 
 % 
 %; (4) place blue
 % Delta:
  /*
-directive(delta).
+.
 */
-directive(delta).
+.
 
  % Happens(PlaceOnPalette(Palette1,Blue),3).
  /*
-happens(placeOnPalette(palette1,blue),3).
+.
 */
-axiom(happens(placeOnPalette(palette1,blue),3),[is_time(3)]).
+.
 
 % 
 % examples/Mueller2006/Exercises/MixingPaints.e:77
@@ -275,55 +250,55 @@ axiom(happens(placeOnPalette(palette1,blue),3),[is_time(3)]).
 %; (5) place green
 % Delta:
  /*
-directive(delta).
+.
 */
-directive(delta).
+.
 
  % Happens(PlaceOnPalette(Palette1,Yellow),4).
  /*
-happens(placeOnPalette(palette1,yellow),4).
+.
 */
-axiom(happens(placeOnPalette(palette1,yellow),4),[is_time(4)]).
+.
 
 % 
 % Delta:
  /*
-directive(delta).
+.
 */
-directive(delta).
+.
 
  % Happens(PlaceOnPalette(Palette1,Blue),4).
  /*
-happens(placeOnPalette(palette1,blue),4).
+.
 */
-axiom(happens(placeOnPalette(palette1,blue),4),[is_time(4)]).
+.
 
 % 
 % 
 % completion Delta Happens
  /*
-completion(delta).
+.
 */
-completion(delta).
+.
 
  /*
-completion(happens).
+.
 */
-completion(happens).
+.
 
 % examples/Mueller2006/Exercises/MixingPaints.e:83
 % 
 % range time 0 5
  /*
-range(time,0,5).
+.
 */
-range(time,0,5).
+.
 
 % range offset 1 1
  /*
-range(offset,1,1).
+.
 */
-range(offset,1,1).
+.
 
 % 
 %; End of file.
