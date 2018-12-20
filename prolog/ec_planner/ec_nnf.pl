@@ -49,11 +49,12 @@
      op(400,fy,cir)		% Next time
    ).
 
+clausify_pnf(PNF, Cla):- clausify_pnf_v1(PNF, Cla),!.
 
-clausify_pnf(PNF, Cla):- declare_fact(PNF),
-   findall(E,retract(saved_clauz(E)),Cla),!.
+clausify_pnf_v1(PNF, Cla):- declare_fact(PNF),
+   findall(E,retract(saved_clauz(E)),Cla), E\==[], !.
 
-clausify_pnf( Formula, CF ):-
+clausify_pnf_v2( Formula, CF ):-
   nnf( Formula, NNF ), 
     pnf( NNF, PNF ), cf( PNF, CF ),!.
 
@@ -64,7 +65,7 @@ clausify_pnf( Formula, CF ):-
 
 % Usage: nnf(+Fml, ?NNF)
 
-nnf(Fml,NNF) :- nnf(Fml,[],NNF,_).
+nnf(Fml,NNF) :- nnf(Fml,even,Fml0), nnf(Fml0,[],NNF,_).
 
 % -----------------------------------------------------------------
 %  nnf(+Fml,+FreeV,-NNF,-Paths)
@@ -72,7 +73,7 @@ nnf(Fml,NNF) :- nnf(Fml,[],NNF,_).
 % Fml,NNF:    See above.
 % FreeV:      List of free variables in Fml.
 % Paths:      Number of disjunctive paths in Fml.
-
+nnf(Fml,_FreeV,Fml,1):- \+ callable(Fml), !.
 nnf(box F,FreeV,BOX,Paths) :- !,
 	nnf(F,FreeV,NNF,Paths), cnf(NNF,CNF), boxRule(box CNF, BOX).
 
@@ -1255,7 +1256,7 @@ and can be ignored on first reading.
 
 drule(X):- default(X).
 
-rule(F,R) :-
+rule(F,R) :- fail, 
    flagth((sound_unification,on)),!,
    make_sound(R,S),
    drule(F,S).
@@ -1317,12 +1318,12 @@ The declarations are as follows:
 
 declare_fact(PNF) :-
    removeQ(PNF,[], UnQ),
-   nnf(UnQ,even,N),   
+   nnf(UnQ,N),
    %wdmsgl(nnf=N),
    rulify(fact,N).
 
 declare_constraint(C) :-
-   nnf(C,even,N),
+   nnf(C,N),
    % wdmsgl(cnnf=N),
    rulify(constraint,N).
 
@@ -1811,9 +1812,6 @@ nnf(if(X,Y), P,B) :- !, nnf(=>(X , Y), P,B).
 nnf(->(X,Y), P,B) :- !, nnf(=>(X , Y), P,B).
 
 
-nnf((Y <- X), P,B) :-  !,
-   nnf((Y or not X),P,B).
-
 nnf(^(X, Y), P,B) :- !, nnf(and(X, Y),P,B).
 nnf((X & Y), P,B) :- !, nnf(and(X, Y),P,B).
 nnf((X , Y), P,B) :- !, nnf(and(X, Y),P,B).
@@ -1841,6 +1839,8 @@ nnf((not X),P,B) :- !,
    opposite_parity(P,OP),
    nnf(X,OP,B).
 
+% nnf((Y <- X), P,B) :-  !, nnf((Y or not X),P,B).
+
 nnf(F,odd,FF):- xlit(F,FF).
 
 nnf(not(F),even,FF) :- !,xlit(F,FF).
@@ -1850,6 +1850,9 @@ xlit(F,F):- \+ compound(F).
 xlit({X},{X}).
 xlit(=(A,B),sameObjects(A,B)).
 xlit(neq(A,B),{dif(A,B)}).
+xlit(\=(A,B),{dif(A,B)}).
+xlit(>(A,B),comparison(A,B,>)).
+xlit(<(A,B),comparison(A,B,<)).
 xlit([F|Args],OUT):- maplist(xlit,[F|Args],OUT).
 xlit(P,PP):- 
   compound_name_arguments(P,F,Args),

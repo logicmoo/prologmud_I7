@@ -309,7 +309,7 @@ process_e_stream(Why, S):- read_line_to_string(S, Comment), echo_format('~N%RROO
 % continue_process_e_stream(Why, _S, [], space):- !.
 continue_process_e_stream(_Why, _S, [], _):- !.
 continue_process_e_stream(_Why, _S, [], end_of_line):- !.
-continue_process_e_stream(Why, S, NextCodes, CanBe ):-
+continue_process_e_stream(Why, S, NextCodes, CanBe ):- ttyflush,
   continue_process_e_stream_too(Why, S, NextCodes, CanBe ),maybe_mention_s_l,!.
 
 continue_process_e_stream_too(Why, _S, Codes, to_lower(':')):- 
@@ -320,7 +320,8 @@ continue_process_e_stream_too(Why, _S, Codes, to_lower(':')):-
 continue_process_e_stream_too(Why, S, Codes, space):- last(Codes, Last), 
    once([Last]=`!`;char_type(Last, alpha)), !, 
    trim_off_whitepace(S), !, 
-   atom_codes(Token, Codes), process_e_stream_token(Why, Token, S), !.
+   atom_codes(Token, Codes),    
+   process_e_stream_token(Why, Token, S), !.
 continue_process_e_stream_too(Why, S, NextCodes, _CanBe ):-  !, 
    last(NextCodes, Last), cont_one_e_compound(S, NextCodes, Last, Term), ec_on_read(Why, Term).
 
@@ -382,8 +383,11 @@ map_callables(Call, HT, HTTerm):- !,
  map_callables(Call, '$'(F, L), '$'(FF, LL)), 
  compound_name_arguments(HTTerm, FF, LL).
 
+:- export(compound_gt/2).
 compound_gt(P,GT):- compound(P), compound_name_arity(P, _, N), N > GT.
 
+
+:- export(fix_predname/2).
 
 fix_predname('!', 'not').
 fix_predname('not', 'not').
@@ -391,6 +395,7 @@ fix_predname('not', 'not').
 fix_predname(';', ';').
 fix_predname('|', ';').
 fix_predname('or', ';').
+fix_predname('xor', 'xor').
 
 fix_predname(',', ',').
 fix_predname('and', ',').
@@ -418,7 +423,7 @@ my_unCamelcase(X, Y):- atom(X), fix_predname(X, Y), !.
 my_unCamelcase(X, Y):- atom(X), upcase_atom(X, X), !, downcase_atom(X, Y).
 my_unCamelcase(X, Y):- unCamelcase(X, Y), !.
 
-
+:- export(e_to_ec/2).
 e_to_ec(C, C):- \+ callable(C), !.
 e_to_ec('$VAR'(HT), '$VAR'(HT)):-!.
 e_to_ec(X, Y):- \+ compound(X), !, must(my_unCamelcase(X, Y)).
@@ -556,8 +561,8 @@ maybe_mention_s_l:- last_s_l(B,L),LLL is L+5,  s_l(BB,LL), B==BB, !, (LLL<LL -> 
 maybe_mention_s_l:- mention_s_l.                      
 
 :- export(mention_s_l/0).
-mention_s_l:-  must_det_l(( flush_output,
-  s_l(B,L), real_ansi_format([fg(green)], '~N% ~w~n', [B:L]), flush_output)),
+mention_s_l:-  must_det_l(( ttyflush,
+  s_l(B,L), real_ansi_format([fg(green)], '~N% ~w~n', [B:L]), ttyflush)),
   retractall(last_s_l(B,_)),asserta(last_s_l(B,L)).
 
 :- export(s_l/2).
@@ -663,7 +668,7 @@ print_e_to_string(T, _Ops, S):-
                              %   max_length(120),
                  % indent_arguments(auto),
                   output(current_output)]),
-                  flush_output)]).
+                  ttyflush)]).
 
 to_ansi(e,[bold,fg(yellow)]) :-!.
 to_ansi(ec,[bold,fg(green)]) :-!.
@@ -695,9 +700,9 @@ pprint_ecp(C, P):-
 pprint_ec_and_f(C, P, AndF):-
   pprint_ec_no_newline(C, P), 
   echo_format(AndF), !,
-  flush_output.
+  ttyflush.
 
-user:portray(Term):- ec_portray_hook(Term).
+user:portray(Term):- fail, ec_portray_hook(Term).
 
 ec_portray_hook(Term):- 
  setup_call_cleanup(flag(ec_portray, N, N+1), 
@@ -710,7 +715,7 @@ ec_portray(_,'$VAR'(Atomic)):-  atom(Atomic), name(Atomic,[C|_]), !,
 ec_portray(_,Term):- notrace(is_list(Term)),!,Term\==[], fail, notrace(catch(text_to_string(Term,Str),_,fail)),!,format('"~s"',[Str]).
 ec_portray(_,Term):- compound(Term),compound_name_arity(Term, F, 0), !,ansi_format([bold,hfg(red)],'~q()',[F]),!.
 ec_portray(N,Term):- N < 2, 
-  % flush_output,
+  % ttyflush,
   ttyflush,
   catch(pprint_ec_no_newline(white, Term),_,fail),!.
 
@@ -844,15 +849,15 @@ in_space_cmt(Goal):- setup_call_cleanup(echo_format('~N /*~n', []), Goal, echo_f
 
 read_line_to_string_echo(S, String):- read_line_to_string(S, String), real_ansi_format([bold, hfg(black)], '~s~n',[String]).
   
-echo_flush:- flush_output.
+echo_flush:- ttyflush.
 :- export(echo_format/1).
 echo_format(S):- echo_flush, echo_format(S, []).
 :- export(echo_format/2).
 echo_format(_Fmt, _Args):- t_l:block_comment_mode(Was), Was==invisible, !.
-echo_format(Fmt, Args):- t_l:block_comment_mode(_), t_l:echo_mode(echo_file), !, real_format(Fmt, Args), flush_output.
-echo_format(Fmt, Args):- t_l:echo_mode(echo_file), !, real_format(Fmt, Args), flush_output.
+echo_format(Fmt, Args):- t_l:block_comment_mode(_), t_l:echo_mode(echo_file), !, real_format(Fmt, Args), ttyflush.
+echo_format(Fmt, Args):- t_l:echo_mode(echo_file), !, real_format(Fmt, Args), ttyflush.
 echo_format(_Fmt, _Args):- t_l:echo_mode(skip(_)), !.
-echo_format(Fmt, Args):- real_format(Fmt, Args), flush_output, !.
+echo_format(Fmt, Args):- real_format(Fmt, Args), ttyflush, !.
 %echo_format(_Fmt, _Args).
 
 is_outputing_to_file:- 
@@ -863,28 +868,28 @@ put_out(Char):- put(Char),
   (is_outputing_to_file-> put(user_error,Char);true).
 
 real_format(Fmt, Args):- 
-  (is_outputing_to_file -> with_output_to(user_error, (ansi_format([hfg(magenta)], Fmt, Args),flush_output)) ; true),
-  format(Fmt, Args),!.
+  (is_outputing_to_file -> with_output_to(user_error, (ansi_format([hfg(magenta)], Fmt, Args),ttyflush)) ; true),
+  format(Fmt, Args),!,ttyflush.
    
   
 real_ansi_format(Ansi, Fmt, Args) :-  
    (is_outputing_to_file -> format(Fmt, Args) ; true),
-   with_output_to(user_error,(ansi_format(Ansi, Fmt, Args),flush_output)).
+   with_output_to(user_error,(ansi_format(Ansi, Fmt, Args),ttyflush)).
 
 
 /*
 process_e_stream(Why, S):- must((read_term(S, T, [variable_names(Vs)]), put_variable_names( Vs))), 
   call(b_setval, '$variable_names', Vs), b_setval('$term', T), 
   (t_l:echo_mode(skip(items)) -> true ; write_stream_item(user_error, T)), !, 
-  flush_output(user_error), 
+  ttyflush(user_error), 
   must(visit_script_term(T)), !, 
   echo_format('~N', []), !.
 
 write_stream_item(Out, T):- 
-  flush_output, 
+  ttyflush, 
   format(Out, '~N~n', []), 
   must(with_output_to(Out, portray_clause_w_vars(T))), 
-  format(Out, '~N~n', []), !, flush_output(Out).
+  format(Out, '~N~n', []), !, ttyflush(Out).
 
 
 */
