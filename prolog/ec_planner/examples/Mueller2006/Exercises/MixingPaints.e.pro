@@ -208,7 +208,7 @@ directive(delta).
  /*
 happens(placeOnPalette(palette1,green),0).
 */
-axiom(happens(placeOnPalette(palette1,green),0),[]).
+axiom(happens(placeOnPalette(palette1,green),0),[is_time(0)]).
 
 % 
 % 
@@ -223,7 +223,7 @@ directive(delta).
  /*
 happens(placeOnPalette(palette1,yellow),1).
 */
-axiom(happens(placeOnPalette(palette1,yellow),1),[]).
+axiom(happens(placeOnPalette(palette1,yellow),1),[is_time(1)]).
 
 % 
 % Delta:
@@ -236,7 +236,7 @@ directive(delta).
  /*
 happens(placeOnPalette(palette1,blue),1).
 */
-axiom(happens(placeOnPalette(palette1,blue),1),[]).
+axiom(happens(placeOnPalette(palette1,blue),1),[is_time(1)]).
 
 % 
 % examples/Mueller2006/Exercises/MixingPaints.e:71
@@ -252,7 +252,7 @@ directive(delta).
  /*
 happens(placeOnPalette(palette1,yellow),2).
 */
-axiom(happens(placeOnPalette(palette1,yellow),2),[]).
+axiom(happens(placeOnPalette(palette1,yellow),2),[is_time(2)]).
 
 % 
 % 
@@ -267,7 +267,7 @@ directive(delta).
  /*
 happens(placeOnPalette(palette1,blue),3).
 */
-axiom(happens(placeOnPalette(palette1,blue),3),[]).
+axiom(happens(placeOnPalette(palette1,blue),3),[is_time(3)]).
 
 % 
 % examples/Mueller2006/Exercises/MixingPaints.e:77
@@ -283,7 +283,7 @@ directive(delta).
  /*
 happens(placeOnPalette(palette1,yellow),4).
 */
-axiom(happens(placeOnPalette(palette1,yellow),4),[]).
+axiom(happens(placeOnPalette(palette1,yellow),4),[is_time(4)]).
 
 % 
 % Delta:
@@ -296,7 +296,7 @@ directive(delta).
  /*
 happens(placeOnPalette(palette1,blue),4).
 */
-axiom(happens(placeOnPalette(palette1,blue),4),[]).
+axiom(happens(placeOnPalette(palette1,blue),4),[is_time(4)]).
 
 % 
 % 

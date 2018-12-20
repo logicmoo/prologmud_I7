@@ -1376,8 +1376,11 @@ happens(doorUnlock(Agent, Door), Time) ->
     not(holds_at(doorUnlocked(Door), Time)),
     holds_at(nearPortal(Agent, Door), Time).
 */
-axiom(holds_at(awake(Agent),Time) ',' not(holds_at(doorUnlocked(Door),Time)) ',' holds_at(nearPortal(Agent,Door),Time),
-      [happens(doorUnlock(Agent,Door),Time)]).
+axiom(requires(doorUnlock(Agent,Door),Time),
+      [ holds_at(awake(Agent),Time),
+	not(holds_at(doorUnlocked(Door),Time)),
+	holds_at(nearPortal(Agent,Door),Time)
+      ]).
 
 % 
 % 
@@ -1416,8 +1419,11 @@ happens(doorLock(Agent, Door), Time) ->
     holds_at(doorUnlocked(Door), Time),
     holds_at(nearPortal(Agent, Door), Time).
 */
-axiom(holds_at(awake(Agent),Time) ',' holds_at(doorUnlocked(Door),Time) ',' holds_at(nearPortal(Agent,Door),Time),
-      [happens(doorLock(Agent,Door),Time)]).
+axiom(requires(doorLock(Agent,Door),Time),
+      [ holds_at(awake(Agent),Time),
+	holds_at(doorUnlocked(Door),Time),
+	holds_at(nearPortal(Agent,Door),Time)
+      ]).
 
 % 
 % 
@@ -1498,8 +1504,12 @@ happens(doorOpen(Agent, Door), Time) ->
     holds_at(doorUnlocked(Door), Time),
     holds_at(nearPortal(Agent, Door), Time).
 */
-axiom(holds_at(awake(Agent),Time) ',' not(holds_at(doorIsOpen(Door),Time)) ',' holds_at(doorUnlocked(Door),Time) ',' holds_at(nearPortal(Agent,Door),Time),
-      [happens(doorOpen(Agent,Door),Time)]).
+axiom(requires(doorOpen(Agent,Door),Time),
+      [ holds_at(awake(Agent),Time),
+	not(holds_at(doorIsOpen(Door),Time)),
+	holds_at(doorUnlocked(Door),Time),
+	holds_at(nearPortal(Agent,Door),Time)
+      ]).
 
 % 
 % ectest/ec_reader_test_ecnet.e:513
@@ -1542,8 +1552,12 @@ happens(doorClose(Agent, Door), Time) ->
     holds_at(doorUnlocked(Door), Time),
     holds_at(nearPortal(Agent, Door), Time).
 */
-axiom(holds_at(awake(Agent),Time) ',' holds_at(doorIsOpen(Door),Time) ',' holds_at(doorUnlocked(Door),Time) ',' holds_at(nearPortal(Agent,Door),Time),
-      [happens(doorClose(Agent,Door),Time)]).
+axiom(requires(doorClose(Agent,Door),Time),
+      [ holds_at(awake(Agent),Time),
+	holds_at(doorIsOpen(Door),Time),
+	holds_at(doorUnlocked(Door),Time),
+	holds_at(nearPortal(Agent,Door),Time)
+      ]).
 
 % 
 % ectest/ec_reader_test_ecnet.e:532
@@ -1604,8 +1618,12 @@ happens(walkThroughDoor12(Agent, Door), Time) ->
     holds_at(doorIsOpen(Door), Time),
     holds_at(at(Agent, side1(Door)), Time).
 */
-axiom(holds_at(awake(Agent),Time) ',' holds_at(standing(Agent),Time) ',' holds_at(doorIsOpen(Door),Time) ',' holds_at(at(Agent,side1(Door)),Time),
-      [happens(walkThroughDoor12(Agent,Door),Time)]).
+axiom(requires(walkThroughDoor12(Agent,Door),Time),
+      [ holds_at(awake(Agent),Time),
+	holds_at(standing(Agent),Time),
+	holds_at(doorIsOpen(Door),Time),
+	holds_at(at(Agent,side1(Door)),Time)
+      ]).
 
 % 
 % ectest/ec_reader_test_ecnet.e:558
@@ -1624,8 +1642,12 @@ happens(walkThroughDoor21(Agent, Door), Time) ->
     holds_at(doorIsOpen(Door), Time),
     holds_at(at(Agent, side2(Door)), Time).
 */
-axiom(holds_at(awake(Agent),Time) ',' holds_at(standing(Agent),Time) ',' holds_at(doorIsOpen(Door),Time) ',' holds_at(at(Agent,side2(Door)),Time),
-      [happens(walkThroughDoor21(Agent,Door),Time)]).
+axiom(requires(walkThroughDoor21(Agent,Door),Time),
+      [ holds_at(awake(Agent),Time),
+	holds_at(standing(Agent),Time),
+	holds_at(doorIsOpen(Door),Time),
+	holds_at(at(Agent,side2(Door)),Time)
+      ]).
 
 % 
 % ectest/ec_reader_test_ecnet.e:565
@@ -1736,8 +1758,11 @@ happens(walkStreet12(Agent, Street), Time) ->
     holds_at(standing(Agent), Time),
     holds_at(at(Agent, side1(Street)), Time).
 */
-axiom(holds_at(awake(Agent),Time) ',' holds_at(standing(Agent),Time) ',' holds_at(at(Agent,side1(Street)),Time),
-      [happens(walkStreet12(Agent,Street),Time)]).
+axiom(requires(walkStreet12(Agent,Street),Time),
+      [ holds_at(awake(Agent),Time),
+	holds_at(standing(Agent),Time),
+	holds_at(at(Agent,side1(Street)),Time)
+      ]).
 
 % 
 % 
@@ -1753,8 +1778,11 @@ happens(walkStreet21(Agent, Street), Time) ->
     holds_at(standing(Agent), Time),
     holds_at(at(Agent, side2(Street)), Time).
 */
-axiom(holds_at(awake(Agent),Time) ',' holds_at(standing(Agent),Time) ',' holds_at(at(Agent,side2(Street)),Time),
-      [happens(walkStreet21(Agent,Street),Time)]).
+axiom(requires(walkStreet21(Agent,Street),Time),
+      [ holds_at(awake(Agent),Time),
+	holds_at(standing(Agent),Time),
+	holds_at(at(Agent,side2(Street)),Time)
+      ]).
 
 % 
 % 
@@ -1874,9 +1902,11 @@ happens(walkDownStaircase(Agent, Staircase), Time) ->
     holds_at(standing(Agent), Time),
     holds_at(at(Agent, side2(Staircase)), Time).
 */
-axiom(holds_at(awake(Agent),Time) ',' holds_at(standing(Agent),Time) ',' holds_at(at(Agent,side2(Staircase)),Time),
-      [ happens(walkDownStaircase(Agent,Staircase),
-		Time)
+axiom(requires(walkDownStaircase(Agent,Staircase),
+	       Time),
+      [ holds_at(awake(Agent),Time),
+	holds_at(standing(Agent),Time),
+	holds_at(at(Agent,side2(Staircase)),Time)
       ]).
 
 % 
@@ -1893,9 +1923,10 @@ happens(walkUpStaircase(Agent, Staircase), Time) ->
     holds_at(standing(Agent), Time),
     holds_at(at(Agent, side1(Staircase)), Time).
 */
-axiom(holds_at(awake(Agent),Time) ',' holds_at(standing(Agent),Time) ',' holds_at(at(Agent,side1(Staircase)),Time),
-      [ happens(walkUpStaircase(Agent,Staircase),
-		Time)
+axiom(requires(walkUpStaircase(Agent,Staircase),Time),
+      [ holds_at(awake(Agent),Time),
+	holds_at(standing(Agent),Time),
+	holds_at(at(Agent,side1(Staircase)),Time)
       ]).
 
 % 
@@ -2319,8 +2350,8 @@ axiom(terminates(letGoOf(Agent,Physobj),
 happens(letGoOf(Agent, Physobj), Time) ->
     holds_at(holding(Agent, Physobj), Time).
 */
-axiom(holds_at(holding(Agent,Physobj),Time),
-      [happens(letGoOf(Agent,Physobj),Time)]).
+axiom(requires(letGoOf(Agent,Physobj),Time),
+      [holds_at(holding(Agent,Physobj),Time)]).
 
 % 
 % 
@@ -2519,9 +2550,13 @@ axiom(initiates(holdSome(Agent,Stuff1,Stuff2),
  /*
 exists([Location],  (happens(holdSome(Agent, Stuff1, Stuff2), Time)->partOf(Stuff1, Stuff2), holds_at(at(Agent, Location), Time), holds_at(at(Stuff1, Location), Time), holds_at(at(Stuff2, Location), Time))).
 */
-axiom(partOf(Stuff1,Stuff2) ',' holds_at(at(Agent,Location),Time) ',' holds_at(at(Stuff1,Location),Time) ',' holds_at(at(Stuff2,Location),Time) ',' some([Location]),
-      [ happens(holdSome(Agent,Stuff1,Stuff2),
-		Time)
+axiom(requires(holdSome(Agent,Stuff1,Stuff2),
+	       Time),
+      [ partOf(Stuff1,Stuff2),
+	holds_at(at(Agent,Location),Time),
+	holds_at(at(Stuff1,Location),Time),
+	holds_at(at(Stuff2,Location),Time),
+	some([Location])
       ]).
 
 % 
@@ -2694,9 +2729,13 @@ axiom(terminates(takeOutOf(Agent,Physobj1,Physobj2),
  /*
 exists([Location],  (happens(takeOutOf(Agent, Physobj1, Physobj2), Time)->holds_at(inside(Physobj1, Physobj2), Time), holds_at(at(Agent, Location), Time), holds_at(at(Physobj1, Location), Time), holds_at(at(Physobj2, Location), Time))).
 */
-axiom(holds_at(inside(Physobj1,Physobj2),Time) ',' holds_at(at(Agent,Location),Time) ',' holds_at(at(Physobj1,Location),Time) ',' holds_at(at(Physobj2,Location),Time) ',' some([Location]),
-      [ happens(takeOutOf(Agent,Physobj1,Physobj2),
-		Time)
+axiom(requires(takeOutOf(Agent,Physobj1,Physobj2),
+	       Time),
+      [ holds_at(inside(Physobj1,Physobj2),Time),
+	holds_at(at(Agent,Location),Time),
+	holds_at(at(Physobj1,Location),Time),
+	holds_at(at(Physobj2,Location),Time),
+	some([Location])
       ]).
 
 % 
@@ -2930,9 +2969,13 @@ axiom(initiates(takeOffOf(Agent,Physobj1,Physobj2),
  /*
 exists([Location],  (happens(takeOffOf(Agent, Physobj1, Physobj2), Time)->holds_at(on(Physobj1, Physobj2), Time), holds_at(at(Agent, Location), Time), holds_at(at(Physobj1, Location), Time), holds_at(at(Physobj2, Location), Time))).
 */
-axiom(holds_at(on(Physobj1,Physobj2),Time) ',' holds_at(at(Agent,Location),Time) ',' holds_at(at(Physobj1,Location),Time) ',' holds_at(at(Physobj2,Location),Time) ',' some([Location]),
-      [ happens(takeOffOf(Agent,Physobj1,Physobj2),
-		Time)
+axiom(requires(takeOffOf(Agent,Physobj1,Physobj2),
+	       Time),
+      [ holds_at(on(Physobj1,Physobj2),Time),
+	holds_at(at(Agent,Location),Time),
+	holds_at(at(Physobj1,Location),Time),
+	holds_at(at(Physobj2,Location),Time),
+	some([Location])
       ]).
 
 % 
@@ -3048,9 +3091,12 @@ axiom(terminates(walkFromTo(Agent,Object1,Object2),
  /*
 exists([Location],  (happens(walkFromTo(Agent, Object1, Object2), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Object1, Location), Time), holds_at(at(Object2, Location), Time))).
 */
-axiom(holds_at(at(Agent,Location),Time) ',' holds_at(at(Object1,Location),Time) ',' holds_at(at(Object2,Location),Time) ',' some([Location]),
-      [ happens(walkFromTo(Agent,Object1,Object2),
-		Time)
+axiom(requires(walkFromTo(Agent,Object1,Object2),
+	       Time),
+      [ holds_at(at(Agent,Location),Time),
+	holds_at(at(Object1,Location),Time),
+	holds_at(at(Object2,Location),Time),
+	some([Location])
       ]).
 
 % 
@@ -3100,9 +3146,12 @@ axiom(terminates(runFromTo(Agent,Object1,Object2),
  /*
 exists([Location],  (happens(runFromTo(Agent, Object1, Object2), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Object1, Location), Time), holds_at(at(Object2, Location), Time))).
 */
-axiom(holds_at(at(Agent,Location),Time) ',' holds_at(at(Object1,Location),Time) ',' holds_at(at(Object2,Location),Time) ',' some([Location]),
-      [ happens(runFromTo(Agent,Object1,Object2),
-		Time)
+axiom(requires(runFromTo(Agent,Object1,Object2),
+	       Time),
+      [ holds_at(at(Agent,Location),Time),
+	holds_at(at(Object1,Location),Time),
+	holds_at(at(Object2,Location),Time),
+	some([Location])
       ]).
 
 % 
@@ -3136,7 +3185,7 @@ axiom(terminates(walkFrom(Agent,Object),
 holds_at(near(Agent, Object), Time), holds_at(at(Agent, Location), Time), holds_at(at(Object, Location), Time), side1(Door)=Location, happens(walkThroughDoor12(Agent, Door), Time) ->
     happens(walkFrom(Agent, Object), Time).
 */
-axiom(happens(walkFrom(Agent,Object),Time),
+axiom(requires(walkFrom(Agent,Object),Time),
       [ holds_at(near(Agent,Object),Time),
 	holds_at(at(Agent,Location),Time),
 	holds_at(at(Object,Location),Time),
@@ -3159,7 +3208,7 @@ axiom(happens(walkFrom(Agent,Object),Time),
 holds_at(near(Agent, Object), Time), holds_at(at(Agent, Location), Time), holds_at(at(Object, Location), Time), side2(Door)=Location, happens(walkThroughDoor21(Agent, Door), Time) ->
     happens(walkFrom(Agent, Object), Time).
 */
-axiom(happens(walkFrom(Agent,Object),Time),
+axiom(requires(walkFrom(Agent,Object),Time),
       [ holds_at(near(Agent,Object),Time),
 	holds_at(at(Agent,Location),Time),
 	holds_at(at(Object,Location),Time),
@@ -3182,7 +3231,7 @@ axiom(happens(walkFrom(Agent,Object),Time),
 holds_at(near(Agent, Object), Time), holds_at(at(Agent, Room), Time), holds_at(at(Object, Room), Time), side1(Staircase)=Room, happens(walkUpStaircase(Agent, Staircase), Time) ->
     happens(walkFrom(Agent, Object), Time).
 */
-axiom(happens(walkFrom(Agent,Object),Time),
+axiom(requires(walkFrom(Agent,Object),Time),
       [ holds_at(near(Agent,Object),Time),
 	holds_at(at(Agent,Room),Time),
 	holds_at(at(Object,Room),Time),
@@ -3206,7 +3255,7 @@ axiom(happens(walkFrom(Agent,Object),Time),
 holds_at(near(Agent, Object), Time), holds_at(at(Agent, Room), Time), holds_at(at(Object, Room), Time), side2(Staircase)=Room, happens(walkDownStaircase(Agent, Staircase), Time) ->
     happens(walkFrom(Agent, Object), Time).
 */
-axiom(happens(walkFrom(Agent,Object),Time),
+axiom(requires(walkFrom(Agent,Object),Time),
       [ holds_at(near(Agent,Object),Time),
 	holds_at(at(Agent,Room),Time),
 	holds_at(at(Object,Room),Time),
@@ -3518,7 +3567,7 @@ axiom(trajectory(fallingFromTo(Physobj1,
 holds_at(fallingFromTo(Physobj1, Physobj2, Physobj3), Time), holds_at(height(Physobj1, Height), Time), holds_at(height(Physobj3, Height), Time) ->
     happens(collideWith(Physobj1, Physobj3), Time).
 */
-axiom(happens(collideWith(Physobj1,Physobj3),Time),
+axiom(requires(collideWith(Physobj1,Physobj3),Time),
       [ holds_at(fallingFromTo(Physobj1,
 			       Physobj2,
 			       Physobj3),
@@ -3793,7 +3842,7 @@ axiom(trajectory(flyingFromTo(Agent,
 holds_at(flyingFromTo(Agent, Physobj1, Physobj2), Time), holds_at(height(Agent, Height), Time), holds_at(height(Physobj2, Height), Time) ->
     happens(reach(Agent, Physobj2), Time).
 */
-axiom(happens(reach(Agent,Physobj2),Time),
+axiom(requires(reach(Agent,Physobj2),Time),
       [ holds_at(flyingFromTo(Agent,
 			      Physobj1,
 			      Physobj2),
@@ -4189,20 +4238,26 @@ happens(gridWalk(Grid, Agent, Coord1, Coord2, Coord3, Coord4), Time) ->
     ;   Coord2=Coord4-1
     ).
 */
-axiom(holds_at(gridAt(Grid,Agent,Coord1,Coord2),
-	       Time) ',' not(exists([Object],
-		 holds_at(gridAt(Grid,
-				 Object,
-				 Coord3,
-				 Coord4),
-			  Time))) ',' (Coord1 = Coord3 ; Coord1 = Coord3 + 1 ; Coord1 = Coord3 - 1) ',' (Coord2 = Coord4 ; Coord2 = Coord4 + 1 ; Coord2 = Coord4 - 1),
-      [ happens(gridWalk(Grid,
-			 Agent,
-			 Coord1,
-			 Coord2,
-			 Coord3,
-			 Coord4),
-		Time)
+axiom(requires(gridWalk(Grid,
+			Agent,
+			Coord1,
+			Coord2,
+			Coord3,
+			Coord4),
+	       Time),
+      [ holds_at(gridAt(Grid,
+			Agent,
+			Coord1,
+			Coord2),
+		 Time),
+	not(exists([Object],
+		   holds_at(gridAt(Grid,
+				   Object,
+				   Coord3,
+				   Coord4),
+			    Time))),
+	Coord1 = Coord3 ; Coord1 = Coord3 + 1 ; Coord1 = Coord3 - 1,
+	Coord2 = Coord4 ; Coord2 = Coord4 + 1 ; Coord2 = Coord4 - 1
       ]).
 
 % ectest/ec_reader_test_ecnet.e:1641
@@ -4618,18 +4673,19 @@ happens(move(Grid, Object, Xcoord1, Ycoord1, Xcoord2, Ycoord2), Time) ->
         )
     ).
 */
-axiom(holds_at(location(Grid,
-			Object,
-			Xcoord1,
-			Ycoord1),
-	       Time) ',' (Xcoord1 = Xcoord2 ',' (Ycoord1 = Ycoord2 + 1 ; Ycoord1 = Ycoord2 - 1) ; Ycoord1 = Ycoord2 ',' (Xcoord1 = Xcoord2 + 1 ; Xcoord1 = Xcoord2 - 1)),
-      [ happens(move(Grid,
-		     Object,
-		     Xcoord1,
-		     Ycoord1,
-		     Xcoord2,
-		     Ycoord2),
-		Time)
+axiom(requires(move(Grid,
+		    Object,
+		    Xcoord1,
+		    Ycoord1,
+		    Xcoord2,
+		    Ycoord2),
+	       Time),
+      [ holds_at(location(Grid,
+			  Object,
+			  Xcoord1,
+			  Ycoord1),
+		 Time),
+	Xcoord1 = Xcoord2 ',' (Ycoord1 = Ycoord2 + 1 ; Ycoord1 = Ycoord2 - 1) ; Ycoord1 = Ycoord2 ',' (Xcoord1 = Xcoord2 + 1 ; Xcoord1 = Xcoord2 - 1)
       ]).
 
 % 
@@ -4705,10 +4761,9 @@ axiom(terminates(handTo(Agent1,Agent2,Physobj),
 happens(handTo(Agent1, Agent2, Physobj), Time) ->
     holds_at(holding(Agent1, Physobj), Time).
 */
-axiom(holds_at(holding(Agent1,Physobj),Time),
-      [ happens(handTo(Agent1,Agent2,Physobj),
-		Time)
-      ]).
+axiom(requires(handTo(Agent1,Agent2,Physobj),
+	       Time),
+      [holds_at(holding(Agent1,Physobj),Time)]).
 
 % 
 % 
@@ -4758,12 +4813,9 @@ event(writeOn(agent,paper,pen)).
 happens(takeOutOf(Agent, Container1, Container2), Time) ->
     holds_at(containerIsOpen(Container2), Time).
 */
-axiom(holds_at(containerIsOpen(Container2),Time),
-      [ happens(takeOutOf(Agent,
-			  Container1,
-			  Container2),
-		Time)
-      ]).
+axiom(requires(takeOutOf(Agent,Container1,Container2),
+	       Time),
+      [holds_at(containerIsOpen(Container2),Time)]).
 
 % 
 % 
@@ -4775,12 +4827,9 @@ axiom(holds_at(containerIsOpen(Container2),Time),
 happens(putInside(Agent, Container1, Container2), Time) ->
     holds_at(containerIsOpen(Container2), Time).
 */
-axiom(holds_at(containerIsOpen(Container2),Time),
-      [ happens(putInside(Agent,
-			  Container1,
-			  Container2),
-		Time)
-      ]).
+axiom(requires(putInside(Agent,Container1,Container2),
+	       Time),
+      [holds_at(containerIsOpen(Container2),Time)]).
 
 % 
 % 
@@ -4855,8 +4904,11 @@ happens(containerOpen(Agent, Container), Time) ->
     not(holds_at(containerIsOpen(Container), Time)),
     holds_at(holding(Agent, Container), Time).
 */
-axiom(holds_at(awake(Agent),Time) ',' not(holds_at(containerIsOpen(Container),Time)) ',' holds_at(holding(Agent,Container),Time),
-      [happens(containerOpen(Agent,Container),Time)]).
+axiom(requires(containerOpen(Agent,Container),Time),
+      [ holds_at(awake(Agent),Time),
+	not(holds_at(containerIsOpen(Container),Time)),
+	holds_at(holding(Agent,Container),Time)
+      ]).
 
 % 
 % 
@@ -4895,8 +4947,11 @@ happens(containerClose(Agent, Container), Time) ->
     holds_at(containerIsOpen(Container), Time),
     holds_at(holding(Agent, Container), Time).
 */
-axiom(holds_at(awake(Agent),Time) ',' holds_at(containerIsOpen(Container),Time) ',' holds_at(holding(Agent,Container),Time),
-      [happens(containerClose(Agent,Container),Time)]).
+axiom(requires(containerClose(Agent,Container),Time),
+      [ holds_at(awake(Agent),Time),
+	holds_at(containerIsOpen(Container),Time),
+	holds_at(holding(Agent,Container),Time)
+      ]).
 
 % 
 % 
@@ -4991,9 +5046,12 @@ fluent(invitedIn(agent,room,agent)).
  /*
 exists([Outside],  (happens(inviteIn(Agent1, Agent2, Room), Time)->holds_at(at(Agent1, Room), Time), holds_at(at(Agent2, Outside), Time), adjacent(Room, Outside))).
 */
-axiom(holds_at(at(Agent1,Room),Time) ',' holds_at(at(Agent2,Outside),Time) ',' adjacent(Room,Outside) ',' some([Outside]),
-      [ happens(inviteIn(Agent1,Agent2,Room),
-		Time)
+axiom(requires(inviteIn(Agent1,Agent2,Room),
+	       Time),
+      [ holds_at(at(Agent1,Room),Time),
+	holds_at(at(Agent2,Outside),Time),
+	adjacent(Room,Outside),
+	some([Outside])
       ]).
 
 % 
@@ -5064,7 +5122,7 @@ noninertial(actOnIntentionToWalkIn).
 holds_at(invitedIn(Agent1, Room, Agent2), Time), holds_at(like(Agent1, Agent2), Time), not(holds_at(intentionToWalkIn(Agent1, Room), Time)) ->
     happens(intendToWalkIn(Agent1, Room), Time).
 */
-axiom(happens(intendToWalkIn(Agent1,Room),Time),
+axiom(requires(intendToWalkIn(Agent1,Room),Time),
       [ holds_at(invitedIn(Agent1,Room,Agent2),
 		 Time),
 	holds_at(like(Agent1,Agent2),Time),
@@ -5113,7 +5171,7 @@ axiom(initiates(intendToWalkIn(Agent,Room),
 holds_at(intentionToWalkIn(Agent, Room), Time), holds_at(actOnIntentionToWalkIn(Agent, Room), Time), holds_at(at(Agent, Location), Time), side1(Door)=Room, side2(Door)=Location ->
     happens(walkThroughDoor21(Agent, Door), Time).
 */
-axiom(happens(walkThroughDoor21(Agent,Door),Time),
+axiom(requires(walkThroughDoor21(Agent,Door),Time),
       [ holds_at(intentionToWalkIn(Agent,Room),Time),
 	holds_at(actOnIntentionToWalkIn(Agent,Room),
 		 Time),
@@ -5137,7 +5195,7 @@ axiom(happens(walkThroughDoor21(Agent,Door),Time),
 holds_at(intentionToWalkIn(Agent, Room), Time), holds_at(actOnIntentionToWalkIn(Agent, Room), Time), holds_at(at(Agent, Location), Time), side2(Door)=Room, side1(Door)=Location ->
     happens(walkThroughDoor12(Agent, Door), Time).
 */
-axiom(happens(walkThroughDoor12(Agent,Door),Time),
+axiom(requires(walkThroughDoor12(Agent,Door),Time),
       [ holds_at(intentionToWalkIn(Agent,Room),Time),
 	holds_at(actOnIntentionToWalkIn(Agent,Room),
 		 Time),
@@ -5241,8 +5299,11 @@ event(converse(agent,agent)).
  /*
 exists([Location],  (happens(converse(Agent1, Agent2), Time)->holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
 */
-axiom(holds_at(at(Agent1,Location),Time) ',' holds_at(at(Agent2,Location),Time) ',' some([Location]),
-      [happens(converse(Agent1,Agent2),Time)]).
+axiom(requires(converse(Agent1,Agent2),Time),
+      [ holds_at(at(Agent1,Location),Time),
+	holds_at(at(Agent2,Location),Time),
+	some([Location])
+      ]).
 
 % 
 % 
@@ -5261,8 +5322,11 @@ axiom(holds_at(at(Agent1,Location),Time) ',' holds_at(at(Agent2,Location),Time) 
  /*
 exists([Location],  (happens(greet(Agent, Object), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Object, Location), Time))).
 */
-axiom(holds_at(at(Agent,Location),Time) ',' holds_at(at(Object,Location),Time) ',' some([Location]),
-      [happens(greet(Agent,Object),Time)]).
+axiom(requires(greet(Agent,Object),Time),
+      [ holds_at(at(Agent,Location),Time),
+	holds_at(at(Object,Location),Time),
+	some([Location])
+      ]).
 
 % 
 % 
@@ -5276,8 +5340,11 @@ axiom(holds_at(at(Agent,Location),Time) ',' holds_at(at(Object,Location),Time) '
  /*
 exists([Location],  (happens(sayGoodbye(Agent, Object), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Object, Location), Time))).
 */
-axiom(holds_at(at(Agent,Location),Time) ',' holds_at(at(Object,Location),Time) ',' some([Location]),
-      [happens(sayGoodbye(Agent,Object),Time)]).
+axiom(requires(sayGoodbye(Agent,Object),Time),
+      [ holds_at(at(Agent,Location),Time),
+	holds_at(at(Object,Location),Time),
+	some([Location])
+      ]).
 
 % 
 % 
@@ -5303,8 +5370,8 @@ event(cryForJoy(agent)).
 happens(cryForJoy(Agent), Time) ->
     holds_at(happy(Agent), Time).
 */
-axiom(holds_at(happy(Agent),Time),
-      [happens(cryForJoy(Agent),Time)]).
+axiom(requires(cryForJoy(Agent),Time),
+      [holds_at(happy(Agent),Time)]).
 
 % 
 % 
@@ -5341,9 +5408,12 @@ fluent(threatenedBy(agent,agent)).
  /*
 exists([Location],  (happens(threaten(Agent1, Agent2, Weapon), Time)->holds_at(holding(Agent1, Weapon), Time), holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
 */
-axiom(holds_at(holding(Agent1,Weapon),Time) ',' holds_at(at(Agent1,Location),Time) ',' holds_at(at(Agent2,Location),Time) ',' some([Location]),
-      [ happens(threaten(Agent1,Agent2,Weapon),
-		Time)
+axiom(requires(threaten(Agent1,Agent2,Weapon),
+	       Time),
+      [ holds_at(holding(Agent1,Weapon),Time),
+	holds_at(at(Agent1,Location),Time),
+	holds_at(at(Agent2,Location),Time),
+	some([Location])
       ]).
 
 % 
@@ -5356,9 +5426,9 @@ axiom(holds_at(holding(Agent1,Weapon),Time) ',' holds_at(at(Agent1,Location),Tim
 happens(threaten(Agent1, Agent2, Weapon), Time) ->
     happens(becomeAngryAt(Agent2, Agent1), Time).
 */
-axiom(happens(becomeAngryAt(Agent2,Agent1),Time),
-      [ happens(threaten(Agent1,Agent2,Weapon),
-		Time)
+axiom(requires(becomeAngryAt(Agent2,Agent1),Time),
+      [ requires(threaten(Agent1,Agent2,Weapon),
+		 Time)
       ]).
 
 % 
@@ -5439,9 +5509,11 @@ axiom(initiates(order(Agent1,Agent2,Physobj),
  /*
 exists([Location],  (happens(order(Agent1, Agent2, Physobj), Time)->holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
 */
-axiom(holds_at(at(Agent1,Location),Time) ',' holds_at(at(Agent2,Location),Time) ',' some([Location]),
-      [ happens(order(Agent1,Agent2,Physobj),
-		Time)
+axiom(requires(order(Agent1,Agent2,Physobj),
+	       Time),
+      [ holds_at(at(Agent1,Location),Time),
+	holds_at(at(Agent2,Location),Time),
+	some([Location])
       ]).
 
 % 
@@ -5488,9 +5560,11 @@ axiom(initiates(request(Agent1,Agent2,Physobj),
  /*
 exists([Location],  (happens(request(Agent1, Agent2, Physobj), Time)->holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
 */
-axiom(holds_at(at(Agent1,Location),Time) ',' holds_at(at(Agent2,Location),Time) ',' some([Location]),
-      [ happens(request(Agent1,Agent2,Physobj),
-		Time)
+axiom(requires(request(Agent1,Agent2,Physobj),
+	       Time),
+      [ holds_at(at(Agent1,Location),Time),
+	holds_at(at(Agent2,Location),Time),
+	some([Location])
       ]).
 
 % 
@@ -5722,8 +5796,8 @@ axiom(initiates(wakeUp(Agent),sleep1(Agent),Time),[]).
 happens(wakeUp(Agent), Time) ->
     holds_at(sleep0(Agent), Time).
 */
-axiom(holds_at(sleep0(Agent),Time),
-      [happens(wakeUp(Agent),Time)]).
+axiom(requires(wakeUp(Agent),Time),
+      [holds_at(sleep0(Agent),Time)]).
 
 % 
 % 
@@ -5766,8 +5840,8 @@ axiom(initiates(riseFrom(Agent,Bed),
 happens(riseFrom(Agent, Bed), Time) ->
     holds_at(sleep1(Agent), Time).
 */
-axiom(holds_at(sleep1(Agent),Time),
-      [happens(riseFrom(Agent,Bed),Time)]).
+axiom(requires(riseFrom(Agent,Bed),Time),
+      [holds_at(sleep1(Agent),Time)]).
 
 % 
 % 
@@ -5803,8 +5877,8 @@ axiom(initiates(getDressed(Agent),sleep3(Agent),Time),
 happens(getDressed(Agent), Time) ->
     holds_at(sleep2(Agent), Time).
 */
-axiom(holds_at(sleep2(Agent),Time),
-      [happens(getDressed(Agent),Time)]).
+axiom(requires(getDressed(Agent),Time),
+      [holds_at(sleep2(Agent),Time)]).
 
 % 
 % 
@@ -5838,8 +5912,8 @@ axiom(initiates(getTired(Agent),sleep4(Agent),Time),
 happens(getTired(Agent), Time) ->
     holds_at(sleep3(Agent), Time).
 */
-axiom(holds_at(sleep3(Agent),Time),
-      [happens(getTired(Agent),Time)]).
+axiom(requires(getTired(Agent),Time),
+      [holds_at(sleep3(Agent),Time)]).
 
 % 
 % 
@@ -5877,8 +5951,8 @@ axiom(initiates(getUndressed(Agent),
 happens(getUndressed(Agent), Time) ->
     holds_at(sleep4(Agent), Time).
 */
-axiom(holds_at(sleep4(Agent),Time),
-      [happens(getUndressed(Agent),Time)]).
+axiom(requires(getUndressed(Agent),Time),
+      [holds_at(sleep4(Agent),Time)]).
 
 % 
 % 
@@ -5916,8 +5990,8 @@ axiom(initiates(lieOn(Agent,Bed),
 happens(lieOn(Agent, Bed), Time) ->
     holds_at(sleep5(Agent), Time).
 */
-axiom(holds_at(sleep5(Agent),Time),
-      [happens(lieOn(Agent,Bed),Time)]).
+axiom(requires(lieOn(Agent,Bed),Time),
+      [holds_at(sleep5(Agent),Time)]).
 
 % 
 % 
@@ -5953,8 +6027,8 @@ axiom(initiates(fallAsleep(Agent),sleep0(Agent),Time),
 happens(fallAsleep(Agent), Time) ->
     holds_at(sleep6(Agent), Time).
 */
-axiom(holds_at(sleep6(Agent),Time),
-      [happens(fallAsleep(Agent),Time)]).
+axiom(requires(fallAsleep(Agent),Time),
+      [holds_at(sleep6(Agent),Time)]).
 
 % 
 % 
@@ -6009,7 +6083,7 @@ axiom(holds_at(neg(actOnSleep5(Agent)),Time),
 holds_at(sleep5(Agent), Time), holds_at(actOnSleep5(Agent), Time), holds_at(at(Agent, Room), Time), holds_at(at(Bed, Room), Time) ->
     happens(lieOn(Agent, Bed), Time).
 */
-axiom(happens(lieOn(Agent,Bed),Time),
+axiom(requires(lieOn(Agent,Bed),Time),
       [ holds_at(sleep5(Agent),Time),
 	holds_at(actOnSleep5(Agent),Time),
 	holds_at(at(Agent,Room),Time),
@@ -6037,8 +6111,13 @@ axiom(happens(lieOn(Agent,Bed),Time),
  /*
 exists([Room],  (happens(lieOn(Agent, Bed), Time)->holds_at(sleep5(Agent), Time), holds_at(actOnSleep5(Agent), Time), holds_at(at(Agent, Room), Time), holds_at(at(Bed, Room), Time))).
 */
-axiom(holds_at(sleep5(Agent),Time) ',' holds_at(actOnSleep5(Agent),Time) ',' holds_at(at(Agent,Room),Time) ',' holds_at(at(Bed,Room),Time) ',' some([Room]),
-      [happens(lieOn(Agent,Bed),Time)]).
+axiom(requires(lieOn(Agent,Bed),Time),
+      [ holds_at(sleep5(Agent),Time),
+	holds_at(actOnSleep5(Agent),Time),
+	holds_at(at(Agent,Room),Time),
+	holds_at(at(Bed,Room),Time),
+	some([Room])
+      ]).
 
 % 
 % 
@@ -6071,8 +6150,11 @@ event(sitOn(agent,physobj)).
  /*
 exists([Location],  (happens(sitOn(Agent, Physobj), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Physobj, Location), Time))).
 */
-axiom(holds_at(at(Agent,Location),Time) ',' holds_at(at(Physobj,Location),Time) ',' some([Location]),
-      [happens(sitOn(Agent,Physobj),Time)]).
+axiom(requires(sitOn(Agent,Physobj),Time),
+      [ holds_at(at(Agent,Location),Time),
+	holds_at(at(Physobj,Location),Time),
+	some([Location])
+      ]).
 
 % 
 % 
@@ -6451,52 +6533,63 @@ option(modeldiff,on).
  /*
 ignore(love).
 */
+ignore(love).
 
  /*
 ignore(threatenedBy).
 */
+ignore(threatenedBy).
 
 % ignore LookOutOnto, Floor, BuildingOf, SkyOf, GroundOf
  /*
 ignore(lookOutOnto).
 */
+ignore(lookOutOnto).
 
  /*
 ignore(floor).
 */
+ignore(floor).
 
  /*
 ignore(buildingOf).
 */
+ignore(buildingOf).
 
  /*
 ignore(skyOf).
 */
+ignore(skyOf).
 
  /*
 ignore(groundOf).
 */
+ignore(groundOf).
 
 % ignore Inside, Near
  /*
 ignore(inside).
 */
+ignore(inside).
 
  /*
 ignore(near).
 */
+ignore(near).
 
 % ectest/ec_reader_test_ecnet.e:2483
 % ignore See
  /*
 ignore(see).
 */
+ignore(see).
 
 % 
 % ignore ActOnSleep5
  /*
 ignore(actOnSleep5).
 */
+ignore(actOnSleep5).
 
 % 
 % option renaming off
@@ -6691,7 +6784,7 @@ axiom(holds_at(at(bed1,room1),0),[]).
  /*
 happens(getTired(sleeper1),0).
 */
-axiom(happens(getTired(sleeper1),0),[]).
+axiom(happens(getTired(sleeper1),0),[is_time(0)]).
 
 % 
 % ectest/ec_reader_test_ecnet.e:2527
@@ -6699,42 +6792,42 @@ axiom(happens(getTired(sleeper1),0),[]).
  /*
 happens(walkThroughDoor12(sleeper1,door1),1).
 */
-axiom(happens(walkThroughDoor12(sleeper1,door1),1),[]).
+axiom(happens(walkThroughDoor12(sleeper1,door1),1),[is_time(1)]).
 
 % 
 % Happens(GetUndressed(Sleeper1),2).
  /*
 happens(getUndressed(sleeper1),2).
 */
-axiom(happens(getUndressed(sleeper1),2),[]).
+axiom(happens(getUndressed(sleeper1),2),[is_time(2)]).
 
 % 
 % Happens(LieOn(Sleeper1,Bed1),3).
  /*
 happens(lieOn(sleeper1,bed1),3).
 */
-axiom(happens(lieOn(sleeper1,bed1),3),[]).
+axiom(happens(lieOn(sleeper1,bed1),3),[is_time(3)]).
 
 % 
 % Happens(FallAsleep(Sleeper1),4).
  /*
 happens(fallAsleep(sleeper1),4).
 */
-axiom(happens(fallAsleep(sleeper1),4),[]).
+axiom(happens(fallAsleep(sleeper1),4),[is_time(4)]).
 
 % 
 % Happens(Dream(Sleeper1),5).
  /*
 happens(dream(sleeper1),5).
 */
-axiom(happens(dream(sleeper1),5),[]).
+axiom(happens(dream(sleeper1),5),[is_time(5)]).
 
 % 
 % Happens(WakeUp(Sleeper1),6).
  /*
 happens(wakeUp(sleeper1),6).
 */
-axiom(happens(wakeUp(sleeper1),6),[]).
+axiom(happens(wakeUp(sleeper1),6),[is_time(6)]).
 
 % 
 % ectest/ec_reader_test_ecnet.e:2533
@@ -6742,21 +6835,21 @@ axiom(happens(wakeUp(sleeper1),6),[]).
  /*
 happens(riseFrom(sleeper1,bed1),7).
 */
-axiom(happens(riseFrom(sleeper1,bed1),7),[]).
+axiom(happens(riseFrom(sleeper1,bed1),7),[is_time(7)]).
 
 % 
 % Happens(GetDressed(Sleeper1),8).
  /*
 happens(getDressed(sleeper1),8).
 */
-axiom(happens(getDressed(sleeper1),8),[]).
+axiom(happens(getDressed(sleeper1),8),[is_time(8)]).
 
 % 
 % Happens(WalkThroughDoor21(Sleeper1,Door1),9).
  /*
 happens(walkThroughDoor21(sleeper1,door1),9).
 */
-axiom(happens(walkThroughDoor21(sleeper1,door1),9),[]).
+axiom(happens(walkThroughDoor21(sleeper1,door1),9),[is_time(9)]).
 
 % 
 % 
@@ -7537,14 +7630,15 @@ axiom(initially(neg(hungry(waiter1))),[]).
  /*
 happens(walkThroughDoor12(customer1,mainEntrance1),0).
 */
-axiom(happens(walkThroughDoor12(customer1,mainEntrance1),0),[]).
+axiom(happens(walkThroughDoor12(customer1,mainEntrance1),0),
+      [is_time(0)]).
 
 % 
 % Happens(Greet(Waiter1,Customer1),1).
  /*
 happens(greet(waiter1,customer1),1).
 */
-axiom(happens(greet(waiter1,customer1),1),[]).
+axiom(happens(greet(waiter1,customer1),1),[is_time(1)]).
 
 % 
 % ectest/ec_reader_test_ecnet.e:2680
@@ -7552,42 +7646,42 @@ axiom(happens(greet(waiter1,customer1),1),[]).
  /*
 happens(sitOn(customer1,chair1),2).
 */
-axiom(happens(sitOn(customer1,chair1),2),[]).
+axiom(happens(sitOn(customer1,chair1),2),[is_time(2)]).
 
 % 
 % Happens(TakeOffOf(Customer1,Menu1,Table1),3).
  /*
 happens(takeOffOf(customer1,menu1,table1),3).
 */
-axiom(happens(takeOffOf(customer1,menu1,table1),3),[]).
+axiom(happens(takeOffOf(customer1,menu1,table1),3),[is_time(3)]).
 
 % 
 % Happens(Order(Customer1,Waiter1,Food1),4).
  /*
 happens(order(customer1,waiter1,food1),4).
 */
-axiom(happens(order(customer1,waiter1,food1),4),[]).
+axiom(happens(order(customer1,waiter1,food1),4),[is_time(4)]).
 
 % 
 % Happens(PlaceOn(Customer1,Menu1,Table1),5).
  /*
 happens(placeOn(customer1,menu1,table1),5).
 */
-axiom(happens(placeOn(customer1,menu1,table1),5),[]).
+axiom(happens(placeOn(customer1,menu1,table1),5),[is_time(5)]).
 
 % 
 % Happens(Eat(Customer1,Food1),11).
  /*
 happens(eat(customer1,food1),11).
 */
-axiom(happens(eat(customer1,food1),11),[]).
+axiom(happens(eat(customer1,food1),11),[is_time(11)]).
 
 % 
 % Happens(Request(Customer1,Waiter1,Bill1),12).
  /*
 happens(request(customer1,waiter1,bill1),12).
 */
-axiom(happens(request(customer1,waiter1,bill1),12),[]).
+axiom(happens(request(customer1,waiter1,bill1),12),[is_time(12)]).
 
 % 
 % ectest/ec_reader_test_ecnet.e:2686
@@ -7595,35 +7689,36 @@ axiom(happens(request(customer1,waiter1,bill1),12),[]).
  /*
 happens(pay(customer1,waiter1),15).
 */
-axiom(happens(pay(customer1,waiter1),15),[]).
+axiom(happens(pay(customer1,waiter1),15),[is_time(15)]).
 
 % 
 % Happens(Tip(Customer1,Waiter1),15).
  /*
 happens(tip(customer1,waiter1),15).
 */
-axiom(happens(tip(customer1,waiter1),15),[]).
+axiom(happens(tip(customer1,waiter1),15),[is_time(15)]).
 
 % 
 % Happens(RiseFrom(Customer1,Chair1),16).
  /*
 happens(riseFrom(customer1,chair1),16).
 */
-axiom(happens(riseFrom(customer1,chair1),16),[]).
+axiom(happens(riseFrom(customer1,chair1),16),[is_time(16)]).
 
 % 
 % Happens(SayGoodbye(Customer1,Waiter1),17).
  /*
 happens(sayGoodbye(customer1,waiter1),17).
 */
-axiom(happens(sayGoodbye(customer1,waiter1),17),[]).
+axiom(happens(sayGoodbye(customer1,waiter1),17),[is_time(17)]).
 
 % 
 % Happens(WalkThroughDoor21(Customer1,MainEntrance1),18).
  /*
 happens(walkThroughDoor21(customer1,mainEntrance1),18).
 */
-axiom(happens(walkThroughDoor21(customer1,mainEntrance1),18),[]).
+axiom(happens(walkThroughDoor21(customer1,mainEntrance1),18),
+      [is_time(18)]).
 
 % 
 % 
@@ -7812,8 +7907,11 @@ axiom(initiates(pickUp(Agent,Physobj),
  /*
 exists([Location],  (happens(pickUp(Agent, Physobj), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Physobj, Location), Time))).
 */
-axiom(holds_at(at(Agent,Location),Time) ',' holds_at(at(Physobj,Location),Time) ',' some([Location]),
-      [happens(pickUp(Agent,Physobj),Time)]).
+axiom(requires(pickUp(Agent,Physobj),Time),
+      [ holds_at(at(Agent,Location),Time),
+	holds_at(at(Physobj,Location),Time),
+	some([Location])
+      ]).
 
 % 
 % 
@@ -7840,8 +7938,8 @@ axiom(terminates(letGoOf(Agent,Physobj),
 happens(letGoOf(Agent, Physobj), Time) ->
     holds_at(holding(Agent, Physobj), Time).
 */
-axiom(holds_at(holding(Agent,Physobj),Time),
-      [happens(letGoOf(Agent,Physobj),Time)]).
+axiom(requires(letGoOf(Agent,Physobj),Time),
+      [holds_at(holding(Agent,Physobj),Time)]).
 
 % 
 % 
@@ -7990,9 +8088,12 @@ axiom(terminates(placeOn(Agent,Physobj1,Physobj2),
  /*
 exists([Location],  (happens(placeOn(Agent, Physobj1, Physobj2), Time)->holds_at(holding(Agent, Physobj1), Time), holds_at(at(Agent, Location), Time), holds_at(at(Physobj2, Location), Time))).
 */
-axiom(holds_at(holding(Agent,Physobj1),Time) ',' holds_at(at(Agent,Location),Time) ',' holds_at(at(Physobj2,Location),Time) ',' some([Location]),
-      [ happens(placeOn(Agent,Physobj1,Physobj2),
-		Time)
+axiom(requires(placeOn(Agent,Physobj1,Physobj2),
+	       Time),
+      [ holds_at(holding(Agent,Physobj1),Time),
+	holds_at(at(Agent,Location),Time),
+	holds_at(at(Physobj2,Location),Time),
+	some([Location])
       ]).
 
 % 
@@ -8058,9 +8159,13 @@ axiom(releases(takeOffOf(Agent,Physobj1,Physobj2),
  /*
 exists([Location],  (happens(takeOffOf(Agent, Physobj1, Physobj2), Time)->holds_at(on(Physobj1, Physobj2), Time), holds_at(at(Agent, Location), Time), holds_at(at(Physobj1, Location), Time), holds_at(at(Physobj2, Location), Time))).
 */
-axiom(holds_at(on(Physobj1,Physobj2),Time) ',' holds_at(at(Agent,Location),Time) ',' holds_at(at(Physobj1,Location),Time) ',' holds_at(at(Physobj2,Location),Time) ',' some([Location]),
-      [ happens(takeOffOf(Agent,Physobj1,Physobj2),
-		Time)
+axiom(requires(takeOffOf(Agent,Physobj1,Physobj2),
+	       Time),
+      [ holds_at(on(Physobj1,Physobj2),Time),
+	holds_at(at(Agent,Location),Time),
+	holds_at(at(Physobj1,Location),Time),
+	holds_at(at(Physobj2,Location),Time),
+	some([Location])
       ]).
 
 % 
@@ -8205,8 +8310,10 @@ happens(walkThroughDoor12(Agent, Door), Time) ->
     holds_at(standing(Agent), Time),
     holds_at(at(Agent, side1(Door)), Time).
 */
-axiom(holds_at(standing(Agent),Time) ',' holds_at(at(Agent,side1(Door)),Time),
-      [happens(walkThroughDoor12(Agent,Door),Time)]).
+axiom(requires(walkThroughDoor12(Agent,Door),Time),
+      [ holds_at(standing(Agent),Time),
+	holds_at(at(Agent,side1(Door)),Time)
+      ]).
 
 % 
 % 
@@ -8220,8 +8327,10 @@ happens(walkThroughDoor21(Agent, Door), Time) ->
     holds_at(standing(Agent), Time),
     holds_at(at(Agent, side2(Door)), Time).
 */
-axiom(holds_at(standing(Agent),Time) ',' holds_at(at(Agent,side2(Door)),Time),
-      [happens(walkThroughDoor21(Agent,Door),Time)]).
+axiom(requires(walkThroughDoor21(Agent,Door),Time),
+      [ holds_at(standing(Agent),Time),
+	holds_at(at(Agent,side2(Door)),Time)
+      ]).
 
 % 
 % 
@@ -8344,8 +8453,11 @@ event(eat(agent,food)).
  /*
 exists([Location],  (happens(eat(Agent, Food), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Food, Location), Time))).
 */
-axiom(holds_at(at(Agent,Location),Time) ',' holds_at(at(Food,Location),Time) ',' some([Location]),
-      [happens(eat(Agent,Food),Time)]).
+axiom(requires(eat(Agent,Food),Time),
+      [ holds_at(at(Agent,Location),Time),
+	holds_at(at(Food,Location),Time),
+	some([Location])
+      ]).
 
 % 
 % 
@@ -8606,9 +8718,9 @@ waiterOf(Restaurant)=Waiter, holds_at(beWaiter2(Waiter), Time) ->
     happens(walkThroughDoor12(Waiter, kitchenDoorOf(Restaurant)),
             Time).
 */
-axiom(happens(walkThroughDoor12(Waiter,
-				kitchenDoorOf(Restaurant)),
-	      Time),
+axiom(requires(walkThroughDoor12(Waiter,
+				 kitchenDoorOf(Restaurant)),
+	       Time),
       [ equals(waiterOf(Restaurant),Waiter),
 	holds_at(beWaiter2(Waiter),Time)
       ]).
@@ -8677,10 +8789,10 @@ holds_at(beWaiter3(waiterOf(Restaurant)), Time), exists([Agent], holds_at(knowOr
                   Food),
             Time).
 */
-axiom(happens(order(waiterOf(Restaurant),
-		    cookOf(Restaurant),
-		    Food),
-	      Time),
+axiom(requires(order(waiterOf(Restaurant),
+		     cookOf(Restaurant),
+		     Food),
+	       Time),
       [ holds_at(beWaiter3(waiterOf(Restaurant)),Time),
 	holds_at(knowOrder(waiterOf(Restaurant),
 			   Agent,
@@ -8751,7 +8863,7 @@ axiom(initiates(order(Waiter,Cook,Food),
 holds_at(beWaiter4(Waiter), Time), exists([Agent], holds_at(knowOrder(Waiter, Agent, Food), Time)), holds_at(foodPrepared(Food), Time) ->
     happens(pickUp(Waiter, Food), Time).
 */
-axiom(happens(pickUp(Waiter,Food),Time),
+axiom(requires(pickUp(Waiter,Food),Time),
       [ holds_at(beWaiter4(Waiter),Time),
 	holds_at(knowOrder(Waiter,Agent,Food),
 		 Time),
@@ -8821,9 +8933,9 @@ waiterOf(Restaurant)=Waiter, holds_at(beWaiter5(Waiter), Time) ->
     happens(walkThroughDoor21(Waiter, kitchenDoorOf(Restaurant)),
             Time).
 */
-axiom(happens(walkThroughDoor21(Waiter,
-				kitchenDoorOf(Restaurant)),
-	      Time),
+axiom(requires(walkThroughDoor21(Waiter,
+				 kitchenDoorOf(Restaurant)),
+	       Time),
       [ equals(waiterOf(Restaurant),Waiter),
 	holds_at(beWaiter5(Waiter),Time)
       ]).
@@ -8891,7 +9003,7 @@ axiom(initiates(walkThroughDoor21(Waiter,Door),
 waiterOf(Restaurant)=Waiter, tableOf(Restaurant)=Table, holds_at(beWaiter6(Waiter), Time), holds_at(holding(Waiter, Food), Time) ->
     happens(placeOn(Waiter, Food, Table), Time).
 */
-axiom(happens(placeOn(Waiter,Food,Table),Time),
+axiom(requires(placeOn(Waiter,Food,Table),Time),
       [ equals(waiterOf(Restaurant),Waiter),
 	equals(tableOf(Restaurant),Table),
 	holds_at(beWaiter6(Waiter),Time),
@@ -8987,7 +9099,7 @@ axiom(initiates(request(Agent,Waiter,Bill),
 waiterOf(Restaurant)=Waiter, billOf(Restaurant)=Bill, holds_at(beWaiter8(Waiter), Time) ->
     happens(pickUp(Waiter, Bill), Time).
 */
-axiom(happens(pickUp(Waiter,Bill),Time),
+axiom(requires(pickUp(Waiter,Bill),Time),
       [ equals(waiterOf(Restaurant),Waiter),
 	equals(billOf(Restaurant),Bill),
 	holds_at(beWaiter8(Waiter),Time)
@@ -9044,7 +9156,7 @@ axiom(initiates(pickUp(Waiter,Bill),
 waiterOf(Restaurant)=Waiter, billOf(Restaurant)=Bill, tableOf(Restaurant)=Table, holds_at(beWaiter9(Waiter), Time) ->
     happens(placeOn(Waiter, Bill, Table), Time).
 */
-axiom(happens(placeOn(Waiter,Bill,Table),Time),
+axiom(requires(placeOn(Waiter,Bill,Table),Time),
       [ equals(waiterOf(Restaurant),Waiter),
 	equals(billOf(Restaurant),Bill),
 	equals(tableOf(Restaurant),Table),
@@ -9194,8 +9306,11 @@ axiom(initiates(foodPrepare(Agent,Food),
  /*
 exists([Location],  (happens(foodPrepare(Agent, Food), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Food, Location), Time))).
 */
-axiom(holds_at(at(Agent,Location),Time) ',' holds_at(at(Food,Location),Time) ',' some([Location]),
-      [happens(foodPrepare(Agent,Food),Time)]).
+axiom(requires(foodPrepare(Agent,Food),Time),
+      [ holds_at(at(Agent,Location),Time),
+	holds_at(at(Food,Location),Time),
+	some([Location])
+      ]).
 
 % 
 % 
@@ -9208,7 +9323,7 @@ axiom(holds_at(at(Agent,Location),Time) ',' holds_at(at(Food,Location),Time) ','
 holds_at(beCook1(Cook), Time), holds_at(knowOrder(Cook, Agent, Food), Time) ->
     happens(foodPrepare(Cook, Food), Time).
 */
-axiom(happens(foodPrepare(Cook,Food),Time),
+axiom(requires(foodPrepare(Cook,Food),Time),
       [ holds_at(beCook1(Cook),Time),
 	holds_at(knowOrder(Cook,Agent,Food),
 		 Time)
@@ -9279,8 +9394,11 @@ event(tip(agent,agent)).
  /*
 exists([Room],  (happens(lieOn(Agent, Physobj), Time)->holds_at(at(Agent, Room), Time), holds_at(at(Physobj, Room), Time))).
 */
-axiom(holds_at(at(Agent,Room),Time) ',' holds_at(at(Physobj,Room),Time) ',' some([Room]),
-      [happens(lieOn(Agent,Physobj),Time)]).
+axiom(requires(lieOn(Agent,Physobj),Time),
+      [ holds_at(at(Agent,Room),Time),
+	holds_at(at(Physobj,Room),Time),
+	some([Room])
+      ]).
 
 % 
 % 
@@ -9294,8 +9412,11 @@ axiom(holds_at(at(Agent,Room),Time) ',' holds_at(at(Physobj,Room),Time) ',' some
  /*
 exists([Room],  (happens(sitOn(Agent, Physobj), Time)->holds_at(at(Agent, Room), Time), holds_at(at(Physobj, Room), Time))).
 */
-axiom(holds_at(at(Agent,Room),Time) ',' holds_at(at(Physobj,Room),Time) ',' some([Room]),
-      [happens(sitOn(Agent,Physobj),Time)]).
+axiom(requires(sitOn(Agent,Physobj),Time),
+      [ holds_at(at(Agent,Room),Time),
+	holds_at(at(Physobj,Room),Time),
+	some([Room])
+      ]).
 
 % 
 % 
@@ -9589,8 +9710,11 @@ event(sayGoodbye(agent,agent)).
  /*
 exists([Location],  (happens(greet(Agent1, Agent2), Time)->holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
 */
-axiom(holds_at(at(Agent1,Location),Time) ',' holds_at(at(Agent2,Location),Time) ',' some([Location]),
-      [happens(greet(Agent1,Agent2),Time)]).
+axiom(requires(greet(Agent1,Agent2),Time),
+      [ holds_at(at(Agent1,Location),Time),
+	holds_at(at(Agent2,Location),Time),
+	some([Location])
+      ]).
 
 % 
 % 
@@ -9604,8 +9728,11 @@ axiom(holds_at(at(Agent1,Location),Time) ',' holds_at(at(Agent2,Location),Time) 
  /*
 exists([Location],  (happens(sayGoodbye(Agent1, Agent2), Time)->holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
 */
-axiom(holds_at(at(Agent1,Location),Time) ',' holds_at(at(Agent2,Location),Time) ',' some([Location]),
-      [happens(sayGoodbye(Agent1,Agent2),Time)]).
+axiom(requires(sayGoodbye(Agent1,Agent2),Time),
+      [ holds_at(at(Agent1,Location),Time),
+	holds_at(at(Agent2,Location),Time),
+	some([Location])
+      ]).
 
 % 
 % 
@@ -9651,9 +9778,11 @@ axiom(initiates(order(Agent1,Agent2,Physobj),
  /*
 exists([Location],  (happens(order(Agent1, Agent2, Physobj), Time)->holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
 */
-axiom(holds_at(at(Agent1,Location),Time) ',' holds_at(at(Agent2,Location),Time) ',' some([Location]),
-      [ happens(order(Agent1,Agent2,Physobj),
-		Time)
+axiom(requires(order(Agent1,Agent2,Physobj),
+	       Time),
+      [ holds_at(at(Agent1,Location),Time),
+	holds_at(at(Agent2,Location),Time),
+	some([Location])
       ]).
 
 % 
@@ -9700,9 +9829,11 @@ axiom(initiates(request(Agent1,Agent2,Physobj),
  /*
 exists([Location],  (happens(request(Agent1, Agent2, Physobj), Time)->holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
 */
-axiom(holds_at(at(Agent1,Location),Time) ',' holds_at(at(Agent2,Location),Time) ',' some([Location]),
-      [ happens(request(Agent1,Agent2,Physobj),
-		Time)
+axiom(requires(request(Agent1,Agent2,Physobj),
+	       Time),
+      [ holds_at(at(Agent1,Location),Time),
+	holds_at(at(Agent2,Location),Time),
+	some([Location])
       ]).
 
 % 
@@ -10036,8 +10167,8 @@ happens(putOn(Diver, Equipment), Time) ->
     not(exists([Diver1],
                holds_at(wearing(Diver1, Equipment), Time))).
 */
-axiom(holds_at(neg(wearing(Diver1,Equipment)),Time),
-      [happens(putOn(Diver,Equipment),Time)]).
+axiom(requires(putOn(Diver,Equipment),Time),
+      [holds_at(neg(wearing(Diver1,Equipment)),Time)]).
 
 % 
 % 
@@ -10465,8 +10596,8 @@ axiom(initiates(putOn(Diver,Equipment),
 happens(putOn(Diver, Equipment), Time) ->
     not(holds_at(underWater(Diver), Time)).
 */
-axiom(holds_at(neg(underWater(Diver)),Time),
-      [happens(putOn(Diver,Equipment),Time)]).
+axiom(requires(putOn(Diver,Equipment),Time),
+      [holds_at(neg(underWater(Diver)),Time)]).
 
 % 
 % 
@@ -10669,7 +10800,7 @@ event(rotateYaw(diver)).
 happens(ascend1(Diver), Time), not(happens(rapidAscendToSurface(Diver), Time)), not(exists([Diver1], holds_at(holding(Diver, Diver1), Time))) ->
     happens(rotateYaw(Diver), Time).
 */
-axiom(happens(rotateYaw(Diver),Time),
+axiom(requires(rotateYaw(Diver),Time),
       [ happens(ascend1(Diver),Time),
 	not(happens(rapidAscendToSurface(Diver),Time)),
 	holds_at(neg(holding(Diver,Diver1)),Time)
@@ -10738,8 +10869,8 @@ happens(enterWater(Diver), Time) ->
     not(exists([Diver1],
                holds_at(holding(Diver1, Diver), Time))).
 */
-axiom(holds_at(neg(holding(Diver1,Diver)),Time),
-      [happens(enterWater(Diver),Time)]).
+axiom(requires(enterWater(Diver),Time),
+      [holds_at(neg(holding(Diver1,Diver)),Time)]).
 
 % 
 % 
@@ -10840,8 +10971,8 @@ axiom(terminates(surface(Object),
 happens(enterWater(Diver), Time) ->
     holds_at(vertical(Diver), Time).
 */
-axiom(holds_at(vertical(Diver),Time),
-      [happens(enterWater(Diver),Time)]).
+axiom(requires(enterWater(Diver),Time),
+      [holds_at(vertical(Diver),Time)]).
 
 % 
 % 
@@ -11000,8 +11131,10 @@ happens(pressDeflateButton(Diver, Bc), Time) ->
     holds_at(vertical(Diver), Time),
     holds_at(underWater(Bc), Time).
 */
-axiom(holds_at(vertical(Diver),Time) ',' holds_at(underWater(Bc),Time),
-      [happens(pressDeflateButton(Diver,Bc),Time)]).
+axiom(requires(pressDeflateButton(Diver,Bc),Time),
+      [ holds_at(vertical(Diver),Time),
+	holds_at(underWater(Bc),Time)
+      ]).
 
 % 
 % 
@@ -11015,8 +11148,10 @@ happens(pressDumpButton(Diver, Bc), Time) ->
     holds_at(vertical(Diver), Time),
     holds_at(underWater(Bc), Time).
 */
-axiom(holds_at(vertical(Diver),Time) ',' holds_at(underWater(Bc),Time),
-      [happens(pressDumpButton(Diver,Bc),Time)]).
+axiom(requires(pressDumpButton(Diver,Bc),Time),
+      [ holds_at(vertical(Diver),Time),
+	holds_at(underWater(Bc),Time)
+      ]).
 
 % 
 % 
@@ -11027,8 +11162,8 @@ axiom(holds_at(vertical(Diver),Time) ',' holds_at(underWater(Bc),Time),
 happens(pressDumpButton(Diver, Bc), Time) ->
     holds_at(uncontrolledBuoyancy(Diver), Time).
 */
-axiom(holds_at(uncontrolledBuoyancy(Diver),Time),
-      [happens(pressDumpButton(Diver,Bc),Time)]).
+axiom(requires(pressDumpButton(Diver,Bc),Time),
+      [holds_at(uncontrolledBuoyancy(Diver),Time)]).
 
 % 
 % 
@@ -11266,8 +11401,8 @@ predicate(isInexperiencedDiver(diver)).
 happens(loseBuoyancyControl(Diver), Time) ->
     isInexperiencedDiver(Diver).
 */
-axiom(isInexperiencedDiver(Diver),
-      [happens(loseBuoyancyControl(Diver),Time)]).
+axiom(requires(loseBuoyancyControl(Diver),Time),
+      [isInexperiencedDiver(Diver)]).
 
 % 
 % 
@@ -11377,11 +11512,13 @@ happens(descend(Diver, Depth), Time) ->
     exists([Depth1],
             (holds_at(ascendDescendAmount(Diver, Depth1), Time), holds_at(atDepth(Diver, Depth-Depth1), Time))).
 */
-axiom(holds_at(negativelyBuoyant(Diver),Time) ',' exists([Depth1],
-	     holds_at(ascendDescendAmount(Diver,Depth1),
-		      Time) ',' holds_at(atDepth(Diver,Depth-Depth1),
-		      Time)),
-      [happens(descend(Diver,Depth),Time)]).
+axiom(requires(descend(Diver,Depth),Time),
+      [ holds_at(negativelyBuoyant(Diver),Time),
+	exists([Depth1],
+	       holds_at(ascendDescendAmount(Diver,Depth1),
+			Time) ',' holds_at(atDepth(Diver,Depth-Depth1),
+			Time))
+      ]).
 
 % 
 % ectest/ec_reader_test_ecnet.e:3795
@@ -11410,11 +11547,13 @@ happens(ascend(Diver, Depth), Time) ->
     exists([Depth1],
             (holds_at(ascendDescendAmount(Diver, Depth1), Time), holds_at(atDepth(Diver, Depth+Depth1), Time))).
 */
-axiom((holds_at(positivelyBuoyant(Diver),Time) ; holds_at(neutrallyBuoyant(Diver),Time) ',' happens(kickUp(Diver),Time)) ',' exists([Depth1],
-	     holds_at(ascendDescendAmount(Diver,Depth1),
-		      Time) ',' holds_at(atDepth(Diver,Depth+Depth1),
-		      Time)),
-      [happens(ascend(Diver,Depth),Time)]).
+axiom(requires(ascend(Diver,Depth),Time),
+      [ holds_at(positivelyBuoyant(Diver),Time) ; holds_at(neutrallyBuoyant(Diver),Time) ',' happens(kickUp(Diver),Time),
+	exists([Depth1],
+	       holds_at(ascendDescendAmount(Diver,Depth1),
+			Time) ',' holds_at(atDepth(Diver,Depth+Depth1),
+			Time))
+      ]).
 
 % ectest/ec_reader_test_ecnet.e:3804
 % 
@@ -11427,8 +11566,8 @@ axiom((holds_at(positivelyBuoyant(Diver),Time) ; holds_at(neutrallyBuoyant(Diver
 happens(kickUp(Diver), Time) ->
     holds_at(vertical(Diver), Time).
 */
-axiom(holds_at(vertical(Diver),Time),
-      [happens(kickUp(Diver),Time)]).
+axiom(requires(kickUp(Diver),Time),
+      [holds_at(vertical(Diver),Time)]).
 
 % 
 % 
@@ -11447,8 +11586,8 @@ event(swimAround(diver)).
 happens(swimAround(Diver), Time) ->
     holds_at(horizontalDown(Diver), Time).
 */
-axiom(holds_at(horizontalDown(Diver),Time),
-      [happens(swimAround(Diver),Time)]).
+axiom(requires(swimAround(Diver),Time),
+      [holds_at(horizontalDown(Diver),Time)]).
 
 % 
 % 
@@ -11552,8 +11691,10 @@ event(rapidAscendToSurface(diver)).
 happens(descend1(Diver), Time) <->
     exists([Depth], happens(descend(Diver, Depth), Time)).
 */
-axiom(happens(descend(Diver,Depth),Time) ',' some([Depth]),
-      [happens(descend1(Diver),Time)]).
+axiom(requires(descend1(Diver),Time),
+      [ happens(descend(Diver,Depth),Time),
+	some([Depth])
+      ]).
 axiom(happens(descend1(Diver),Time),
       [ happens(descend(Diver,Depth),Time),
 	some([Depth])
@@ -11569,8 +11710,10 @@ axiom(happens(descend1(Diver),Time),
 happens(ascend1(Diver), Time) <->
     exists([Depth], happens(ascend(Diver, Depth), Time)).
 */
-axiom(happens(ascend(Diver,Depth),Time) ',' some([Depth]),
-      [happens(ascend1(Diver),Time)]).
+axiom(requires(ascend1(Diver),Time),
+      [ happens(ascend(Diver,Depth),Time),
+	some([Depth])
+      ]).
 axiom(happens(ascend1(Diver),Time),
       [ happens(ascend(Diver,Depth),Time),
 	some([Depth])
@@ -11586,8 +11729,8 @@ axiom(happens(ascend1(Diver),Time),
 happens(rapidAscendToSurface(Diver), Time) ->
     happens(ascend(Diver, 0), Time).
 */
-axiom(happens(ascend(Diver,0),Time),
-      [happens(rapidAscendToSurface(Diver),Time)]).
+axiom(requires(ascend(Diver,0),Time),
+      [requires(rapidAscendToSurface(Diver),Time)]).
 
 % 
 % 
@@ -11606,8 +11749,8 @@ event(ascendLine(diver,line)).
 happens(ascendLine(Diver, Line), Time) ->
     happens(ascend1(Diver), Time).
 */
-axiom(happens(ascend1(Diver),Time),
-      [happens(ascendLine(Diver,Line),Time)]).
+axiom(requires(ascend1(Diver),Time),
+      [requires(ascendLine(Diver,Line),Time)]).
 
 % 
 % 
@@ -11699,8 +11842,10 @@ happens(becomeDisoriented(Diver), Time) ->
     not(holds_at(disturbedSilt(), Time-1)),
     holds_at(disturbedSilt(), Time).
 */
-axiom(not(holds_at(disturbedSilt(),Time-1)) ',' holds_at(disturbedSilt(),Time),
-      [happens(becomeDisoriented(Diver),Time)]).
+axiom(requires(becomeDisoriented(Diver),Time),
+      [ not(holds_at(disturbedSilt(),Time-1)),
+	holds_at(disturbedSilt(),Time)
+      ]).
 
 % 
 % 
@@ -11803,8 +11948,8 @@ axiom(terminates(regainConsciousness(Diver),
 happens(goUnconscious(Diver), Time) ->
     happens(rapidAscendToSurface(Diver), Time).
 */
-axiom(happens(rapidAscendToSurface(Diver),Time),
-      [happens(goUnconscious(Diver),Time)]).
+axiom(requires(rapidAscendToSurface(Diver),Time),
+      [requires(goUnconscious(Diver),Time)]).
 
 % 
 % 
@@ -12010,7 +12155,7 @@ axiom(happens(startDecompressionIllness(Diver),Time),
 holds_at(holding(Diver1, Diver2), Time), happens(ascend1(Diver1), Time), not(happens(decompress(Diver2), Time)) ->
     happens(startDecompressionIllness(Diver2), Time).
 */
-axiom(happens(startDecompressionIllness(Diver2),Time),
+axiom(requires(startDecompressionIllness(Diver2),Time),
       [ holds_at(holding(Diver1,Diver2),Time),
 	happens(ascend1(Diver1),Time),
 	not(happens(decompress(Diver2),Time))
@@ -12029,9 +12174,11 @@ happens(decompress(Diver), Time) ->
             (Depth>0, holds_at(atDepth(Diver, Depth), Time))),
     not(holds_at(uncontrolledBuoyancy(Diver), Time)).
 */
-axiom(exists([Depth],
-	     (Depth > 0 ',' holds_at(atDepth(Diver,Depth),Time))) ',' not(holds_at(uncontrolledBuoyancy(Diver),Time)),
-      [happens(decompress(Diver),Time)]).
+axiom(requires(decompress(Diver),Time),
+      [ exists([Depth],
+	       Depth > 0 ',' holds_at(atDepth(Diver,Depth),Time)),
+	not(holds_at(uncontrolledBuoyancy(Diver),Time))
+      ]).
 
 % 
 % 
@@ -12156,6 +12303,7 @@ axiom(initially(neg(disoriented(Diver))),[]).
  /*
 not(holds_at(positivelyBuoyant(Diver),0)) ',' not(holds_at(neutrallyBuoyant(Diver),0)) ',' not(holds_at(negativelyBuoyant(Diver),0)).
 */
+not(holds_at(positivelyBuoyant(Diver),0)) ',' not(holds_at(neutrallyBuoyant(Diver),0)) ',' not(holds_at(negativelyBuoyant(Diver),0)).
 
 % 
 % ectest/ec_reader_test_ecnet.e:4032
@@ -12352,8 +12500,12 @@ axiom(initiates(putOn(Agent,Clothing),
  /*
 exists([Location],  (happens(putOn(Agent, Clothing), Time)->not(holds_at(wearing(Agent, Clothing), Time)), holds_at(at(Agent, Location), Time), holds_at(at(Clothing, Location), Time))).
 */
-axiom(not(holds_at(wearing(Agent,Clothing),Time)) ',' holds_at(at(Agent,Location),Time) ',' holds_at(at(Clothing,Location),Time) ',' some([Location]),
-      [happens(putOn(Agent,Clothing),Time)]).
+axiom(requires(putOn(Agent,Clothing),Time),
+      [ not(holds_at(wearing(Agent,Clothing),Time)),
+	holds_at(at(Agent,Location),Time),
+	holds_at(at(Clothing,Location),Time),
+	some([Location])
+      ]).
 
 % 
 % 
@@ -12382,8 +12534,8 @@ axiom(terminates(takeOff(Agent,Clothing),
 happens(takeOff(Agent, Clothing), Time) ->
     holds_at(wearing(Agent, Clothing), Time).
 */
-axiom(holds_at(wearing(Agent,Clothing),Time),
-      [happens(takeOff(Agent,Clothing),Time)]).
+axiom(requires(takeOff(Agent,Clothing),Time),
+      [holds_at(wearing(Agent,Clothing),Time)]).
 
 % 
 % 
@@ -12514,8 +12666,11 @@ event(eat(agent,food)).
  /*
 exists([Location],  (happens(eat(Agent, Food), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Food, Location), Time))).
 */
-axiom(holds_at(at(Agent,Location),Time) ',' holds_at(at(Food,Location),Time) ',' some([Location]),
-      [happens(eat(Agent,Food),Time)]).
+axiom(requires(eat(Agent,Food),Time),
+      [ holds_at(at(Agent,Location),Time),
+	holds_at(at(Food,Location),Time),
+	some([Location])
+      ]).
 
 % 
 % 
@@ -12807,9 +12962,9 @@ waiterOf(Restaurant)=Waiter, holds_at(beWaiter2(Waiter), Time) ->
     happens(walkThroughDoor12(Waiter, kitchenDoorOf(Restaurant)),
             Time).
 */
-axiom(happens(walkThroughDoor12(Waiter,
-				kitchenDoorOf(Restaurant)),
-	      Time),
+axiom(requires(walkThroughDoor12(Waiter,
+				 kitchenDoorOf(Restaurant)),
+	       Time),
       [ equals(waiterOf(Restaurant),Waiter),
 	holds_at(beWaiter2(Waiter),Time)
       ]).
@@ -12878,10 +13033,10 @@ holds_at(beWaiter3(waiterOf(Restaurant)), Time), exists([Agent], holds_at(knowOr
                   Food),
             Time).
 */
-axiom(happens(order(waiterOf(Restaurant),
-		    cookOf(Restaurant),
-		    Food),
-	      Time),
+axiom(requires(order(waiterOf(Restaurant),
+		     cookOf(Restaurant),
+		     Food),
+	       Time),
       [ holds_at(beWaiter3(waiterOf(Restaurant)),Time),
 	holds_at(knowOrder(waiterOf(Restaurant),
 			   Agent,
@@ -12952,7 +13107,7 @@ axiom(initiates(order(Waiter,Cook,Food),
 holds_at(beWaiter4(Waiter), Time), exists([Agent], holds_at(knowOrder(Waiter, Agent, Food), Time)), holds_at(foodPrepared(Food), Time) ->
     happens(pickUp(Waiter, Food), Time).
 */
-axiom(happens(pickUp(Waiter,Food),Time),
+axiom(requires(pickUp(Waiter,Food),Time),
       [ holds_at(beWaiter4(Waiter),Time),
 	holds_at(knowOrder(Waiter,Agent,Food),
 		 Time),
@@ -13022,9 +13177,9 @@ waiterOf(Restaurant)=Waiter, holds_at(beWaiter5(Waiter), Time) ->
     happens(walkThroughDoor21(Waiter, kitchenDoorOf(Restaurant)),
             Time).
 */
-axiom(happens(walkThroughDoor21(Waiter,
-				kitchenDoorOf(Restaurant)),
-	      Time),
+axiom(requires(walkThroughDoor21(Waiter,
+				 kitchenDoorOf(Restaurant)),
+	       Time),
       [ equals(waiterOf(Restaurant),Waiter),
 	holds_at(beWaiter5(Waiter),Time)
       ]).
@@ -13092,7 +13247,7 @@ axiom(initiates(walkThroughDoor21(Waiter,Door),
 waiterOf(Restaurant)=Waiter, tableOf(Restaurant)=Table, holds_at(beWaiter6(Waiter), Time), holds_at(holding(Waiter, Food), Time) ->
     happens(placeOn(Waiter, Food, Table), Time).
 */
-axiom(happens(placeOn(Waiter,Food,Table),Time),
+axiom(requires(placeOn(Waiter,Food,Table),Time),
       [ equals(waiterOf(Restaurant),Waiter),
 	equals(tableOf(Restaurant),Table),
 	holds_at(beWaiter6(Waiter),Time),
@@ -13188,7 +13343,7 @@ axiom(initiates(request(Agent,Waiter,Bill),
 waiterOf(Restaurant)=Waiter, billOf(Restaurant)=Bill, holds_at(beWaiter8(Waiter), Time) ->
     happens(pickUp(Waiter, Bill), Time).
 */
-axiom(happens(pickUp(Waiter,Bill),Time),
+axiom(requires(pickUp(Waiter,Bill),Time),
       [ equals(waiterOf(Restaurant),Waiter),
 	equals(billOf(Restaurant),Bill),
 	holds_at(beWaiter8(Waiter),Time)
@@ -13245,7 +13400,7 @@ axiom(initiates(pickUp(Waiter,Bill),
 waiterOf(Restaurant)=Waiter, billOf(Restaurant)=Bill, tableOf(Restaurant)=Table, holds_at(beWaiter9(Waiter), Time) ->
     happens(placeOn(Waiter, Bill, Table), Time).
 */
-axiom(happens(placeOn(Waiter,Bill,Table),Time),
+axiom(requires(placeOn(Waiter,Bill,Table),Time),
       [ equals(waiterOf(Restaurant),Waiter),
 	equals(billOf(Restaurant),Bill),
 	equals(tableOf(Restaurant),Table),
@@ -13398,8 +13553,11 @@ axiom(initiates(foodPrepare(Agent,Food),
  /*
 exists([Location],  (happens(foodPrepare(Agent, Food), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Food, Location), Time))).
 */
-axiom(holds_at(at(Agent,Location),Time) ',' holds_at(at(Food,Location),Time) ',' some([Location]),
-      [happens(foodPrepare(Agent,Food),Time)]).
+axiom(requires(foodPrepare(Agent,Food),Time),
+      [ holds_at(at(Agent,Location),Time),
+	holds_at(at(Food,Location),Time),
+	some([Location])
+      ]).
 
 % 
 % 
@@ -13412,7 +13570,7 @@ axiom(holds_at(at(Agent,Location),Time) ',' holds_at(at(Food,Location),Time) ','
 holds_at(beCook1(Cook), Time), holds_at(knowOrder(Cook, Agent, Food), Time) ->
     happens(foodPrepare(Cook, Food), Time).
 */
-axiom(happens(foodPrepare(Cook,Food),Time),
+axiom(requires(foodPrepare(Cook,Food),Time),
       [ holds_at(beCook1(Cook),Time),
 	holds_at(knowOrder(Cook,Agent,Food),
 		 Time)
@@ -13510,210 +13668,258 @@ option(renaming,off).
  /*
 ignore(love).
 */
+ignore(love).
 
  /*
 ignore(threatenedBy).
 */
+ignore(threatenedBy).
 
 % ectest/ec_reader_test_ecnet.e:4484
 % ignore LookOutOnto, Floor, BuildingOf, SkyOf, GroundOf
  /*
 ignore(lookOutOnto).
 */
+ignore(lookOutOnto).
 
  /*
 ignore(floor).
 */
+ignore(floor).
 
  /*
 ignore(buildingOf).
 */
+ignore(buildingOf).
 
  /*
 ignore(skyOf).
 */
+ignore(skyOf).
 
  /*
 ignore(groundOf).
 */
+ignore(groundOf).
 
 % ignore Inside
  /*
 ignore(inside).
 */
+ignore(inside).
 
 % ignore Near, WalkFrom, WalkFromTo, RunFromTo
  /*
 ignore(near).
 */
+ignore(near).
 
  /*
 ignore(walkFrom).
 */
+ignore(walkFrom).
 
  /*
 ignore(walkFromTo).
 */
+ignore(walkFromTo).
 
  /*
 ignore(runFromTo).
 */
+ignore(runFromTo).
 
 % ignore BillOf, CookOf, TableOf, WaiterOf, KitchenDoorOf
  /*
 ignore(billOf).
 */
+ignore(billOf).
 
  /*
 ignore(cookOf).
 */
+ignore(cookOf).
 
  /*
 ignore(tableOf).
 */
+ignore(tableOf).
 
  /*
 ignore(waiterOf).
 */
+ignore(waiterOf).
 
  /*
 ignore(kitchenDoorOf).
 */
+ignore(kitchenDoorOf).
 
 % ignore BeWaiter0, BeWaiter1, BeWaiter2, BeWaiter3, BeWaiter4
  /*
 ignore(beWaiter0).
 */
+ignore(beWaiter0).
 
  /*
 ignore(beWaiter1).
 */
+ignore(beWaiter1).
 
  /*
 ignore(beWaiter2).
 */
+ignore(beWaiter2).
 
  /*
 ignore(beWaiter3).
 */
+ignore(beWaiter3).
 
  /*
 ignore(beWaiter4).
 */
+ignore(beWaiter4).
 
 % ignore BeWaiter5, BeWaiter6, BeWaiter7, BeWaiter8, BeWaiter9
  /*
 ignore(beWaiter5).
 */
+ignore(beWaiter5).
 
  /*
 ignore(beWaiter6).
 */
+ignore(beWaiter6).
 
  /*
 ignore(beWaiter7).
 */
+ignore(beWaiter7).
 
  /*
 ignore(beWaiter8).
 */
+ignore(beWaiter8).
 
  /*
 ignore(beWaiter9).
 */
+ignore(beWaiter9).
 
 % ectest/ec_reader_test_ecnet.e:4490
 % ignore BeCook0, BeCook1
  /*
 ignore(beCook0).
 */
+ignore(beCook0).
 
  /*
 ignore(beCook1).
 */
+ignore(beCook1).
 
 % ignore InviteIn, InvitedIn, IntendToWalkIn, IntentionToWalkIn
  /*
 ignore(inviteIn).
 */
+ignore(inviteIn).
 
  /*
 ignore(invitedIn).
 */
+ignore(invitedIn).
 
  /*
 ignore(intendToWalkIn).
 */
+ignore(intendToWalkIn).
 
  /*
 ignore(intentionToWalkIn).
 */
+ignore(intentionToWalkIn).
 
 % ignore ActOnIntentionToWalkIn, Greet, SayGoodbye, CryForJoy
  /*
 ignore(actOnIntentionToWalkIn).
 */
+ignore(actOnIntentionToWalkIn).
 
  /*
 ignore(greet).
 */
+ignore(greet).
 
  /*
 ignore(sayGoodbye).
 */
+ignore(sayGoodbye).
 
  /*
 ignore(cryForJoy).
 */
+ignore(cryForJoy).
 
 % ignore Threaten, ReleaseFromThreat, ThreatenedBy
  /*
 ignore(threaten).
 */
+ignore(threaten).
 
  /*
 ignore(releaseFromThreat).
 */
+ignore(releaseFromThreat).
 
  /*
 ignore(threatenedBy).
 */
+ignore(threatenedBy).
 
 % ignore Order, KnowOrder, Request, KnowRequest
  /*
 ignore(order).
 */
+ignore(order).
 
  /*
 ignore(knowOrder).
 */
+ignore(knowOrder).
 
  /*
 ignore(request).
 */
+ignore(request).
 
  /*
 ignore(knowRequest).
 */
+ignore(knowRequest).
 
 % ignore PutInside, TakeOutOf
  /*
 ignore(putInside).
 */
+ignore(putInside).
 
  /*
 ignore(takeOutOf).
 */
+ignore(takeOutOf).
 
 % ectest/ec_reader_test_ecnet.e:4496
 % ignore SayPleaseToMeet, Move
  /*
 ignore(sayPleaseToMeet).
 */
+ignore(sayPleaseToMeet).
 
  /*
 ignore(move).
 */
+ignore(move).
 
 % 
 % load foundations/Root.e% load foundations/EC.e% load answers/Mueller2003/Ontology.e
@@ -14352,42 +14558,43 @@ axiom(holds_at(at(eater2,upstairs1),0),[]).
  /*
 happens(foodPrepare(cook1,food1),0).
 */
-axiom(happens(foodPrepare(cook1,food1),0),[]).
+axiom(happens(foodPrepare(cook1,food1),0),[is_time(0)]).
 
 % 
 % Happens(PutOn(Eater1,Clothing1),1).
  /*
 happens(putOn(eater1,clothing1),1).
 */
-axiom(happens(putOn(eater1,clothing1),1),[]).
+axiom(happens(putOn(eater1,clothing1),1),[is_time(1)]).
 
 % 
 % Happens(PutOn(Eater2,Clothing2),2).
  /*
 happens(putOn(eater2,clothing2),2).
 */
-axiom(happens(putOn(eater2,clothing2),2),[]).
+axiom(happens(putOn(eater2,clothing2),2),[is_time(2)]).
 
 % 
 % Happens(WalkDownStaircase(Eater1,Staircase1),3).
  /*
 happens(walkDownStaircase(eater1,staircase1),3).
 */
-axiom(happens(walkDownStaircase(eater1,staircase1),3),[]).
+axiom(happens(walkDownStaircase(eater1,staircase1),3),[is_time(3)]).
 
 % 
 % Happens(WalkDownStaircase(Eater2,Staircase1),4).
  /*
 happens(walkDownStaircase(eater2,staircase1),4).
 */
-axiom(happens(walkDownStaircase(eater2,staircase1),4),[]).
+axiom(happens(walkDownStaircase(eater2,staircase1),4),[is_time(4)]).
 
 % 
 % Happens(WalkThroughDoor12(Eater1,DiningRoomDoor1),5).
  /*
 happens(walkThroughDoor12(eater1,diningRoomDoor1),5).
 */
-axiom(happens(walkThroughDoor12(eater1,diningRoomDoor1),5),[]).
+axiom(happens(walkThroughDoor12(eater1,diningRoomDoor1),5),
+      [is_time(5)]).
 
 % 
 % ectest/ec_reader_test_ecnet.e:4619
@@ -14395,42 +14602,43 @@ axiom(happens(walkThroughDoor12(eater1,diningRoomDoor1),5),[]).
  /*
 happens(walkThroughDoor12(eater2,diningRoomDoor1),6).
 */
-axiom(happens(walkThroughDoor12(eater2,diningRoomDoor1),6),[]).
+axiom(happens(walkThroughDoor12(eater2,diningRoomDoor1),6),
+      [is_time(6)]).
 
 % 
 % Happens(SitOn(Eater1,Chair1),7).
  /*
 happens(sitOn(eater1,chair1),7).
 */
-axiom(happens(sitOn(eater1,chair1),7),[]).
+axiom(happens(sitOn(eater1,chair1),7),[is_time(7)]).
 
 % 
 % Happens(SitOn(Eater2,Chair2),8).
  /*
 happens(sitOn(eater2,chair2),8).
 */
-axiom(happens(sitOn(eater2,chair2),8),[]).
+axiom(happens(sitOn(eater2,chair2),8),[is_time(8)]).
 
 % 
 % Happens(PickUp(Cook1, Food1),9).
  /*
 happens(pickUp(cook1,food1),9).
 */
-axiom(happens(pickUp(cook1,food1),9),[]).
+axiom(happens(pickUp(cook1,food1),9),[is_time(9)]).
 
 % 
 % Happens(WalkThroughDoor21(Cook1, KitchenDoor1),10).
  /*
 happens(walkThroughDoor21(cook1,kitchenDoor1),10).
 */
-axiom(happens(walkThroughDoor21(cook1,kitchenDoor1),10),[]).
+axiom(happens(walkThroughDoor21(cook1,kitchenDoor1),10),[is_time(10)]).
 
 % 
 % Happens(PlaceOn(Cook1, Food1, Table1),11).
  /*
 happens(placeOn(cook1,food1,table1),11).
 */
-axiom(happens(placeOn(cook1,food1,table1),11),[]).
+axiom(happens(placeOn(cook1,food1,table1),11),[is_time(11)]).
 
 % 
 % ectest/ec_reader_test_ecnet.e:4625
@@ -14438,42 +14646,42 @@ axiom(happens(placeOn(cook1,food1,table1),11),[]).
  /*
 happens(walkThroughDoor12(cook1,kitchenDoor1),12).
 */
-axiom(happens(walkThroughDoor12(cook1,kitchenDoor1),12),[]).
+axiom(happens(walkThroughDoor12(cook1,kitchenDoor1),12),[is_time(12)]).
 
 % 
 % Happens(Eat(Eater1,Food1),13).
  /*
 happens(eat(eater1,food1),13).
 */
-axiom(happens(eat(eater1,food1),13),[]).
+axiom(happens(eat(eater1,food1),13),[is_time(13)]).
 
 % 
 % Happens(Eat(Eater2,Food1),14).
  /*
 happens(eat(eater2,food1),14).
 */
-axiom(happens(eat(eater2,food1),14),[]).
+axiom(happens(eat(eater2,food1),14),[is_time(14)]).
 
 % 
 % Happens(Converse(Eater1,Eater2),15).
  /*
 happens(converse(eater1,eater2),15).
 */
-axiom(happens(converse(eater1,eater2),15),[]).
+axiom(happens(converse(eater1,eater2),15),[is_time(15)]).
 
 % 
 % Happens(TalkAbout(Eater1,Content1),16).
  /*
 happens(talkAbout(eater1,content1),16).
 */
-axiom(happens(talkAbout(eater1,content1),16),[]).
+axiom(happens(talkAbout(eater1,content1),16),[is_time(16)]).
 
 % 
 % Happens(TalkAbout(Eater2,Content2),17).
  /*
 happens(talkAbout(eater2,content2),17).
 */
-axiom(happens(talkAbout(eater2,content2),17),[]).
+axiom(happens(talkAbout(eater2,content2),17),[is_time(17)]).
 
 % 
 % ectest/ec_reader_test_ecnet.e:4631
@@ -14481,14 +14689,14 @@ axiom(happens(talkAbout(eater2,content2),17),[]).
  /*
 happens(riseFrom(eater1,chair1),18).
 */
-axiom(happens(riseFrom(eater1,chair1),18),[]).
+axiom(happens(riseFrom(eater1,chair1),18),[is_time(18)]).
 
 % 
 % Happens(RiseFrom(Eater2,Chair2),19).
  /*
 happens(riseFrom(eater2,chair2),19).
 */
-axiom(happens(riseFrom(eater2,chair2),19),[]).
+axiom(happens(riseFrom(eater2,chair2),19),[is_time(19)]).
 
 % 
 % 

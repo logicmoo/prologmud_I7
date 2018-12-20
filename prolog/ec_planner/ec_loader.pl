@@ -140,18 +140,70 @@ axiom(
      holds_at(nearPortal(Agent,Door),Time)]).
  
 */
+functors_are(F,E):- \+ is_list(E), conjuncts_to_list(E, L), !, functors_are(F, L).
+functors_are(\+ F,P):-  nonvar(F), !, forall(member(E,P), \+ functor_is(F,P)).
+functors_are((F1,F2),P):- !,  
+  partition(functors_are(F1),P,[_|_],RestOf),
+  functors_are(F2,RestOf).
+%functors_are((F1;F2),P):-  !, nonvar(F1), (functors_are(F1,P);functors_are(F2,P)).
+functors_are(F,P):- maplist(functor_is(F),P).
 
-:- export(assert_ele/1).
+
+functor_is(F, not(E)):- !, compound(E), functor_is(F, E).
+functor_is(\+ F,P):- !, nonvar(F), !,  \+ functor_is(F,P).
+functor_is((F1;F2),P):- !, nonvar(F1), (functor_is(F1,P);functor_is(F2,P)).
+functor_is(F,P):- compound_name_arity(P,F,_).
+
+
+
+
+
+
+:- export(assert_ele/1).
 assert_ele(SS):- is_list(SS),!,maplist(assert_ele,SS).
-assert_ele(SS):- syntx_term_check(SS),!.
+%assert_ele(SS):- syntx_term_check(SS),!.
+assert_ele(ec_current_domain_db(P,_TMI_)):- !, assert_ele(P).
+assert_ele(ec_axiom(H,B,_TMI_)):- !,  assert_axiom(H,B).
+assert_ele(SS):- echo_format('~N'), 
+  pprint_ecp(pl, SS).
 
-assert_ele(ec_axiom(happens(A,T), B,_TM)):- 
+assert_axiom(Conds, [happens(A,T)]):-
+   conjuncts_to_list(Conds, B ), 
+   functors_are(\+ happens, B), !,
+   assert_axiom(requires(A,T),B).
+
+assert_axiom(happens(A,T), []):- !,
+   assert_axiom(happens(A,T), [is_time(T)]).  
+
+assert_axiom(EffectAx, B):- 
+  EffectAx=..[Effect,Event,Fluent,T],
+  member(Effect,[initiates,terminates,releases]),
+  assert_effect(Effect,Event,Fluent,T,B).
+
+assert_axiom(happens(A,T), B):- 
   is_list(B), member(holds_at(_,_), B), !,
-  pprint_ecp(ec, axiom(requires(A,T),B)).
+  assert_axiom(requires(A,T),B).
+/*
+assert_axiom((A1,A2), B):- 
+  assert_axiom(A1, [possible(A2)|B]),
+  assert_axiom(A2, [possible(A1)|B]).
+assert_axiom(A1;A2, B):- 
+  assert_axiom(A1, [not(A2)|B]),
+  assert_axiom(A2, [not(A1)|B]).
+*/
+assert_axiom(H,B):- 
+  assert_ele(axiom(H,B)).
 
-assert_ele(ec_axiom(H,B,_TM)):- !,  pprint_ecp(ec, axiom(H,B)).
-assert_ele(ec_current_domain_db(P,_TM)):- !, assert_ele(P).
-assert_ele(SS):- echo_format('~N'), pprint_ecp(pl, SS).
+% Normals
+assert_effect(Effect,(A1,A2),Fluent,T,B):- !,
+   assert_effect(Effect,A1,Fluent,T,[possible(A2)|B]),
+   assert_effect(Effect,A2,Fluent,T,[possible(A1)|B]).
+assert_effect(Effect,(A1;A2),Fluent,T,B):- !,
+   assert_effect(Effect,A1,Fluent,T,[possible(not(A2))|B]),
+   assert_effect(Effect,A2,Fluent,T,[possible(not(A2))|B]).
+assert_effect(Effect,Event,Fluent,T,B):-
+  EffectAx=..[Effect,Event,Fluent,T],
+  assert_ele(axiom(EffectAx,B)).
 
 
 

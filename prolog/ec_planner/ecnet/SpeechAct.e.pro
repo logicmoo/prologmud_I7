@@ -65,9 +65,12 @@ fluent(invitedIn(agent,room,agent)).
  /*
 exists([Outside],  (happens(inviteIn(Agent1, Agent2, Room), Time)->holds_at(at(Agent1, Room), Time), holds_at(at(Agent2, Outside), Time), adjacent(Room, Outside))).
 */
-axiom(holds_at(at(Agent1,Room),Time) ',' holds_at(at(Agent2,Outside),Time) ',' adjacent(Room,Outside) ',' some([Outside]),
-      [ happens(inviteIn(Agent1,Agent2,Room),
-		Time)
+axiom(requires(inviteIn(Agent1,Agent2,Room),
+	       Time),
+      [ holds_at(at(Agent1,Room),Time),
+	holds_at(at(Agent2,Outside),Time),
+	adjacent(Room,Outside),
+	some([Outside])
       ]).
 
 % 
@@ -315,8 +318,11 @@ event(converse(agent,agent)).
  /*
 exists([Location],  (happens(converse(Agent1, Agent2), Time)->holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
 */
-axiom(holds_at(at(Agent1,Location),Time) ',' holds_at(at(Agent2,Location),Time) ',' some([Location]),
-      [happens(converse(Agent1,Agent2),Time)]).
+axiom(requires(converse(Agent1,Agent2),Time),
+      [ holds_at(at(Agent1,Location),Time),
+	holds_at(at(Agent2,Location),Time),
+	some([Location])
+      ]).
 
 % 
 % 
@@ -335,8 +341,11 @@ axiom(holds_at(at(Agent1,Location),Time) ',' holds_at(at(Agent2,Location),Time) 
  /*
 exists([Location],  (happens(greet(Agent, Object), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Object, Location), Time))).
 */
-axiom(holds_at(at(Agent,Location),Time) ',' holds_at(at(Object,Location),Time) ',' some([Location]),
-      [happens(greet(Agent,Object),Time)]).
+axiom(requires(greet(Agent,Object),Time),
+      [ holds_at(at(Agent,Location),Time),
+	holds_at(at(Object,Location),Time),
+	some([Location])
+      ]).
 
 % 
 % 
@@ -350,8 +359,11 @@ axiom(holds_at(at(Agent,Location),Time) ',' holds_at(at(Object,Location),Time) '
  /*
 exists([Location],  (happens(sayGoodbye(Agent, Object), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Object, Location), Time))).
 */
-axiom(holds_at(at(Agent,Location),Time) ',' holds_at(at(Object,Location),Time) ',' some([Location]),
-      [happens(sayGoodbye(Agent,Object),Time)]).
+axiom(requires(sayGoodbye(Agent,Object),Time),
+      [ holds_at(at(Agent,Location),Time),
+	holds_at(at(Object,Location),Time),
+	some([Location])
+      ]).
 
 % 
 % 
@@ -377,8 +389,8 @@ event(cryForJoy(agent)).
 happens(cryForJoy(Agent), Time) ->
     holds_at(happy(Agent), Time).
 */
-axiom(holds_at(happy(Agent),Time),
-      [happens(cryForJoy(Agent),Time)]).
+axiom(requires(cryForJoy(Agent),Time),
+      [holds_at(happy(Agent),Time)]).
 
 % 
 % 
@@ -415,9 +427,12 @@ fluent(threatenedBy(agent,agent)).
  /*
 exists([Location],  (happens(threaten(Agent1, Agent2, Weapon), Time)->holds_at(holding(Agent1, Weapon), Time), holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
 */
-axiom(holds_at(holding(Agent1,Weapon),Time) ',' holds_at(at(Agent1,Location),Time) ',' holds_at(at(Agent2,Location),Time) ',' some([Location]),
-      [ happens(threaten(Agent1,Agent2,Weapon),
-		Time)
+axiom(requires(threaten(Agent1,Agent2,Weapon),
+	       Time),
+      [ holds_at(holding(Agent1,Weapon),Time),
+	holds_at(at(Agent1,Location),Time),
+	holds_at(at(Agent2,Location),Time),
+	some([Location])
       ]).
 
 % 
@@ -430,9 +445,9 @@ axiom(holds_at(holding(Agent1,Weapon),Time) ',' holds_at(at(Agent1,Location),Tim
 happens(threaten(Agent1, Agent2, Weapon), Time) ->
     happens(becomeAngryAt(Agent2, Agent1), Time).
 */
-axiom(happens(becomeAngryAt(Agent2,Agent1),Time),
-      [ happens(threaten(Agent1,Agent2,Weapon),
-		Time)
+axiom(requires(becomeAngryAt(Agent2,Agent1),Time),
+      [ requires(threaten(Agent1,Agent2,Weapon),
+		 Time)
       ]).
 
 % 
@@ -513,9 +528,11 @@ axiom(initiates(order(Agent1,Agent2,Physobj),
  /*
 exists([Location],  (happens(order(Agent1, Agent2, Physobj), Time)->holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
 */
-axiom(holds_at(at(Agent1,Location),Time) ',' holds_at(at(Agent2,Location),Time) ',' some([Location]),
-      [ happens(order(Agent1,Agent2,Physobj),
-		Time)
+axiom(requires(order(Agent1,Agent2,Physobj),
+	       Time),
+      [ holds_at(at(Agent1,Location),Time),
+	holds_at(at(Agent2,Location),Time),
+	some([Location])
       ]).
 
 % 
@@ -562,9 +579,11 @@ axiom(initiates(request(Agent1,Agent2,Physobj),
  /*
 exists([Location],  (happens(request(Agent1, Agent2, Physobj), Time)->holds_at(at(Agent1, Location), Time), holds_at(at(Agent2, Location), Time))).
 */
-axiom(holds_at(at(Agent1,Location),Time) ',' holds_at(at(Agent2,Location),Time) ',' some([Location]),
-      [ happens(request(Agent1,Agent2,Physobj),
-		Time)
+axiom(requires(request(Agent1,Agent2,Physobj),
+	       Time),
+      [ holds_at(at(Agent1,Location),Time),
+	holds_at(at(Agent2,Location),Time),
+	some([Location])
       ]).
 
 % 

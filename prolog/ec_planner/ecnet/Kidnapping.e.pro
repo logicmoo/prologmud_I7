@@ -30,61 +30,75 @@
  /*
 ignore(skyOf).
 */
+ignore(skyOf).
 
  /*
 ignore(groundOf).
 */
+ignore(groundOf).
 
  /*
 ignore(near).
 */
+ignore(near).
 
  /*
 ignore(walkFromTo).
 */
+ignore(walkFromTo).
 
  /*
 ignore(runFromTo).
 */
+ignore(runFromTo).
 
 % ignore RollAlong, Diameter, Move, HoldSome
  /*
 ignore(rollAlong).
 */
+ignore(rollAlong).
 
  /*
 ignore(diameter).
 */
+ignore(diameter).
 
  /*
 ignore(move).
 */
+ignore(move).
 
  /*
 ignore(holdSome).
 */
+ignore(holdSome).
 
 % ignore On, DoorUnlock, DoorLock
  /*
 ignore(on).
 */
+ignore(on).
 
  /*
 ignore(doorUnlock).
 */
+ignore(doorUnlock).
 
  /*
 ignore(doorLock).
 */
+ignore(doorLock).
 
 % ignore WalkDownStaircase, WalkUpStaircase
  /*
 ignore(walkDownStaircase).
 */
+ignore(walkDownStaircase).
 
  /*
 ignore(walkUpStaircase).
 */
+ignore(walkUpStaircase).
 
 % 
 % ecnet/Kidnapping.e:30
@@ -92,49 +106,60 @@ ignore(walkUpStaircase).
  /*
 ignore(request).
 */
+ignore(request).
 
  /*
 ignore(knowRequest).
 */
+ignore(knowRequest).
 
  /*
 ignore(order).
 */
+ignore(order).
 
  /*
 ignore(knowOrder).
 */
+ignore(knowOrder).
 
  /*
 ignore(sayGoodbye).
 */
+ignore(sayGoodbye).
 
 % ignore IntentionToWalkIn, InvitedIn
  /*
 ignore(intentionToWalkIn).
 */
+ignore(intentionToWalkIn).
 
  /*
 ignore(invitedIn).
 */
+ignore(invitedIn).
 
 % ignore Snowing
  /*
 ignore(snowing).
 */
+ignore(snowing).
 
 % ignore Like, Dislike, LikeSnow
  /*
 ignore(like).
 */
+ignore(like).
 
  /*
 ignore(dislike).
 */
+ignore(dislike).
 
  /*
 ignore(likeSnow).
 */
+ignore(likeSnow).
 
 % 
 % load foundations/Root.e
@@ -804,8 +829,8 @@ axiom(terminates(becomeHappy(Agent),
 happens(becomeHappy(Agent), Time) ->
     not(holds_at(happy(Agent), Time)).
 */
-axiom(holds_at(neg(happy(Agent)),Time),
-      [happens(becomeHappy(Agent),Time)]).
+axiom(requires(becomeHappy(Agent),Time),
+      [holds_at(neg(happy(Agent)),Time)]).
 
 % 
 % 
@@ -855,8 +880,8 @@ axiom(terminates(becomeCalm(Agent),
 happens(becomeCalm(Agent), Time) ->
     not(holds_at(calm(Agent), Time)).
 */
-axiom(holds_at(neg(calm(Agent)),Time),
-      [happens(becomeCalm(Agent),Time)]).
+axiom(requires(becomeCalm(Agent),Time),
+      [holds_at(neg(calm(Agent)),Time)]).
 
 % 
 % 
@@ -910,8 +935,8 @@ axiom(terminates(becomeUnhappy(Agent),
 happens(becomeUnhappy(Agent), Time) ->
     not(holds_at(unhappy(Agent), Time)).
 */
-axiom(holds_at(neg(unhappy(Agent)),Time),
-      [happens(becomeUnhappy(Agent),Time)]).
+axiom(requires(becomeUnhappy(Agent),Time),
+      [holds_at(neg(unhappy(Agent)),Time)]).
 
 % 
 % 
@@ -969,8 +994,8 @@ axiom(terminates(becomeHappy(Agent1),
 happens(becomeAngryAt(Agent1, Agent2), Time) ->
     happens(becomeUnhappy(Agent1), Time).
 */
-axiom(happens(becomeUnhappy(Agent1),Time),
-      [happens(becomeAngryAt(Agent1,Agent2),Time)]).
+axiom(requires(becomeUnhappy(Agent1),Time),
+      [requires(becomeAngryAt(Agent1,Agent2),Time)]).
 
 % 
 % 
@@ -1230,8 +1255,8 @@ event(repair(object,physobj)).
 happens(damage(Object, Physobj), Time) ->
     holds_at(intact(Physobj), Time).
 */
-axiom(holds_at(intact(Physobj),Time),
-      [happens(damage(Object,Physobj),Time)]).
+axiom(requires(damage(Object,Physobj),Time),
+      [holds_at(intact(Physobj),Time)]).
 
 % 
 % 
@@ -1276,8 +1301,9 @@ happens(destroy(Object, Physobj), Time) ->
     ;   holds_at(damaged(Physobj), Time)
     ).
 */
-axiom(holds_at(intact(Physobj),Time) ; holds_at(damaged(Physobj),Time),
-      [happens(destroy(Object,Physobj),Time)]).
+axiom(requires(destroy(Object,Physobj),Time),
+      [ holds_at(intact(Physobj),Time) ; holds_at(damaged(Physobj),Time)
+      ]).
 
 % 
 % 
@@ -1493,10 +1519,13 @@ happens(shoot(Agent, Gun, Object), Time) ->
     exists([Location],
             (holds_at(at(Agent, Location), Time), holds_at(at(Object, Location), Time))).
 */
-axiom(holds_at(holding(Agent,Gun),Time) ',' exists([Bullet],
-	     holds_at(loaded(Gun,Bullet),Time)) ',' exists([Location],
-	     holds_at(at(Agent,Location),Time) ',' holds_at(at(Object,Location),Time)),
-      [happens(shoot(Agent,Gun,Object),Time)]).
+axiom(requires(shoot(Agent,Gun,Object),Time),
+      [ holds_at(holding(Agent,Gun),Time),
+	exists([Bullet],
+	       holds_at(loaded(Gun,Bullet),Time)),
+	exists([Location],
+	       holds_at(at(Agent,Location),Time) ',' holds_at(at(Object,Location),Time))
+      ]).
 
 % 
 % 
@@ -1815,8 +1844,8 @@ axiom(initiates(wakeUp(Agent),sleep1(Agent),Time),[]).
 happens(wakeUp(Agent), Time) ->
     holds_at(sleep0(Agent), Time).
 */
-axiom(holds_at(sleep0(Agent),Time),
-      [happens(wakeUp(Agent),Time)]).
+axiom(requires(wakeUp(Agent),Time),
+      [holds_at(sleep0(Agent),Time)]).
 
 % 
 % 
@@ -1859,8 +1888,8 @@ axiom(initiates(riseFrom(Agent,Bed),
 happens(riseFrom(Agent, Bed), Time) ->
     holds_at(sleep1(Agent), Time).
 */
-axiom(holds_at(sleep1(Agent),Time),
-      [happens(riseFrom(Agent,Bed),Time)]).
+axiom(requires(riseFrom(Agent,Bed),Time),
+      [holds_at(sleep1(Agent),Time)]).
 
 % 
 % 
@@ -1896,8 +1925,8 @@ axiom(initiates(getDressed(Agent),sleep3(Agent),Time),
 happens(getDressed(Agent), Time) ->
     holds_at(sleep2(Agent), Time).
 */
-axiom(holds_at(sleep2(Agent),Time),
-      [happens(getDressed(Agent),Time)]).
+axiom(requires(getDressed(Agent),Time),
+      [holds_at(sleep2(Agent),Time)]).
 
 % 
 % 
@@ -1931,8 +1960,8 @@ axiom(initiates(getTired(Agent),sleep4(Agent),Time),
 happens(getTired(Agent), Time) ->
     holds_at(sleep3(Agent), Time).
 */
-axiom(holds_at(sleep3(Agent),Time),
-      [happens(getTired(Agent),Time)]).
+axiom(requires(getTired(Agent),Time),
+      [holds_at(sleep3(Agent),Time)]).
 
 % 
 % 
@@ -1970,8 +1999,8 @@ axiom(initiates(getUndressed(Agent),
 happens(getUndressed(Agent), Time) ->
     holds_at(sleep4(Agent), Time).
 */
-axiom(holds_at(sleep4(Agent),Time),
-      [happens(getUndressed(Agent),Time)]).
+axiom(requires(getUndressed(Agent),Time),
+      [holds_at(sleep4(Agent),Time)]).
 
 % 
 % 
@@ -2009,8 +2038,8 @@ axiom(initiates(lieOn(Agent,Bed),
 happens(lieOn(Agent, Bed), Time) ->
     holds_at(sleep5(Agent), Time).
 */
-axiom(holds_at(sleep5(Agent),Time),
-      [happens(lieOn(Agent,Bed),Time)]).
+axiom(requires(lieOn(Agent,Bed),Time),
+      [holds_at(sleep5(Agent),Time)]).
 
 % 
 % 
@@ -2046,8 +2075,8 @@ axiom(initiates(fallAsleep(Agent),sleep0(Agent),Time),
 happens(fallAsleep(Agent), Time) ->
     holds_at(sleep6(Agent), Time).
 */
-axiom(holds_at(sleep6(Agent),Time),
-      [happens(fallAsleep(Agent),Time)]).
+axiom(requires(fallAsleep(Agent),Time),
+      [holds_at(sleep6(Agent),Time)]).
 
 % 
 % 
@@ -2127,8 +2156,13 @@ axiom(requires(lieOn(Agent,Bed),Time),
  /*
 exists([Room],  (happens(lieOn(Agent, Bed), Time)->holds_at(sleep5(Agent), Time), holds_at(actOnSleep5(Agent), Time), holds_at(at(Agent, Room), Time), holds_at(at(Bed, Room), Time))).
 */
-axiom(holds_at(sleep5(Agent),Time) ',' holds_at(actOnSleep5(Agent),Time) ',' holds_at(at(Agent,Room),Time) ',' holds_at(at(Bed,Room),Time) ',' some([Room]),
-      [happens(lieOn(Agent,Bed),Time)]).
+axiom(requires(lieOn(Agent,Bed),Time),
+      [ holds_at(sleep5(Agent),Time),
+	holds_at(actOnSleep5(Agent),Time),
+	holds_at(at(Agent,Room),Time),
+	holds_at(at(Bed,Room),Time),
+	some([Room])
+      ]).
 
 % 
 % 
@@ -2160,8 +2194,11 @@ event(sitOn(agent,physobj)).
  /*
 exists([Location],  (happens(sitOn(Agent, Physobj), Time)->holds_at(at(Agent, Location), Time), holds_at(at(Physobj, Location), Time))).
 */
-axiom(holds_at(at(Agent,Location),Time) ',' holds_at(at(Physobj,Location),Time) ',' some([Location]),
-      [happens(sitOn(Agent,Physobj),Time)]).
+axiom(requires(sitOn(Agent,Physobj),Time),
+      [ holds_at(at(Agent,Location),Time),
+	holds_at(at(Physobj,Location),Time),
+	some([Location])
+      ]).
 
 % 
 % 
@@ -2914,21 +2951,21 @@ axiom(initially(neg(love(Agent,Object))),[]).
  /*
 happens(pickUp(perp1,gun1),0).
 */
-axiom(happens(pickUp(perp1,gun1),0),[]).
+axiom(happens(pickUp(perp1,gun1),0),[is_time(0)]).
 
 % 
 % Happens(PickUp(Perp1,Bullet1),1).
  /*
 happens(pickUp(perp1,bullet1),1).
 */
-axiom(happens(pickUp(perp1,bullet1),1),[]).
+axiom(happens(pickUp(perp1,bullet1),1),[is_time(1)]).
 
 % 
 % Happens(PutInside(Perp1,Bullet1,Gun1),2).
  /*
 happens(putInside(perp1,bullet1,gun1),2).
 */
-axiom(happens(putInside(perp1,bullet1,gun1),2),[]).
+axiom(happens(putInside(perp1,bullet1,gun1),2),[is_time(2)]).
 
 % 
 % ecnet/Kidnapping.e:112
@@ -2936,42 +2973,42 @@ axiom(happens(putInside(perp1,bullet1,gun1),2),[]).
  /*
 happens(walkStreet21(perp1,street1),3).
 */
-axiom(happens(walkStreet21(perp1,street1),3),[]).
+axiom(happens(walkStreet21(perp1,street1),3),[is_time(3)]).
 
 % 
 % Happens(Threaten(Perp1,HumanTarget1,Gun1),4).
  /*
 happens(threaten(perp1,humanTarget1,gun1),4).
 */
-axiom(happens(threaten(perp1,humanTarget1,gun1),4),[]).
+axiom(happens(threaten(perp1,humanTarget1,gun1),4),[is_time(4)]).
 
 % 
 % Happens(Grab(Perp1,HumanTarget1),5).
  /*
 happens(grab(perp1,humanTarget1),5).
 */
-axiom(happens(grab(perp1,humanTarget1),5),[]).
+axiom(happens(grab(perp1,humanTarget1),5),[is_time(5)]).
 
 % 
 % Happens(WalkStreet12(Perp1,Street1),6).
  /*
 happens(walkStreet12(perp1,street1),6).
 */
-axiom(happens(walkStreet12(perp1,street1),6),[]).
+axiom(happens(walkStreet12(perp1,street1),6),[is_time(6)]).
 
 % 
 % Happens(WalkThroughDoor12(Perp1,Door1),7).
  /*
 happens(walkThroughDoor12(perp1,door1),7).
 */
-axiom(happens(walkThroughDoor12(perp1,door1),7),[]).
+axiom(happens(walkThroughDoor12(perp1,door1),7),[is_time(7)]).
 
 % 
 % Happens(LetGoOf(Perp1,HumanTarget1),8).
  /*
 happens(letGoOf(perp1,humanTarget1),8).
 */
-axiom(happens(letGoOf(perp1,humanTarget1),8),[]).
+axiom(happens(letGoOf(perp1,humanTarget1),8),[is_time(8)]).
 
 % 
 % ecnet/Kidnapping.e:118
@@ -2979,14 +3016,14 @@ axiom(happens(letGoOf(perp1,humanTarget1),8),[]).
  /*
 happens(shoot(perp1,gun1,humanTarget1),9).
 */
-axiom(happens(shoot(perp1,gun1,humanTarget1),9),[]).
+axiom(happens(shoot(perp1,gun1,humanTarget1),9),[is_time(9)]).
 
 % 
 % Happens(ShootKill(Perp1,Gun1,HumanTarget1),9).
  /*
 happens(shootKill(perp1,gun1,humanTarget1),9).
 */
-axiom(happens(shootKill(perp1,gun1,humanTarget1),9),[]).
+axiom(happens(shootKill(perp1,gun1,humanTarget1),9),[is_time(9)]).
 
 % 
 % 
