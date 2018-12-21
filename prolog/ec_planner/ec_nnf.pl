@@ -45,7 +45,7 @@
    ;*/
 :- (
      op(400,fy,box),		% Necessity, Always
-     op(400,fy,dia),		% Possibly, Eventually
+     op(400,fy,dia),	        % Possibly, Eventually
      op(400,fy,cir)		% Next time
    ).
 
@@ -55,8 +55,12 @@ clausify_pnf_v1(PNF, Cla):- declare_fact(PNF),
    findall(E,retract(saved_clauz(E)),Cla), E\==[], !.
 
 clausify_pnf_v2( Formula, CF ):-
-  nnf( Formula, NNF ), 
+  nnf( not(Formula), NNF ), 
     pnf( NNF, PNF ), cf( PNF, CF ),!.
+
+:- export(negations_inward/2).
+negations_inward(Formula, NNF):-  
+ nnf( not(Formula), NNF ).
 
 :- use_module(library(logicmoo/portray_vars)).
 
@@ -65,7 +69,23 @@ clausify_pnf_v2( Formula, CF ):-
 
 % Usage: nnf(+Fml, ?NNF)
 
-nnf(Fml,NNF) :- nnf(Fml,even,Fml0), nnf(Fml0,[],NNF,_).
+:- export(nnf/2).
+nnf(Fml,NNF) :- 
+   correct_holds(outward,Fml,Holds),
+   nnf(Holds,even,Fml0),!, nnf(Fml0,[],NNF,_), !.
+
+correct_holds(_,Fml,Fml):- \+ compound_gt(Fml, 0),!.
+correct_holds(_,Fml,Fml):- arg(1,Fml,Var), var(Var),!.
+correct_holds(neg, not(holds_at(P,T)),holds_at(neg(P),T)).
+correct_holds(neg, holds_at(not(P),T),holds_at(neg(P),T)).
+correct_holds(inward,  not(holds_at(P,T)),holds_at(not(P),T)).
+correct_holds(outward, holds_at(neg(P),T),not(holds_at(P,T))).
+correct_holds(outward, holds_at(not(P),T),not(holds_at(P,T))).
+correct_holds(IO, P,PP):-
+  compound_name_arguments(P,F,Args),
+  maplist(correct_holds(IO),Args,FArgs),
+  compound_name_arguments(PP,F,FArgs).
+
 
 % -----------------------------------------------------------------
 %  nnf(+Fml,+FreeV,-NNF,-Paths)
@@ -74,14 +94,15 @@ nnf(Fml,NNF) :- nnf(Fml,even,Fml0), nnf(Fml0,[],NNF,_).
 % FreeV:      List of free variables in Fml.
 % Paths:      Number of disjunctive paths in Fml.
 nnf(Fml,_FreeV,Fml,1):- \+ callable(Fml), !.
-nnf(box F,FreeV,BOX,Paths) :- !,
-	nnf(F,FreeV,NNF,Paths), cnf(NNF,CNF), boxRule(box CNF, BOX).
+nnf(not(Fml),_FreeV,not(Fml),1):- \+ callable(Fml), !.
+nnf(box(F),FreeV,BOX,Paths) :- !,
+	nnf(F,FreeV,NNF,Paths), cnf(NNF,CNF), boxRule(box(CNF), BOX).
 
-nnf(dia F,FreeV,DIA,Paths) :- !,
-	nnf(F,FreeV,NNF,Paths), dnf(NNF,DNF), diaRule(dia DNF, DIA).
+nnf(dia(F),FreeV,DIA,Paths) :- !,
+	nnf(F,FreeV,NNF,Paths), dnf(NNF,DNF), diaRule(dia(DNF), DIA).
 
-nnf(cir F,FreeV,CIR,Paths) :- !,
-	nnf(F,FreeV,NNF,Paths), cirRule(cir NNF, CIR).
+nnf(cir(F),FreeV,CIR,Paths) :- !,
+	nnf(F,FreeV,NNF,Paths), cirRule(cir(NNF), CIR).
 
 nnf(until(A,B),FreeV,NNF,Paths) :- !,
 	nnf(A,FreeV,NNF1,Paths1),
@@ -128,38 +149,43 @@ nnf(';'(A,B),FreeV,NNF,Paths) :- !,
 	(Paths1 > Paths2 -> NNF = ';'(NNF2,NNF1);
 		            NNF = ';'(NNF1,NNF2)).
 
-nnf(Fml,FreeV,NNF,Paths) :- 
-	(Fml = not(not(A))   -> Fml1 = A;
-	 Fml = not(box F)      -> Fml1 = dia not(F);
-	 Fml = not(dia F)      -> Fml1 = box not(F);
-	 Fml = not(cir F)      -> Fml1 = cir not(F);
-	 Fml = not(until(A,B)) -> (nnf(not(A),FreeV,NNA,_), nnf(not(B),FreeV,NNB,_),
-                                     Fml1 = ';'( all(_,NNB), until(NNB,','(NNA,NNB))));
-	 Fml = not(all(X,F))   -> Fml1 = exists(X,not(F));
-	 Fml = not(exists(X,F))    -> Fml1 = all(X,not(F));
+nnf('if'(A,B),FreeV,NNF,Paths) :- !,
+         nnf(( not(A); B ),FreeV,NNF,Paths).
+
+nnf('equiv'(A,B),FreeV,NNF,Paths) :- !,
+         nnf(';'( ','(A, B), ','(not(A), not(B))),FreeV,NNF,Paths).
+
+nnf(not(Fml),FreeV,NNF,Paths) :- compound(Fml),
+	(Fml = not(A)   -> Fml1 = A;
+	 Fml = box(F)      -> Fml1 = dia(not(F));
+	 Fml = dia(F)      -> Fml1 = box(not(F));
+	 Fml = cir(F)      -> Fml1 = cir(not(F));
+	 Fml = until(A,B) -> (nnf(not(A),FreeV,NNA,_), nnf(not(B),FreeV,NNB,_),
+                                     Fml1 = ( all(_,NNB) ; until(NNB,','(NNA,NNB))));
+	 Fml = all(X,F)   -> Fml1 = exists(X,not(F));
+	 Fml = exists(X,F)    -> Fml1 = all(X,not(F));
 /*
 	 Fml = not(atleast(N,X,F)) -> Fml1 = atmost(N,X,F);
 	 Fml = not(atmost(N,X,F)) -> Fml1 = atleast(N,X,F);
 */
-	 Fml = not(';'(A,B))  -> Fml1 = ','( not(A), not(B) );
-	 Fml = not(','(A,B)) -> Fml1 = ';'( not(A), not(B) );
-	 Fml = if(A,B)        -> Fml1 = ';'( not(A), B );
-	 Fml = not(if(A,B)) -> Fml1 = ','( A, not(B) );
-	 Fml = equiv(A,B)        -> Fml1 = ';'( ','(A, B), ','(not(A), not(B)) );
-	 Fml = not(equiv(A,B)) -> Fml1 = ';'( ','(A, not(B)) , ','(not(A), B) )
+	 Fml = (A;B)  -> Fml1 = ( not(A), not(B) );
+	 Fml = (A,B) -> Fml1 = ( not(A); not(B) );
+	 Fml = if(A,B) -> Fml1 = ( A, not(B) );
+         Fml = equiv(A,B) -> Fml1 = ';'( ','(A, not(B)) , ','(not(A), B) )
 	),!,
 	nnf(Fml1,FreeV,NNF,Paths).
 
+
 nnf(Lit,_,Lit,1).
 
-boxRule(box ','(A,B), ','(BA,BB)) :- !, boxRule(box A,BA), boxRule(box B,BB).
+boxRule(box(','(A,B)), ','(BA,BB)) :- !, boxRule(box(A),BA), boxRule(box(B),BB).
 boxRule(BOX, BOX).
 
-diaRule(dia ';'(A,B), ';'(DA,DB)) :- !, diaRule(dia A,DA), diaRule(dia B,DB).
+diaRule(dia(';'(A,B)), ';'(DA,DB)) :- !, diaRule(dia(A),DA), diaRule(dia(B),DB).
 diaRule(DIA, DIA).
 
-cirRule(cir ';'(A,B), ';'(DA,DB)) :- !, cirRule(cir A,DA), cirRule(cir B,DB).
-cirRule(cir ','(A,B), ','(DA,DB)) :- !, cirRule(cir A,DA), cirRule(cir B,DB).
+cirRule(cir(';'(A,B)), ';'(DA,DB)) :- !, cirRule(cir(A),DA), cirRule(cir(B),DB).
+cirRule(cir(','(A,B)), ','(DA,DB)) :- !, cirRule(cir(A),DA), cirRule(cir(B),DB).
 cirRule(CIR, CIR).
 
 
@@ -244,11 +270,13 @@ cf(PNF, Cla):- removeQ(PNF,[], UnQ), cnf(UnQ,CNF), clausify(CNF,Cla,[]).
 removeQ( all(X,F),Vars, RQ) :- removeQ(F,[X|Vars], RQ).
 
 removeQ( exists(XVs,F),Vars, RQ) :- \+ var(XVs), term_variables(XVs,[X]), !, removeQ( exists(X,F),Vars, RQ).
-removeQ( exists(X,F),Vars, RQ) :-
-    debug_var(exists,X),
-    removeQ(F, Vars, RFQ),
-    RQ = if(some(X), RFQ).
-   
+
+removeQ( exists(XVs,F),Vars, RQ) :- term_variables(XVs,[X]), 
+        (Vars\==[] -> UVars=Vars ; term_variables(X+F,[X|UVars])),
+        skolem_v3(F,X,UVars,Sk),
+        debug_var(exists,X),
+	removeQ(if(some(X, Sk), F),Vars, RQ).
+
 removeQ( exists(XVs,F),Vars, RQ) :- term_variables(XVs,[X]), 
         (Vars\==[] -> UVars=Vars ; term_variables(X+F,[X|UVars])),
         skolem_v2(F,X,UVars,Fsk),
@@ -311,6 +339,11 @@ skolem_v2( F, X, FreeV, FmlSk) :-
 	gensym('$kolem_Fn_' , Fun ),
 	Sk =..[Fun|FreeV],
 	subst( F, X, Sk, FmlSk ).
+
+skolem_v3( _F, _X, FreeV,  Sk) :-
+	gensym('$kolem_Fn_' , Fun ),
+	Sk =..[Fun|FreeV].
+	
 
 
 %%% generate new atomic symbols
@@ -1278,7 +1311,7 @@ drule(F,<-(H,B)) :-
    ; F= (constraint)).
 
 drule(F,H) :-
-   make_anc(H),
+  % make_anc(H),
    make_bodies(assertable,H,T,[ths(T,T,D,D),_,ans(A,A)],ProveH,ExH),
    prolog_cl(ProveH),
    ( F= 'fact' -> prolog_cl(ExH) ; F='constraint').
@@ -1796,6 +1829,8 @@ if parity is even and the negation normal form of $Fla$ if parity is odd.
 \index{nnf}
 \begin{verbatim} */
 
+nnf(F,odd,FF):- \+ compound_gt(F, 0), !, xlit(F,FF).
+nnf(F,even,not(FF)):- \+ compound_gt(F, 0), !, xlit(F,FF).
 
 nnf(equiv(X , Y), P,B) :- !,
    nnf(((Y or not X) and (X or not Y)),P,B).
@@ -1840,10 +1875,8 @@ nnf((not X),P,B) :- !,
    nnf(X,OP,B).
 
 % nnf((Y <- X), P,B) :-  !, nnf((Y or not X),P,B).
-
-nnf(F,odd,FF):- xlit(F,FF).
-
 nnf(not(F),even,FF) :- !,xlit(F,FF).
+nnf(F,odd,FF):- xlit(F,FF).
 nnf(F,even,not(FF)):- xlit(F,FF).
 
 xlit(F,F):- \+ compound(F).

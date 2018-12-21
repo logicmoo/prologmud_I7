@@ -142,6 +142,7 @@ exists_all_filenames(S0, SL, Options):-
   dedupe_files(SL0,SL),!.
 
 :- export(resolve_local_files/2).
+resolve_local_files(S0,SL):- is_list(S0), !, maplist(resolve_local_files,S0,SS), append(SS,SL).
 resolve_local_files(S0,SL):- atom(S0), expand_file_name(S0,SL), SL \= [E|_], exists_file(E), !.
 resolve_local_files(S0,SL):- exists_all_filenames(S0,SL, [expand(false)]), SL \= [].
 resolve_local_files(S0,SL):- exists_all_filenames(S0,SL, [expand(true)]), SL \= [].
@@ -657,6 +658,32 @@ print_e_to_string(T, Ops, S):-  member('<->', Ops), sformat(S0, '~p',[T]),
 /*.
 ec_portray(','):-write(',').
 user:portray(Nonvar):- nonvar(Nonvar), ec_portray(Nonvar).   */
+print_e_to_string(axiom(H,B), _, S):-
+  print_e_to_string((H-->B), S0),  
+  mid_pipe(S0,[str_repl(' \n','\n'),str_repl(' -->',','),str_repl('\n\n','\n')],S1),
+  sformat(S,'axiom(~s)',[S1]).
+
+print_e_to_string(B, [Op|_], S):- ((Op== ';') ; Op==','), !,
+  print_e_to_string((:- B), S0),  
+  mid_pipe(S0,[str_repl(':-','')],S).  
+
+print_e_to_string(B, _, S):- is_list(B),  !,
+  print_e_to_string((:- B), S0),  
+  mid_pipe(S0,[str_repl(':-','')],S).  
+
+print_e_to_string(T, _Ops, S):-  is_list(T),
+  sformat(S, '~@',
+    [(prolog_pretty_print:print_term(T, 
+             [  % left_margin(1),
+                                write_options([numbervars(true),
+                                   quoted(true),
+                                  portray(true)]),
+                                 right_margin(80),
+                             %   max_length(120),
+                 % indent_arguments(auto),
+                  output(current_output)]),
+                  ttyflush)]).
+
 print_e_to_string(T, _Ops, S):- 
   sformat(S, '~@',
     [(prolog_pretty_print:print_term(T, 
@@ -664,7 +691,7 @@ print_e_to_string(T, _Ops, S):-
                                 write_options([numbervars(true),
                                    quoted(true),
                                   portray(true)]),
-                                right_margin(200),
+                                 %right_margin(10),
                              %   max_length(120),
                  % indent_arguments(auto),
                   output(current_output)]),
@@ -691,9 +718,15 @@ is_output_lang(_).
 pprint_ec(C, P):-
   pprint_ec_and_f(C, P, '~n').
 
+:- export(pprint_ecp_cmt/2).
+pprint_ecp_cmt(C, P):-
+  print_e_to_string(P, S0),
+  to_ansi(C, C0),
+  str_repl('\n','\n   ',S0, S),
+  real_ansi_format(C0, '~n /*  ~s.~n */~n', [S]).
+
 :- export(pprint_ecp/2).
-pprint_ecp(C, P):- \+ is_output_lang(C), 
-  in_space_cmt(pprint_ec_and_f(C, P, '.~n')).
+pprint_ecp(C, P):- \+ is_output_lang(C), !, pprint_ecp_cmt(C, P).
 pprint_ecp(C, P):-
   pprint_ec_and_f(C, P, '.~n').
 
@@ -702,10 +735,10 @@ pprint_ec_and_f(C, P, AndF):-
   echo_format(AndF), !,
   ttyflush.
 
-user:portray(Term):- fail, ec_portray_hook(Term).
+user:portray(Term):- \+ current_prolog_flag(debug,true), \+ tracing, ec_portray_hook(Term).
 
 ec_portray_hook(Term):- 
- setup_call_cleanup(flag(ec_portray, N, N+1), 
+ setup_call_cleanup(flag('$ec_portray', N, N+1), 
   ec_portray(N, Term),
   flag(ec_portray,_, N)).
 
@@ -844,7 +877,8 @@ read_stream_until_true(S, Buffer, Pred, Codes):- get_code(S, Char),
 
 
 % in_space_cmt(Goal):- call_cleanup(prepend_each_line(' % ', Goal), echo_format('~N', [])).
-in_space_cmt(Goal):- setup_call_cleanup(echo_format('~N /*~n', []), Goal, echo_format('~N*/~n', [])).
+%in_space_cmt(Goal):- setup_call_cleanup(echo_format('~N /*~n', []), Goal, echo_format('~N*/~n', [])).
+in_space_cmt(Goal):- setup_call_cleanup(echo_format('~N /* ', []), Goal, echo_format('~N */~n', [])).
 
 
 read_line_to_string_echo(S, String):- read_line_to_string(S, String), real_ansi_format([bold, hfg(black)], '~s~n',[String]).
@@ -906,4 +940,34 @@ till_eof(In) :-
                   true), 
                 fail)
             ).
+
+
+end_of_file.            
+
+exists(T, 
+  ~holds_at(positivelyBuoyant(Diver), T) & 
+  ~holds_at(neutrallyBuoyant(Diver), T) & 
+  ~holds_at(negativelyBuoyant(Diver), T)).
+ implies that is a T that the Diver is not in the water.
+
+all([Diver:diver,T:time], 
+  (holds_at(~positivelyBuoyant(Diver), T) & 
+   holds_at(~neutrallyBuoyant(Diver), T) & 
+   holds_at(~negativelyBuoyant(Diver), T)).
+ -> holds_at(~inWater(Diver),T)).
+
+all([Diver:diver,T:time], 
+  (holds_at(~positivelyBuoyant(Diver), T) & 
+   holds_at(~neutrallyBuoyant(Diver), T) & 
+   holds_at(~negativelyBuoyant(Diver), T)).
+ -> ~holds_at(inWater(Diver),T)).
+
+
+ implies that is a T that the Diver is not in the water.
+
+
+exists(T, 
+  ~holds_at(positivelyBuoyant(Diver), T) & 
+  ~holds_at(neutrallyBuoyant(Diver), T) & 
+  ~holds_at(negativelyBuoyant(Diver), T)).
 

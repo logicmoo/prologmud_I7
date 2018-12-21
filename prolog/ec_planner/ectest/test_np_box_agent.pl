@@ -58,7 +58,7 @@ do_test(test_np_box_occurs) :- test_np_box_occurs.
 
 test_np_box_occurs:- 
  findall(E, (ec_axiom(E,[]),functor(E,happens,_)), UHapsList),
- predsort(sort_on_times_arg,UHapsList,HapsList),
+ predsort(compare_on_time_arg,UHapsList,HapsList),
  dbginfo('HapsList'=HapsList), 
  /* 
    HapsList = 
