@@ -300,7 +300,7 @@ assert_axiom(H,B):- compound_name_arity(H, F, 2),
 
 
 /*
-assert_axiom(EffectAx, Some):- fail, select(E,Some,Rest), E = (A;B), !, nnf(A,NotA), nnf(B,NotB),
+assert_axiom(EffectAx, Some):- select(E,Some,Rest), E = (A;B), !, nnf(A,NotA), nnf(B,NotB),
    assert_axiom(EffectAx, append3(A,NotB,Rest)),
    assert_axiom(EffectAx, append3(B,NotA,Rest)).
 */
@@ -358,25 +358,41 @@ assert_effect(Effect,Event,Fluent,T,B):-
   assert_ele(axiom(EffectAx,B)).
 
 
+:- include(ec_nnf).
+
+
+loop_forever.
+loop_forever:- loop_forever.
+
+:- import(make:modified_file/1).
+
+:- export(rect/0).    
+
+% recompiles source everytime it is updated
+rect:- 
+   once(ect), % first run
+   loop_forever,
+   wait_for_input([current_input],Was,0.5), 
+   modified_file(_Any),
+   once(ect), 
+   Was == [current_input]. 
 
 :- export(ect/0).
-ect:- cls , make, 
+ect:- 
+   cls,
+   make, 
    Out = cond_load_e(always),
- % cond_load_e(always,'examples/FrankEtAl2003/Story1.e'),
- % cond_load_e(always,'ecnet/GSpace.e'),
-   cond_load_e(always,'ecnet/Diving.e'),
+ % call(Out, 'examples/FrankEtAl2003/Story1.e'),
+ % call(Out, 'ecnet/GSpace.e'),
+   call(Out, 'ecnet/Diving.e'),
    call(Out, 'ecnet/RTSpace.e'),
    call(Out, 'ectest/ec_reader_test_ecnet.e'),
    call(Out, 'ecnet/Kidnapping.e'),
    call(Out, 'ecnet/SpeechAct.e'),
    % cond_load_e(always,'examples/Mueller2006/Exercises/MixingPaints.e'),
-  
+   list_undefined,
+   list_void_declarations,  
   !.
-
-:- export(rect/0).
-rect:- ect, repeat, wait_for_input([current_input],_,0.5), make:modified_file(_File),once(ect), fail.
-
-:- include(ec_nnf).
 
 
 
