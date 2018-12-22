@@ -361,16 +361,14 @@ assert_effect(Effect,Event,Fluent,T,B):-
 :- include(ec_nnf).
 
 
-loop_forever.
-loop_forever:- loop_forever.
+loop_forever.  loop_forever:- loop_forever.
 
 :- import(make:modified_file/1).
 
 :- export(rect/0).    
 
-% recompiles source everytime it is updated
-rect:- 
-   once(ect), % first run
+% recompiles and restart tests everytime source is update updated
+rect:- once(ect), % first run
    loop_forever,
    wait_for_input([current_input],Was,0.5), 
    modified_file(_Any),
@@ -378,6 +376,7 @@ rect:-
    Was == [current_input]. 
 
 :- export(ect/0).
+% event calc tests
 ect:- 
    cls,
    make, 
