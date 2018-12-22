@@ -367,7 +367,7 @@ loop_forever.  loop_forever:- loop_forever.
 
 :- export(rect/0).    
 
-% recompiles and restart tests everytime source is update updated
+% recompiles and restart tests everytime source is updated
 rect:- once(ect), % first run
    loop_forever,
    wait_for_input([current_input],Was,0.5), 
