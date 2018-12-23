@@ -10,6 +10,7 @@
 % First a couple of auxiliary relations
 % 
 % The above and below relations
+:- expects_dialect(icl).
 
 % U is above v
 not_above(U,V,S) <- on(U,table,S) & V \= table.

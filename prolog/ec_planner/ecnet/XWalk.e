@@ -74,7 +74,8 @@ HoldsAt(XWalkDone(xschema),time).
 
 ; durative events
 
-fluent XWalkStepping(xschema,distance) ; distance is the goal
+; distance is the goal
+fluent XWalkStepping(xschema,distance) 
 event XWalkSteppingOn(xschema)
 event XWalkSteppingOff(xschema)
 

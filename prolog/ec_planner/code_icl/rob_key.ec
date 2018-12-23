@@ -2,6 +2,8 @@
 % stable models in the independent choice logic".
 % Copyright 1997. All Rights reserved. David Poole.
 
+:- expects_dialect(icl).
+
 carrying(key,s(T)) <-
    do(pickup(key),T) &
    at(robot,Pos,T) &

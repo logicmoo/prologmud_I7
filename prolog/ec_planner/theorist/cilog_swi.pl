@@ -332,7 +332,7 @@ tell_clause(H) :-
 
 illegal_body(X,['Variables cannot be atoms. Use call(',X,').']) :- var(X).
 illegal_body((_,_),[' "," is not a legal conjunction. Use "&".']).
-illegal_body((\+ _),[' "\+" is not a legal negation. Use "&".']).
+illegal_body((\+ _),[' "\\+" is not a legal negation. Use "~".']).
 illegal_body(!,[' "!" is not supported.']).
 illegal_body([_|_],[' Lists cannot be atoms.']).
 
@@ -1024,48 +1024,56 @@ flush_and_read(T) :-
    flush_output,
    read(T).
 
-ci_load(File) :-
+with_file(File,Read,Input,Goal):-
+   setup_call_cleanup(
+    open(File,Read,Input),
+    Goal,
+   close(Input)).
+ 
+
+with_input(Input,Goal):- 
    current_input(OldFile),
-   open(File,read,Input),
-   set_input(Input),
-   flush_and_read(T),
-   read_all(T),
-   set_input(OldFile),
+   setup_call_cleanup(set_input(Input),
+     Goal,
+     set_input(OldFile)).
+
+ci_load(File) :-
+   with_file(File,read,Input,
+     with_input(Input,and_read_all)),
    writeallonline(['CILOG theory ',File,' loaded.']).
 
+and_read_all:-
+   flush_and_read(T),
+   read_all(T).
 read_all(end_of_file) :- !.
 read_all((askable G)) :- !,
    assertz(askabl(G)),
-   flush_and_read(T2),
-   read_all(T2).
+   and_read_all.
+  
 read_all((assumable G)) :- !,
    assertz(assumabl(G)),
-   flush_and_read(T2),
-   read_all(T2).
+   and_read_all.
 read_all((H :- B)) :- !,
    writeallonline(['Error: Illegal Implication: ',H,' :- ',B,'. Use <- or prload.']).
 read_all(T) :-
    tell_clause(T),
-   flush_and_read(T2),
-   read_all(T2).
+   and_read_all.
 
 prolog_load(File) :-
-   current_input(OldFile),
-   open(File,read,Input),
-   set_input(Input),
-   flush_and_read(T),
-   prread_all(T),
-   set_input(OldFile),
+   with_file(File,read,Input,
+     with_input(Input,and_prread_all)),
    writeallonline(['CILOG theory ',File,' consulted.']).
 
+and_prread_all:-
+   flush_and_read(T),
+   prread_all(T).
 prread_all(end_of_file) :- !.
 prread_all(T) :- 
    prillegal(T,Mesg),!,
    writeallonline(Mesg).
 prread_all(T) :-
    prtell(T),
-   flush_and_read(T2),
-   prread_all(T2).
+   and_prread_all.
 
 % prillegal(R,Mesg) is true if R is illegal Prolog rule. 
 %    Mesg is the corresponding error message.
@@ -1120,10 +1128,11 @@ start :-
    start1.
 
 start1 :-
-   catch(go,Exc,handle_exception(Exc)).   % for Sicstus Prolog
-%   go.                                           % for other Prologs
-
-go :-
+   catch(cilog,Exc,handle_exception(Exc)).   % for Sicstus Prolog
+%   go.    
+                                          % for other Prologs
+go:- cilog.
+cilog :-
    writel(['cilog: ']), 
    flush_and_read(T),
    (T == prolog ->
@@ -1133,7 +1142,7 @@ go :-
         writeallonline(['Returning to Prolog. Type "start." to start cilog.'])
    ; interpret(T),
      !,
-     go).
+     cilog).
 
 handle_exception(prompt) :- !, start1.
 handle_exception(quit) :- halt.

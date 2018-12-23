@@ -21,6 +21,7 @@
 % First a couple of auxiliary relations
 % 
 % The above and below relations
+:- expects_dialect(icl).
 
 :- op(1060, xfy, '&').
 :- op(900,fy, ~).

@@ -1075,6 +1075,7 @@ new_lit(Prefix, Reln, NewArgs, NewReln) :-
    NewReln =.. [NewPred | AllArgs].
 
 add_prefix(Prefix,Pred,NewPred) :-
+    trace,
    string_codes(Prefix,PrefixC),
    name(Pred,PredName),
    append(PrefixC, PredName, NewPredName),
@@ -1243,12 +1244,13 @@ make_bodies(CoA,(H;B),T,Ths,(ProveH;ProveB),(ExH;ExB)) :-
 
 make_bodies(callable,not(Builtin),_,[ths(T,T,D,D),_,ans(A,A)], \+ Builtin, \+ Builtin) :- is_thbuiltin(Builtin),!.
 make_bodies(_CoA,not(A), T, [Ths,Anc,Ans], ProveA, ExA) :-
-   !,
+   !, trace,
    new_lit(`prv_not_`, A, [T,Anc], ProveA),
    new_lit(`ex_not_`, A, [Ths,Anc,Ans], ExA).
 
 make_bodies(_CoA,Builtin,_,[ths(T,T,D,D),_,ans(A,A)],Builtin,Builtin) :- is_thbuiltin(Builtin),!.
-make_bodies(_CoA,A, T, [Ths,Anc,Ans], ProveA, ExA) :- !, 
+make_bodies(_CoA,A, T, [Ths,Anc,Ans], ProveA, ExA) :- 
+   !, trace,
    new_lit(`prv_tru_`, A, [T,Anc], ProveA),
    new_lit(`ex_tru_`, A, [Ths,Anc,Ans], ExA).
 
@@ -1298,7 +1300,7 @@ rule(F,R) :-
 
 drule(_F,<-(H,B)):-
    prolog_cl((H:-B)),!.
-
+/*
 drule(F,<-(H,B)) :-
    !,
    make_anc(H),
@@ -1309,12 +1311,11 @@ drule(F,<-(H,B)) :-
    ( F= (fact),
      prolog_cl((ExH:-ExB))
    ; F= (constraint)).
-
-drule(F,H) :-
+*/
+drule(_F,H) :-
   % make_anc(H),
-   make_bodies(assertable,H,T,[ths(T,T,D,D),_,ans(A,A)],ProveH,ExH),
-   prolog_cl(ProveH),
-   ( F= 'fact' -> prolog_cl(ExH) ; F='constraint').
+   % make_bodies(assertable,H,T,[ths(T,T,D,D),_,ans(A,A)],ProveH,ExH),
+   prolog_cl(H).
 
 
 /* \end{verbatim}
@@ -1881,7 +1882,7 @@ nnf(F,even,not(FF)):- xlit(F,FF).
 
 xlit(F,F):- \+ compound(F).
 xlit({X},{X}).
-xlit(=(A,B),sameObjects(A,B)).
+xlit(=(A,B),equals(A,B)).
 xlit(neq(A,B),{dif(A,B)}).
 xlit(\=(A,B),{dif(A,B)}).
 xlit(>(A,B),comparison(A,B,>)).

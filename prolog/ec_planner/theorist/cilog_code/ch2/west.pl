@@ -3,6 +3,7 @@
 % Copyright (c) 1998, Poole, Mackworth, Goebel and Oxford University Press
 
 % imm_west(R1,R2) is true if room R1 is immediately west of room R2
+:- 
 
 imm_west(r101,r103).
 imm_west(r103,r105).

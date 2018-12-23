@@ -103,7 +103,7 @@ is_quantifier_type(thereExists,exists).
 e_reader_test:- with_e_sample_tests(convert_e(user_output)).
 
 :- export(e_reader_testf/0).
-e_reader_testf:- with_e_sample_tests(convert_e(outdir('.'))).
+e_reader_testf:- with_e_sample_tests(convert_e(outdir('.', pro))).
 
 
 
@@ -112,13 +112,13 @@ with_e_sample_tests(Out) :-
   retractall(etmp:ec_option(load(_), _)),
 %  call(Out, 'ectest/*.e'),  
 %  call(Out, 'examples/AkmanEtAl2004/ZooWorld.e'),  
-  call(Out, 'ecnet/RTSpace.e'),
-  call(Out, 'ectest/ec_reader_test_ecnet.e'),
-  call(Out, 'ecnet/Kidnapping.e'),
-  call(Out, 'ecnet/SpeechAct.e'),
-   call(Out, 'ecnet/Diving.e'),
-   call(Out, 'examples/Mueller2006/Exercises/MixingPaints.e'),
-
+  %call(Out, 'ecnet/RTSpace.e'),
+  %call(Out, 'ectest/ec_reader_test_ecnet.e'),
+  %call(Out, 'ecnet/Kidnapping.e'),
+  %call(Out, 'ecnet/SpeechAct.e'),
+  % call(Out, 'ecnet/Diving.e'),
+   %call(Out, 'examples/Mueller2006/Exercises/MixingPaints.e'),
+   call(Out, ['*/*/*/*.e','*/*/*.e','*/*.e']),
   
 %  call(Out, 'examples/Mueller2006/Chapter11/HungryCat.e'),
   !.
@@ -143,7 +143,8 @@ exists_all_filenames(S0, SL, Options):-
 
 :- export(resolve_local_files/2).
 resolve_local_files(S0,SL):- is_list(S0), !, maplist(resolve_local_files,S0,SS), append(SS,SL).
-resolve_local_files(S0,SL):- atom(S0), expand_file_name(S0,SL), SL \= [E|_], exists_file(E), !.
+resolve_local_files(S0,SL):- atom(S0), exists_file(S0), !, SL = [S0].
+resolve_local_files(S0,SL):- atom(S0), expand_file_name(S0,SL), SL = [E|_], exists_file(E), !.
 resolve_local_files(S0,SL):- exists_all_filenames(S0,SL, [expand(false)]), SL \= [].
 resolve_local_files(S0,SL):- exists_all_filenames(S0,SL, [expand(true)]), SL \= [].
 resolve_local_files(S0,SS):- atom(S0), file_base_name(S0,S1), S0\==S1, resolve_local_files(S1,SS).
@@ -164,19 +165,23 @@ needs_resolve_local_files(F, L):- \+ is_stream(F), \+ is_filename(F),
   resolve_local_files(F, L), !,  L \= [], L \= [F].
 
 :- export(calc_where_to/3).
-calc_where_to(InputName,_Dir,OutputName):- atom_concat(InputName, '.pro', OutputName).
+calc_where_to(outdir(Dir, Ext), InputName, OutputFile):- 
+    atomic_list_concat([InputName, '.', Ext], OutputName),
+    make_directory_path(Dir),
+    absolute_file_name(OutputName, OutputFile, [relative_to(Dir)]).
 
-:- set_ec_option(overwrite_transated_files,always).
+:- set_ec_option(overwrite_translated_files,false).
 
-should_update(OutputName):- \+ exists_file(OutputName),!.
-should_update(_):- etmp:ec_option(overwrite_transated_files,always),!.
+:- export(should_update/1).
+should_update(OutputName):- \+ exists_file(OutputName), !.
+should_update(_):- etmp:ec_option(overwrite_translated_files,always),!.
 
 :- export(include_e/1).
 include_e(F):- e_to_pl(do_convert_e, current_output, F).
 
 
 :- export(convert_e/1).
-convert_e(F):- convert_e(outdir('.'), F).
+convert_e(F):- convert_e(outdir('.', pro), F).
 convert_e(Out, F):- e_to_pl(do_convert_e, Out, F).
 
 :- export(is_filename/1).
@@ -184,6 +189,9 @@ is_filename(F):- atom(F), \+ is_stream(F),
   (exists_file(F);is_absolute_file_name(F)).
 
 %e_to_pl(Why, Out, F):- dmsg(e_to_pl(Why, Out, F)), fail.
+
+e_to_pl(Why, Out, F):- compound(Out), Out=outdir(Dir), !, e_to_pl(Why, outdir(Dir, pro), F).
+e_to_pl(Why, Out, F):- nonvar(F), \+ is_stream(F), \+ is_filename(F), needs_resolve_local_files(F, L), !, maplist(e_to_pl(Why, Out), L).  
 
 % wildcard input file  "./foo*.e"
 e_to_pl(Why, Out, F):- atom(F), \+ is_stream(F), \+ is_filename(F), 
@@ -203,14 +211,14 @@ e_to_pl(Why, Outs, Ins):-
     e_to_pl(current_output, Why, Ins)),!.
 
 % Out is like a wildcard stream (but we have a real filename)
-e_to_pl(Why, outdir(Dir), F):- is_filename(F), !, 
-   calc_where_to(F, outdir(Dir), OutputName),
+e_to_pl(Why, outdir(Dir, Ext), F):- is_filename(F), !, 
+   calc_where_to(outdir(Dir, Ext), F, OutputName),
    e_to_pl(Why, OutputName, F).
 
 % Out is like a wildcard stream (calc a real filename)
-e_to_pl(Why, outdir(Dir), Ins):- must(is_stream(Ins)), !, 
+e_to_pl(Why, outdir(Dir, Ext), Ins):- must(is_stream(Ins)), !, 
    must(stream_property(Ins, file(InputName))),
-   calc_where_to(InputName, outdir(Dir), OutputName),
+   calc_where_to(outdir(Dir, Ext), InputName, OutputName),
    e_to_pl(Why, OutputName, Ins).
 
 % Out is a filename not neding update
@@ -234,7 +242,8 @@ e_to_pl(Why, OutputName, Ins):-  \+ is_stream(OutputName), !,
    setup_call_cleanup(
      open(OutputName, write, Outs),
      with_output_to(Outs, 
-       (raise_translation_event(Why,begining,OutputName), 
+       (raise_translation_event(Why,begining,OutputName),
+         format(Outs,'~N~q.~n',[:- expects_dialect(ecalc)]),
          e_to_pl(Why, current_output, Ins),
           raise_translation_event(Why,ending,OutputName))),
      close(Outs)),
@@ -287,10 +296,18 @@ upcased_functors(G):-
 %
 % Process file stream input
 %
-process_stream_comment(S) :- (peek_string(S, 2, W);peek_string(S, 1, W)), clause(process_stream_peeked213(S, W),Body),!,call(Body).
+process_stream_comment(S) :- (peek_string(S, 2, W);peek_string(S, 1, W)), clause(process_stream_peeked213(S, W),Body),!,once(Body).
 process_stream_peeked213(S, "#!"):- !, read_line_to_string_echo(S, _).
-process_stream_peeked213(S,  ";"):- !, echo_format('%'), read_line_to_string_echo(S, _).
-process_stream_peeked213(S, "["):- mention_s_l, echo_format('% '), !, read_stream_until(S, [], `]`, Codes), read_n_save_vars(universal, Codes).
+process_stream_peeked213(S,  ";"):- !, 
+   ( ( nb_current(last_e_string, axiom)) -> (echo_format('~N~n~n',[Codes]), mention_s_l) ; true),
+   echo_format('%'), read_line_to_string_echo(S, _),!, 
+   nb_setval(last_e_string, cmt).
+process_stream_peeked213(S, "["):- !, 
+  locally(b_setval(e_echo, nil), read_stream_until(S, [], `]`, Codes)),
+   ( (\+ nb_current(last_e_string, cmt), \+ nb_current(last_e_string, vars) ) -> (echo_format('~N~n~n',[Codes]), mention_s_l) ; true),
+   echo_format('% ~s~N',[Codes]),
+   read_n_save_vars(universal, Codes),
+   nb_setval(last_e_string, vars).
 process_stream_peeked213(S, "{"):- mention_s_l, echo_format('% '), !, read_stream_until(S, [], `}`, Codes), read_n_save_vars(existential, Codes).
 
 
@@ -299,11 +316,13 @@ process_e_stream(Why, S):- notrace(at_end_of_stream(S)), !, mention_s_l, call(Wh
 process_e_stream(_, S) :- removed_one_ws(S), !.
 process_e_stream(_, S):- process_stream_comment(S), !.
 
-process_e_stream(Why, S):- maybe_mention_s_l,    
+process_e_stream(Why, S):-   
    OR = [to_lower('.'), to_lower('('), end_of_line, to_lower('='),to_lower('>'), space, to_lower(':')], 
-   echo_format('% '),
-   read_stream_until_true(S, [], char_type_inverse(Was, or(OR)), Text), 
-   unpad_codes(Text, Codes), must(continue_process_e_stream(Why, S, Codes, Was)), !.
+   locally(b_setval(e_echo, nil),
+         read_stream_until_true(S, [], char_type_inverse(Was, or(OR)), Text)), 
+   unpad_codes(Text, Codes), 
+   ttyflush, 
+   must(continue_process_e_stream(Why, S, Codes, Was)), !.
 process_e_stream(Why, S):- read_line_to_string(S, Comment), echo_format('~N%RROOR: ~w: ~s~n', [Why, Comment]), break.
 
 
@@ -311,22 +330,33 @@ process_e_stream(Why, S):- read_line_to_string(S, Comment), echo_format('~N%RROO
 continue_process_e_stream(_Why, _S, [], _):- !.
 continue_process_e_stream(_Why, _S, [], end_of_line):- !.
 continue_process_e_stream(Why, S, NextCodes, CanBe ):- ttyflush,
-  continue_process_e_stream_too(Why, S, NextCodes, CanBe ),maybe_mention_s_l,!.
+  continue_process_e_stream_too(Why, S, NextCodes, CanBe ),!.
 
 continue_process_e_stream_too(Why, _S, Codes, to_lower(':')):- 
   append(Delta, [_], Codes), 
   text_to_string(Delta,DeltaS),
   normalize_space(atom(Term),DeltaS),
+  nb_setval(last_e_string, delta),
+   echo_format('~N~n'),maybe_mention_s_l(0), echo_format('% ~s ', [Codes]),
   ec_on_read(Why, directive(Term)),!.
 continue_process_e_stream_too(Why, S, Codes, space):- last(Codes, Last), 
    once([Last]=`!`;char_type(Last, alpha)), !, 
    trim_off_whitepace(S), !, 
-   atom_codes(Token, Codes),    
-   process_e_stream_token(Why, Token, S), !.
+   atom_codes(Token, Codes),  
+   nb_setval(last_e_string, kw),
+   echo_format('~N~n'),maybe_mention_s_l(1), echo_format('% ~s ', [Codes]),
+   process_e_stream_token(Why, Token, S), ttyflush, !.
 continue_process_e_stream_too(Why, S, NextCodes, _CanBe ):-  !, 
+  ( \+ nb_current(last_e_string, vars) -> (echo_format('~N~n~n',[Codes]), mention_s_l) ; true),
+   maybe_mention_s_l(2), echo_format('% ~s', [NextCodes]),
    last(NextCodes, Last), cont_one_e_compound(S, NextCodes, Last, Term), ec_on_read(Why, Term).
 
-unpad_codes(Text, Codes):- text_to_string(Text, String), normalize_space(codes(Codes), String).
+unpad_codes(Text, Codes):- text_to_string(Text, String), 
+   normalize_space(codes(Codes0), String),
+   trim_eol_comment(Codes0,Codes).
+
+trim_eol_comment(Codes,Left):- append(Left,[59|_Cmt], Codes),!.
+trim_eol_comment(Codes,Codes).
   
   
 e_from_atom(String, Term):- e_read1(String, Term, _).   
@@ -336,8 +366,8 @@ set_e_ops(M):-
    op(1150, xfx, M:'->'),
    op(1150, xfy, M:'->'),
    % op(1125, xfy, M:'thereExists'), 
-   op(1150, xfy, M:'thereExists'),
    op(1100, xfy, M:'<->'),
+   op(1075, xfy, M:'thereExists'),
    op(1050, xfy, M:'|'),
    op(950, xfy, M:'&'),
    op(900, fx, M:'!'),
@@ -541,11 +571,11 @@ read_one_e_compound(S, Term):-
    cont_one_e_compound(S, Codes, Last, Term).
 
 cont_one_e_compound(_S, Text, Last, Term):- char_type(Last, to_lower('.')),
-   unpad_codes(Text, Codes), e_from_atom(Codes, Term).
+   unpad_codes(Text, Codes), e_from_atom(Codes, Term), nb_setval(last_e_string, axiom).
 
 cont_one_e_compound(_S, Text, Last, Term):- char_type(Last, to_lower(')')),
    \+ (member(T, `>&|`), member(T, Text)),
-   unpad_codes(Text, Codes), e_from_atom(Codes, Term).
+   unpad_codes(Text, Codes), e_from_atom(Codes, Term), nb_setval(last_e_string, axiom).
 
 cont_one_e_compound(S, InCodes, WasLast, Term):- process_stream_comment(S), !, cont_one_e_compound(S, InCodes, WasLast, Term).
 cont_one_e_compound(S, InCodes, WasLast, Term):- 
@@ -558,13 +588,20 @@ cont_one_e_compound(S, InCodes, WasLast, Term):-
 %s_l(F,L):- source_location(F,L),!.
 
 :- dynamic(last_s_l/2).
-maybe_mention_s_l:- last_s_l(B,L),LLL is L+5,  s_l(BB,LL), B==BB, !, (LLL<LL -> mention_s_l; true).
-maybe_mention_s_l:- mention_s_l.                      
+
+:- export(maybe_mention_s_l/1).
+maybe_mention_s_l(N):- last_s_l(B,L),LLL is L+N,  s_l(BB,LL), B==BB, !, (LLL<LL -> mention_s_l; true).
+maybe_mention_s_l(_):- mention_s_l.
 
 :- export(mention_s_l/0).
-mention_s_l:-  must_det_l(( ttyflush,
-  s_l(B,L), real_ansi_format([fg(green)], '~N% ~w~n', [B:L]), ttyflush)),
-  retractall(last_s_l(B,_)),asserta(last_s_l(B,L)).
+mention_s_l:- 
+  s_l(B,L0),
+  L is L0-1,
+  L2 is L0,
+  absolute_file_name(B,F),
+  real_ansi_format([fg(green)], '~N% From ~w~n', [F:L]), 
+  ttyflush,
+  retractall(last_s_l(B,_)),asserta(last_s_l(B,L2)).
 
 :- export(s_l/2).
 s_l(F,L):- source_location(F,L), !.
@@ -697,40 +734,41 @@ print_e_to_string(T, _Ops, S):-
                   output(current_output)]),
                   ttyflush)]).
 
-to_ansi(e,[bold,fg(yellow)]) :-!.
-to_ansi(ec,[bold,fg(green)]) :-!.
-to_ansi(pl,[bold,fg(cyan)]) :-!.
-to_ansi([H|T],[H|T]):-!.
+to_ansi(e,[bold,fg(yellow)]).
+to_ansi(ec,[bold,fg(green)]).
+to_ansi(pl,[bold,fg(cyan)]).
+to_ansi([H|T],[H|T]).
 to_ansi(C, [bold,hfg(C)]):- assertion(nonvar(C)), is_color(C),!.
 to_ansi(H,[H]).
 
-is_color(white). is_color(black). 
-is_color(yellow). is_color(cyan).
-is_color(blue). is_color(red).
-is_color(green). is_color(magenta).
+is_color(white). is_color(black). is_color(yellow). is_color(cyan). 
+is_color(blue). is_color(red). is_color(green). is_color(magenta).
 
 
 is_output_lang(Lang):- atom(Lang), Lang \==[],
  \+ is_color(Lang), nb_current('$output_lang',E),E\==[], !, memberchk(Lang,E).
 is_output_lang(_).
   
-:- export(pprint_ec/2).
-pprint_ec(C, P):-
-  pprint_ec_and_f(C, P, '~n').
+%:- export(pprint_ec/2).
+%pprint_ec(C, P):- pprint_ec_and_f(C, P, '~n').
 
 :- export(pprint_ecp_cmt/2).
 pprint_ecp_cmt(C, P):-
+  echo_format('~N'),
   print_e_to_string(P, S0),
+  into_space_cmt(S0,S),
   to_ansi(C, C0),
-  str_repl('\n','\n   ',S0, S),
-  real_ansi_format(C0, '~n /*  ~s.~n */~n', [S]).
+  real_ansi_format(C0, '~s', [S]).
 
 :- export(pprint_ecp/2).
 pprint_ecp(C, P):- \+ is_output_lang(C), !, pprint_ecp_cmt(C, P).
 pprint_ecp(C, P):-
+  maybe_mention_s_l(0),
+  echo_format('~N'),
   pprint_ec_and_f(C, P, '.~n').
 
 pprint_ec_and_f(C, P, AndF):-
+  maybe_mention_s_l(1),
   pprint_ec_no_newline(C, P), 
   echo_format(AndF), !,
   ttyflush.
@@ -876,12 +914,24 @@ read_stream_until_true(S, Buffer, Pred, Codes):- get_code(S, Char),
   (notrace(append(Buffer, [Char], NextBuffer)), read_stream_until_true(S, NextBuffer, Pred, Codes))).
 
 
+into_space_cmt(S0,O):- 
+  %normalize_space(string(S1),S0),
+  str_repl('\n','\n   ',S0, S),
+  (S0==S -> sformat(O, '~N %  ~s.~n', [S]); 
+    sformat(O, '~n /*  ~s.~n */~n', [S])).
+
 % in_space_cmt(Goal):- call_cleanup(prepend_each_line(' % ', Goal), echo_format('~N', [])).
 %in_space_cmt(Goal):- setup_call_cleanup(echo_format('~N /*~n', []), Goal, echo_format('~N*/~n', [])).
+in_space_cmt(Goal):- 
+   with_output_to(string(S0),Goal),
+   into_space_cmt(S0,S),
+   real_format('~s', [S]).
+
 in_space_cmt(Goal):- setup_call_cleanup(echo_format('~N /* ', []), Goal, echo_format('~N */~n', [])).
 
 
-read_line_to_string_echo(S, String):- read_line_to_string(S, String), real_ansi_format([bold, hfg(black)], '~s~n',[String]).
+read_line_to_string_echo(S, String):- read_line_to_string(S, String), ttyflush, real_ansi_format([bold, hfg(black)], '~s~N',[String]),
+  ttyflush.
   
 echo_flush:- ttyflush.
 :- export(echo_format/1).

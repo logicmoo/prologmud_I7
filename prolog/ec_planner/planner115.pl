@@ -390,13 +390,13 @@ check_clipping([G|Gs],R1,R2,N1,N2,D) :-
    if a happens fact has been added to the residue.
 */
 
-abresolve(terms_or_rels(A,F,T),R,Gs,R,false) :- ec_axiom(releases(A,F,T),Gs).
+abresolve(terms_or_rels(A,F,T),R,Gs,R,false) :- axiom(releases(A,F,T),Gs).
 
-abresolve(terms_or_rels(A,F,T),R,Gs,R,false) :- !, ec_axiom(terminates(A,F,T),Gs).
+abresolve(terms_or_rels(A,F,T),R,Gs,R,false) :- !, axiom(terminates(A,F,T),Gs).
 
-abresolve(inits_or_rels(A,F,T),R,Gs,R,false) :- ec_axiom(releases(A,F,T),Gs).
+abresolve(inits_or_rels(A,F,T),R,Gs,R,false) :- axiom(releases(A,F,T),Gs).
 
-abresolve(inits_or_rels(A,F,T),R,Gs,R,false) :- !, ec_axiom(initiates(A,F,T),Gs).
+abresolve(inits_or_rels(A,F,T),R,Gs,R,false) :- !, axiom(initiates(A,F,T),Gs).
 
 /*
    happens goals get checked to see if they are already in the residue.
@@ -446,7 +446,7 @@ abresolve(is(X,Y),R,[],R,false) :- !, X is Y.
 
 abresolve(G,R,[],[G|R],false) :- ec_abducible(G).
 
-abresolve(G,R,Gs,R,false) :- ec_axiom(G,Gs).
+abresolve(G,R,Gs,R,false) :- axiom(G,Gs).
 
 
 

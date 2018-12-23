@@ -1,3 +1,6 @@
+
+:- expects_dialect(theorist).
+
 dyn pacifist(X).
 default quakers_are_pacifists(X): pacifist(X) <- quaker(X).
 default pro_defense_people_are_not_pacifists(X) : n(pacifist(X)) <- pro_def(X).

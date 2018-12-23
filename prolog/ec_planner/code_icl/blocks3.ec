@@ -10,6 +10,7 @@
 %                 state S.
 %
 %    do(A,S) is true if action A is carried out in state S
+:- expects_dialect(icl).
 
 
 % The following are the actions that can occur. The priors represent what 

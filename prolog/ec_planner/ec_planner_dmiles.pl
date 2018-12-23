@@ -17,6 +17,9 @@
 
 :- module(ec,[abdemo_special/3]).
 
+:- use_module(library((pfc_lib))).
+
+%%executable(P):- mpred_props(
 :- include(ec_common).
 
 %:- if((prolog_load_context(file,F),prolog_load_context(source,F))).

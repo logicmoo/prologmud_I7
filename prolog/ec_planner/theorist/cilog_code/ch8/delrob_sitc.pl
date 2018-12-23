@@ -1,5 +1,7 @@
 % DELIVERY ROBOT DOMAIN IN THE SITUATION CALCULUS
 
+:- expects_dialect(cilog).
+
 % INITIAL SITUATION
 
 sitting_at(rob,o109,init).
@@ -15,6 +17,7 @@ at(Obj,Pos,S) <-
 at(Obj,Pos,S) <-
    carrying(Ag,Obj,S) &
    at(Ag,Pos,S).
+
 
 adjacent(o109,o103,_).
 adjacent(o103,o109,_).
@@ -86,18 +89,21 @@ carrying(Ag,Obj,do(A,S)) <-
 unlocked(Door,do(unlock(Ag,Door),S)) <-
    poss(unlock(Ag,Door),S).
 unlocked(Door,do(A,S)) <-
-   unlocked(Door,S) &
+   unlocked(Door,S) &     
    poss(A,S).
 
 % TRY the following queries:
 % bound 10.
-% ask sitting_at(parcel,o109,S).
+:- trace.
+askable sitting_at(parcel,o109,S).
 % bound 8.
-% ask carrying(rob,k1,S).
+askable carrying(rob,k1,S).
 % bound 16.
-% ask sitting_at(rob,lab2,S).
+askable sitting_at(rob,lab2,S).
 % bound 15.
-% ask sitting_at(rob,lab2,S).
+askable sitting_at(rob,lab2,S).
       % warning: this takes a *very* *very* long time
-% ask sitting_at(parcel,lab2,S).
-% ask sitting_at(parcel,lab2,do(putdown(rob,parcel),do(move(rob, o103, lab2), do(unlock(rob, door1), do(move(rob, mail, o103), do(pickup(rob, k1), do(move(rob, o103, mail), do(move(rob, o109, o103), do(move(rob, storage, o109), do(pickup(rob, parcel), do(move(rob, o109, storage), init))))))))))).
+askable sitting_at(parcel,lab2,S).
+askable sitting_at(parcel,lab2,do(putdown(rob,parcel),do(move(rob, o103, lab2), do(unlock(rob, door1), do(move(rob, mail, o103), do(pickup(rob, k1), do(move(rob, o103, mail), do(move(rob, o109, o103), do(move(rob, storage, o109), do(pickup(rob, parcel), do(move(rob, o109, storage), init))))))))))).
+
+

@@ -52,7 +52,7 @@ ec_current_domain(Var):- ec_current_domain_bi(Var).
 ec_current_domain(Var):- ec_current_domain_db(Var).
 
 ec_current_domain_bi(Var):- var(Var),!, throw(ec_current_domain_var(Var)).
-ec_current_domain_bi(axiom(G,Gs)):- !, ec_axiom(G,Gs,_).
+ec_current_domain_bi(axiom(G,Gs)):- !, axiom(G,Gs).
 ec_current_domain_bi(G):- ec_current_domain_db(G).
 
 ec_current_domain_db(G):- ec_current_domain_db(G, _REF).

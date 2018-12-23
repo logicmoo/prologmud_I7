@@ -1,5 +1,7 @@
 %DEFINITION OF DELIVERY ROBOT WORLD IN STRIPS NOTATION
 
+:- expects_dialect(cilog).
+
 % ACTIONS
 % move(Ag,Pos,Pos_1) is the action of Ag moving from Pos to Pos_1
 

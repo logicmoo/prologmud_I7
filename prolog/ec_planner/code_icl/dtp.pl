@@ -20,6 +20,8 @@
 % Sensing conditions
 %     sense(at_key,S) robot senses that it is at the same location as the key.
 
+:- expects_dialect(icl).
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %             INITIAL SITUATION                         %
@@ -220,13 +222,13 @@ random([sensor_true_neg(S):0.97, sensor_false_pos(S):0.03]).
 % thconsult('dtp.pl').
 
 % Here is a simple plan:
-% explain(utility(V,do(enter_lab,do(goto(door,direct),s0))),[],[]).
+example_query(explain(utility(V,do(enter_lab,do(goto(door,direct),s0))),[],[])).
 
 %Here is the explanations of the sensing
-% explain(sense(at_key,do(goto(r101,direct), s0)),[],[]).
+example_query(explain(sense(at_key,do(goto(r101,direct), s0)),[],[])).
 
 % The following two generate the explanations needed to determine the
 % expected utility of the plan in the paper:
-% explain((sense(at_key,do(goto(r101,direct), s0)) & utility(V,do(enter_lab, do(unlock_door, do(goto(door,long), do(pickup(key), do(goto(r101,direct), s0))))))) ,[],[]).
+example_query(explain((sense(at_key,do(goto(r101,direct), s0)) & utility(V,do(enter_lab, do(unlock_door, do(goto(door,long), do(pickup(key), do(goto(r101,direct), s0))))))) ,[],[])).
 
-% explain((~ sense(at_key,do(goto(r101,direct), s0)) & utility(V,do(enter_lab, do(unlock_door, do(goto(door,direct), do(pickup(key), do(goto(r123,direct), do(goto(r101,direct), s0)))))))) ,[],[]).
+example_query(explain((~ sense(at_key,do(goto(r101,direct), s0)) & utility(V,do(enter_lab, do(unlock_door, do(goto(door,direct), do(pickup(key), do(goto(r123,direct), do(goto(r101,direct), s0)))))))) ,[],[])).
