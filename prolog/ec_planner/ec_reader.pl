@@ -630,8 +630,9 @@ ec_on_read(Why, Cmp):- compound_gt(Cmp, 0),
 ec_on_read(Why, S):- must(glean_data(Why, S)), must(call(Why, S)).
 
 
+:- use_module(library(logicmoo/misc_terms)).
 
-ec_on_each_read(Why, NonlistF, E):- Cmp =.. [NonlistF, E], ec_on_read(Why, Cmp).
+ec_on_each_read(Why, NonlistF, E):- Cmp univ_safe [NonlistF, E], ec_on_read(Why, Cmp).
 
 %must(G):- tracing, !, notrace(G).
 %must(G):- call(G)->true;(trace,ignore(rtrace(G)),break).

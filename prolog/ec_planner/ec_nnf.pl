@@ -51,8 +51,18 @@
 
 clausify_pnf(PNF, Cla):- clausify_pnf_v1(PNF, Cla),!.
 
-clausify_pnf_v1(PNF, Cla):- declare_fact(PNF),
-   findall(E,retract(saved_clauz(E)),Cla), E\==[], !.
+clausify_pnf_v1(PNF, ClaS):- declare_fact(PNF),
+   findall(saved_clauz(E,Vs),retract(saved_clauz(E,Vs)),Cla), E\==[], !,
+   maplist(cla_to_clas,Cla,ClaS).
+
+cla_to_clas(saved_clauz(E,Vs),E):- maplist(to_wasvar,Vs).
+
+to_numbars(N=V):- ignore(V='$VAR'(N)).
+to_wasvar(N=V):-    
+   prolog_load_context(variable_names,VsO),
+   (member(N=V,VsO) -> true ; debug_var(N,V)).
+
+
 
 clausify_pnf_v2( Formula, CF ):-
   nnf( not(Formula), NNF ), 
@@ -218,6 +228,7 @@ dnf1( ','( ';'(P,Q), R), ';'(P1,Q1) ):- !, dnf1( ','(P,R), P1), dnf1( ','(Q,R), 
 dnf1( DNF,                  DNF ).
 
 
+dont_copy_term(X,X).
 
 %%
 %%  Prenex Normal Form (PNF)
@@ -232,22 +243,22 @@ pnf(F,PNF) :- pnf(F,[],PNF).
 pnf(     all(X,F),Vs,   all(X,PNF)) :- !, pnf(F,[X|Vs], PNF).
 pnf(  exists(X,F),Vs,exists(X,PNF)) :- !, pnf(F,[X|Vs], PNF).
 
-pnf(  ','(exists(X,A) , B),Vs,  exists(Y,PNF)) :- !, copy_term((X,A,Vs),(Y,Ay,Vs)),
+pnf(  ','(exists(X,A) , B),Vs,  exists(Y,PNF)) :- !, dont_copy_term((X,A,Vs),(Y,Ay,Vs)),
                                         pnf(','(Ay,B),[Y|Vs], PNF).
-pnf(  ';'(exists(X,A), B),Vs,  exists(Y,PNF)) :- !, copy_term((X,A,Vs),(Y,Ay,Vs)),
+pnf(  ';'(exists(X,A), B),Vs,  exists(Y,PNF)) :- !, dont_copy_term((X,A,Vs),(Y,Ay,Vs)),
                                         pnf(';'(Ay,B),[Y|Vs], PNF).
-pnf( ','(all(X,A), B),Vs, all(Y,PNF)) :- !, copy_term((X,A,Vs),(Y,Ay,Vs)),
+pnf( ','(all(X,A), B),Vs, all(Y,PNF)) :- !, dont_copy_term((X,A,Vs),(Y,Ay,Vs)),
                                         pnf(','(Ay , B),[Y|Vs], PNF).
-pnf( ';'(all(X,A), B),Vs, all(Y,PNF)) :- !, copy_term((X,A,Vs),(Y,Ay,Vs)),
+pnf( ';'(all(X,A), B),Vs, all(Y,PNF)) :- !, dont_copy_term((X,A,Vs),(Y,Ay,Vs)),
                                         pnf(';'(Ay,B),[Y|Vs], PNF).
 
-pnf( ','(A,exists(X,B)),Vs,  exists(Y,PNF)) :- !, copy_term((X,B,Vs),(Y,By,Vs)),
+pnf( ','(A,exists(X,B)),Vs,  exists(Y,PNF)) :- !, dont_copy_term((X,B,Vs),(Y,By,Vs)),
                                         pnf(','(A, By),[Y|Vs], PNF).
-pnf( ';'(A,exists(X,B)),Vs,  exists(Y,PNF)) :- !, copy_term((X,B,Vs),(Y,By,Vs)),
+pnf( ';'(A,exists(X,B)),Vs,  exists(Y,PNF)) :- !, dont_copy_term((X,B,Vs),(Y,By,Vs)),
                                         pnf(';'(A,By),[Y|Vs], PNF).
-pnf( ','(A,all(X,B)),Vs, all(Y,PNF)) :- !, copy_term((X,B,Vs),(Y,By,Vs)),
+pnf( ','(A,all(X,B)),Vs, all(Y,PNF)) :- !, dont_copy_term((X,B,Vs),(Y,By,Vs)),
                                         pnf(','(A,By),[Y|Vs], PNF).
-pnf( ';'(A,all(X,B)),Vs, all(Y,PNF)) :- !, copy_term((X,B,Vs),(Y,By,Vs)),
+pnf( ';'(A,all(X,B)),Vs, all(Y,PNF)) :- !, dont_copy_term((X,B,Vs),(Y,By,Vs)),
                                         pnf(';'(A,By),[Y|Vs], PNF).
 
 pnf( ','(A, B),Vs,       PNF ) :- pnf(A,Vs,Ap), pnf(B,Vs,Bp), 
@@ -1256,7 +1267,7 @@ make_bodies(_CoA,A, T, [Ths,Anc,Ans], ProveA, ExA) :-
 
 
 :- dynamic(declared_as_prolog/1).
-is_thbuiltin(V):- var(V),fail.
+is_thbuiltin(V):- is_ftVar(V),fail.
 is_thbuiltin(true).
 is_thbuiltin(unifii(_,_)).
 is_thbuiltin( \+ (_)).
@@ -2398,8 +2409,9 @@ prolog_cl(C) :-
    print_clause(C),!.
 
 prolog_cl(C) :-
+   prolog_load_context(variable_names,Vs),
    (clause_asserted(C)->! ; ( %trace,
-      assertz( saved_clauz(C)),call(if_dbg(print_clause((C)))))),!.
+      assertz( saved_clauz(C,Vs)),call(if_dbg(print_clause((C)))))),!.
 prolog_cl(C) :-
    if_dbg(print_clause(retract(C))),
    break,retract(C),

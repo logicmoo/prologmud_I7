@@ -19,6 +19,23 @@
 % =========================================
 :- module(ec_loader,[load_e/1, needs_proccess/2,process_ec/2]).
 
+:- use_module(library(logicmoo_utils_all)).
+
+:- if(\+ current_prolog_flag(lm_no_autoload,_)).
+:- set_prolog_flag(lm_no_autoload,false).
+:- wdmsg("WARNING: PFC_AUTOLOAD").
+:- endif.
+
+:- if(\+ current_prolog_flag(lm_pfc_lean,_)).
+:- set_prolog_flag(lm_pfc_lean,false).
+:- wdmsg("WARNING: PFC_NOT_LEAN").
+:- endif.
+
+%:- use_module(library(pfc_lib)).
+:- use_module(library(pfc)).
+:- baseKB:export(baseKB:spft/3).
+:- system:import(baseKB:spft/3).
+
 export_transparent(P):-
   export(P),
   module_transparent(P).
@@ -37,7 +54,7 @@ e_reader_teste2:-
                       cookOf(Restaurant),
                       Food),
                 Time))),O),
-     pprint_ecp(e,O).
+     assert_ready(e,O).
 
 :- export_transparent(e_reader_testec/0).
 e_reader_testec:- with_e_sample_tests(load_e_pl).
@@ -154,9 +171,10 @@ set_mpred_props(MF,E):- strip_module(MF,M,P),MF==P,!,must(set_mpred_props(M:P,E)
 set_mpred_props(M:F/A,E):- !, ain(mpred_prop(M,F,A,E)).
 set_mpred_props(M:P,E):- \+ compound(P),!,set_mpred_props(M:P/_,E).
 set_mpred_props(M:P,E):- compound_name_arity(P,F,A),set_mpred_props(M:F/A,E),
-   pprint_ecp(red, (==>meta_argtypes(P))),
+   assert_ready(red, (==>meta_argtypes(P))),
    ain(meta_argtypes(P)).
 
+assert_ready(Type,Value):- pprint_ecp(Type,Value).
 :- export_transparent(assert_ele/1).
 assert_ele(EOF) :- EOF == end_of_file,!.
 assert_ele(SS):- is_list(SS),!,maplist(assert_ele,SS).
@@ -165,9 +183,9 @@ assert_ele(_):- notrace(echo_format('~N')), fail.
 assert_ele(translate(Event, Outfile)):- !, mention_s_l, echo_format('% translate: ~w  File: ~w ~n',[Event, Outfile]).
 assert_ele(load(S0)):- resolve_local_files(S0,SS), !, maplist(cond_load_e(changed), SS), !.
 assert_ele(include(S0)):- resolve_local_files(S0,SS), !, maplist(load_e, SS), !.
-assert_ele(ec_current_domain_db(P)):- !, pprint_ecp(pl, ec_current_domain_db(P)).
+assert_ele(ec_current_domain_db(P)):- !, assert_ready(pl, ec_current_domain_db(P)).
 
-% , pprint_ecp(e, HB),
+% , assert_ready(e, HB),
 %assert_ele(SS):- syntx_term_check(SS),!.
 assert_ele(HB):- correct_holds(outward,HB, HBC), HB\=@=HBC, !, assert_ele(HB).
 assert_ele(HB):- \+ compound_gt(HB, 0), !, assert_axiom(HB, []).
@@ -183,18 +201,18 @@ assert_ele(HB):- HB=..[function, RelSpec, RetType],
   assert_ele(functional_predicate(PredSpec)),
   %assert_ele(function(RelSpec)),
   get_functor(RelSpec,F),
-  assert_ele(resultIsa(F, RetType)).
+  assert_ele(==>resultIsa(F, RetType)).
 
 assert_ele(HB):- HB=..[RelType,RelSpec],arg_info(domain,RelType,arginfo), !, 
   pprint_ecp_cmt(blue, HB),
-  pprint_ecp(red, (==>(mpred_prop(RelSpec, RelType)))),
+  assert_ready(red, (==>(mpred_prop(RelSpec, RelType)))),
   must(set_mpred_props(RelSpec,RelType)).
 
-assert_ele(HB):- functor(HB,F, L), arg_info(abducible,F,Args),Args=..[v|ArgL], length(ArgL,L), !, pprint_ecp(yellow, ==>(HB)).
-assert_ele(subsort(F, W)):- !, maplist(pprint_ecp(yellow),[sort(F),sort(W),subsort(F, W)]).
-assert_ele(option(X,Y)):- set_ec_option(X,Y), maplist(pprint_ecp(yellow),[:- set_ec_option(X,Y)]).
-assert_ele(xor(XORS)):- conjuncts_to_list(XORS,List),  !, pprint_ecp(red, xor(List)).
-assert_ele(t(F, W)):- !, maplist(pprint_ecp(yellow),[sort(F),t(F, W)]).
+assert_ele(HB):- functor(HB,F, L), arg_info(abducible,F,Args),Args=..[v|ArgL], length(ArgL,L), !, assert_ready(yellow, ==>(HB)).
+assert_ele(subsort(F, W)):- !, maplist(assert_ready(yellow),[sort(F),sort(W),subsort(F, W)]).
+assert_ele(option(X,Y)):- set_ec_option(X,Y), maplist(assert_ready(yellow),[:- set_ec_option(X,Y)]).
+assert_ele(xor(XORS)):- conjuncts_to_list(XORS,List),  !, assert_ready(red, ==>xor(List)).
+assert_ele(t(F, W)):- !, maplist(assert_ready(yellow),[==>(sort(F)), ==>(t(F, W))]).
                                                     
   %locally(b_setval('$output_lang',[ec]), assert_ele(P)).
 assert_ele(equiv(H,B)):- 
@@ -214,7 +232,7 @@ assert_ele(initially(F)):- !, assert_axiom(initially(F),[]).
 
 assert_ele('<-'(H,B)):- !, conjuncts_to_list(B,BL), assert_axiom(H,BL).
 % assert_ele((H :- B)):- (H=not(_);is_axiom_head(H)), !, conjuncts_to_list(B,BL), assert_axiom(H,BL).
-assert_ele((H :- B)):- !,  pprint_ecp(pl, (H :- B)).
+assert_ele((H :- B)):- !,  assert_ready(pl, (H :- B)).
 
 assert_ele(if(Body,EffectAx)):- EffectAx=..[Effect|_],
   member(Effect,[initiates,terminates,releases]),
@@ -239,9 +257,9 @@ assert_ele(not(H)):-  !,  assert_m_axiom(not(H)).
 
 assert_ele(axiom(H,B)):- echo_format('~N'), !,
   correct_axiom_time_args(t,H,B,HH,BB),
-  pprint_ecp(pl, axiom(HH,BB)).
+  assert_ready(pl, axiom(HH,BB)).
 assert_ele(SS):- echo_format('~N'), 
-  pprint_ecp(red, SS).
+  assert_ready(red, SS).
 
 correct_axiom_time_args(Stem,H,B,HH,BB):- 
   visit_time_args(Stem,[],H,HH,Mid),
@@ -292,7 +310,7 @@ assert_ele_clauses(X,L,L):- is_list(L), !,
  length(L,N), 
  (N > 14 
   -> 
-   (pprint_ecp(magenta,
+   (assert_ready(magenta,
          todo_later(X,L,N==N)),sleep(1.0))
    ; maplist(assert_ele_clauses(X,L),L)).
 
