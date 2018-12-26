@@ -32,8 +32,6 @@ do_test(stdtest+7) :-
           holds_at(have(o5),t), holds_at(have(o6),t),
           holds_at(have(o7),t)], R).
 
-
-
 do_test(stdtest+8) :-
      testing_msg('Test 8 - 111 sicstus'),
      abdemo_special(easy,[holds_at(have(o1),t), holds_at(have(o2),t),
@@ -77,9 +75,7 @@ do_test(benchtest+14+long) :-
 
 do_test(benchtest+16+long) :-
      testing_msg('Test 16'),
-     abdemo_special(long,[
-          holds_at(have(o1),t), 
-          holds_at(have(o2),t),
+     abdemo_special(long,[holds_at(have(o1),t), holds_at(have(o2),t),
           holds_at(have(o3),t), holds_at(have(o4),t),
           holds_at(have(o5),t), holds_at(have(o6),t),
           holds_at(have(o7),t), holds_at(have(o8),t),
@@ -89,64 +85,50 @@ do_test(benchtest+16+long) :-
           holds_at(have(o15),t), holds_at(have(o16),t)], R).
 
 
-make_test_n(Max,Haves):-
-  findall(holds_at(have(O),t),
-    (between(1,Max,N),atom_concat(o,N,O)),Haves).
-   
-do_test(benchtest+19+long) :-
-     testing_msg('Test 19'),
-     make_test_n(19, Haves),
-     dbginfo(haves=Haves),!,
-     abdemo_special(long, Haves, R).
-
-do_test(benchtest+20+long) :-
-     testing_msg('Test 20'),
-     make_test_n(20, Haves),
-     dbginfo(haves=Haves),!,
-     abdemo_special(long, Haves, R).
 
 
 
-:- use_module(library(ec_planner/ec_loader)).
-
-% axiom(initiates(go(X),at(X),T),[]).
-% axiom(terminates(go(X),at(Y),T),[diff(X,Y)]).
-event(go(store)).
-fluent(at(store)).
-initiates(go(X),at(X)).
-terminates(go(X), at(Y)) <- X \= Y.
-
-% axiom(initiates(buy(X),have(X),T),[sells(Y,X), holds_at(at(Y),T)]).
-event(buy(object)).
-fluent(at(store)).
-predicate(sells(store,object)).
-fluent(have(object)).
-initiates(buy(X), have(X)) <- sells(Y, X), at(Y).
 
 
-:- 
-  forall((between(1, 64, N), 
-        atom_concat(s,N,S),atom_concat(o,N,O)),
-    process_ec(sells(S,O))).
 
-/*
+axiom(initiates(go(X),at(X),T),[]).
+
+axiom(terminates(go(X),at(Y),T),[diff(X,Y)]).
+
+axiom(initiates(buy(X),have(X),T),[sells(Y,X), holds_at(at(Y),T)]).
+
 axiom(sells(s1,o1),[]).
+
 axiom(sells(s2,o2),[]).
+
 axiom(sells(s3,o3),[]).
+
 axiom(sells(s4,o4),[]).
+
 axiom(sells(s5,o5),[]).
+
 axiom(sells(s6,o6),[]).
+
 axiom(sells(s7,o7),[]).
+
 axiom(sells(s8,o8),[]).
+
 axiom(sells(s9,o9),[]).
+
 axiom(sells(s10,o10),[]).
+
 axiom(sells(s11,o11),[]).
+
 axiom(sells(s12,o12),[]).
+
 axiom(sells(s13,o13),[]).
+
 axiom(sells(s14,o14),[]).
+
 axiom(sells(s15,o15),[]).
+
 axiom(sells(s16,o16),[]).
-*/
+
 
 
 
@@ -154,9 +136,11 @@ axiom(sells(s16,o16),[]).
 
 /* Abduction policy */
 
-%abducible(dummy).
-%executable(go(X)).
-%executable(buy(X)).
+abducible(dummy).
 
-:- listing([ec_current_domain_db, ec_axiom]).
+executable(go(X)).
+
+executable(buy(X)).
+
+
 

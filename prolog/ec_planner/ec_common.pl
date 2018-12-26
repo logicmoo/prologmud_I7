@@ -54,6 +54,8 @@ ec_current_domain(Var):- ec_current_domain_bi(Var).
 ec_current_domain_bi(Var):- notrace(var(Var)),!, throw(ec_current_domain_var(Var)).
 %ec_current_domain_bi(axiom(G,Gs)):- !, axiom(G,Gs).
 ec_current_domain_bi(G):- ec_current_domain_db(G).
+ec_current_domain_bi(executable(G)):- var(G), ec_current_domain_bi(event(Ax)), functor(G,F,A), functor(Ax,F,A).
+ec_current_domain_bi(executable(G)):- compound(G), functor(G,F,A), functor(Ax,F,A), ec_current_domain_bi(event(Ax)).
 
 ec_current_domain_db(G):- user:ec_current_domain_db(G, _REF).
 :- lock_predicate(ec_current_domain_db/1).

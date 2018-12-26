@@ -85,7 +85,7 @@ load_e_pl(F):- needs_resolve_local_files(F, L), !, maplist(load_e_pl, L).
 load_e_pl(F):-
   calc_where_to(outdir('.', pl), F, OutputName), !,
  ( 
- (( ( \+ should_update(OutputName))) -> true ;
+ (( ( fail, \+ should_update(OutputName))) -> true ;
   setup_call_cleanup(open(OutputName, write, Outs),
   (maplist(format(Outs,'~N~q.~n'),
     [( :- include(library('ec_planner/ec_test_incl'))),
@@ -174,10 +174,107 @@ set_mpred_props(M:P,E):- compound_name_arity(P,F,A),set_mpred_props(M:F/A,E),
    assert_ready(red, (==>meta_argtypes(P))),
    ain(meta_argtypes(P)).
 
+
+
+is_4th_order(axiom).
+is_4th_order(F):- upcase_atom(F,UD),upcase_atom(F,UD).
+
+get_arg_type(argIsa(W),1,W).
+get_arg_type(F, Nth,Type):- arg_info(_,F,VTypes), compound(VTypes), arg(Nth,VTypes,Type), !.
+get_arg_type(F,_,axiom_head):- is_4th_order(F),!.
+
+coerce_arg_to_type(Time, axiom_head, H, HH):- !, show_fix_axiom_head(Time, H, HH).
+
+coerce_arg_to_type(_, axiom, HB, HB):- compound_gt(HB, 0), HB=..[RelType|_], fixed_already(RelType), !.
+coerce_arg_to_type(Time, axiom, HB, axiom(AxHB,[])):-  coerce_arg_to_type(Time, axiom_head, HB, AxHB), !.
+coerce_arg_to_type(Time, axiom, H, HH):- fix_assert(Time, H, HH).
+
+
+fixed_already(mpred_prop).
+fixed_already(meta_argtypes).
+fixed_already(abducible).
+fixed_already(executable).
+fixed_already(axiom).
+fixed_already(F):- arg_info(domain,F,_).
+fixed_already(F):- arg_info(abducible,F,_).
+
+fix_assert(Time, HT, HTO):- 
+ fix_argtypes(Time, 1, [argIsa(axiom)], HT, HTM),!,
+ fix_assert_pass2(Time, HTM, HTO).
+
+fix_assert_pass2(_, HB, HB):- HB=..[RelType|_], fixed_already(RelType), !.
+fix_assert_pass2(Time, G, axiom(GG, [])):- must(show_fix_axiom_head(Time, G, GG)),!.
+
+
+fix_argtypes(Time, NthArg, [F|_], HT, HTO):-
+    get_arg_type(F,NthArg,Type), 
+    coerce_arg_to_type(Time,Type,HT,HTO),!.
+fix_argtypes(_, _NthArg, _Type, HB, HB):- \+ compound_gt(HB, 0), !.
+fix_argtypes(Time, _NthArg, Type, HT, HTO):-
+ compound_name_arguments(HT, F, L), 
+ fix_argtypes(Time, 1, [F|Type], L, LL),
+ compound_name_arguments(HTO, F, LL).
+
+fix_numbered_argtypes(Time, NthArg, FType, [H|T], [HH|TT]):- !,
+  fix_argtypes(Time, NthArg, FType, H, HH),
+  NthArgPlus1 is NthArg + 1,
+  fix_numbered_argtypes(Time, NthArgPlus1, FType, T, TT).
+fix_numbered_argtypes(_Time, _NthArg, _FType, [], []).
+
+
+:- export_transparent(fix_axiom_head/3).
+fix_axiom_head(_, X, Y):-  (\+ callable(X);\+ compound(X)), !, X=Y.
+fix_axiom_head(_T, option(X,Y),option(X,Y)):-!.
+fix_axiom_head(T, X\=Y, O):- must(fix_axiom_head(T, not(X=Y), O)).
+fix_axiom_head(T, P, PP):- cvt0(T, P,PP),!.
+fix_axiom_head(T, not(I),O):- !, fix_axiom_head(T, I,M), correct_holds(neg,not(M), O). 
+fix_axiom_head(T, happens(F, T1, T2), O):- T1==T2, fix_axiom_head(T, happens(F, T1), O).
+fix_axiom_head(_, equals(X,Y),equals(X,Y)).
+fix_axiom_head(T, HT, HTTerm):-  
+ compound_name_arguments(HT, F, L),
+ upcase_atom(F,U),downcase_atom(F,U),
+ maplist(show_fix_axiom_head(T),L,LL),
+ ( LL\==L -> compound_name_arguments(HTTerm, F, LL) ; HT = HTTerm ), !.
+
+fix_axiom_head(_, G, G):- functor_skel(G,P), syntx_term_check(predicate(P)),!.
+fix_axiom_head(T, G, happens(G,T)):- functor_skel(G,P), (syntx_term_check(event(P));executable(P)),!.
+fix_axiom_head(T, G, holds_at(G,T)):- functor_skel(G,P), syntx_term_check(fluent(P)),!.
+fix_axiom_head(T, G, Gs):- fix_goal_add_on_arg( T, G, Gs, _TExtra),!.
+fix_axiom_head(_, G, G):- functor(G,F,A), already_good(F,A),!.
+%fix_axiom_head(T,(G1,G2),GGs):- !, fix_axiom_head(T,G1,GG1),fix_axiom_head(T,G2,GG2).
+fix_axiom_head(T, P, PP):-  
+   P =..[F|Args],functor(P,F,A), arg_info(AxH,F,Arity),!,
+   functor(Arity,_,N), 
+   must(correct_ax_args(T,F,A,Args,AxH,Arity,N,PP)).
+%fix_axiom_head(T, P, P).
+%fix_axiom_head(T,X,Y):- trace, ec_to_ax(T, X,Y).
+fix_axiom_head(_, P, call(P)):- predicate_property(P,foreign),!.
+fix_axiom_head(T, G, GG):- trace, GG = holds_at(G, T).
+
+:- export(show_fix_axiom_head/3).
+show_fix_axiom_head(T, HT, HTTermO):- 
+    fix_axiom_head(T, HT, HTTermO),!,
+    ignore((HT\==HTTermO,dmsg(fix_axiom_head(HT):- HTTermO))),!.
+show_fix_axiom_head(T, HT, HTTermO):-  
+ compound_name_arguments(HT, F, L),
+ upcase_atom(F,U),downcase_atom(F,U),
+ maplist(show_fix_axiom_head(T),L,LL),
+ compound_name_arguments(HTTerm, F, LL),
+ show_fix_axiom_head(T, HTTerm, HTTermO).
+show_fix_axiom_head(T, HT, HTTermO):- trace, rtrace(fix_axiom_head(T, HT, HTTermO)),!.
+
+
+
+assert_ready(Type,'==>'(Value)):- 
+   pprint_ecp(Type,'==>'(Value)),
+   mpred_fwc('==>'(Value)),
+   fix_assert(_Time,Value,ValueO),
+   assertz_if_new(user:ec_current_domain_db(ValueO,_)).
 assert_ready(Type,Value):- 
    pprint_ecp(Type,Value),
    mpred_fwc(Value),
-   assertz_if_new(user:ec_current_domain_db(Value,_)).
+   fix_assert(_Time,Value,ValueO),
+   assertz_if_new(user:ec_current_domain_db(ValueO,_)).
 
 :- export_transparent(assert_ele/1).
 assert_ele(EOF) :- notrace((EOF == end_of_file)),!.
@@ -213,7 +310,7 @@ assert_ele(HB):- HB=..[function, RelSpec, RetType],
   assert_ele(==>resultIsa(F, RetType)).
 
 assert_ele(HB):- HB=..[RelType,RelSpec],arg_info(domain,RelType,arginfo), !, 
-  pprint_ecp_cmt(blue, HB),
+  assert_ready(blue, HB),
   assert_ready(red, (==>(mpred_prop(RelSpec, RelType)))),
   must(set_mpred_props(RelSpec,RelType)).
 
@@ -247,7 +344,7 @@ assert_ele('->'(B,H)):- nonvar(B),
 assert_ele('->'(B,H)):- nonvar(B),B=((B1;B2)),!,assert_ele('->'(B1,H)),assert_ele('->'(B2,H)).
 */
 
-assert_ele('<-'(H,B)):- !, conjuncts_to_list(B,BL), assert_axiom(H,BL).
+assert_ele('<-'(H,B)):- conjuncts_to_list(B,BL), !, must(assert_axiom(H,BL)).
 % assert_ele((H :- B)):- (H=not(_);is_axiom_head(H)), !, conjuncts_to_list(B,BL), assert_axiom(H,BL).
 assert_ele((H :- B)):- !,  assert_ready(pl, (H :- B)).
 
@@ -299,7 +396,7 @@ cvt0(_, P, _):- \+ callable(P),!, fail.
 cvt0(_, X\=Y, diff(X,Y)) :- !.
 cvt0(_, X=Y, Equals):- !,as_equals(X,Y,Equals).
 %cvt0(T, holds_at(not(H),T)),O):- !, cvt0(T, holds_at(neg(H),T), O).
-cvt0(T, P, holds_at(call(P), T)):- predicate_property(P,foreign),!.
+%cvt0(T, P, call(P)):- predicate_property(P,foreign),!.
 %cvt0(_, not(exists(_Vars, holds_at(P, Time))),not(holds_at(neg(P), Time))).
 cvt0(_, holds_at(N,AT),initially(N)):- AT==0,!.
 cvt0(T, not(I),not(O)) :- cvt0(T,I,O).
@@ -362,26 +459,37 @@ assert_m_axiom(X):-
   conjuncts_to_list(Conds,CondsL),
   assert_ele_clauses(X,CondsL,CondsL).
 
-  
-
+:- export_transparent(assert_axiom/2).
 assert_axiom(EffectAx, append3(L1,L2,LL)):- 
    conjuncts_to_list_body(L1,LL1),conjuncts_to_list_body(L2,LL2),
    append([LL1,LL2,LL],L12),!,
    assert_axiom(EffectAx, L12).
-assert_axiom(happens(A,T), []):- !,
-   assert_axiom(happens(A,T), [is_time(T)]).  
-assert_axiom(EffectAx, Some) :- fix_axiom_head(_T, EffectAx,New), New\=@=EffectAx, !,
-   assert_axiom(EffectAx, Some).
+
 assert_axiom(EffectAx, B) :- \+ is_list(B), !,
   conjuncts_to_list_body(B,Bs),
   assert_axiom(EffectAx, Bs).
+
 assert_axiom(Conds, []):- is_list(Conds),!,
    maplist(assert_ele,Conds).
+assert_axiom(happens(A,T), []):- !,
+   assert_axiom(happens(A,T), [is_time(T)]).  
 
 assert_axiom(Conds, [happens(A,T)]):-
    conjuncts_to_list(Conds, B ), 
    functors_are(\+ happens, B), !,
    assert_axiom(requires(A,T),Conds),!.
+
+assert_axiom(EffectAx, Some) :- 
+    show_fix_axiom_head(Time,EffectAx,New),    
+    New\=@=EffectAx, !,
+    must_maplist(show_fix_axiom_head(Time),Some,SomeL),
+    must(assert_axiom(New, SomeL)).
+
+assert_axiom(H,B) :- 
+    semi_legit_time(H,Time),
+    maplist(show_fix_axiom_head(Time),B,BL),
+    BL\=@=B,!,
+    assert_axiom(H,BL).
 
   
 
@@ -392,6 +500,7 @@ assert_axiom(Conds, [happens(A,T)]):-
    debug_var(when,T),
    assert_axiom(requires(A,T),holds_at(metreqs(A),T)),
    assert_axiom(holds_at(requirements(A),T),B).
+
 
 assert_axiom(H,B):- compound_name_arity(H, F, 2), 
   needs_cononicalization(F), !,
@@ -540,8 +649,8 @@ ec_to_ax(T, '->'(B,H),O):- !, into_axiom(T,H,B,O).
 ec_to_ax(T, '<->'(HB1,HB2),[A,B]):- !, ec_to_ax(T, '->'(HB1,HB2),A),ec_to_ax(T, '->'(HB2,HB1),B).
 ec_to_ax(T, axiom(H,B),O):- into_axiom(T,H,B,O), !.
 ec_to_ax(_, axiom(H,B), axiom(H,B)):- !.
-ec_to_ax(T, X,Y):- cvt1(T, X,Y),X=Y,!.
-ec_to_ax(T, X,Y):- cvt1(T, X,XY),ec_to_ax(T, XY,Y).
+ec_to_ax(T, X,Y):- fix_axiom_head(T, X,Y),X=Y,!.
+ec_to_ax(T, X,Y):- fix_axiom_head(T, X,XY),ec_to_ax(T, XY,Y).
 ec_to_ax(_, X,X).
 
 to_axiom_body(T,G,GGs) :-  fix_goal(T,G,GGs).
@@ -552,49 +661,8 @@ into_axiom(T,H,B,'->'(ABNonList,AH)):- to_axiom_head(T1,H,AH),
   list_to_conjuncts(AB, ABNonList),!.
 
 
-:- export_transparent(fix_axiom_head/3).
-
-cvt1(_, X,Y):-  (\+ callable(X);\+ compound(X)), !, X=Y.
-%cvt1(T, (Pre -> iff(HB,BH)), HBO):- cvt1(T, (iff((Pre,HB),(Pre,BH))), HBO).
-%cvt1(T,','(A,B),(AABB)):- !, fix_axiom_head(T,(A,B),(AABB)).
-%cvt1(T,(A,B),(AA,BB)):- !, fix_axiom_head(T,A,AA), fix_axiom_head(T,B,BB).
-cvt1(T,(A;B),(AA;BB)):- !, cvt1(T,A,AA), cvt1(T,B,BB).
-
-cvt1(T, HT, HTTermO):-  
- compound_name_arguments(HT, F, L),
- upcase_atom(F,U),downcase_atom(F,U),
- maplist(fix_axiom_head(T),L,LL), LL\==L, !,
- compound_name_arguments(HTTerm, F, LL),
- fix_axiom_head(T, HTTerm, HTTermO).
-
-cvt1(_T, option(X,Y),option(X,Y)):-!.
 
 
-
-%cvt1(T, isa(E, C), List):- !, fix_axiom_head(T, t(C, E), List).
-%cvt1(T, not(holds_at(N,AT)),O):- AT==0, fix_axiom_head(T, initially(neg(N)),O).
-%cvt1(T, holds_at(NEG,AT),O):- compound(NEG),NEG=neg(N),!, fix_axiom_head(T, not(holds_at(N,AT)),O).
-%cvt1(T, neg(holds_at(N)),O):- !, fix_axiom_head(T, holds_at(neg(N),T),O).
-%cvt1(T, not(happens(G,T2)),not(O)):- !, fix_axiom_head(T,happens(G,T2),O).
-cvt1(T, not(I),not(O)):- !, fix_axiom_head(T, I,O).
-% cvt1(T, not(exists(_Vars,I)),O):- !, fix_axiom_head(T, not(I),O).
-%cvt1(_, exists(Vars,Truth), NewTruth):- conjoin(Truth,some(Vars),NewTruth).
-cvt1(T, happens(F, T1, T2), O):- T1==T2,!, fix_axiom_head(T, happens(F, T1), O).
-cvt1(_, equals(X,Y),equals(X,Y)).
-
-cvt1(_, G, G):- functor_skel(G,P), syntx_term_check(predicate(P)).
-cvt1(T, G, happens(G,T)):- functor_skel(G,P), (syntx_term_check(event(P));executable(P)).
-cvt1(T, G, holds_at(G,T)):- functor_skel(G,P), syntx_term_check(fluent(P)).
-cvt1(_, G, G):- functor(G,F,A), already_good(F,A),!.
-
-
-fix_axiom_head(T,X,Y):- ec_to_ax(T, X,Y).
-
-fix_axiom_head_2(T, G, Gs):- fix_goal_add_on_arg( T, G, Gs, _TExtra),!.
-fix_axiom_head_2(T, P,PP):- P =..[F|Args],functor(P,F,A), arg_info(AxH,F,Arity),!,
-   functor(Arity,_,N), 
-   must(correct_ax_args(T,F,A,Args,AxH,Arity,N,PP)).
-%fix_axiom_head(T, G, P):- ec_to_ax(T, G,P),!.
 
 as_equals(X,Y,equals(X,Y)).
 as_equals(X,Y,Equals):- compound(X),append_term(X,Y, Equals).

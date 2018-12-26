@@ -88,7 +88,8 @@ DECLARATIONS:
 :- ['utilities/interval-manipulation.prolog'].
 :- ['utilities/amalgamate-periods.prolog'].
 
-:- dynamic temporalDistance/1, input/1, preProcessing/1, initTime/1, iePList/4, simpleFPList/4, sdFPList/4, evTList/3, happensAtIE/2, holdsForIESI/2, holdsAtIE/2, 
+:- dynamic temporalDistance/1, input/1, preProcessing/1, initTime/1, iePList/4, simpleFPList/4, sdFPList/4, evTList/3, happensAtIE/2, holdsForIESI/2, 
+   holdsAtIE/2, 
    processedCyclic/2, initiallyCyclic/1, storedCyclicPoints/3, startingPoints/3.
 
 
@@ -108,9 +109,10 @@ initialiseRecognition(InputFlag, PreProcessingFlag, TemporalDistance) :-
 rtec_v2 :- true.
 
 eventRecognition(QueryTime, WM) :-
-    rtec_v2, !, 
+    rtec_v2, 
+    !, 
     eventRecognition_v2(QueryTime, WM).
-eventRecognition_v1(QueryTime, WM) :-
+eventRecognition(QueryTime, WM) :-
 	InitTime is QueryTime-WM,
 	assert(initTime(InitTime)),
         % delete input entities that have taken place before or on Qi-WM

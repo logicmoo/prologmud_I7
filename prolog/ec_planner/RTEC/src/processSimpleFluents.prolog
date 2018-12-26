@@ -117,8 +117,12 @@ broken(U, Ts, Tf, T) :-
 broken(F=V1, Ts, Tstar, T) :-  
     broken_v2(F=V1, Ts, Tstar, T).
 
+broken(F=V1, Ts, Tstar, T) :-
+    rtec_v2, !,
+    broken_v2(F=V1, Ts, Tstar, T).
+
 % master version and dsc-msc
-broken_v1(F=V1, Ts, Tstar, T) :-
+broken(F=V1, Ts, Tstar, T) :-
 	initiatedAt(F=V2, Ts, Tstar, T), 
 	(strong_initiates ; V1 \= V2).   
   
@@ -170,7 +174,10 @@ holdsForSimpleFluent(U, PeriodList, InitTime, QueryTime, InitList) :-
 
 % makeIntervalsFromSEPoints(+ListofStartingPoints, +ListofEndingPoints, -MaximalIntervals) 
 
-makeIntervalsFromSEPoints(ListofStartingPoints, ListofEndingPoints, MaximalIntervals):- fail, !,
+makeIntervalsFromSEPoints(ListofStartingPoints, ListofEndingPoints, MaximalIntervals):- 
+  rtec_v2, !, makeIntervalsFromSEPoints_v2(ListofStartingPoints, ListofEndingPoints, MaximalIntervals).
+
+makeIntervalsFromSEPoints(ListofStartingPoints, ListofEndingPoints, MaximalIntervals):- 
   makeIntervalsFromSEPoints_v1(ListofStartingPoints, ListofEndingPoints, MaximalIntervals).
 
 % the predicate below works under the assumption that the lists of 
