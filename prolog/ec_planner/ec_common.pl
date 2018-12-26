@@ -24,10 +24,10 @@ is_sicstus:- \+ current_prolog_flag(version_data,swi(_,_,_,_)).
 :- export(ec_current_domain_db/1).
 :- system:import(ec_current_domain_db/1).
 
-:- module_transparent(ec_current_domain_db/2).
-:- dynamic(ec_current_domain_db/2).
-:- export(ec_current_domain_db/2).
-:- system:import(ec_current_domain_db/2).
+:- module_transparent(user:ec_current_domain_db/2).
+:- dynamic(user:ec_current_domain_db/2).
+:- export(user:ec_current_domain_db/2).
+:- system:import(user:ec_current_domain_db/2).
 
 
 :- module_transparent(system:axiom/2).
@@ -47,15 +47,16 @@ system:executable(A):- ec_current_domain_bi(executable(A)).
 
 ec_predicate_template(Var):- ec_current_domain(predicate(Pred)), functor(Pred,F,A), functor(Var,F,A).
 
-ec_current_domain(Var):- var(Var),!,ec_predicate_template(Var),ec_current_domain(Var).
+ec_current_domain(Var):- notrace(var(Var)),!,ec_predicate_template(Var),ec_current_domain(Var).
 ec_current_domain(Var):- ec_current_domain_bi(Var).
-ec_current_domain(Var):- ec_current_domain_db(Var).
+%ec_current_domain(Var):- ec_current_domain_db(Var).
 
-ec_current_domain_bi(Var):- var(Var),!, throw(ec_current_domain_var(Var)).
-ec_current_domain_bi(axiom(G,Gs)):- !, axiom(G,Gs).
+ec_current_domain_bi(Var):- notrace(var(Var)),!, throw(ec_current_domain_var(Var)).
+%ec_current_domain_bi(axiom(G,Gs)):- !, axiom(G,Gs).
 ec_current_domain_bi(G):- ec_current_domain_db(G).
 
-ec_current_domain_db(G):- ec_current_domain_db(G, _REF).
+ec_current_domain_db(G):- user:ec_current_domain_db(G, _REF).
+:- lock_predicate(ec_current_domain_db/1).
  
 
 % =========================================

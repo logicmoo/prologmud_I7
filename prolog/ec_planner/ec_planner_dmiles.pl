@@ -317,7 +317,7 @@ abdemo_cons(expand([happens(A,T1,T2)|Bs]),Gs1,R1,R8,N1,N8,D) :-
      abdemo(Gs1,R7,R8,N7,N8,D).
 
 /*
-   The last two clauses cater for the general case (ie: goals other
+   The last three clauses cater for the general case (ie: goals other
    than holds_at and happens). They're also used to tackle domain
    constraints (ie: holds_at if holds_at clauses).
 */
@@ -325,6 +325,10 @@ abdemo_cons(expand([happens(A,T1,T2)|Bs]),Gs1,R1,R8,N1,N8,D) :-
 abdemo_cons(not(G),Gs,R1,R3,N1,N4,D) :-
      !, abdemo_naf_cons(G,[],R1,R2,N1,N2,D), add_neg_car(G,N2,N3),
      abdemo(Gs,R2,R3,N3,N4,D).
+
+abdemo_cons((G1;G2),Gs,R1,R3,N1,N4,D) :- !,
+  (abdemo_cons(G1,Gs,R1,R3,N1,N4,D);
+   abdemo_cons(G2,Gs,R1,R3,N1,N4,D)).
 
 abdemo_cons(G,Gs1,R1,R3,N1,N2,D) :-
      abresolve(G,R1,Gs2,R2,B), append(Gs2,Gs1,Gs3),

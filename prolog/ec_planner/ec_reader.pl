@@ -68,6 +68,7 @@ builtin_pred(initially).
 is_quantifier_type(thereExists,( & )):- use_some.
 is_quantifier_type(forAll,all).
 is_quantifier_type(thereExists,exists).
+is_quantifier_type(X,Y):- atom(X), is_quantifier_type(_,X),Y=X.
 
 % used by ec_loader
 
@@ -182,6 +183,7 @@ include_e(F):- e_to_pl(do_convert_e, current_output, F).
 
 :- export(convert_e/1).
 convert_e(F):- convert_e(outdir('.', pro), F).
+:- export(convert_e/2).
 convert_e(Out, F):- e_to_pl(do_convert_e, Out, F).
 
 :- export(is_filename/1).
@@ -296,15 +298,21 @@ upcased_functors(G):-
 %
 % Process file stream input
 %
-process_stream_comment(S) :- (peek_string(S, 2, W);peek_string(S, 1, W)), clause(process_stream_peeked213(S, W),Body),!,once(Body).
+process_stream_comment(S) :- (peek_string(S, 3, W);peek_string(S, 2, W);peek_string(S, 1, W)), clause(process_stream_peeked213(S, W),Body),!,once(Body).
 process_stream_peeked213(S, "#!"):- !, read_line_to_string_echo(S, _).
+process_stream_peeked213(S, ";:-"):- !, 
+   ( ( nb_current(last_e_string, axiom)) -> (echo_format('~N~n~n',[]), mention_s_l) ; true),
+   get_char(S, ';'), read_term(S, Term, []),!, 
+      portray_clause(Term),nl,
+   nb_setval(last_e_string, axiom).
+
 process_stream_peeked213(S,  ";"):- !, 
-   ( ( nb_current(last_e_string, axiom)) -> (echo_format('~N~n~n',[Codes]), mention_s_l) ; true),
+   ( ( nb_current(last_e_string, axiom)) -> (echo_format('~N~n~n',[]), mention_s_l) ; true),
    echo_format('%'), read_line_to_string_echo(S, _),!, 
    nb_setval(last_e_string, cmt).
 process_stream_peeked213(S, "["):- !, 
   locally(b_setval(e_echo, nil), read_stream_until(S, [], `]`, Codes)),
-   ( (\+ nb_current(last_e_string, cmt), \+ nb_current(last_e_string, vars) ) -> (echo_format('~N~n~n',[Codes]), mention_s_l) ; true),
+   ( (\+ nb_current(last_e_string, cmt), \+ nb_current(last_e_string, vars) ) -> (echo_format('~N~n~n',[]), mention_s_l) ; true),
    echo_format('% ~s~N',[Codes]),
    read_n_save_vars(universal, Codes),
    nb_setval(last_e_string, vars).
@@ -347,7 +355,7 @@ continue_process_e_stream_too(Why, S, Codes, space):- last(Codes, Last),
    echo_format('~N~n'),maybe_mention_s_l(1), echo_format('% ~s ', [Codes]),
    process_e_stream_token(Why, Token, S), ttyflush, !.
 continue_process_e_stream_too(Why, S, NextCodes, _CanBe ):-  !, 
-  ( \+ nb_current(last_e_string, vars) -> (echo_format('~N~n~n',[Codes]), mention_s_l) ; true),
+  ( \+ nb_current(last_e_string, vars) -> (echo_format('~N~n~n',[]), mention_s_l) ; true),
    maybe_mention_s_l(2), echo_format('% ~s', [NextCodes]),
    last(NextCodes, Last), cont_one_e_compound(S, NextCodes, Last, Term), ec_on_read(Why, Term).
 
@@ -367,7 +375,7 @@ set_e_ops(M):-
    op(1150, xfy, M:'->'),
    % op(1125, xfy, M:'thereExists'), 
    op(1100, xfy, M:'<->'),
-   op(1075, xfy, M:'thereExists'),
+   op(1075, xfx, M:'thereExists'),
    op(1050, xfy, M:'|'),
    op(950, xfy, M:'&'),
    op(900, fx, M:'!'),
@@ -415,30 +423,36 @@ map_callables(Call, HT, HTTerm):- !,
  compound_name_arguments(HTTerm, FF, LL).
 
 :- export(compound_gt/2).
-compound_gt(P,GT):- compound(P), compound_name_arity(P, _, N), N > GT.
+compound_gt(P,GT):- notrace((compound(P), compound_name_arity(P, _, N), N > GT)).
 
 
 :- export(fix_predname/2).
 
 fix_predname('!', 'not').
-fix_predname('not', 'not').
+fix_predname('~', 'not').
 
 fix_predname(';', ';').
-fix_predname('|', ';').
+fix_predname('\\/', ';').
+fix_predname('v', ';').
 fix_predname('or', ';').
+fix_predname('|', ';').
 fix_predname('xor', 'xor').
 
 fix_predname(',', ',').
+fix_predname('^', ',').
 fix_predname('and', ',').
 fix_predname('&', ',').
+fix_predname('/\\', ',').
 
-fix_predname('equiv', 'equiv').
-fix_predname('iff', 'equiv').
-fix_predname('<->', 'equiv').
+fix_predname('equiv','<->').
+fix_predname('iff', '<->').
+fix_predname('<->', '<->').
+fix_predname('<=>', '<->').
 
-fix_predname('->', 'if').
-fix_predname('implies', 'if').
-fix_predname('=>', 'if').
+fix_predname('->', '->').
+fix_predname('implies', '->').
+fix_predname('=>', '->').
+fix_predname('if', '->').
 
 fix_predname(holds_at, holds_at).
 fix_predname(holdsat, holds_at).
@@ -461,10 +475,12 @@ e_to_ec(X, Y):- \+ compound(X), !, must(my_unCamelcase(X, Y)).
 e_to_ec(X, Y):- compound_name_arity(X, F, 0), !, my_unCamelcase(F, FF), compound_name_arity(Y, FF, 0).
 e_to_ec(not(Term),not(O)):- !, e_to_ec(Term, O).
 e_to_ec(Prop,O):- 
-  Prop =.. [ThereExists,not(Vars),Term0],
+  Prop =.. [ThereExists,NotVars,Term0],
   is_quantifier_type(ThereExists,_Exists),
-  nonvar(Vars),!,
-  QProp =.. [ThereExists,Vars,Term0], 
+  conjuncts_to_list(NotVars,NotVarsL), select(not(Vars),NotVarsL,Rest),
+  is_list(Vars),%forall(member(E,Vars),ground(E)),!,
+  (Rest==[]->Term1= Term0 ; list_to_conjuncts(Rest,NotVarsRest),conjoin(NotVarsRest,Term0,Term1)), 
+  QProp =.. [ThereExists,Vars,Term1], 
   e_to_ec(not(QProp),O).
 e_to_ec(Prop,O):- 
   Prop =.. [ThereExists,Vars,Term0], 
@@ -473,6 +489,7 @@ e_to_ec(Prop,O):-
   QProp =.. [Exists,Vars,Term0],
   insert_vars(QProp, Vars, Term, _Has),
   e_to_ec(Term,O),!.
+
 %e_to_ec(X, Y):- e_to_ax(X, Y),X\=@=Y,!,e_to_ec(X, Y).
 %e_to_ec(neg(C),O):-e_to_ec(holds_at(neg(N),V),O):- compound(C),holds_at(N,V)=C,
 %e_to_ec(neg(holds_at(N,V)),O):-e_to_ec((holds_at(neg(N),V)),O).
@@ -505,7 +522,7 @@ vars_verbatum(Term):- \+ compound_gt(Term, 0), !.
 vars_verbatum(Term):- compound_name_arity(Term, F, A), (verbatum_functor(F);verbatum_functor(F/A)), !.
 
 add_ec_vars(Term0, Term, Vs):- vars_verbatum(Term0), !, Term0=Term, Vs=[].
-add_ec_vars(Term0, Term, Vs):- 
+add_ec_vars(Term0, Term, Vs):-        
   get_vars(universal, UniVars),
   get_vars(existential,ExtVars),
   insert_vars(Term0, UniVars, Term1, VsA),!,  
@@ -681,18 +698,39 @@ clause_to_string(T,S):-
     [portrayed(false),partial(true),nl(false),fullstop(false),singletons(false)])),!,
  trim_stop(S0,S).
 
+print_e_to_string_b(H, S):- 
+  compound_gt(H, 0), H=..[F,_,_], 
+  current_op(_,_,F),
+  print_e_to_string(H, S0),
+  mid_pipe(S0,[str_repl('\n',' \n')],S1),
+  sformat(S, '(~s)',[S1]),!.
+
+print_e_to_string_b(H, HS):- print_e_to_string(H, HS),!.
+
 print_e_to_string(T, Ops, S):- member(':-', Ops), !, clause_to_string(T,S).
 print_e_to_string(T, Ops, S):- member('-->', Ops), !, clause_to_string(T,S).
+
 print_e_to_string(T, Ops, S):- member('<-', Ops), !, 
    subst(T,('<-'),(':-'),T0), 
    clause_to_string(T0,S0), !,
    mid_pipe(S0,str_repl(':-','<-'),S).
-print_e_to_string(T, Ops, S):-  Ops \== [], (member('->', Ops);member('<->', Ops)),
-   mid_pipe(T, [replcterm(('<->'),(':-')), replcterm(('->'),('-->'))],T0),
+
+print_e_to_string(exists(Vars,H), _, S):-
+  print_e_to_string(H, HS),
+  sformat(S, 'exists(~p,\n ~s)',[Vars, HS]).
+
+print_e_to_string(T, Ops, S):- Ops \== [],
+   member(EQUIV-IF,[('->'-'<->'),(if-equiv)]),
+   (member(IF, Ops);member(EQUIV, Ops)),
+
+   mid_pipe(T, [replcterm((EQUIV),(':-')), replcterm((IF),('-->'))],T0),
    clause_to_string(T0,S0),!,
-   mid_pipe(S0, [str_repl(':-','<->'),str_repl('-->','->')],S).
+   mid_pipe(S0, [str_repl(':-',EQUIV),str_repl('-->',IF)],S).
+
+
 print_e_to_string(T, Ops, S):-  member('<->', Ops), sformat(S0, '~p',[T]),
   mid_pipe(S0,str_repl('<->','<->\n  '),S).
+
 /*.
 ec_portray(','):-write(',').
 user:portray(Nonvar):- nonvar(Nonvar), ec_portray(Nonvar).   */
@@ -709,31 +747,22 @@ print_e_to_string(B, _, S):- is_list(B),  !,
   print_e_to_string((:- B), S0),  
   mid_pipe(S0,[str_repl(':-','')],S).  
 
-print_e_to_string(T, _Ops, S):-  is_list(T),
-  sformat(S, '~@',
-    [(prolog_pretty_print:print_term(T, 
-             [  % left_margin(1),
-                                write_options([numbervars(true),
-                                   quoted(true),
-                                  portray(true)]),
-                                 right_margin(80),
-                             %   max_length(120),
-                 % indent_arguments(auto),
-                  output(current_output)]),
-                  ttyflush)]).
+print_e_to_string(T, _Ops, S):-  is_list(T), print_et_to_string(T,S,[right_margin(80)]),!.
+print_e_to_string(T, _Ops, S):-  must(print_et_to_string(T,S,[])).
 
-print_e_to_string(T, _Ops, S):- 
+print_et_to_string(T,S,Options):-
+  ttyflush,
   sformat(S, '~@',
     [(prolog_pretty_print:print_term(T, 
-             [  % left_margin(1),
-                                write_options([numbervars(true),
-                                   quoted(true),
-                                  portray(true)]),
-                                 %right_margin(10),
-                             %   max_length(120),
+             [   % left_margin(1),
+                 write_options([numbervars(true),
+                                quoted(true),
+                                portray(true)]),
+                 %  max_length(120),
                  % indent_arguments(auto),
-                  output(current_output)]),
-                  ttyflush)]).
+                 output(current_output)|Options]),
+      ttyflush)]).
+
 
 to_ansi(e,[bold,fg(yellow)]).
 to_ansi(ec,[bold,fg(green)]).

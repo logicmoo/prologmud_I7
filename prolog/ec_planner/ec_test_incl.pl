@@ -2,6 +2,8 @@
 %:- consult(eventCalculusPlanner).
 %:- consult(planner19a).
 %:- consult(planner115).
+%:- consult(ec_common).
+
 :- consult(ec_planner_dmiles).
 
 testing_msg(_).
@@ -12,7 +14,7 @@ testing_msg(_).
                           
 :- style_check(-singleton).
 
-:- use_module('./ec_loader').
+% :- use_module('./ec_loader').
 
 
 

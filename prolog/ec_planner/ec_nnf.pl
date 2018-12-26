@@ -4,14 +4,14 @@
 %% Copyright (C) 1999 Anthony A. Aaby <aabyan@wwc.edu>
 %% Copyright (C) 2006-2007 Stasinos Konstantopoulos <stasinos@users.sourceforge.net>
 %%
-%% This program is free software; you can redistribute it and/or modify
+%% This program is free software; you can redistribute it ','/';' modify
 %% it under the terms of the GNU General Public License as published by
-%% the Free Software Foundation; either version 2 of the License, or
+%% the Free Software Foundation; either version 2 of the License, ';'
 %% (at your option) any later version.
 %%
 %% This program is distributed in the hope that it will be useful,
 %% but WITHOUT ANY WARRANTY; without even the implied warranty of
-%% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%% MERCHANTABILITY ';' FITNESS FOR A PARTICULAR PURPOSE.  See the
 %% GNU General Public License for more details.
 %%
 %% You should have received a copy of the GNU General Public License along
@@ -42,16 +42,58 @@
      op( 400, fy, user:(box) ),	% Necessity, Always
      op( 400, fy, user:(dia) ),	% Possibly, Eventually
      op( 400, fy, user:(cir) )	% Next time
-   ;*/
+   ;
 :- (
      op(400,fy,box),		% Necessity, Always
      op(400,fy,dia),	        % Possibly, Eventually
      op(400,fy,cir)		% Next time
    ).
+*/
+:- export(clausify_pnf/2).
+clausify_pnf(PNF, Cla):-
+  notrace(catch(clausify_pnf1(PNF, Cla),_,fail)),!.
+clausify_pnf(PNF, Cla):-
+  rtrace(clausify_pnf1(PNF, Cla)),!.
 
-clausify_pnf(PNF, Cla):- clausify_pnf_v1(PNF, Cla),!.
+clausify_pnf1(PNF, Cla):-
+ tolerate_elaboration(PNF,PNF0),
+ clausify_pnf_v2(PNF0, Cla0),!,
+ modal_cleansup(Cla0,Cla),
+  !.
 
-clausify_pnf_v1(PNF, ClaS):- declare_fact(PNF),
+modal_cleansup(Cla0,Cla):- 
+   f_modal(_,Cla0,Cla1), d_modal(_,Cla1,Cla2),
+  r_modal(_,Cla2,Cla3),r_modal(_,Cla3,Cla4),r_modal(_,Cla4,Cla),!.
+
+:- export(tolerate_elaboration/2).   
+%tolerate_elaboration(I,I):-!.
+tolerate_elaboration(I,O):-  fail,
+ numbervars(I,0,_,[attvar(bind)]),!,
+  tolerate_elaboration0(I,O).
+tolerate_elaboration(I,I).
+tolerate_elaboration(I,O):- 
+  with_vars_locked(I,tolerate_elaboration0(I,O)),!.
+
+tolerate_elaboration0(I,O):-   
+  correct_common('->'(poss(I),nesc(I)),I0),
+ % correct_common(nesc(I),I0),
+   negations_inward(I0,O),!.
+
+:- export(correct_common/2).
+correct_common(I,O):- correct_modal(_,I,O),!.
+
+:- export(negations_inward/2).
+negations_inward(Formula, NNF):-  
+ nnf(not(Formula), NNF ).
+
+:- use_module(library(logicmoo/portray_vars)).
+
+clausify_pnf_v1( Formula, CF ):-
+  negations_inward(Formula, NNF), 
+    pnf( NNF, PNF ), cf( PNF, CF ),!.
+
+clausify_pnf_v2(PNF, ClaS):- 
+   declare_fact(PNF),
    findall(saved_clauz(E,Vs),retract(saved_clauz(E,Vs)),Cla), E\==[], !,
    maplist(cla_to_clas,Cla,ClaS).
 
@@ -62,29 +104,15 @@ to_wasvar(N=V):-
    prolog_load_context(variable_names,VsO),
    (member(N=V,VsO) -> true ; debug_var(N,V)).
 
+var_or_atomic(Fml):- notrace(var_or_atomic0(Fml)).
+var_or_atomic0(Fml):- \+ compound_gt(Fml,0), !.
+var_or_atomic0('$VAR'(_)).
 
+non_expandable(Fml):- notrace(non_expandable0(Fml)).
+non_expandable0(Fml):- var_or_atomic0(Fml),!.
+non_expandable0(Fml):- arg(_,Fml,E), var(E),!.
 
-clausify_pnf_v2( Formula, CF ):-
-  nnf( not(Formula), NNF ), 
-    pnf( NNF, PNF ), cf( PNF, CF ),!.
-
-:- export(negations_inward/2).
-negations_inward(Formula, NNF):-  
- nnf( not(Formula), NNF ).
-
-:- use_module(library(logicmoo/portray_vars)).
-
-
-%%% Negation Normal Form
-
-% Usage: nnf(+Fml, ?NNF)
-
-:- export(nnf/2).
-nnf(Fml,NNF) :- 
-   correct_holds(outward,Fml,Holds),
-   nnf(Holds,even,Fml0),!, nnf(Fml0,[],NNF,_), !.
-
-correct_holds(_,Fml,Fml):- \+ compound_gt(Fml, 0),!.
+correct_holds(_,Fml,Fml):- var_or_atomic(Fml),!.
 correct_holds(_,Fml,Fml):- arg(1,Fml,Var), var(Var),!.
 correct_holds(neg, not(holds_at(P,T)),holds_at(neg(P),T)).
 correct_holds(neg, holds_at(not(P),T),holds_at(neg(P),T)).
@@ -97,33 +125,140 @@ correct_holds(IO, P,PP):-
   compound_name_arguments(PP,F,FArgs).
 
 
+cir_until2(next,until).
+box_dia(always,eventually).
+
+box_dia((impl),(proves)).
+box_dia(nesc,poss).
+box_dia(will,can).
+box_dia(knows,believes).
+box_dia(BOX,DIA):- compound_gt(BOX, 0), !, 
+  BOX=..[K|ARGS],
+  box_dia(K,B), !,
+  DIA=..[B|ARGS].
+box_dia(BOX,DIA):- compound_gt(DIA, 0), !, 
+  DIA=..[B|ARGS],
+  box_dia(K,B), !,
+  BOX=..[K|ARGS].
+
+aliased_rel(possibly,poss).
+aliased_rel((~), not).
+
+
+correct_modal(_,Fml,Fml):- var_or_atomic(Fml),!.
+correct_modal(M, P, O ):- P=..[F|A], aliased_rel(F,FF),!, PP=..[FF|A], correct_modal(M, PP, O ).
+correct_modal(M, P, box(FA,E) ):- P=..[F,A,D],box_dia(F,_),!,correct_modal(M,D,E),FA=..[F,A].
+correct_modal(M, P, dia(FA,E) ):- P=..[F,A,D],box_dia(_,F),!,correct_modal(M,D,E),FA=..[F,A].
+correct_modal(M, P, box(F,E) ):- P=..[F,D],box_dia(F,_),!,correct_modal(M,D,E).
+correct_modal(M, P, dia(F,E) ):- P=..[F,D],box_dia(_,F),!,correct_modal(M,D,E).
+correct_modal(M, P, cir(F,E) ):- P=..[F,D],cir_until2(F,_),!,correct_modal(M,D,E).
+correct_modal(M, P, until2(F,E,U) ):- P=..[F,D,X],cir_until2(_,F),!,correct_modal(M,D,E),correct_modal(M,X,U).
+correct_modal(M, P, PP):-
+  compound_name_arguments(P,F,Args),
+  maplist(correct_modal(M),Args,FArgs),
+  compound_name_arguments(PP,F,FArgs),!.
+
+
+f_modal(_,Fml,Fml):- non_expandable(Fml),!.
+f_modal(M, P, O ):- P=..[F|A], aliased_rel(F,FF),!, PP=..[FF|A], f_modal(M, PP, O ).
+f_modal(M, not(dia(FA, P)), O ):- box_dia(nesc,FA), f_modal(M, not(P), O ).
+%f_modal(M, not(box(FA, P)), O ):- f_modal(M, P, PP ), !, f_modal(M, dia(FA, not(PP)), O ).
+f_modal(M, box(FA, not(P)), O ):- box_dia(FA,poss), !, f_modal(M, not(P), O ).
+%f_modal(M, not(dia(FA, P)), O ):- !, f_modal(M, not(t(FA,P)), O ).
+f_modal(M, P, PP):-
+  compound_name_arguments(P,F,Args),
+  maplist(f_modal(M),Args,FArgs),
+  compound_name_arguments(PP,F,FArgs),!.
+
+
+is_modL(cir). is_modL(box). is_modL(dia). is_modL(until2).
+d_modal(_,Fml,Fml):- var_or_atomic(Fml),!.
+d_modal(M, P, O ):- P=..[F|A], aliased_rel(F,FF),!, PP=..[FF|A], d_modal(M, PP, O ).
+d_modal(M, P, O ):- P=..[F,FA|Args], is_modL(F),!, maplist(d_modal(M),Args,ARGS0), append_term_l(FA,ARGS0,O).
+d_modal(M, P, PP):-
+  compound_name_arguments(P,F,Args),
+  maplist(d_modal(M),Args,FArgs),
+  compound_name_arguments(PP,F,FArgs),!.
+
+append_term_l(P,A,O):- P=..FA,append(FA,A,FAO),O=..FAO.
+
+r_modal(_,Fml,Fml):- non_expandable(Fml),!.
+r_modal(M, not(poss(P)), O ):- !, r_modal(M, not(P), O ).
+r_modal(M, nesc(not(P)), O ):- !, r_modal(M, not(P), O ).
+r_modal(M, not(not(P)), O ):- !, r_modal(M, poss(P), O ).
+r_modal(M, poss((A,B)), O ):- !, r_modal(M, (poss(A),poss(B)), O ).
+r_modal(_, not(not(P)), \+ not(P) ):- !.
+r_modal(_, poss(not(P)), \+ P ):- !.
+
+%r_modal(_, equals(A,B), false ):- A\=B, !.
+r_modal(_, equals(X,Y), {X=Y} ):-  \+ \+ ((unlock_vars(X),nonvar(Y),X=Y)),!.
+
+
+r_modal(_, not(false), true ).
+r_modal(_, poss(false), false ).
+r_modal(_, \+ false, true ).
+r_modal(_, \+ true, false ).
+
+r_modal(_, ( _, false), false ).
+r_modal(_, ( false, _), false ).
+r_modal(_, ( true; _), true ).
+r_modal(_, ( _; true), true ).
+
+r_modal(M, ( true, X), Y ):- r_modal(M,X,Y).
+r_modal(M, ( false; X), Y ):- r_modal(M,X,Y).
+
+%r_modal(M, not(box(FA, P)), O ):- r_modal(M, P, PP ), !, r_modal(M, dia(FA, not(PP)), O ).
+%r_modal(M, box(FA, not(P)), O ):- box_dia(FA,poss), !, r_modal(M, not(P), O ).
+%r_modal(M, not(dia(FA, P)), O ):- !, r_modal(M, not(t(FA,P)), O ).
+r_modal(M, P, PP):-
+  compound_name_arguments(P,F,Args),
+  maplist(r_modal(M),Args,FArgs),
+  compound_name_arguments(PP,F,FArgs),!.
+
+
+%%% Negation Normal Form
+
+% Usage: nnf(+Fml, ?NNF)
+
+:- export(nnf/2).
+
+nnf(Fml,NNF) :- 
+  nnf1(Fml,NNF1),
+  nnf1(not(NNF1),NNF),
+  must(ignore(NNF1==NNF)).
+
+nnf1(Fml,NNF) :- 
+   correct_holds(outward,Fml,Holds),
+   nnf(Holds,even,Fml0),!, nnf(Fml0,[],NNF,_), !.
+
 % -----------------------------------------------------------------
 %  nnf(+Fml,+FreeV,-NNF,-Paths)
 %
 % Fml,NNF:    See above.
 % FreeV:      List of free variables in Fml.
 % Paths:      Number of disjunctive paths in Fml.
-nnf(Fml,_FreeV,Fml,1):- \+ callable(Fml), !.
-nnf(not(Fml),_FreeV,not(Fml),1):- \+ callable(Fml), !.
-nnf(box(F),FreeV,BOX,Paths) :- !,
-	nnf(F,FreeV,NNF,Paths), cnf(NNF,CNF), boxRule(box(CNF), BOX).
+nnf(Fml,_FreeV,Fml,1):- var_or_atomic(Fml), !.
+nnf(not(Fml),_FreeV,not(Fml),1):- var_or_atomic(Fml), !.
+nnf(box(BP,F),FreeV,BOX,Paths) :- !,
+	nnf(F,FreeV,NNF,Paths), cnf(NNF,CNF), boxRule(box(BP,CNF), BOX).
 
-nnf(dia(F),FreeV,DIA,Paths) :- !,
-	nnf(F,FreeV,NNF,Paths), dnf(NNF,DNF), diaRule(dia(DNF), DIA).
+nnf(dia(DP,F),FreeV,DIA,Paths) :- !,
+	nnf(F,FreeV,NNF,Paths), dnf(NNF,DNF), diaRule(dia(DP,DNF), DIA).
 
-nnf(cir(F),FreeV,CIR,Paths) :- !,
-	nnf(F,FreeV,NNF,Paths), cirRule(cir(NNF), CIR).
+nnf(cir(CP,F),FreeV,CIR,Paths) :- !,
+	nnf(F,FreeV,NNF,Paths), cirRule(cir(CP,NNF), CIR).
 
-nnf(until(A,B),FreeV,NNF,Paths) :- !,
+nnf(until2(PU,A,B),FreeV,NNF,Paths) :- !,
 	nnf(A,FreeV,NNF1,Paths1),
 	nnf(B,FreeV,NNF2,Paths2),
 	Paths is Paths1 + Paths2,
-	NNF = until(NNF1, NNF2).
+	NNF = until2(PU,NNF1, NNF2).
 
 nnf(all(X,F),FreeV,all(X,NNF),Paths) :- !,
 	nnf(F,[X|FreeV],NNF,Paths).
 
-nnf(exists(X,Fml),FreeV,NNF,Paths) :- !,
+nnf(exists(X,Fml),FreeV,NNF,Paths) :- % trace, 
+        !,
 	skolem_v2(Fml,X,FreeV,FmlSk),
 	nnf(FmlSk,FreeV,NNF,Paths).
 
@@ -159,19 +294,22 @@ nnf(';'(A,B),FreeV,NNF,Paths) :- !,
 	(Paths1 > Paths2 -> NNF = ';'(NNF2,NNF1);
 		            NNF = ';'(NNF1,NNF2)).
 
-nnf('if'(A,B),FreeV,NNF,Paths) :- !,
+nnf('->'(A,B),FreeV,NNF,Paths) :- !,
          nnf(( not(A); B ),FreeV,NNF,Paths).
 
-nnf('equiv'(A,B),FreeV,NNF,Paths) :- !,
+nnf('<->'(A,B),FreeV,NNF,Paths) :- !,
          nnf(';'( ','(A, B), ','(not(A), not(B))),FreeV,NNF,Paths).
+
 
 nnf(not(Fml),FreeV,NNF,Paths) :- compound(Fml),
 	(Fml = not(A)   -> Fml1 = A;
-	 Fml = box(F)      -> Fml1 = dia(not(F));
-	 Fml = dia(F)      -> Fml1 = box(not(F));
-	 Fml = cir(F)      -> Fml1 = cir(not(F));
-	 Fml = until(A,B) -> (nnf(not(A),FreeV,NNA,_), nnf(not(B),FreeV,NNB,_),
-                                     Fml1 = ( all(_,NNB) ; until(NNB,','(NNA,NNB))));
+	 Fml = box(BP,F)      -> (must(box_dia(BP,DP)), Fml1 = dia(DP,not(F)));
+	 Fml = dia(DP,F)      -> (must(box_dia(BP,DP)), Fml1 = box(BP,not(F)));
+	 Fml = cir(CP,F)      -> Fml1 = cir(CP,not(F));
+	 Fml = until2(PU,A,B) -> (nnf(not(A),FreeV,NNA,_), 
+                                  nnf(not(B),FreeV,NNB,_),
+                                  % circ_until(_CP,PU),
+                                  Fml1 = ( all(_,NNB) ; until2(PU,NNB,','(NNA,NNB))));
 	 Fml = all(X,F)   -> Fml1 = exists(X,not(F));
 	 Fml = exists(X,F)    -> Fml1 = all(X,not(F));
 /*
@@ -180,23 +318,31 @@ nnf(not(Fml),FreeV,NNF,Paths) :- compound(Fml),
 */
 	 Fml = (A;B)  -> Fml1 = ( not(A), not(B) );
 	 Fml = (A,B) -> Fml1 = ( not(A); not(B) );
-	 Fml = if(A,B) -> Fml1 = ( A, not(B) );
-         Fml = equiv(A,B) -> Fml1 = ';'( ','(A, not(B)) , ','(not(A), B) )
+	 Fml = '->'(A,B) -> Fml1 = ( A, not(B) );
+         Fml = '<->'(A,B) -> Fml1 = ';'( ','(A, not(B)) , ','(not(A), B) )
 	),!,
 	nnf(Fml1,FreeV,NNF,Paths).
 
 
 nnf(Lit,_,Lit,1).
 
-boxRule(box(','(A,B)), ','(BA,BB)) :- !, boxRule(box(A),BA), boxRule(box(B),BB).
+
+
+boxRule(Fml,Fml):- non_expandable(Fml),!.
+boxRule(box(BP,','(A,B)), ','(BA,BB)) :- !, boxRule(box(BP,A),BA), boxRule(box(BP,B),BB).
 boxRule(BOX, BOX).
 
-diaRule(dia(';'(A,B)), ';'(DA,DB)) :- !, diaRule(dia(A),DA), diaRule(dia(B),DB).
+
+diaRule(Fml,Fml):- non_expandable(Fml),!.
+diaRule(dia(DP,';'(A,B)), ';'(DA,DB)) :- !, diaRule(dia(DP,A),DA), diaRule(dia(DP,B),DB).
 diaRule(DIA, DIA).
 
-cirRule(cir(';'(A,B)), ';'(DA,DB)) :- !, cirRule(cir(A),DA), cirRule(cir(B),DB).
-cirRule(cir(','(A,B)), ','(DA,DB)) :- !, cirRule(cir(A),DA), cirRule(cir(B),DB).
+cirRule(Fml,Fml):- non_expandable(Fml),!.
+cirRule(cir(CP,';'(A,B)), ';'(DA,DB)) :- !, cirRule(cir(CP,A),DA), cirRule(cir(CP,B),DB).
+cirRule(cir(CP,','(A,B)), ','(DA,DB)) :- !, cirRule(cir(CP,A),DA), cirRule(cir(CP,B),DB).
 cirRule(CIR, CIR).
+
+
 
 
 %%%
@@ -205,12 +351,14 @@ cirRule(CIR, CIR).
 
 % Usage: cnf( +NNF, ?CNF )
 
+cnf(Fml,Fml):- var_or_atomic(Fml),!.
 cnf(','(P,Q), ','(P1,Q1)):- !, cnf(P, P1), cnf(Q, Q1).
-cnf(';'(P,Q),     CNF):- !, cnf(P, P1), cnf(Q, Q1), cnf1( ';'(P1,Q1), CNF ).
+cnf(';'(P,Q),     CNF):- !, cnf(P, P1), cnf(Q, Q1), cnf1( ';'(P1,Q1), CNF ), !.
 cnf(CNF,       CNF).
 
-cnf1( ';'(','(P,Q), R), ','(P1,Q1) ):- !, cnf1( ';'(P,R), P1), cnf1( ';'(Q,R), Q1).
-cnf1( ';'(P, ','(Q,R)), ','(P1,Q1) ):- !, cnf1( ';'(P,Q), P1), cnf1( ';'(P,R), Q1).
+cnf1(Fml,Fml):- var_or_atomic(Fml),!.
+cnf1( ';'(PQ, R), (P1,Q1) ):- compound(PQ), PQ = ','(P,Q), !, cnf1( ';'(P,R), P1), cnf1( ';'(Q,R), Q1).
+cnf1( ';'(P, QR), (P1,Q1) ):- compound(QR), QR = ','(Q,R), !, cnf1( ';'(P,Q), P1), cnf1( ';'(P,R), Q1).
 cnf1( CNF,                 CNF).
 
 
@@ -219,12 +367,14 @@ cnf1( CNF,                 CNF).
 %%%
 % Usage: dnf( +NNF, ?DNF )
 
+dnf(Fml,Fml):- var_or_atomic(Fml),!.
 dnf( ';'(P,Q),  ';'(P1,Q1) ) :- !, dnf(P, P1), dnf(Q, Q1).
 dnf( ','(P,Q), DNF) :- !, dnf(P, P1), dnf(Q, Q1), dnf1( ','(P1,Q1), DNF).
 dnf(DNF,       DNF).
 
-dnf1( ','(P, ';'(Q,R)),  ';'(P1,Q1) ):- !, dnf1( ','(P,Q), P1), dnf1( ','(P,R), Q1).
-dnf1( ','( ';'(P,Q), R), ';'(P1,Q1) ):- !, dnf1( ','(P,R), P1), dnf1( ','(Q,R), Q1).
+dnf1(Fml,Fml):-  var_or_atomic(Fml),!.
+dnf1( ','(PQ, R), ';'(P1,Q1) ):- compound(PQ), PQ = ';'(P,Q), !, dnf1( ','(P,R), P1), dnf1( ','(Q,R), Q1).
+dnf1( ','(P, QR), ';'(P1,Q1) ):- compound(QR), QR = ';'(Q,R), !, dnf1( ','(P,Q), P1), dnf1( ','(P,R), Q1).
 dnf1( DNF,                  DNF ).
 
 
@@ -239,6 +389,8 @@ dont_copy_term(X,X).
 pnf(F,PNF) :- pnf(F,[],PNF).
 
 % pnf(+Fml, +Vars, ?PNF)
+
+fnf(Fml,_, Fml):- var_or_atomic(Fml),!.
 
 pnf(     all(X,F),Vs,   all(X,PNF)) :- !, pnf(F,[X|Vs], PNF).
 pnf(  exists(X,F),Vs,exists(X,PNF)) :- !, pnf(F,[X|Vs], PNF).
@@ -268,12 +420,12 @@ pnf( ';'(A, B),Vs,       PNF ) :- pnf(A,Vs,Ap), pnf(B,Vs,Bp),
 
 pnf(          PNF, _,       PNF ).
 
-%%%  Clausal Form (CF) -- assumes Fml in PNF and
+%%%  Clausal Form (CF) -- assumes Fml in PNF ','
 %                                 each quantified variable is unique
 
 % cf(+Fml, ?Cs)
 % Cs is a list of the form: [cl(Head,Body), ...]
-% Head and Body are lists.
+% Head ',' Body are lists.
 
 cf(PNF, Cla):- removeQ(PNF,[], UnQ), cnf(UnQ,CNF), clausify(CNF,Cla,[]).
 
@@ -286,7 +438,7 @@ removeQ( exists(XVs,F),Vars, RQ) :- term_variables(XVs,[X]),
         (Vars\==[] -> UVars=Vars ; term_variables(X+F,[X|UVars])),
         skolem_v3(F,X,UVars,Sk),
         debug_var(exists,X),
-	removeQ(if(some(X, Sk), F),Vars, RQ).
+	removeQ('->'(some(X, Sk), F),Vars, RQ).
 
 removeQ( exists(XVs,F),Vars, RQ) :- term_variables(XVs,[X]), 
         (Vars\==[] -> UVars=Vars ; term_variables(X+F,[X|UVars])),
@@ -390,7 +542,7 @@ subst2( X, Sk, [A|As], [Ap|AS] ) :- subst( A,X,Sk,Ap ),
                                     subst2( X, Sk, As, AS).
 */
 
-% this is both a latex file and a quintus prolog file
+% this is both a latex file ',' a quintus prolog file
 % the only difference is that the latex version comments out the following
 % line:
 
@@ -426,7 +578,7 @@ poole@cs.ubc.ca}
 \maketitle
 \begin{abstract}
 Artificial intelligence researchers have been designing representation
-systems for default and abductive reasoning.
+systems for default ',' abductive reasoning.
 Logic Programming researchers have been working on techniques to improve
 the efficiency of Horn Clause deduction systems.
 This paper describes how {\em Theorist\/} can be
@@ -445,7 +597,7 @@ of Prolog. This is a compiler from Theorist to a Horn-clause reasoner
 with negation as failure; nothing precludes any other search strategy
 (e.g., dependency directed backtracking, constraint propagation).
 This is intended to be a runnable specification, which runs fast
-(e.g., for the common intersection between Theorist and Prolog (i.e., Horn
+(e.g., for the common intersection between Theorist ',' Prolog (i.e., Horn
 clauses) Theorist code runs about half the speed of compiled Quintus
 Prolog code).
 
@@ -454,9 +606,9 @@ This code is available electronically from the author.
 \tableofcontents
 \section{Introduction}
 Many people in Artificial Intelligence have been working on default reasoning
-and abductive diagnosis systems 
+',' abductive diagnosis systems 
 \cite{reiter80,mccarthy86,cox87,poole:lf}. The systems implemented so far
-(eg., \cite{brewka86,lifschitz85,ginsberg87,pga}) are only prototypes or
+(eg., \cite{brewka86,lifschitz85,ginsberg87,pga}) are only prototypes ';'
 have been developed in ways that cannot take full advantage in the
 advances of logic programming implementation technology.
 
@@ -467,40 +619,40 @@ the default reasoning system Theorist \cite{poole:lf,pga}
 by compiling its input into Horn clauses with negation as failure, thereby
 allowing direct
 use the advances in logic programming implementation technology.
-Both the compiler and the compiled code can take advantage of 
+Both the compiler ',' the compiled code can take advantage of 
 these improvements.
 
 We have been running this implementation on standard
-Prolog compilers (in particular Quintus Prolog) and it outperforms
+Prolog compilers (in particular Quintus Prolog) ',' it outperforms
 all other default reasoning systems that the author is aware of.
 It is, however, not restricted to the control structure of Prolog. There is
 nothing in the compiled code which forces it to use Prolog's
 search strategy.
-Logic programming and other researchers are working on alternate
+Logic programming ',' other researchers are working on alternate
 control structures which seem very appropriate for default 
-and abductive reasoning.
+',' abductive reasoning.
 Advances in parallel inference (e.g.,\ \cite{pie}),
-constraint satisfaction \cite{dincbas,vanh} and dependency directed backtracking
+constraint satisfaction \cite{dincbas,vanh} ',' dependency directed backtracking
 \cite{dekleer86,doyle79,cox82} 
 should be able to be directly applicable to the code produced by this compiler.
 
 We are thus effecting a clear
-distinction between the control and logic of our default reasoning systems
+distinction between the control ',' logic of our default reasoning systems
 \cite{kowalski}. We can let the control people concentrate on efficiency
-of Horn clause systems, and these will then be directly applicable to
+of Horn clause systems, ',' these will then be directly applicable to
 those of us building richer representation systems.
 The Theorist system has been designed to allow maximum flexibility in
 control strategies while still giving us the power of assumption-based
-reasoning that are required for default and abductive reasoning.
+reasoning that are required for default ',' abductive reasoning.
 
-This is a step towards having representation and reasoning systems
+This is a step towards having representation ',' reasoning systems
 which are designed for correctness being able to use the most
 efficient of control
-strategies, so we can have the best of expressibility and efficiency.
+strategies, so we can have the best of expressibility ',' efficiency.
 \section{Theorist Framework} \label{theorist}
 
 Theorist \cite{poole:lf,pga} is a logical reasoning system for default reasoning
-and diagnosis. It is based on the idea of theory formation from a fixed
+',' diagnosis. It is based on the idea of theory formation from a fixed
 set of possible hypotheses.
 
 This implementation is of the version of Theorist described in \cite{poole:lf}.
@@ -530,13 +682,13 @@ is a  scenario of ${\cal F},\Delta$ which implies $g$.
 That is, $g$ is explainable from ${\cal F},\Delta$ if there is a set
 $D$ of ground instances of elements of $\Delta$ such that
 \begin{quote}
-${\cal F} \cup D \models g$ and\\
+${\cal F} \cup D \models g$ ','\\
 ${\cal F} \cup D \cup C$ is consistent
 \end{quote}
 ${\cal F} \cup D$ is an explanation of $g$.
 
 In other papers we have described how this can be the basis of
-default and abductive reasoning systems \cite{pga,poole:lf,poole:dc,poole:dd}.
+default ',' abductive reasoning systems \cite{pga,poole:lf,poole:dc,poole:dd}.
 If we are using this for prediction then possible hypotheses can be seen
 as defaults. \cite{poole:lf} describes how this formalism can account
 for default reasoning. This is also a framework for abductive reasoning
@@ -557,7 +709,7 @@ prover \cite{poole:clausal}.
 A {\em wff\/} is a well formed formula made up of arbitrary combination of
 equivalence (``=='', ``$equiv$''),
 implication (``$=>$'', ``$<-$''), disjunction (``$or$'', ``;''),
-conjunction (``$and$'', ``$\&$'', ``,'') and negation (``$not$'', ``\~{}'')
+conjunction (``$and$'', ``$\&$'', ``,'') ',' negation (``$not$'', ``\~{}'')
 of atomic symbols. Variables follow the Prolog convention
 of being in upper case. There is no explicit quantification.
 
@@ -576,9 +728,9 @@ where $d$ is a name,
 means that $d\in \Delta$; i.e., $d$ is a default (a possible hypothesis).
 \item[\bf default]
 $d:w.$\\
-where $d$ is a name and $w$ is a wff means $w$, with name $d$ can
+where $d$ is a name ',' $w$ is a wff means $w$, with name $d$ can
 be used in a scenario if it is consistent.
-Formally it means $d\in  \Delta$ and
+Formally it means $d\in  \Delta$ ','
 $(\forall d\Rightarrow w) \in {\cal F}$.
 \item[\bf constraint]
 $w.$\\
@@ -596,7 +748,7 @@ gives all explanations of $\exists w$.
 $w.$\\
 where $w$ is a arbitrary ground wff,
 returns ``yes'' if $w$ is in every extension of the defaults
-and ``no'' otherwise.
+',' ``no'' otherwise.
 If it returns ``yes'', a set of explanations is returned, if
 it returns ``no'' then a scenario from which $g$ cannot be explained is
 returned (this follows the framework of \cite{poole:dc}).
@@ -611,22 +763,22 @@ commands.
 The following are compiler directives:
 \begin{description}
 \item[\bf thconsult] {\em filename.}\\
-reads commands from {\em filename}, and asserts and/or executes them.
+reads commands from {\em filename}, ',' asserts ','/';' executes them.
 \item[\bf thtrans] {\em filename.}\\
-reads commands from {\em filename} and translates them into Prolog
+reads commands from {\em filename} ',' translates them into Prolog
 code in the file {\em filename.pl}.
 \item[\bf thcompile] {\em filename.}\\
 reads commands from {\em filename}, translates them into the file
-{\em filename.pl} and then compiles this file. ``explain'' commands in
+{\em filename.pl} ',' then compiles this file. ``explain'' commands in
 the file are not interpreted.
 \item[\bf dyn] {\em atom.}\\
-should be in a file and declares that anything matching the atom
-is allowed to be asked or added to. This should appear before any
+should be in a file ',' declares that anything matching the atom
+is allowed to be asked ';' added to. This should appear before any
 use of the atom. This corresponds to the ``dynamic'' declaration of
 Quintus Prolog. This is ignored except when compiling a file.
 \end{description}
 There are some other commands which allow one to set flags. See section
-\ref{flags} for more detail on setting checking and resetting flags.
+\ref{flags} for more detail on setting checking ',' resetting flags.
 
 \section{Overview of Implementation}
 In this section we assume that we have a deduction system 
@@ -636,7 +788,7 @@ next section):
 \begin{enumerate}
 \item It is sound (i.e., if $A\vdash g$ then $A\models g$).
 \item It is complete in the sense that if $g$ follows from a consistent
-set of formulae, then $g$ can be proven. I.e., if $A$ is consistent and
+set of formulae, then $g$ can be proven. I.e., if $A$ is consistent ','
 $A\models g$ then $A\vdash g$.
 \item If $A\vdash g$ then $A\cup B\vdash g$; i.e., adding in extra facts will
 not prevent the system from finding a proof which previously existed.
@@ -661,20 +813,20 @@ by failing to prove it is inconsistent.
 The following two theorems are important for implementing the consistency
 check:
 \begin{lemma} \label{incremantal}
-If $A$ is a consistent set of formulae and
+If $A$ is a consistent set of formulae ','
 $D$ is a finite set of ground instances of possible hypotheses, then
 if we impose arbitrary ordering on the elements of $D=\{d_1,...,d_n\}$
 \begin{center}
-$A\cup D$ is inconsistent\\if and only if\\
+$A\cup D$ is inconsistent\\if ',' only if\\
 there is some $i$, $1\leq i \leq n$ such that
-$A\cup \{d_1,...,d_{i-1}\}$ is consistent and\\
+$A\cup \{d_1,...,d_{i-1}\}$ is consistent ','\\
 $A\cup \{d_1,...,d_{i-1}\}\models \neg d_i$.
 \end{center}
 \end{lemma}
 \begin{proof}
 If $A \cup D $ is inconsistent there is some least $i$ such
 that $A\cup \{d_1,...,d_i\}$ is inconsistent. Then we must have
-$A\cup \{d_1,...,d_{i-1}\}$ is consistent (as $i$ is minimal) and
+$A\cup \{d_1,...,d_{i-1}\}$ is consistent (as $i$ is minimal) ','
 $A\cup \{d_1,...,d_{i-1}\}\models \neg d_i$ (by inconsistency).
 \end{proof}
 
@@ -692,7 +844,7 @@ Note that this ordering is arbitrary.
 The following theorem expands on how explainability can be computed:
 \begin{theorem} \label{consisthm}
 If ${\cal F} \cup C$ is consistent,
-$g$ is explainable from ${\cal F},\Delta$ if and only if there is a ground
+$g$ is explainable from ${\cal F},\Delta$ if ',' only if there is a ground
 proof of $g$ from ${\cal F}\cup D$ where $D=\{d_1,...,d_n\}$
 is a set of ground instances
 of elements of $\Delta$ such that
@@ -701,7 +853,7 @@ for all $i,1\leq i \leq n$.
 \end{theorem}
 \begin{proof}
 If $g$ is explainable from ${\cal F},\Delta$, there is a set $D$ of ground instances
-of elements of $\Delta$ such that ${\cal F}\cup D \models g$ and ${\cal F} \cup D \cup C$
+of elements of $\Delta$ such that ${\cal F}\cup D \models g$ ',' ${\cal F} \cup D \cup C$
 is consistent. So there is a ground proof of $g$ from ${\cal F} \cup D$.
 By the preceding lemma
 ${\cal F}\cup D \cup C$ is consistent so there can be no sound proof
@@ -724,9 +876,9 @@ such proofs fail, $D$ is an explanation for $g$.
 Note that the ordering imposed on the $D$ is arbitrary. A sensible one is
 the order in which the elements of $D$ were generated. Thus when
 a new hypothesis is used in the proof, we try to prove its negation from
-the facts and the previously used hypotheses. These proofs are independent
-of the original proof and can be done as they are generated
-as in negation as failure (see section \ref{incremental}), or can be done
+the facts ',' the previously used hypotheses. These proofs are independent
+of the original proof ',' can be done as they are generated
+as in negation as failure (see section \ref{incremental}), ';' can be done
 concurrently.
 
 \subsection{Variables}
@@ -749,7 +901,7 @@ true if there is a $Y$ such that $p(Y)$.
 According to our semantics,
 $g$ is explainable with the explanation $\{p(b)\}$,
 which is consistent with ${\cal F}$ (consider the interpretation $I=\{\neg p(a),p(b)\}$
-on the domain $\{a,b\}$), and implies $g$.
+on the domain $\{a,b\}$), ',' implies $g$.
 
 However,
 if we try to prove $g$, we generate $D=\{p(Y)\}$ where $Y$ is free
@@ -775,10 +927,10 @@ So we need to generate a ground proof of $g$. This leads us to:
 \begin{algorithm} \em \label{det-alg}
 To determine if $g$ is explainable from ${\cal F},\Delta$
 \begin{enumerate}
-\item generate a proof of $g$ using elements of ${\cal F}$ and $ \Delta$ as axioms.
+\item generate a proof of $g$ using elements of ${\cal F}$ ',' $ \Delta$ as axioms.
 Make $D_0$ the set of instances of $ \Delta$ used in the proof;
 \item form $D_1$ by replacing free variables in $D_0$ with unique constants;
-\item add $D_1$ to ${\cal F}$ and try to prove an inconsistency (as in the
+\item add $D_1$ to ${\cal F}$ ',' try to prove an inconsistency (as in the
 previous case). If a
 complete search for a proof fails, $g$ is explainable.
 \end{enumerate}
@@ -787,7 +939,7 @@ complete search for a proof fails, $g$ is explainable.
 This algorithm can now be directly implemented by a resolution theorem prover.
 
 \begin{example}\em
-Consider ${\cal F}$ and $\Delta$ as in example 1 above.
+Consider ${\cal F}$ ',' $\Delta$ as in example 1 above.
 If we try to prove $g$, we use the hypothesis instance $p(Y)$.
 This means that $g$ is provable from any instance of $p(Y)$.
 To show $g$ cannot be explained, we must show that all of the instances
@@ -822,27 +974,27 @@ Consider the two alternate set of facts:
 &&\neg p(a),\\
 &&q(a) \ \}
 \end{eqnarray*}
-Suppose we try to explain $g$ by first explaining $p$ and then explaining $q$.
+Suppose we try to explain $g$ by first explaining $p$ ',' then explaining $q$.
 Once we have generated the hypothesis $p(X)$, we have not enough information to
-determine whether the consistency check should succeed or fail.
+determine whether the consistency check should succeed ';' fail.
 The consistency check for ${\cal F}_1$ should succeed (i.e, we should conclude
 with a consistent instance, namely $X=b$), but the 
 consistency check for ${\cal F}_2$ should fail (there is no consistent value
-for the $X$ which satisfies $p$ and $q$).
+for the $X$ which satisfies $p$ ',' $q$).
 We can only determine the consistency after we have proven $q$.
 \end{example}
 
 There seems to be two obvious solutions to this problem,
 the first is to allow the consistency check to return constraints on the
-values (eg., \cite{edmonson}). The alternate (and simpler) solution is
+values (eg., \cite{edmonson}). The alternate (',' simpler) solution is
 to delay the evaluation of the consistency check until all of the variables
-are bound (as in \cite{naish86}), or until we know that the variables
+are bound (as in \cite{naish86}), ';' until we know that the variables
 cannot be bound any more. In particular we know that a variable cannot be
 bound any more at the end of the computation.
 
 The implementation described in this paper
 does the simplest form of incremental consistency checking, namely it computes
-consistency immediately for those hypotheses with no variables and delays
+consistency immediately for those hypotheses with no variables ',' delays
 consistency checking until the end for hypotheses containing variables
 at the time they are generated.
 \section{The Deduction System} \label{deduction}
@@ -853,7 +1005,7 @@ sense that if $g$ logically follows from some {\em consistent} set of
 clauses $A$, then there is a linear resolution proof of $g$ from $A$.
 
 SLD resolution of Prolog \cite{lloyd} can be seen as linear resolution with
-the contrapositive and ancestor search removed.
+the contrapositive ',' ancestor search removed.
 
 To implement linear resolution in Prolog, we add two things
 \begin{enumerate}
@@ -876,17 +1028,17 @@ as an atom $notp(\overline{X})$).
 $\neg L$. We have a subgoal proven if it unifies with the negation of
 an ancestor in the proof tree.
 This is an instance of proof by contradiction. We can see this as assuming
-$\neg L$ and then when we have proven $L$ we can discharge the assumption.
+$\neg L$ ',' then when we have proven $L$ we can discharge the assumption.
 \end{enumerate}
 
 One property of the deduction system that we want is the ability to
 implement definite clauses with a constant factor overhead over
 using Prolog. One way to do this is to keep two lists of ancestors
 of any node: $P$ the positive (non negated atoms) ancestors
-and $N$ the negated ancestors. Thus for a positive subgoal we
-only need to search for membership in $N$ and for a negated subgoal we only
+',' $N$ the negated ancestors. Thus for a positive subgoal we
+only need to search for membership in $N$ ',' for a negated subgoal we only
 need to search $P$.
-When we have definite clauses, there are no negated subgoals, and so 
+When we have definite clauses, there are no negated subgoals, ',' so 
 $N$ is always empty. Thus the ancestor search always consists
 of checking for membership in an empty list. The alternate
 contrapositive form of the clauses are never used.
@@ -902,12 +1054,12 @@ disjunctive answers. We need disjunctive answers for the case
 that we can prove only a disjunctive form of the query.
 
 For example, if we can prove $p(a)\vee p(b)$ for the
-query $?p(X)$, then we want the answer $X= a$ or $b$.
+query $?p(X)$, then we want the answer $X= a$ ';' $b$.
 This can be seen as ``if the answer is not $a$ then the
 answer is $b$''.
 
 To have the answer $a_1\vee...\vee a_n$, we need to have a proof
-of ``If the answer is not $a_1$ and not $a_2$ and ... and not $a_{n-1}$
+of ``If the answer is not $a_1$ ',' not $a_2$ ',' ... ',' not $a_{n-1}$
 then the answer is $a_n$''.
 We collect up conditions on the proof of
 alternate answers that we are assuming are not true in order to have
@@ -918,7 +1070,7 @@ goal as long as we add it to the set of answers. To do this we carry a list
 of the alternate disjuncts that we are assuming in proving the top level goal.
 \subsection{Conversion to Clausal Form}
 It is desirable that we can convert an
-arbitrary well formed formula into clausal (or rule) form
+arbitrary well formed formula into clausal (';' rule) form
 without mapping out subterms. Instead of distributing, we do this by
 creating a new term to refer to the disjunct.
 
@@ -928,18 +1080,18 @@ convert something of the form
 \[\alpha \vee (\beta \wedge \gamma)\]
 by distribution into
 \[(\alpha \vee \beta) \wedge (\alpha \vee \gamma)\]
-and so mapping out subterms.
+',' so mapping out subterms.
 
 The alternate \cite{poole:clausal} is to create a new relation $p$ parameterised
-with the variables in common with $\alpha$ and $\beta \wedge \gamma$.
-We can then replace $\beta \wedge \gamma$ by $p$ and then add
+with the variables in common with $\alpha$ ',' $\beta \wedge \gamma$.
+We can then replace $\beta \wedge \gamma$ by $p$ ',' then add
 \[(\neg p \vee \beta)\wedge (\neg p \vee \gamma)\]
 to the set of formulae.
 
 This can be embedded into the compiler by using
-Prolog ``or'' instead of actually building the $p$. 
-(Alternatively we can define ``or'' by defining the
-clause $(p;q)\leftarrow p$ and $(p;q)\leftarrow q$.)
+Prolog ``';''' instead of actually building the $p$. 
+(Alternatively we can define ``';''' by defining the
+clause $(p;q)\leftarrow p$ ',' $(p;q)\leftarrow q$.)
 We build up the clauses so that the computation runs
 without any multiplying out of subterms.
 This is an instance of the general procedure of making clausal
@@ -950,9 +1102,9 @@ Theorist code into Prolog code.
 The compiler is described here in a bottom up fashion; from the
 construction of the atoms to compilation of general formulae.
 
-The compiler is written in Prolog and the
+The compiler is written in Prolog ',' the
 target code for the compiler is Prolog code (in particular Horn
-clauses with negation as failure). There are no ``cuts'' or other
+clauses with negation as failure). There are no ``cuts'' ';' other
 non-logical ``features'' of Prolog which depend on Prolog's
 search strategy in the compiled code.
 Each Theorist wff gets locally translated into a set of
@@ -961,20 +1113,20 @@ Prolog clauses.
 For each Theorist predicate symbol $r$ there are 4 target predicate
 symbols, with the following informal meanings:
 \begin{description}
-\item[prv\_tru\_r] meaning $r$ can be proven from the facts and the constraints.
+\item[prv\_tru\_r] meaning $r$ can be proven from the facts ',' the constraints.
 \item[prv\_not\_r] meaning $\neg r$ can be proven from the facts 
-and the constraints.
+',' the constraints.
 \item[ex\_tru\_r] meaning $r$ can be explained from ${\cal F},\Delta$.
 \item[ex\_not\_r] meaning $\neg r$ can be explained from ${\cal F},\Delta$.
 \end{description}
 
 The arguments to these built predicate symbols will contain all
-of the information that we need to prove or explain instances of the source
+of the information that we need to prove ';' explain instances of the source
 predicates.
 \subsubsection{Proving}
 For relation $r(-args-)$ in the source code we want to produce object
-code which says that $r(-args-)$ (or its negation)
-can be proven from the facts and constraints and the current set
+code which says that $r(-args-)$ (';' its negation)
+can be proven from the facts ',' constraints ',' the current set
 of assumed hypotheses.
 
 For the source relation
@@ -984,19 +1136,19 @@ sequence of its arguments),
 we have the corresponding target relations
 \[prv\_tru\_r( - args - , Ths, Anc)\]
 \[prv\_not\_r( - args - , Ths, Anc)\]
-which are to mean that $r$ (or $\neg r$) can be proven
->from the facts and ground hypotheses
+which are to mean that $r$ (';' $\neg r$) can be proven
+>from the facts ',' ground hypotheses
 $Ths$ with ancestor structure $Anc$.
 These extra arguments are:
 
 \begin{description}
 \item $Ths$ is a list of ground defaults.
-These are the defaults we have already assumed and so define the context in
+These are the defaults we have already assumed ',' so define the context in
 which to prove $r(-args-)$.
-\item $Anc$ is a structure of the form $anc(P,N)$ where $P$ and $N$ are
+\item $Anc$ is a structure of the form $anc(P,N)$ where $P$ ',' $N$ are
 lists of source atoms. Interpreted procedurally,
 $P$ is the list of positive (not negated) ancestors of
-the goal in a proof and $N$ is the list of negated ancestors
+the goal in a proof ',' $N$ is the list of negated ancestors
 in a proof. As described in section \ref{deduction} we conclude some goal
 if it unifies with its negated ancestors.
 \end{description}
@@ -1008,49 +1160,49 @@ means
 
 \subsubsection{Explaining}
 There are two target relations for explaining associated with
-each source relation $r$. These are $ex\_tru\_r$ and $ex\_not\_r$.
+each source relation $r$. These are $ex\_tru\_r$ ',' $ex\_not\_r$.
 
 For the source relation:
 \[r( - args -)\]
 we have two target new relations for explaining $r$:
 \[ex\_tru\_r( - args - , Ths, Anc, Ans)\]
 \[ex\_not\_r( - args - , Ths, Anc, Ans)\]
-These mean that $r(-args-)$ (or $\neg r(-args-)$) can be explained, with
+These mean that $r(-args-)$ (';' $\neg r(-args-)$) can be explained, with
 \begin{description}
 \item[$Ths$] is the structure of the incrementally built hypotheses
 used in explaining $r$. There are two statuses of hypotheses we
-use; one the defaults that are ground and so can be proven
+use; one the defaults that are ground ',' so can be proven
 consistent at the time of generation;
 the other the hypotheses with free variables at the time they
 are needed in the proof, for which we defer consistency
 checking (in case the free variables get instantiated later in the proof).
 $Ths$ is essentially
 two difference lists, one of the ground defaults already
-proven consistent and one of the
+proven consistent ',' one of the
 deferred defaults. $Ths$ is of the form
 \[ths(T_1,T_2,D_1,D_2)\]
 which is to mean that $T_1$ is the consistent hypotheses before
-we try to explain $r$, and
-and $T_2$ is the list of consistent hypotheses which includes
-$T_1$ and those hypotheses assumed to explain $r$.
+we try to explain $r$, ','
+',' $T_2$ is the list of consistent hypotheses which includes
+$T_1$ ',' those hypotheses assumed to explain $r$.
 Similarly, $D_1$ is the list of deferred hypotheses before we consider the goal
-and $D_2$ is the list of resulting deferred hypotheses used in explaining $r$.
+',' $D_2$ is the list of resulting deferred hypotheses used in explaining $r$.
 
 \item[$Anc$] contains the ancestors of the goal. As in the previous case,
 this is a pair of the form
 $anc(P,N)$ where $P$ is the list of positive ancestors of the goal,
-and $N$ is the list of negated ancestors of the goal.
+',' $N$ is the list of negated ancestors of the goal.
 
 \item[$Ans$] contains the answers we are considering in difference list form
 $ans(A_1,A_2)$, where $A_1$ is the answers before
-proving the goal, and $A_2$ is the answers after proving the goal.
+proving the goal, ',' $A_2$ is the answers after proving the goal.
 \end{description}
 
 The semantics of
 \[ex\_tru\_r(-args-,ths(T_1,T_2,D_1,D_2),anc(P,N),ans(A_1,A_2))\]
 is defined by
 \[{\cal F}\cup T_2 \cup D_2 \cup \neg P \cup N \cup A_2 \models r(-args-) \]
-where $T_1\subseteq T_2$, $D_1\subseteq D_2$ and $A_1\subseteq A_2$, and
+where $T_1\subseteq T_2$, $D_1\subseteq D_2$ ',' $A_1\subseteq A_2$, ','
 such that
 \[{\cal F}\cup T_2 \hbox{ is consistent}\]
 
@@ -1058,7 +1210,7 @@ such that
 The procedure {\em new\_lit$($Prefix, Reln, Newargs, Newreln\/}$)$ constructs
 a new atom, $Newreln$, with predicate symbol made up of
 $Prefix$ prepended to the
-predicate symbol of $Reln$, and taking as arguments the arguments of $Reln$
+predicate symbol of $Reln$, ',' taking as arguments the arguments of $Reln$
 together with $Newargs$.
 For example,
 \begin{quote}
@@ -1101,15 +1253,15 @@ Rules are statements of how to conclude
 the value of some relation. Each Theorist fact corresponds to a number
 of rules (one for each literal in the fact).
 Each rule gets translated into Prolog rules to explain
-and prove the head of the rule. 
+',' prove the head of the rule. 
 
 Rules use the intermediate form called a ``literal''.
 A literal is either an atomic symbol ; of the form $n(A)$ where $A$ is
 an atomic symbol.
-A rules is either a literal or
+A rules is either a literal ';'
 of the form {\em H $\leftarrow$ Body} (written ``{\tt <-(H,Body)}'')
 where $H$ is a literal
-and $Body$ is a conjunction and disjunction of literals.
+',' $Body$ is a conjunction ',' disjunction of literals.
 
 We translate rules of the form
 \[h(-x-) \leftarrow b_1(-x_1-), b_2(-x_2-), ... ,b_N(-x_n-);\]
@@ -1123,9 +1275,9 @@ $ex\_tru\_b_n(-x_n-,ths(T_{n-1},T_n,D_{n-1},D_n), anc([h(-x-)|P],N),
 ans(A_{n-1},A_n)).$
 \end{prolog}
 That is, we explain $h$ if we explain each of the $b_i$,
-accumulating the explanations and the answers.
+accumulating the explanations ',' the answers.
 Note that if $h$ is negated, then the head of the clause will be of
-the form $ex\_not\_h$, and the ancestor form will be
+the form $ex\_not\_h$, ',' the ancestor form will be
 $anc(P,[h(-x-)|N])$. If any of the $b_i$ are negated, then the
 corresponding predicate will be $ex\_not\_b_i$.
 
@@ -1140,9 +1292,9 @@ $ex\_tru\_gr(X,Y,ths(D,E,F,G),anc(H,I),ans(J,K))$\IF
 $ex\_tru\_f(X,Z,ths(D,M,F,N),anc([gr(X,Y)|H],I),ans(J,O))$\AND
 $ex\_tru\_p(Z,Y,ths(M,E,N,G),anc([gr(X,Y)|H],I),ans(O,K)).$
 \end{prolog}
-To explain $gr$ we explain both $f$ and $p$.
+To explain $gr$ we explain both $f$ ',' $p$.
 The initial assumptions for $f$ should be the initial assumptions for
-$gr$, and the initial assumptions for $p$ should be the initial assumptions
+$gr$, ',' the initial assumptions for $p$ should be the initial assumptions
 plus those made to explain $f$. The resulting assumptions after proving $p$ are
 are the assumptions made in explaining $gr$.
 \end{example}
@@ -1156,7 +1308,7 @@ gets translated into
 $ex\_tru\_father(randy,jodi,ths(T,T,D,D),\_,ans(A,A)).$
 \end{quote}
 We can explain $father(randy,jodi)$ independently of the ancestors;
-we need no extra assumptions, and we create no extra answers.
+we need no extra assumptions, ',' we create no extra answers.
 \end{example}
 
 Similarly we translate rules of the form
@@ -1179,9 +1331,9 @@ $prv\_tru\_gr(X,Y,D,anc(H,I))$\IF
 $prv\_tru\_f(X,Z,D,anc([gr(X,Y)|H],I))$\AND
 $prv\_tru\_p(Z,Y,D,anc([gr(X,Y)|H],I)).$
 \end{prolog}
-That is, we can prove $gr$ if we can prove $f$ and $p$.
+That is, we can prove $gr$ if we can prove $f$ ',' $p$.
 Having $gr(X,Y)$ in the ancestors means that we can prove $gr(X,Y)$
-by assuming that $\neg gr(X,Y)$ and then proving $gr(X,Y)$.
+by assuming that $\neg gr(X,Y)$ ',' then proving $gr(X,Y)$.
 \end{example}
 
 \begin{example} \em the fact
@@ -1192,12 +1344,12 @@ gets translated into
 \begin{quote}
 $prv\_tru\_father(randy,jodi,\_,\_).$
 \end{quote}
-Thus we can prove $father(randy,jodi)$ for any explanation and
+Thus we can prove $father(randy,jodi)$ for any explanation ','
 for any ancestors.
 \end{example}
 
 Disjuncts in the source body (;) get mapped into Prolog's disjunction.
-The answers and assumed hypotheses should be accumulated from
+The answers ',' assumed hypotheses should be accumulated from
 whichever branch was taken.
 This is then executed without mapping out subterms.
 \begin{example} \em
@@ -1222,7 +1374,7 @@ $ex\_tru\_p(A,ths(B,C,D,E),anc(F,G),ans(H,I)):-$\\
 \>$ex\_tru\_m(A,ths(P,C,Q,E),anc([p(A)|F],G),ans(R,I))$
 \end{tabbing}
 Note that $P$ is the resulting explanation from either executing
-$r$ and $s$ or executing $t$ from the explanation $J$.
+$r$ ',' $s$ ';' executing $t$ from the explanation $J$.
 \end{example}
 
 \subsubsection{The Code to Compile Rules}
@@ -1234,8 +1386,8 @@ $Ths$ is a theory structure for explaining,
 $Anc$ is an ancestor
 structure (of form $anc(P,N)$), $Ans$ is an answer structure
 (of form $ans(A0,A1)$). This procedure
-makes $ProveB$ the body of forms $prv\_tru\_b_i$ (and $prv\_not\_b_i$),
-and $ExB$ a body of the forms $ex\_tru\_b_i$.
+makes $ProveB$ the body of forms $prv\_tru\_b_i$ (',' $prv\_not\_b_i$),
+',' $ExB$ a body of the forms $ex\_tru\_b_i$.
 
 \index{make\_bodies}
 \begin{verbatim} */
@@ -1279,22 +1431,22 @@ is_thbuiltin(G):-declared_as_prolog(G).
 /* \end{verbatim}
 
 The procedure $rule(F,R)$ declares $R$ to be a fact
-or constraint rule (depending on the value of $F$).
+';' constraint rule (depending on the value of $F$).
 Constraints can only be used for proving;
 facts can be used for explaining as well as proving.
-$R$ is either a literal or of the form $<-(H,B)$ where $H$ is a literal
-and $B$ is a body.
+$R$ is either a literal ';' of the form $<-(H,B)$ where $H$ is a literal
+',' $B$ is a body.
 
-This $rule$ first checks to see whether we want sound unification and
+This $rule$ first checks to see whether we want sound unification ','
 then uses $drule(F,R)$ to decare the rule.
 
 $prolog\_cl(C)$ is a way of asserting to Prolog the clause $C$.
-This can either be asserted or written to a file to be consulted
-or compiled. The simplest form is to just assert $C$.
+This can either be asserted ';' written to a file to be consulted
+';' compiled. The simplest form is to just assert $C$.
 
 $make\_anc(H)$ is a procedure which ensures that the ancestor search
 is set up properly for $H$. It is described in section \ref{anc-section},
-and can be ignored on first reading.
+',' can be ignored on first reading.
 
 \index{rule}
 \index{drule}
@@ -1344,10 +1496,10 @@ form_anc(G, anc(P,N), anc([G|P],N)).
 
 /* \end{verbatim}
 \subsection{Forming Contrapositives}
-For both facts and constraints we convert the user
+For both facts ',' constraints we convert the user
 syntax into negation normal
 form (section \ref{nnf}), form the contrapositives,
-and declare these as rules.
+',' declare these as rules.
 
 Note that here we choose an arbitrary ordering for the clauses
 in the bodies of the contrapositive forms of the facts. No
@@ -1377,13 +1529,13 @@ declare_constraint(C) :-
 
 {\em nnf\/$($Wff,Parity,Nnf\/$)$} (section \ref{nnf})
 means that {\em Nnf\/} is the negation normal form
-of {\em Wff} if {\em Parity=even} and of $\neg${\em Wff}
+of {\em Wff} if {\em Parity=even} ',' of $\neg${\em Wff}
 if {\em Parity=odd}. Note that we {\em rulify} the normal form
 of the negation of the formula.
 
 {\em rulify\/}$(H,N)$ where $H$ is
-either ``{\em fact\/}'' or ``{\em constraint\/}''
-and $N$ is the negation of a fact or constraint
+either ``{\em fact\/}'' ';' ``{\em constraint\/}''
+',' $N$ is the negation of a fact ';' constraint
 in negation normal form (see section \ref{nnf}),
 means that all rules which can be formed from $N$ (by allowing each
 atom in $N$ being the head of some rule) should be declared as such.
@@ -1409,12 +1561,12 @@ rulify(H,A) :-
 /* \end{verbatim}
 
 $contrapos(H,D,T)$ where $H$ is either ``{\em fact\/}'' 
-or ``{\em constraint\/}'', and $(D,T)$ is (the negation of)
+';' ``{\em constraint\/}'', ',' $(D,T)$ is (the negation of)
 a formula in negation normal form means that all rules
 which can be formed from $(D,T)$ with head of the rule coming from $T$
 should be formed.
 Think of $D$ as the literals for which the rules with them as heads
-have been formed, and $T$ as those which remain to be as the head of
+have been formed, ',' $T$ as those which remain to be as the head of
 some rule.
 \index{contrapos}
 \begin{verbatim} */
@@ -1453,7 +1605,7 @@ $n(m(A))\leftarrow (r(A),s(A);t(A)),q(A),n(p(A))$
 \end{example}
 \subsection{Sound Unification}
 Sound unification works, by checking for repeated variables in the left
-hand side of a rule, and then unifies them by hand. This idea was stolen from 
+hand side of a rule, ',' then unifies them by hand. This idea was stolen from 
 Stickel's implementation.
 
 \index{make\_sound}
@@ -1531,7 +1683,7 @@ appears_in(X,S) :-
 \subsection{Possible Hypotheses}
 The other class of things we have to worry about is the class
 of possible hypotheses. As described in \cite{poole:lf}
-and outlined in section \ref{theorist},
+',' outlined in section \ref{theorist},
 we only need worry about atomic possible hypotheses.
 
 If $d(-args-)$ is a possible hypothesis (default),
@@ -1550,7 +1702,7 @@ $member(d(-args-),T).$
 \end{prolog}
 \item We can explain a hypothesis by assuming it,
 if it has no free variables, we have not
-already assumed it and it is consistent with everything assumed before:
+already assumed it ',' it is consistent with everything assumed before:
 \begin{prolog} \em
 $ex\_tru\_d(-args-,ths(T,[d(-args-)|T],D,D),Anc,ans(A,A)) $\IF
 variable\_free$(d(-args-))$\AND
@@ -1609,7 +1761,7 @@ ex\_tru\_birdsfly$(A,ths(B,B,C,[\hbox{birdsfly}(A)|C]),D,ans(E,E)):- $\\
 \end{example}
 \subsection{Relations defined in Prolog}
 We can define some relations to be executed in Prolog.
-This means that we can prove the $prove$ and $ex$ forms by calling 
+This means that we can prove the $prove$ ',' $ex$ forms by calling 
 the appropriate Prolog definition.
 \index{declare\_prolog}
 \begin{verbatim} */
@@ -1626,7 +1778,7 @@ declare_prolog(G) :-
 /* \end{verbatim}
 
 \subsection{Explaining Observations}
-$expl(G,T0,T1,A)$ means that $T1$ is an explanation of $G$ or $A$ ($A$ being
+$expl(G,T0,T1,A)$ means that $T1$ is an explanation of $G$ ';' $A$ ($A$ being
 the alternate answers) from the facts given $T0$ is already assumed.
 $G$ is an arbitrary wff.
 \index{expl}
@@ -1634,7 +1786,7 @@ $G$ is an arbitrary wff.
 
 
 expl(G,T0,T1,Ans) :-
-   make_ground(N),
+   trace, make_ground(N),
    once(declare_fact('<-'(newans(N,G) , G))),
      ex_tru_newans(N,G,ths(T0,T,[],D),anc([],[]),ans([],Ans)),
    make_ground(D),
@@ -1657,7 +1809,7 @@ check_consis([H|D],T1,T) :-
 /* \end{verbatim}
 To obtain disjunctive answers we have to know if the negation of the top
 level goal is called. This is done by declaring the fact
-$newans(G) \leftarrow G$, and if we ever try to
+$newans(G) \leftarrow G$, ',' if we ever try to
 prove the negation of a top level goal, we add that instance to the
 list of alternate answers. In this implementation we also check
 that $G$ is not identical to a higher level goal. This removes most cases
@@ -1686,7 +1838,7 @@ Our linear resolution
 theorem prover must recognise that a goal has been proven if
 it unifies with an ancestor in the search tree. To do this, it keeps
 two lists of ancestors, one containing the positive (non negated)
-ancestors and the other the negated ancestors.
+ancestors ',' the other the negated ancestors.
 When the ancestor search rules for predicate $p$ are defined, we assert
 {\em ancestor\_recorded(p)}, so that we do not attempt to redefine the
 ancestor search rules.
@@ -1770,8 +1922,8 @@ This is only done once for the $gr$ relation.
 \section{Interface}
 In this section a minimal interface is given. We try to give
 enough so that we can understand the conversion of the wff form
-into negation normal form and
-the parsing of facts and defaults. There is, of course,
+into negation normal form ','
+the parsing of facts ',' defaults. There is, of course,
 much more in any usable interface than described here.
 \subsection{Syntax Declarations}
 All of the declarations we use will be defined as operators.
@@ -1806,11 +1958,13 @@ self contained.
 :- op(1120,xfx,equiv).
 */
 :- op(1110,xfx,<-).
+/*
 :- op(1110,xfx,=>).
 :- op(1000,xfy,&).
-:- op(1100,xfy,or).
-:- op(1000,xfy,and).
+:- op(1100,xfy,';').
+:- op(1000,xfy,',').
 :- op(950,fy,~).
+*/
 :- op(950,fy,not).
 
 
@@ -1820,8 +1974,8 @@ self contained.
 \subsection{Converting to Negation Normal Form} \label{nnf}
 We want to convert an arbitrarily complex formula into a standard form
 called {\em negation normal form\/}. Negation normal form of a formula is
-an equivalent formula consisting of conjunctions and disjunctions of
-literals (either an atom or of the form $n(A)$ where $A$ is an atom).
+an equivalent formula consisting of conjunctions ',' disjunctions of
+literals (either an atom ';' of the form $n(A)$ where $A$ is an atom).
 The relation defined here puts formulae into negation normal form
 without mapping out subterms.
 Usually we want to find the negation normal form of the negation of the
@@ -1832,61 +1986,51 @@ The predicate used is of the form
 where
 \begin{description}
 \item[$Fla$] is a formula with input syntax
-\item[$Parity$] is either $odd$ or $even$ and denotes whether $Fla$ is
-in the context of an odd or even number of negations.
+\item[$Parity$] is either $odd$ ';' $even$ ',' denotes whether $Fla$ is
+in the context of an odd ';' even number of negations.
 \item[$Body$] is a tuple which represents the negation normal form
 of the negation of $Fla$
-if parity is even and the negation normal form of $Fla$ if parity is odd. 
+if parity is even ',' the negation normal form of $Fla$ if parity is odd. 
 \end{description}
 \index{nnf}
 \begin{verbatim} */
 
-nnf(F,odd,FF):- \+ compound_gt(F, 0), !, xlit(F,FF).
-nnf(F,even,not(FF)):- \+ compound_gt(F, 0), !, xlit(F,FF).
+nnf(F,odd,FF):- var_or_atomic(F), !, xlit(F,FF).
+nnf(F,even,not(FF)):- var_or_atomic(F), !, xlit(F,FF).
 
-nnf(equiv(X , Y), P,B) :- !,
-   nnf(((Y or not X) and (X or not Y)),P,B).
-nnf((X == Y), P,B) :- compound(X), compound(Y), !, nnf(equiv(X , Y), P,B).
-nnf('<=>'(X , Y), P,B) :- !, nnf(equiv(X , Y), P,B).
-nnf('iff'(X , Y), P,B) :- !, nnf(equiv(X , Y), P,B).
+nnf('<->'(X , Y), P,B) :- !,
+   nnf(((Y ; not(X)) , (X ; not(Y))),P,B).
+nnf((X == Y), P,B) :- compound(X), compound(Y), !, nnf('<->'(X , Y), P,B).
 
 nnf(all(_, Y), P,B) :- !,nnf(Y, P,B).
 nnf(exists(E, Y), P, exists(E, B)) :- !,nnf(Y, P,B).
 
-nnf((X => Y), P,B) :- !,
-   nnf((Y or not X),P,B).
-nnf(if(X,Y), P,B) :- !, nnf(=>(X , Y), P,B).
-nnf(->(X,Y), P,B) :- !, nnf(=>(X , Y), P,B).
+nnf('->'(X,Y), P,B) :- !,
+   nnf((Y ; not(X)),P,B).
 
-
-nnf(^(X, Y), P,B) :- !, nnf(and(X, Y),P,B).
-nnf((X & Y), P,B) :- !, nnf(and(X, Y),P,B).
-nnf((X , Y), P,B) :- !, nnf(and(X, Y),P,B).
-nnf(and(X, Y),P,B) :- !,
+nnf(','(X, Y),P,B) :- !,
    opposite_parity(P,OP),
-   nnf((not X or not Y),OP,B).
+   nnf((not(X) ; not(Y)),OP,B).
 
 nnf((X | Y), P,B) :- !, nnf(xor(X,Y),P,B).
-nnf(xor(X, Y), P,B) :- !, nnf(or(and(not(X),Y),and(X,not(Y))),P,B).
+nnf(xor(X, Y), P,B) :- !, nnf(';'(','(not(X),Y),','(X,not(Y))),P,B).
 
-nnf((X ; Y), P,B) :- !, nnf(or(X,Y),P,B).
-nnf(v(X, Y), P,B) :- !, nnf(or(X,Y),P,B).
 
-nnf(or(X,Y),even,(XB,YB)) :- !,
+nnf(';'(X,Y),even,(XB,YB)) :- !,
    nnf(X,even,XB),
    nnf(Y,even,YB).
-nnf(or(X,Y),odd,(XB;YB)) :- !,
+nnf(';'(X,Y),odd,(XB;YB)) :- !,
    nnf(X,odd,XB),
    nnf(Y,odd,YB).
 
 nnf((~ X),P,B) :- !,
-   nnf((not X),P,B).
+   nnf((not(X)),P,B).
 
-nnf((not X),P,B) :- !,
+nnf((not(X)),P,B) :- !,
    opposite_parity(P,OP),
    nnf(X,OP,B).
 
-% nnf((Y <- X), P,B) :-  !, nnf((Y or not X),P,B).
+% nnf((Y <- X), P,B) :-  !, nnf((Y ';' not(X)),P,B).
 nnf(not(F),even,FF) :- !,xlit(F,FF).
 nnf(F,odd,FF):- xlit(F,FF).
 nnf(F,even,not(FF)):- xlit(F,FF).
@@ -1919,7 +2063,7 @@ opposite_parity(odd,even).
 \begin{example} \em
 the wff
 \begin{quote} \em
-(a or not b) and c $\Rightarrow$ d and (not e or f)
+(a ';' not b) ',' c $\Rightarrow$ d ',' (not e ';' f)
 \end{quote}
 with parity {\em odd} gets translated into
 \begin{quote}
@@ -1947,7 +2091,7 @@ fact(F) :- declare_fact(F),!.
 /* \end{verbatim}
 
 The $default$ declaration makes the appropriate equivalences between the
-named defaults and the unnamed defaults.
+named defaults ',' the unnamed defaults.
 \index{default}
 \begin{verbatim} */
 
@@ -1995,7 +2139,7 @@ define( G ):-
 /* \end{verbatim}
 
 The $explain$ command keeps writing out all of the explanations found.
-This is done by finding one, writing the answer, and then retrying so that
+This is done by finding one, writing the answer, ',' then retrying so that
 the next answer is found. This is done so that the computation is left in
 an appropriate state at the end of the computation.
 \index{explain}
@@ -2029,7 +2173,7 @@ writeans(G,D,A) :-
 writedisj([]).
 writedisj([H|T]) :-
    writedisj(T),
-   format(' or ~p',[H]).
+   format(' not ~p',[H]).
 
 
 /* \end{verbatim}
@@ -2046,24 +2190,24 @@ that $g$ is not explainable from $S$.
 
 The intuition is that
 if $g$ is not in every extension then there is no reason to rule out
-$S$ (based on the information given) and so we should not predict $g$.
+$S$ (based on the information given) ',' so we should not predict $g$.
                       
 We can use theorem \ref{everythm} to consider another way to view membership
-in every extension. Consider two antagonistic agents $Y$ and $N$ trying to
-determine whether $g$ should be predicted or not. $Y$ comes
-up with explanations of $g$, and $N$ tries to find where these explanations
+in every extension. Consider two antagonistic agents $Y$ ',' $N$ trying to
+determine whether $g$ should be predicted ';' not. $Y$ comes
+up with explanations of $g$, ',' $N$ tries to find where these explanations
 fall down (i.e., tries to find a scenario $S$ which is inconsistent with
 all of $Y$''s explanations). $Y$ then tries to find an explanation of $g$
 given $S$.
 If $N$ cannot find a defeater for $Y$'s explanations then
-$g$ is in every extension, and if $Y$ cannot find an explanation from
+$g$ is in every extension, ',' if $Y$ cannot find an explanation from
 some $S$ constructed by $N$ then $g$ is not in every extension.
                                                                        
 The following code implements this, but (as we cannot implement
 coroutines as needed above in Prolog), it may generate more
 explanations of the goal than is needed. What we really want is for the
 first ``bagof'' to generate the explanations in a demand-driven fashion,
-and then just print the explanations needed.
+',' then just print the explanations needed.
 
 \index{predict}
 \begin{verbatim} */
@@ -2120,7 +2264,7 @@ formed.
 expl2not(G,T0,T1) :-
    new_lit(`ex_not_`,G,[ths(T0,T,[],D),anc([],[]),ans([],[])],ExG),
    ExG,
-   make_ground(D),
+   trace, make_ground(D),
    check_consis(D,T,T1).
 
 
@@ -2176,7 +2320,7 @@ To consult a Theorist file, you should do a,
 {\bf thconsult} \em filename.
 \end{verse}
 The following is the definition of {\em thconsult}. Basicly we just
-keep reading the file and executing the commands in it until we stop.
+keep reading the file ',' executing the commands in it until we stop.
 \index{thconsult}
 \begin{verbatim} */
 
@@ -2212,7 +2356,7 @@ thmust(G):- rtrace(G),!.
 /* \end{verbatim}
 
 {\em thtrans} is like the previous version, but the generated code is written
-to a file. This code is neither loaded or compiled.
+to a file. This code is neither loaded ';' compiled.
 \index{thtrans}
 \begin{verbatim} */
 
@@ -2254,7 +2398,7 @@ To compile a Theorist file, you should do a,
 {\bf thconsult} \em filename.
 \end{verse}
 
-This translates the code to Prolog and then compiles the prolog code.
+This translates the code to Prolog ',' then compiles the prolog code.
 
 {\em thcompile} translates the file to Prolog
 which is then compiled using the Prolog compiler.
@@ -2339,12 +2483,12 @@ code so that the Prolog to assembly language compiler can work
 
 So that the Quintus compiler can correctly compile the code,
 we should declare that all calls for which we can assert the goal
-or the negative are dynamic, this is done by the command
+';' the negative are dynamic, this is done by the command
 \begin{verse}
 \bf dyn $n.$
 \end{verse}
 This need only be given in files,
-and should be given before the atomic symbol $n$ is ever used.
+',' should be given before the atomic symbol $n$ is ever used.
 
 The following gives the appropriate translation.
 Essentially we then must say that the appropriate Prolog code is dynamic.
@@ -2420,7 +2564,7 @@ prolog_cl(C) :-
 
 /* \end{verbatim}
 $prolog\_decl$ is like the above predicate, but is both
-written to the file and asserted.
+written to the file ',' asserted.
 \index{prolog\_decl}
 \begin{verbatim} */
                      
@@ -2598,7 +2742,7 @@ where H is one of:~n',
 What is given here is the core part of our current implementation of
 Theorist.
 This code has been used with Waterloo Unix Prolog, Quintus Prolog,
-C-prolog and Mac-Prolog.
+C-prolog ',' Mac-Prolog.
 For those Prologs with compilers we can actually compile the resulting
 code from this translater as we could any other Prolog code;
 this make it very fast indeed.
@@ -2607,10 +2751,10 @@ The resulting code when the Theorist code is of the form of definite clauses
 (the only case where a comparison makes sense,
 as it is what the two systems have in common), runs at about a quarter
 the speed
-of the corresponding interpreted or compiled code of the underlying
+of the corresponding interpreted ';' compiled code of the underlying
 Prolog system. About half of this extra cost is
 for the extra arguments to unify,
-and the other factor is for one membership
+',' the other factor is for one membership
 of an empty list for each procedure call.
 For each procedure call we do one extra Prolog call which immediately fails.
 For the definite clause case, the contrapositive of the clauses are never used.
@@ -2636,7 +2780,7 @@ variables in the hypotheses?
 \end{itemize}
 
 
-We are currently working on many applications of default and abductive
+We are currently working on many applications of default ',' abductive
 reasoning.
 Hopefully with compilers based on the ideas presented in this paper
 we will be able to take full advantage of
@@ -2644,33 +2788,33 @@ advances in Prolog implementation technology while still allowing
 flexibility in specification of the problems to be solved.
 \section*{Acknowledgements}
 This work could not have been done without the ideas,
-criticism and feedback from Randy Goebel, Eric Neufeld,
-Paul Van Arragon, Scott Goodwin and Denis Gagn\'e.
-Thanks to Brenda Parsons and Amar Shan for valuable comments on
+criticism ',' feedback from Randy Goebel, Eric Neufeld,
+Paul Van Arragon, Scott Goodwin ',' Denis Gagn\'e.
+Thanks to Brenda Parsons ',' Amar Shan for valuable comments on
 a previous version of this paper.
 This research was supported under NSERC grant A6260.
 \begin{thebibliography}{McDer80}
 \bibitem[Brewka86]{brewka86}
 G.\ Brewka,
 ``Tweety -- Still Flying: Some Remarks on Abnormal Birds, Applicable Rules
-and a Default Prover'',
+',' a Default Prover'',
 {\em Proc.\ AAAI-86}, pp.\ 8-12.
 
 \bibitem[Chang73]{chang}
-C-L.\ Chang and R.\ C-T.\ Lee,
-{\em Symbolic Logic and Mechanical Theorem Proving},
+C-L.\ Chang ',' R.\ C-T.\ Lee,
+{\em Symbolic Logic ',' Mechanical Theorem Proving},
 Academic Press, 1973.
 
 \bibitem[Cox82]{cox82}
 P.\ T.\ Cox, {\em Dependency-directed backtracking for Prolog Programs}.
 
 \bibitem[Cox87]{cox87}
-P.\ T.\ Cox and T.\ Pietrzykowski, {\em General Diagnosis by Abductive
+P.\ T.\ Cox ',' T.\ Pietrzykowski, {\em General Diagnosis by Abductive
 Inference}, Technical report CS8701, School of Computer Science,
 Technical University of Nova Scotia, April 1987.
 
 \bibitem[Dincbas87]{dincbas}
-M.~Dincbas, H.~Simonis and P.~Van Hentenryck,
+M.~Dincbas, H.~Simonis ',' P.~Van Hentenryck,
 {\em Solving Large Combinatorial Problems in Logic Programming\/},
 ECRC Technical Report, TR-LP-21, June 1987.
 
@@ -2693,7 +2837,7 @@ H.\ B.\ Enderton, {\em A Mathematical Introduction to Logic},
 Academic Press, Orlando.
 
 \bibitem[Genesereth87]{genesereth87}
-M.\ Genesereth and N.\ Nilsson,
+M.\ Genesereth ',' N.\ Nilsson,
 {\em Logical Foundations of Artificial Intelligence},
 Morgan-Kaufmann, Los Altos, California.
 
@@ -2702,7 +2846,7 @@ M.~L.~Ginsberg, {\em Computing Circumscription\/},
 Stanford Logic Group Report Logic-87-8, June 1987.
 
 \bibitem[Goebel87]{goebel87}
-R.\ G.\ Goebel and S.\ D.\ Goodwin,
+R.\ G.\ Goebel ',' S.\ D.\ Goodwin,
 ``Applying theory formation to the planning problem''
 in F.\ M.\ Brown (Ed.),
 {\em Proceedings of the 1987 Workshop on The Frame Problem in Artificial
@@ -2734,20 +2878,20 @@ Common Sense Knowledge'', {\em Artificial Intelligence}, Vol.\ 28, No.\ 1,
 pp.\ 89-116.
 
 \bibitem[Moto-Oka84]{pie}
-T.~Moto-Oka, H.~Tanaka, H.~Aida, k.~Hirata and T.~Maruyama,
+T.~Moto-Oka, H.~Tanaka, H.~Aida, k.~Hirata ',' T.~Maruyama,
 ``The Architecture of a Parallel Inference Engine --- PIE'',
 {\em Proc.\ Int.\ Conf.\ on Fifth Generation Computing Systems},
 pp.~479-488.
 
 \bibitem[Naish86]{naish86}
-L.~Naish, ``Negation and Quantifiers in NU-PROLOG'',
+L.~Naish, ``Negation ',' Quantifiers in NU-PROLOG'',
 {\em Proc.~3rd Int.\ Conf.\ on Logic Programming},
 Springer-Verlag, pp.~624-634.
 
 \bibitem[Neufeld87]{neufeld87}
-E.\ M.\ Neufeld and D.\ Poole,
+E.\ M.\ Neufeld ',' D.\ Poole,
 ``Towards solving the multiple extension problem:
-combining defaults and probabilities'',
+combining defaults ',' probabilities'',
 {\em Proc.\ Third AAAI Workshop on Reasoning with Uncertainty},
 Seattle, pp.\ 305-312.
 
@@ -2764,7 +2908,7 @@ London, pp.~635-641.
 
 \bibitem[Poole86]{poole:dd}
 D.\ L.\ Poole,
-``Default Reasoning and Diagnosis as Theory Formation'',
+``Default Reasoning ',' Diagnosis as Theory Formation'',
 Technical Report, CS-86-08, Department of Computer Science,
 University of Waterloo, March 1986.
 
@@ -2775,7 +2919,7 @@ D.\ L.\ Poole,
 
 \bibitem[Poole87b]{poole:dc}
 D.\ L.\ Poole,
-{\em Defaults and Conjectures: Hypothetical Reasoning for Explanation and
+{\em Defaults ',' Conjectures: Hypothetical Reasoning for Explanation ','
 Prediction}, Research Report CS-87-54, Department of
 Computer Science, University of Waterloo, October 1987, 49 pages.
 
@@ -2785,9 +2929,9 @@ D.\ L.\ Poole,
 to appear {\em Artificial Intelligence}, Spring 1987.
 
 \bibitem[PGA87]{pga}
-D.\ L.\ Poole, R.\ G.\ Goebel and R.\ Aleliunas,
-``Theorist: A Logical Reasoning System for Defaults and Diagnosis'',
-in N. Cercone and G. McCalla (Eds.)
+D.\ L.\ Poole, R.\ G.\ Goebel ',' R.\ Aleliunas,
+``Theorist: A Logical Reasoning System for Defaults ',' Diagnosis'',
+in N. Cercone ',' G. McCalla (Eds.)
 {\it The Knowledge Frontier: Essays in the Representation of
 Knowledge},
 Springer Varlag, New York, 1987, pp.\ 331-352.
@@ -2799,7 +2943,7 @@ R.\ Reiter,
 Vol.\ 13, pp 81-132.
                       
 \bibitem[Smith86]{smith86}
-D.~Smith and M.~Genesereth,
+D.~Smith ',' M.~Genesereth,
 ``Ordering Conjunctive Queries'',
 {\em Artificial Intelligence}.
 
