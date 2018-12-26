@@ -192,16 +192,22 @@ all_executable([happens(A,T1,T2)|R]) :- executable(A), all_executable(R).
 
 
 
-abdemo(Gs,[[HA,TC1],[BA,TC2]],R,N1,N2,D) :- N1 \= [],
-     Gs == [],
+abdemo(Gs,[[HA,TC1],[BA,TC2]],R,N1,N2,D) :- 
+     (( N1 \== [], Gs == [] );
+      ( fail, N1 == [], Gs \== [] )),
+
      %is_dbginfo(trace=on), 
      dbginfo('Goals'=Gs),
      dbginfo('Happens'=HA),
      dbginfo('Befores'=BA),
      dbginfo('Nafs'=N1),nl,nl,fail.
+
 abdemo([],R,R,N,N,D).
 abdemo([G|Gs],R1,R2,N1,N2,D):-
   abdemo_cons(G,Gs,R1,R2,N1,N2,D).
+
+abdemo_cons(holds_at(F1,T),Gs1,R1,R3,N1,N3,D):- 
+  abdemo_cons_holds_at(F1,T,Gs1,R1,R3,N1,N3,D).
 
 /*
    Now we have two clauses which are meta-level representations of the two
@@ -218,9 +224,6 @@ abdemo([G|Gs],R1,R2,N1,N2,D):-
    clauses in the object-level program. Instead, they're put straight into
    the residue. Resolving happens goals is the job of the refinement phase.
 */
-
-abdemo_cons(holds_at(F1,T),Gs1,R1,R3,N1,N3,D):- 
-  abdemo_cons_holds_at(F1,T,Gs1,R1,R3,N1,N3,D).
 
 :- discontiguous abdemo_cons/7.
 abdemo_cons_holds_at(F1,T,Gs1,R1,R3,N1,N4,D) :-
@@ -282,12 +285,12 @@ abdemo_cons_holds_at(neg(F),T3,Gs1,R1,R6,N1,N5,D) :-
    of sub-goals between compound events wherever possible.
 */
 
-abdemo_cons(happens(A,T1,T2),Gs,R1,R4,N1,N3,D) :-
-     !, abresolve(happens(A,T1,T2),R1,[],R2,B), check_depth(R2,D),
+abdemo_cons(happens(A,T1,T2),Gs,R1,R4,N1,N3,D) :- !,
+     abresolve(happens(A,T1,T2),R1,[],R2,B), check_depth(R2,D),
      check_nafs(B,N1,R2,R3,N1,N2,D), abdemo(Gs,R3,R4,N2,N3,D).
 
-abdemo_cons(happens(A,T),Gs,R1,R4,N1,N3,D) :-
-     !, abresolve(happens(A,T),R1,[],R2,B), check_depth(R2,D),
+abdemo_cons(happens(A,T),Gs,R1,R4,N1,N3,D) :- !,
+     abresolve(happens(A,T),R1,[],R2,B), check_depth(R2,D),
      check_nafs(B,N1,R2,R3,N1,N2,D), abdemo(Gs,R3,R4,N2,N3,D).
 
 /*
@@ -306,8 +309,8 @@ abdemo_cons(happens(A,T),Gs,R1,R4,N1,N3,D) :-
    definition, then those recorded in the negations list.
 */
 
-abdemo_cons(expand([happens(A,T1,T2)|Bs]),Gs1,R1,R8,N1,N8,D) :-
-     !, axiom(happens(A,T1,T2),Gs2),
+abdemo_cons(expand([happens(A,T1,T2)|Bs]),Gs1,R1,R8,N1,N8,D) :- !,
+     axiom(happens(A,T1,T2),Gs2),
      add_sub_actions(Gs2,R1,R2,N1,N2,D,Hs),
      solve_befores(Bs,R2,R3,N2,N3,D),
      abdemo_holds_ats(Gs2,R3,R4,N3,N4,D),
@@ -316,19 +319,26 @@ abdemo_cons(expand([happens(A,T1,T2)|Bs]),Gs1,R1,R8,N1,N8,D) :-
      check_sub_action_nafs(Hs,N1,R6,R7,N6,N7,D),
      abdemo(Gs1,R7,R8,N7,N8,D).
 
+
 /*
-   The last three clauses cater for the general case (ie: goals other
+   The next clauses cater for the general case (ie: goals other
    than holds_at and happens). They're also used to tackle domain
    constraints (ie: holds_at if holds_at clauses).
 */
 
-abdemo_cons(not(G),Gs,R1,R3,N1,N4,D) :-
-     !, abdemo_naf_cons(G,[],R1,R2,N1,N2,D), add_neg_car(G,N2,N3),
-     abdemo(Gs,R2,R3,N3,N4,D).
-
+% INTERP-OR-AND    
+/*
 abdemo_cons((G1;G2),Gs,R1,R3,N1,N4,D) :- !,
   (abdemo_cons(G1,Gs,R1,R3,N1,N4,D);
    abdemo_cons(G2,Gs,R1,R3,N1,N4,D)).
+*/
+abdemo_cons((G,G0),Gs,R1,R2,N1,N2,D):- !,
+  abdemo_cons(G,[G0|Gs],R1,R2,N1,N2,D).
+
+abdemo_cons(not(G),Gs,R1,R3,N1,N4,D) :-
+     % !, removed cut to allow negated axioms
+     abdemo_naf_cons(G,[],R1,R2,N1,N2,D), add_neg_car(G,N2,N3),
+     abdemo(Gs,R2,R3,N3,N4,D).
 
 abdemo_cons(G,Gs1,R1,R3,N1,N2,D) :-
      abresolve(G,R1,Gs2,R2,B), append(Gs2,Gs1,Gs3),
@@ -460,6 +470,8 @@ ammed_preconds(A, T, Gs,Gss):-
    if a happens fact has been added to the residue.
 */
 
+abresolve(G,R1,Gs,R2,B):- notrace(var(G)),!,throw(var_abresolve(G,R1,Gs,R2,B)).
+
 abresolve(terms_or_rels(A,F,T),R,Gss,R,false) :- axiom(releases(A,F,T),Gs), ammed_preconds(A,T,Gs,Gss).
 
 abresolve(terms_or_rels(A,F,T),R,Gss,R,false) :- !, axiom(terminates(A,F,T),Gs), ammed_preconds(A,T,Gs,Gss).
@@ -491,8 +503,8 @@ abresolve(happens(A,T1,T2),[[HA,TC],RB],[],[[HA,TC],RB],false) :-
 abresolve(happens(A,T,T),[[HA,TC],RB],[],[[[happens(A,T,T)|HA],TC],RB],B) :-
      executable(A), !, B = true, skolemise(T).
 
-abresolve(happens(A,T1,T2),R1,[],R2,B) :-
-     !, B = true, skolemise(T1), skolemise(T2), add_happens(A,T1,T2,R1,R2).
+abresolve(happens(A,T1,T2),R1,[],R2,B) :-  !, B = true, 
+     skolemise(T1), skolemise(T2), add_happens(A,T1,T2,R1,R2).
 
 /*
    If either X or Y is not bound in a call to abresolve(b(X,Y)) then
@@ -502,8 +514,8 @@ abresolve(happens(A,T1,T2),R1,[],R2,B) :-
 abresolve(b(X,Y),R,[],R,false) :-
      skolemise(X), skolemise(Y), demo_before(X,Y,R), !.
 
-abresolve(b(X,Y),R1,[],R2,B) :-
-     !, B = false, skolemise(X), skolemise(Y), \+ demo_beq(Y,X,R1),
+abresolve(b(X,Y),R1,[],R2,B) :- !, B = false, 
+     skolemise(X), skolemise(Y), \+ demo_beq(Y,X,R1),
      add_before(X,Y,R1,R2).
 
 /*
@@ -511,12 +523,23 @@ abresolve(b(X,Y),R1,[],R2,B) :-
    arithmetic expressions) are built in.
 */
 
-abresolve(dif(X,Y),R,[],R,false) :- !, dif(X,Y).
 abresolve(diff(X,Y),R,[],R,false) :- !, X \= Y.
-
 abresolve(is(X,Y),R,[],R,false) :- !, X is Y.
 
+abresolve(dif(X,Y),R,[],R,false) :- !, dif(X,Y).
 abresolve(call(G),R,[],R,false) :- !, call(G).
+
+% INTERP-OR-AND
+abresolve((G1;G2),ResidueIn,Goals,ResidueOut,Flag):- !,
+  (abresolve(G1,ResidueIn,Goals,ResidueOut,Flag);
+   abresolve(G2,ResidueIn,Goals,ResidueOut,Flag)).
+
+abresolve((G1,G2),ResidueIn,Goals,ResidueOut,Flag):- !,
+  (abresolve(G1,ResidueIn,Goals1,ResidueMid,Flag),
+   abresolve(G2,ResidueMid,Goals2,ResidueOut,Flag)),
+   append(Goals1,Goals2,Goals).
+
+
 
 abresolve(G,R,[],[G|R],false) :- abducible(G).
 
@@ -612,13 +635,22 @@ abdemo_naf_cons(holds_at(F1,T),Gs1,R1,R3,N1,N3,D):- !,
   abdemo_naf_cons_holds_at(F1,T,Gs1,R1,R3,N1,N3,D).
 
 /* DANGER: Cut in next clause rules out other ways to solve holds_at(F2,T). */
+/*
 abdemo_naf_cons_holds_at(F1,T,Gs1,R1,R3,N1,N3,D) :-
-     opposite(F1,F2), copy_term(Gs1,Gs2),
-     abdemo_cons_holds_at(F2,T,[],R1,R2,N1,N2,D), !,
-     abdemo_naf_cont(R1,Gs2,R2,R3,N1,N3,D).
+     opposite(F1,F2), 
+     abdemo_ cons_holds_at(F2,T,[],R1,R2,N1,N2,D), !,
+     copy_ term(Gs1,Gs2), abdemo_naf_cont(R1,Gs2,R2,R3,N1,N3,D).
 
-abdemo_naf_cons_holds_at(_F,_T,Gs,R1,R2,N1,N2,D) :-
-      abdemo_naf(Gs,R1,R2,N1,N2,D).
+abdemo_naf_cons_holds_at(_F,_T,Gs,R1,R3,N1,N3,D) :-
+      abdemo_naf(Gs,R1,R3,N1,N3,D).
+*/
+abdemo_naf_cons_holds_at(F1,T,Gs1,R1,R3,N1,N3,D) :-
+     opposite(F1,F2), 
+     (abdemo_cons_holds_at(F2,T,[],R1,R2,N1,N2,D), !,
+      (copy_term(Gs1,Gs2), abdemo_naf_cont(R1,Gs2,R2,R3,N1,N3,D))).
+
+abdemo_naf_cons_holds_at(_F,_T,Gs,R1,R3,N1,N3,D) :-
+      abdemo_naf(Gs,R1,R3,N1,N3,D).
 
 /*
    Special facilities for handling temporal ordering facts are built in.
@@ -655,20 +687,45 @@ abdemo_naf_cons(postponed(b(X,Y)),Gs,R1,R2,N1,N2,D) :-
    We drop through to the general case for goals other than special event
    calculus goals.
 */
+% INTERP-OR-AND
+abdemo_naf_cons((G,G0),Gs,R1,R2,N1,N2,D):- !,
+  abdemo_naf_cons(G,[G0|Gs],R1,R2,N1,N2,D).
+% INTERP-OR-AND 
+/*
+abdemo_naf_cons((G1;G2),Gs,R1,R3,N1,N4,D) :- !,
+  (abdemo_naf_cons(G1,Gs,R1,R3,N1,N4,D);
+   abdemo_naf_cons(G2,Gs,R1,R3,N1,N4,D)).
+*/
+
 :-  discontiguous(abdemo_naf_cons/7).
-abdemo_naf_cons(not(G),Gs1,R1,R3,N1,N3,D):- !, abdemo_naf_cons_not(G,Gs1,R1,R3,N1,N3,D).
+
 
 /* DANGER: Cut in next clause rules out other ways to solve G. */
-abdemo_naf_cons_not(G,Gs1,R1,R3,N1,N3,D) :-
-     copy_term(Gs1,Gs2), abdemo_cons(G,[],R1,R2,N1,N2,D), !,
-     abdemo_naf_cont(R1,Gs2,R2,R3,N1,N3,D).
+/*
+abdemo_naf_cons_not(G,Gs1,R1,R3,N1,N3,D) :-  
+     abdemo_cons(G,[],R1,R2,N1,N2,D), !, 
+     copy_term(Gs1,Gs2), abdemo_naf_cont(R1,Gs2,R2,R3,N1,N3,D).
+abdemo_naf_cons_not(_G,Gs,R1,R3,N1,N3,D) :- 
+     abdemo_naf(Gs,R1,R3,N1,N3,D).
+*/
+abdemo_naf_cons_not(G,Gs1,R1,R3,N1,N3,D) :-  
+     abdemo_cons(G,[],R1,R2,N1,N2,D) *-> 
+       (copy_term(Gs1,Gs2), abdemo_naf_cont(R1,Gs2,R2,R3,N1,N3,D)) ;
+     abdemo_naf(Gs,R1,R3,N1,N3,D).
 
-abdemo_naf_cons_not(_G,Gs,R1,R2,N1,N2,D) :- abdemo_naf(Gs,R1,R2,N1,N2,D).
+
+abdemo_naf_cons(not(G),Gs1,R1,R3,N1,N3,D):- 
+    % !, removed cut to allow negated axioms
+    abdemo_naf_cons_not(G,Gs1,R1,R3,N1,N3,D),
+    !. % added cut
 
 abdemo_naf_cons(G,Gs1,R,R,N,N,D) :- \+ abresolve(G,R,Gs2,R,false), !.
 
 abdemo_naf_cons(G1,Gs1,R1,R2,N1,N2,D) :-
-     findall(Gs2,(abresolve(G1,R1,Gs3,R1,false),append(Gs3,Gs1,Gs2)),Gss),
+     findall(Gs2, 
+            (abresolve(G1,R1,Gs3,R1,false),
+                append(Gs3,Gs1,Gs2)),
+             Gss),
      abdemo_nafs(Gss,R1,R2,N1,N2,D).
 
 
@@ -679,7 +736,7 @@ abdemo_naf_cons(G1,Gs1,R1,R2,N1,N2,D) :-
    no need to look for other ways to prove the negation of the overall goal.
 */
 
-abdemo_naf_cont(R1,Gs,R2,R2,N,N,D).
+abdemo_naf_cont(R1,_Gs,R2,R2,N,N,D).
 
 abdemo_naf_cont(R1,Gs,R2,R3,N1,N2,D) :-
      R1 \= R2, abdemo_naf(Gs,R1,R3,N1,N2,D).

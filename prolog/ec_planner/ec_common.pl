@@ -65,6 +65,10 @@ ec_current_domain_db(G):- user:ec_current_domain_db(G, _REF).
 
 fail_solve_goal(G,R):- \+ abdemo_solve(G,R).
 
+:- export(ec_prove/1).
+ec_prove(G):-
+  abdemo_solve(G,_).
+
 :- export(abdemo_solve/2).
 abdemo_solve(Gs,R):- abdemo_solve(Gs,R,1,4).
 :- export(abdemo_solve/4).

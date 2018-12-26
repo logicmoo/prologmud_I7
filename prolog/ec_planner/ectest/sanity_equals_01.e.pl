@@ -5926,58 +5926,66 @@ axiom(equals(Position1, 7),
        (not(equals(Position1, 1));not(equals(Position2, 2))),
       neighbor(Position1, Position2)
     ]).
+
 axiom(neighbor(Position1, Position2),
    
-    [  (equals(Position1, 1), equals(Position2, 2);equals(Position1, 1), equals(Position2, 3);equals(Position1, 1), equals(Position2, 4);equals(Position1, 2), equals(Position2, 3);equals(Position1, 2), equals(Position2, 4);equals(Position1, 3), equals(Position2, 4);equals(Position1, 5), equals(Position2, 6);equals(Position1, 5), equals(Position2, 7);equals(Position1, 5), equals(Position2, 8);equals(Position1, 6), equals(Position2, 7);equals(Position1, 6), equals(Position2, 8);equals(Position1, 7), equals(Position2, 8);equals(Position2, 1), equals(Position1, 2);equals(Position2, 1), equals(Position1, 3);equals(Position2, 1), equals(Position1, 4);equals(Position2, 2), equals(Position1, 3);equals(Position2, 2), equals(Position1, 4);equals(Position2, 3), equals(Position1, 4);equals(Position2, 5), equals(Position1, 6);equals(Position2, 5), equals(Position1, 7);equals(Position2, 5), equals(Position1, 8);equals(Position2, 6), equals(Position1, 7);equals(Position2, 6), equals(Position1, 8);equals(Position2, 7), equals(Position1, 8);equals(Position1, 4), equals(Position2, 7);equals(Position2, 4), equals(Position1, 7))
+    [  (equals(Position1, 1), equals(Position2, 2);
+        equals(Position1, 1), equals(Position2, 3);
+        equals(Position1, 1), equals(Position2, 4);
+        equals(Position1, 2), equals(Position2, 3);
+        equals(Position1, 2), equals(Position2, 4);
+        equals(Position1, 3), equals(Position2, 4);
+        equals(Position1, 5), equals(Position2, 6);
+        equals(Position1, 5), equals(Position2, 7);
+        equals(Position1, 5), equals(Position2, 8);
+        equals(Position1, 6), equals(Position2, 7);
+        equals(Position1, 6), equals(Position2, 8);
+        equals(Position1, 7), equals(Position2, 8);
+        equals(Position2, 1), equals(Position1, 2);
+        equals(Position2, 1), equals(Position1, 3);
+        equals(Position2, 1), equals(Position1, 4);
+        equals(Position2, 2), equals(Position1, 3);
+        equals(Position2, 2), equals(Position1, 4);
+        equals(Position2, 3), equals(Position1, 4);
+        equals(Position2, 5), equals(Position1, 6);
+        equals(Position2, 5), equals(Position1, 7);
+        equals(Position2, 5), equals(Position1, 8);
+        equals(Position2, 6), equals(Position1, 7);
+        equals(Position2, 6), equals(Position1, 8);
+        equals(Position2, 7), equals(Position1, 8);
+        equals(Position1, 4), equals(Position2, 7);
+        equals(Position2, 4), equals(Position1, 7))
     ]).
 
-
-% From /opt/logicmoo_workspace/packs_sys/small_adventure_games/prolog/ec_planner/ectest/sanity_equals_01.e:33
-% [x,y]
- % Neighbor_rev(y,x) <-> Neighbor(x,y).
-
- /*  neighbor_rev(Y, X) <->
-       neighbor(X, Y).
- */
-axiom(neighbor(X, Y),
-    [neighbor_rev(Y, X)]).
-axiom(neighbor_rev(Y, X),
-    [neighbor(X, Y)]).
+axiom(equals(X, Y), [call(X = Y)]).
+axiom(not(equals(X, Y)), [call(X \= Y)]).
+%axiom((G ; _), [G]).
+%axiom((_ ; G), [G]).
+axiom(neighbor(1, 2), []).
+axiom(neighbor(X, Y), [call(X>Y), call(trace), neighbor(Y, X)]).
 
 
-% From /opt/logicmoo_workspace/packs_sys/small_adventure_games/prolog/ec_planner/ectest/sanity_equals_01.e:35
-%; Prolog code starts with ; and %
-:- register_tests(
-                  [ test_tru(neighbor(1, 2)),
-                    test_tru(neighbor(1, 3)),
-                    test_tru(neighbor(1, 4)),
-                    test_tru(neighbor(2, 3)),
-                    test_tru(neighbor(2, 4)),
-                    test_tru(neighbor(3, 4)),
-                    test_tru(neighbor(5, 6)),
-                    test_tru(neighbor(5, 7)),
-                    test_tru(neighbor(5, 8)),
-                    test_tru(neighbor(6, 7)),
-                    test_tru(neighbor(6, 8)),
-                    test_tru(neighbor(7, 8)),
-                    test_tru(neighbor_rev(1, 2)),
-                    test_tru(neighbor_rev(1, 3)),
-                    test_tru(neighbor_rev(1, 4)),
-                    test_tru(neighbor_rev(2, 3)),
-                    test_tru(neighbor_rev(2, 4)),
-                    test_tru(neighbor_rev(3, 4)),
-                    test_tru(neighbor_rev(5, 6)),
-                    test_tru(neighbor_rev(5, 7)),
-                    test_tru(neighbor_rev(5, 8)),
-                    test_tru(neighbor_rev(6, 7)),
-                    test_tru(neighbor_rev(6, 8)),
-                    test_tru(neighbor_rev(7, 8)),
-                    test_tru(neighbor(4, 7)),
-                    test_tru(neighbor_rev(4, 7))
-                  ]).
+% From /opt/logicmoo_workspace/packs_sys/small_adventure_games/prolog/ec_planner/ectest/sanity_equals_01.e:34
+%; Prolog code starts with ;:-
+:-  maplist(call, 
+ [ 
+    assert(( test_neighbor(X, Y) :- must(ec_prove(neighbor(X, Y))), must(ec_prove(neighbor(Y, X))) )),
 
+    assert(( test_not_neighbor(X, Y) :- must(ec_prove(not(neighbor(X, Y)))), must(ec_prove(not(neighbor(Y, X)))) )),
 
+    test_neighbor(1, 2),
+    test_neighbor(1, 3),
+    test_neighbor(1, 4),
+    test_neighbor(2, 3),
+    test_neighbor(2, 4),
+    test_neighbor(3, 4),
+    test_neighbor(4, 7),
+    test_not_neighbor(4, 8),
+    test_neighbor(5, 6),
+    test_neighbor(5, 7),
+    test_neighbor(5, 8),
+    test_neighbor(6, 7),
+    test_neighbor(6, 8),
+    test_neighbor(7, 8) ]).
 
-% From /opt/logicmoo_workspace/packs_sys/small_adventure_games/prolog/ec_planner/ectest/sanity_equals_01.e:37
-:- run_tests.
 

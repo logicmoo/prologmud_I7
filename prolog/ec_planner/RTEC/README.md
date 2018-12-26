@@ -24,8 +24,7 @@ The /examples directory is **optional** and includes CE patterns and sample data
 # Documentation
 
 - User manual of RTEC.
-- Artikis A., Sergot M. and Paliouras G. [An Event Calculus for Event Recognition](http://dx.doi.org/10.1109/TKDE.2014.2356476).  
-  - IEEE Transactions on Knowledge and Data Engineering (TKDE), 27(4):895-908, 2015.
+- Artikis A., Sergot M. and Paliouras G. [An Event Calculus for Event Recognition](http://dx.doi.org/10.1109/TKDE.2014.2356476). IEEE Transactions on Knowledge and Data Engineering (TKDE), 27(4):895-908, 2015.
 
 # Applications
 
@@ -40,5 +39,67 @@ Complete datasets for some of these applications are available from [my site](ht
 - [OLED](https://github.com/nkatzz/OLED): Online Learning of Event Definitions. OLED automatically constructs Event Calculus rules, such as complex event patterns, from annotated data streams.
 - [LoMRF](https://github.com/anskarl/LoMRF):  Library for Markov Logic Networks. LoMRF supports Event Calculus reasoning under uncertainty.
 - [ScaRTEC](https://github.com/ioannis-kon/ScaRTEC):  A Scala implementation of RTEC.
+
+# RTECv2
+
+This an experimental, not properly tested extension of RTEC that supports cycles and deadlines.
+
+# Applications
+
+### Voting for Multi-Agent Systems
+
+In /examples there is a formalisation of a voting protocol for multi-agent systems that includes cycles and deadlines. To test it, navigate to
+
+**/examples/voting/experiments/queries/setting-1**
+
+launch YAP by typing 
+
+
+**yap -l mass-queries.prolog**
+
+
+and then type in YAP
+
+
+**YAP> performFullER('sometextfile', 10, 10, 20).**
+
+
+**YAP> holdsFor(F,I), not I=[].**
+
+
+The assimilated narative is 
+
+**/examples/voting/experiments/data/stream.prolog**
+
+while the constants used for grounding are
+
+**/examples/voting/experiments/data/static_information.prolog**
+
+### Business Processes
+
+In /examples there is also a toy formalisation of business processes. To test it, navigate to
+
+**/examples/BPM/experiments/queries/setting-1**
+
+launch YAP by typing 
+
+
+**yap -l mass-queries.prolog**
+
+
+and then type in YAP
+
+
+**YAP> performFullER('sometextfile', 327240000, 327240000, 327240000).**
+
+
+**YAP> holdsFor(F,I), not I=[].**
+
+
+The assimilated narative and the constants for grounding are in 
+
+**/examples/BPM/experiments/data/event_logprolog**
+
+
 
 

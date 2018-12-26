@@ -9,6 +9,8 @@ processSimpleFluent(Index, F=V, InitTime, QueryTime) :-
 	% before or on Qi-WM and ending after Qi-WM   
 	% to the starting points computed at this stage  
 	addPoint(StPoint, InitList, CompleteInitList),
+	% store the starting points of fluents that expire
+	storeStartingPoints(Index, F=V, CompleteInitList),
 	% compute new intervals
 	holdsForSimpleFluent(F=V, NewIntervals, InitTime, QueryTime, CompleteInitList),
 	% update simpleFPList
@@ -24,9 +26,6 @@ isThereASimpleFPList(Index, F=V, ExtendedPList) :-
 % this predicate deals with the case where no intervals for F=V were computed at the previous query time
 isThereASimpleFPList(_Index, _U, []).
 
-
-addPoint([], L, L) :- !.
-addPoint([P], L, [P|L]).
 
 
 /************************************************************************************************************* 
@@ -109,17 +108,54 @@ termPoint(F=V, InitTime, EndTime, NextTs) :-
 	nextTimePoint(Ts, NextTs).
 
 
+% 'Classic' Event Calculus
 % BROKEN
 
 broken(U, Ts, Tf, T) :-
 	terminatedAt(U, Ts, Tf, T).
 
-broken(F=V1, Ts, Tstar, T) :-
+broken(F=V1, Ts, Tstar, T) :-  
+    broken_v2(F=V1, Ts, Tstar, T).
+
+% master version and dsc-msc
+broken_v1(F=V1, Ts, Tstar, T) :-
 	initiatedAt(F=V2, Ts, Tstar, T), 
 	(strong_initiates ; V1 \= V2).   
   
+% SimplEC version and V2 version
+broken_v2(F=V1, Ts, Tstar, T) :-
+	simpleFluent(F=V2), \+V2=V1,
+	initiatedAt(F=V2, Ts, Tstar, T). 
+	%(strong_initiates ; V1 \= V2).   
+
 % strong_initiates.
 strong_initiates :- fail.    %% weak initiates 
+
+
+/****** auxiliary predicate ******/
+
+addPoint([], L, L) :- !.
+addPoint([P], L, [P|L]).
+
+/****** store the starting points of maxDurationUE fluents ******/
+
+storeStartingPoints(_, _, []) :- !.
+storeStartingPoints(Index, F=V, SPoints) :-
+	maxDurationUE(F=V, _, _),
+	retract(startingPoints(Index, F=V, _)), !,
+	assert(startingPoints(Index, F=V, SPoints)).
+storeStartingPoints(Index, F=V, SPoints) :-
+	maxDurationUE(F=V, _, _), !,
+	assert(startingPoints(Index, F=V, SPoints)).
+storeStartingPoints(Index, F=V, SPoints) :-
+	cyclic(F=V),
+	retract(startingPoints(Index, F=V, _)), !,
+	assert(startingPoints(Index, F=V, SPoints)).
+storeStartingPoints(Index, F=V, SPoints) :-
+	cyclic(F=V), !,
+	assert(startingPoints(Index, F=V, SPoints)).
+storeStartingPoints(_, _, _).
+
 
 
 /****** compute new intervals given the computed starting and ending points ******/
@@ -132,13 +168,18 @@ holdsForSimpleFluent(U, PeriodList, InitTime, QueryTime, InitList) :-
 	makeIntervalsFromSEPoints(InitList, TerminList, PeriodList).
       
 
+% makeIntervalsFromSEPoints(+ListofStartingPoints, +ListofEndingPoints, -MaximalIntervals) 
+
+makeIntervalsFromSEPoints(ListofStartingPoints, ListofEndingPoints, MaximalIntervals):- fail, !,
+  makeIntervalsFromSEPoints_v1(ListofStartingPoints, ListofEndingPoints, MaximalIntervals).
+
 % the predicate below works under the assumption that the lists of 
 % initiating and terminating points are temporally sorted
 
-% makeIntervalsFromSEPoints(+ListofStartingPoints, +ListofEndingPoints, -MaximalIntervals) 
 
+% master version and dsc-msc
 % base cases: single initiation point
-makeIntervalsFromSEPoints([Ts], EPoints, Period) :-
+makeIntervalsFromSEPoints_v1([Ts], EPoints, Period) :-
 	member(Tf, EPoints), 
 	Ts=<Tf, 
 	(
@@ -148,32 +189,62 @@ makeIntervalsFromSEPoints([Ts], EPoints, Period) :-
 		%Ts<Tf
 		!, Period=[(Ts,Tf)]
 	).
-makeIntervalsFromSEPoints([Ts], _EPoints, [(Ts,inf)]) :- !.   
+makeIntervalsFromSEPoints_v1([Ts], _EPoints, [(Ts,inf)]) :- !.   
 
 % recursion: at least two initiation points
 makeIntervalsFromSEPoints([T|MoreTs], [T|MoreTf], Periods) :-
 	!, makeIntervalsFromSEPoints(MoreTs, MoreTf, Periods).
 
-makeIntervalsFromSEPoints([Ts|MoreTs], [Tf|MoreTf], Periods) :-
+makeIntervalsFromSEPoints_v1([Ts|MoreTs], [Tf|MoreTf], Periods) :-
 	Tf<Ts, !, 
 	makeIntervalsFromSEPoints([Ts|MoreTs], MoreTf, Periods).
 
-makeIntervalsFromSEPoints([Ts,T|MoreTs], [T|MoreTf], [(Ts,T)|MorePeriods]) :-
+makeIntervalsFromSEPoints_v1([Ts,T|MoreTs], [T|MoreTf], [(Ts,T)|MorePeriods]) :-
 	%Ts<Tf,  
 	%Tf=Tnext, 
 	!, makeIntervalsFromSEPoints([T|MoreTs], [T|MoreTf], MorePeriods).
 
-makeIntervalsFromSEPoints([Ts,Tnext|MoreTs], [Tf|MoreTf], [(Ts,Tf)|MorePeriods]) :-
+makeIntervalsFromSEPoints_v1([Ts,Tnext|MoreTs], [Tf|MoreTf], [(Ts,Tf)|MorePeriods]) :-
 	%Ts<Tf,  
 	Tf<Tnext, !,
 	makeIntervalsFromSEPoints([Tnext|MoreTs], MoreTf, MorePeriods).
 
-makeIntervalsFromSEPoints([Ts,Tnext|MoreTs], [Tf|MoreTf], [(Ts,Tf)|MorePeriods]) :-
+makeIntervalsFromSEPoints_v1([Ts,Tnext|MoreTs], [Tf|MoreTf], [(Ts,Tf)|MorePeriods]) :-
 	%Ts<Tnext<Tf,  
 	!, makeIntervalsFromSEPoints([Tnext|MoreTs], [Tf|MoreTf], [(Tnext,Tf)|MorePeriods]).
 
-makeIntervalsFromSEPoints([Ts,_Tnext|_MoreTs], _EPoints, [(Ts,inf)]).
+makeIntervalsFromSEPoints_v1([Ts,_Tnext|_MoreTs], _EPoints, [(Ts,inf)]).
 
+
+% SimplEC version and V2 version
+makeIntervalsFromSEPoints_v2([Ts], EPoints, [Period]) :-
+	member(Tf, EPoints), 
+	Ts<Tf, !,  
+	Period = (Ts,Tf).
+
+makeIntervalsFromSEPoints_v2([Ts], _EPoints, [Period]) :- !,
+	Period = (Ts,inf).    % simpler to deal with than since(Ts).
+
+makeIntervalsFromSEPoints_v2([Ts,Tnext|MoreTs], EPoints, [Period|MorePeriods]) :-
+	member(Tf, EPoints), 
+	Ts<Tf,
+	(
+		Tf<Tnext,
+		Period=(Ts,Tf),
+		append( _, [Tf|MoreEPoints], EPoints ), !,
+		makeIntervalsFromSEPoints([Tnext|MoreTs], MoreEPoints, MorePeriods)
+		;
+		% U is neither initiated nor terminated between Ts and Tnext
+		% need to amalgamate (Ts,Tnext) with next period found
+		% Period=(Ts,Tf)
+		% makeIntervalsFromSEPoints([Tnext|MoreTs], U, [(Tnext,Tf)|MorePeriods])	
+		Period=(Ts,Tf), 
+		MorePeriods=MoreX, 
+        	append( _, [Tf|MoreEPoints], EPoints ), !,
+		makeIntervalsFromSEPoints([Tnext|MoreTs], [Tf|MoreEPoints], [(Tnext,Tf)|MoreX])
+	).
+
+makeIntervalsFromSEPoints_v2([Ts,_Tnext|_MoreTs], _EPoints, [(Ts,inf)]).
 
 /****** computesimpleFPList  ******/
 

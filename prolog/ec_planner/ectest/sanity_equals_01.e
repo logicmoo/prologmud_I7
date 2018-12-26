@@ -31,38 +31,30 @@ Neighbor(position1,position2) <->
  (position2=4 & position1=7)).
 
 
-[x,y] Neighbor_rev(y,x) <-> Neighbor(x,y).
 
-; Prolog code starts with ; and %
+; Prolog code starts with ;:-
 
 ;:- 
- register_tests([ 
-    test_tru(neighbor(1 ,2) ),
-    test_tru(neighbor(1 ,3) ),
-    test_tru(neighbor(1 ,4) ),
-    test_tru(neighbor(2 ,3) ),
-    test_tru(neighbor(2 ,4) ),
-    test_tru(neighbor(3 ,4) ),
-    test_tru(neighbor(5 ,6) ),
-    test_tru(neighbor(5 ,7) ),
-    test_tru(neighbor(5 ,8) ),
-    test_tru(neighbor(6 ,7) ),
-    test_tru(neighbor(6 ,8) ),
-    test_tru(neighbor(7 ,8) ),
-    test_tru(neighbor_rev(1 ,2) ),
-    test_tru(neighbor_rev(1 ,3) ),
-    test_tru(neighbor_rev(1 ,4) ),
-    test_tru(neighbor_rev(2 ,3) ),
-    test_tru(neighbor_rev(2 ,4) ),
-    test_tru(neighbor_rev(3 ,4) ),
-    test_tru(neighbor_rev(5 ,6) ),
-    test_tru(neighbor_rev(5 ,7) ),
-    test_tru(neighbor_rev(5 ,8) ),
-    test_tru(neighbor_rev(6 ,7) ),
-    test_tru(neighbor_rev(6 ,8) ),
-    test_tru(neighbor_rev(7 ,8) ),
-    test_tru(neighbor(4 ,7) ),
-    test_tru(neighbor_rev(4 ,7) )]).
+ maplist(call, 
+ [ 
+    assert(( test_neighbor(X, Y) :- must(ec_prove(neighbor(X, Y))), must(ec_prove(neighbor(Y, X))) )),
+
+    assert(( test_not_neighbor(X, Y) :- must(ec_prove(not(neighbor(X, Y)))), must(ec_prove(not(neighbor(Y, X)))) )),
+
+    test_neighbor(1, 2),
+    test_neighbor(1, 3),
+    test_neighbor(1, 4),
+    test_neighbor(2, 3),
+    test_neighbor(2, 4),
+    test_neighbor(3, 4),
+    test_neighbor(4, 7),
+    test_not_neighbor(4, 8),
+    test_neighbor(5, 6),
+    test_neighbor(5, 7),
+    test_neighbor(5, 8),
+    test_neighbor(6, 7),
+    test_neighbor(6, 8),
+    test_neighbor(7, 8) ]).
 
 ;:- run_tests.
 

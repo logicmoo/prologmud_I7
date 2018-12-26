@@ -88,7 +88,8 @@ DECLARATIONS:
 :- ['utilities/interval-manipulation.prolog'].
 :- ['utilities/amalgamate-periods.prolog'].
 
-:- dynamic temporalDistance/1, input/1, preProcessing/1, initTime/1, iePList/4, simpleFPList/4, sdFPList/4, evTList/3, happensAtIE/2, holdsForIESI/2, holdsAtIE/2.
+:- dynamic temporalDistance/1, input/1, preProcessing/1, initTime/1, iePList/4, simpleFPList/4, sdFPList/4, evTList/3, happensAtIE/2, holdsForIESI/2, holdsAtIE/2, 
+   processedCyclic/2, initiallyCyclic/1, storedCyclicPoints/3, startingPoints/3.
 
 
 /********************************** INITIALISE RECOGNITION ***********************************/
@@ -104,8 +105,12 @@ initialiseRecognition(InputFlag, PreProcessingFlag, TemporalDistance) :-
 
 /************************************* EVENT RECOGNITION *************************************/
 
+rtec_v2 :- true.
 
 eventRecognition(QueryTime, WM) :-
+    rtec_v2, !, 
+    eventRecognition_v2(QueryTime, WM).
+eventRecognition_v1(QueryTime, WM) :-
 	InitTime is QueryTime-WM,
 	assert(initTime(InitTime)),
         % delete input entities that have taken place before or on Qi-WM
@@ -123,6 +128,37 @@ eventRecognition(QueryTime, WM) :-
 	findall(OE, (cachingOrder2(Index,OE), processEntity(Index,OE,InitTime,QueryTime)), _),
 	retract(initTime(InitTime)).
 
+
+eventRecognition_v2(QueryTime, WM) :-
+	InitTime is QueryTime-WM,
+	assert(initTime(InitTime)),
+        % delete input entities that have taken place before or on Qi-WM
+	forget(InitTime),
+	% compute the intervals of input entities/statically determined fluents
+	inputProcessing(InitTime, QueryTime),
+	preProcessing(QueryTime),
+	% CYCLES #1 CHANGE
+	prepareCyclic,
+	% CYCLES & DEADLINES CHANGE
+	findall((Index,F=V,SPoints), (startingPoints(Index,F=V,SPoints),retract(startingPoints(Index,F=V,SPoints))), _),
+	% DEADLINES #1 CHANGE
+	findall((F=V,Duration), (maxDuration(F=V,_,Duration), deadlines1(F=V,Duration,InitTime)), _),
+	% the order in which entities are processed makes a difference
+	% start from lower-level entities and then move to higher-level entities
+	% in this way the higher-level entities will use the CACHED lower-level entities
+	% the order in which we process entities is set by cachingOrder/1 
+	% which is specified in the domain-dependent file 
+	% cachingOrder2/2 is produced in the compilation stage 
+	% by combining cachingOrder/1, indexOf/2 and grounding/1
+	findall(OE, (cachingOrder2(Index,OE), processEntity(Index,OE,InitTime,QueryTime)), _),
+	% DEADLINES #2 CHANGE
+	findall((F=V,Duration), (maxDuration(F=V,_,Duration), deadlines2(F=V,Duration,InitTime)), _),
+	retract(initTime(InitTime)).
+
+processEntity(Index, OE, InitTime, QueryTime) :-
+   rtec_v2, !, 
+   processEntity_v2(Index, OE, InitTime, QueryTime).
+
 processEntity(Index, OE, InitTime, QueryTime) :-
 	(
 		% compute the intervals of output entities/statically determined fluents
@@ -139,6 +175,309 @@ processEntity(Index, OE, InitTime, QueryTime) :-
 	), !.
 
 
+processEntity_v2(Index, OE, InitTime, QueryTime) :-
+	(
+		% compute the intervals of output entities/statically determined fluents
+		sDFluent(OE), 
+		processSDFluent(Index, OE, InitTime) 
+		;
+		% compute the intervals of simple fluents 
+		% (simple fluents are by definition output entities) 
+		simpleFluent(OE), 
+		processSimpleFluent(Index, OE, InitTime, QueryTime),
+		% CYCLES #2 CHANGE (no need to assert if not cyclic)
+		assertCyclic(Index, OE)
+		;
+		% compute the time-points of output entities/events
+		processEvent(Index, OE)
+	), !.
+
+
+/******************* deadlines treatment *********************/
+
+% Process deadline attempts computed at the previous query time
+
+% the rule below deals with fluents whose expiration may be extended
+% ie maxDurationUE
+% keep the happensAt(attempt(F=V),T) computed at the previous query time
+% iff (a) holdsAt(F=V,nextTimePoint(Qi-WM)), (b) T>Qi-WM, and (c) T-Duration=<Qi-WM
+deadlines1(F=V, Duration, InitTime) :-
+	maxDurationUE(F=V, _, Duration), !,
+	indexOf(Index, F=V), 
+	retract( evTList(Index, attempt(F=V), ListofDeadlineAttempts) ),
+	% (a) holdsAt(F=V,nextTimePoint(Qi-WM))
+	simpleFPList(Index, F=V, I1, I2),
+	amalgamatePeriods(I2, I1, I),
+	nextTimePoint(InitTime, NextInitTime),
+	tinIntervals(NextInitTime, I),
+	% find the deadline attempt that satisfies conditions (b) and (c) mentioned above
+	% this predicate is defined below
+	findDeadlineAttempt(ListofDeadlineAttempts, Attempt, InitTime, Duration), 
+	assert( evTList(Index, attempt(F=V), Attempt) ).
+	
+% === find the deadline attempt that satisfies conditions (b) and (c) mentioned above	 ===
+findDeadlineAttempt([], [], _, _) :- !.	
+
+findDeadlineAttempt([Attempt], [Attempt], InitTime, Duration) :-
+	% (b) the deadline attempt time is after Qi-WM
+	Attempt>InitTime,
+	% (c) the initiating conditions of the deadline attempt
+	% are before or on Qi-WM	
+	EarlyT is Attempt-Duration, EarlyT=<InitTime, !.
+
+findDeadlineAttempt([_], [], _, _) :- !.	
+	
+findDeadlineAttempt([A1,A2|Tail], [A1], InitTime, Duration) :-
+	% (b) the deadline attempt time is after Qi-WM
+	A1>InitTime,
+	% (c) the initiating conditions of the deadline attempt
+	% are before or on Qi-WM	
+	EarlyT1 is A1-Duration, EarlyT1=<InitTime,
+	EarlyT2 is A2-Duration, EarlyT2>InitTime, !.
+	
+findDeadlineAttempt([A1,A2|Tail], Attempt, InitTime, Duration) :-
+	findDeadlineAttempt([A2|Tail], Attempt, InitTime, Duration).
+% === find the deadline attempt that satisfies conditions (b) and (c) mentioned above	 ===
+
+
+% the rule below deals with fluents whose expiration may NOT be extended
+% keep the happensAt(attempt(F=V),T) computed at the previous query time
+% iff (a) holdsAt(F=V,nextTimePoint(Qi-WM)), (b) T>Qi-WM, (c) T-Duration=<Qi-WM and
+% (d) T-Duration=S where S is the start of the interval starting 
+% before or on Qi-WM and ending after for which F=V 
+deadlines1(F=V, Duration, InitTime) :-
+	indexOf(Index, F=V),
+	retract( evTList(Index, attempt(F=V), ListofDeadlineAttempts) ),	
+	% (a) holdsAt(F=V,nextTimePoint(Qi-WM))
+	simpleFPList(Index, F=V, I1, I2),
+	amalgamatePeriods(I2, I1, I),
+	nextTimePoint(InitTime, NextInitTime),
+	% we do not use tinIntervals as above because we also want S  
+	member((S,E),I), gt(E,NextInitTime), !, S=<NextInitTime,
+	member(Attempt, ListofDeadlineAttempts),
+	% (b) the deadline attempt time is after Qi-WM
+	Attempt>InitTime,
+	EarlyT is Attempt-Duration, 
+	% (c) the initiating conditions of the deadline attempt
+	% are before or on Qi-WM	
+	EarlyT=<InitTime,
+	% (d) Attempt-Duration=S where S is the start of the interval  
+	% starting before or on Qi-WM and ending after for which F=V 
+	prevTimePoint(S,PrevS), EarlyT=PrevS, 
+	% ListofDeadlineAttempts is sorted
+	!,
+	assert( evTList(Index, attempt(F=V), [Attempt]) ).
+
+% deadlines2/1 computes and stores the deadline attempts
+
+% the two rules below deal with fluents whose expiration may be extended
+
+% the rule below deals with the case where there are
+% dealine attempts from the previous query time
+deadlines2(F=V, Duration, InitTime) :-
+	maxDurationUE(F=V, _, Duration),
+	indexOf(Index, F=V),
+	retract( evTList(Index, attempt(F=V), List) ), !,
+	startingPoints(Index, F=V, SPoints),
+	findall(T, 
+		(member(S,SPoints), prevTimePoint(S,PrevS), PrevS>InitTime, T is PrevS+Duration), 
+	NewList),
+	append(List, NewList, AppendedList),
+	% the predicate below is defined in processEvents.prolog
+	updateevTList(Index, attempt(F=V), AppendedList).
+% the rule below deals with the case where there are NO
+% dealine attempts from the previous query time
+deadlines2(F=V, Duration, InitTime) :-
+	maxDurationUE(F=V, _, Duration), !,
+	indexOf(Index, F=V),
+	startingPoints(Index, F=V, SPoints),
+	findall(T, 
+		(member(S,SPoints), prevTimePoint(S,PrevS), PrevS>InitTime, T is PrevS+Duration), 
+	NewList),
+	% the predicate below is defined in processEvents.prolog
+	updateevTList(Index, attempt(F=V), NewList).
+
+% the two rules below deal with fluents whose expiration may NOT be extended
+
+% the rule below deals with the case where there are
+% dealine attempts from the previous query time
+deadlines2(F=V, Duration, InitTime) :-
+	indexOf(Index, F=V),
+	retract( evTList(Index, attempt(F=V), List) ), !,
+	simpleFPList(Index, F=V, I1, I2),
+	amalgamatePeriods(I2, I1, I),
+	findall(T, 
+		(member((S,_),I), prevTimePoint(S,PrevS), PrevS>InitTime, T is PrevS+Duration), 
+	NewList),
+	append(List, NewList, AppendedList),
+	% the predicate below is defined in processEvents.prolog
+	updateevTList(Index, attempt(F=V), AppendedList).
+% the rule below deals with the case where there are NO
+% dealine attempts from the previous query time
+deadlines2(F=V, Duration, InitTime) :-
+	indexOf(Index, F=V),
+	simpleFPList(Index, F=V, I1, I2),
+	amalgamatePeriods(I2, I1, I),
+	findall(T, 
+		(member((S,_),I), prevTimePoint(S,PrevS), PrevS>InitTime, T is PrevS+Duration), 
+	NewList),
+	% the predicate below is defined in processEvents.prolog
+	updateevTList(Index, attempt(F=V), NewList).
+
+
+/******************* cycles treatment *********************/
+
+prepareCyclic :-
+	% check if there are cycles in the event description
+	cyclic(_), !,
+	findall((Index,F=V,L), (storedCyclicPoints(Index,F=V,L), retract(storedCyclicPoints(Index,F=V,L))), _),
+	findall((Index,F=V), (processedCyclic(Index,F=V), retract(processedCyclic(Index,F=V))), _),
+	findall(F=V, (initiallyCyclic(F=V), retract(initiallyCyclic(F=V))), _),
+	assertInitiallyCyclic.
+prepareCyclic.
+
+assertInitiallyCyclic :-
+	initTime(InitTime),
+	InitTime>0, !, 
+	nextTimePoint(InitTime, NextInitTime),
+	findall(F=V, 
+	  (
+	    cyclic(F=V),
+	    indexOf(Index, F=V),
+	    simpleFPList(Index, F=V, I1, I2),
+	    amalgamatePeriods(I2, I1, I),
+	    tinIntervals(NextInitTime, I),
+	    assert(initiallyCyclic(F=V))), 
+	  _).
+assertInitiallyCyclic :-
+	 % InitTime=<0
+	 findall(F=V, 
+	  (
+	    cyclic(F=V),
+	    grounding(F=V),
+	    %initially(F=V),
+	    initiatedAt(F=V, -1, -1, 0),
+	    assert(initiallyCyclic(F=V))), 
+	  _).
+	  
+assertCyclic(Index, F=V) :- 
+	  cyclic(F=V), !,
+	  assert(processedCyclic(Index, F=V)).
+assertCyclic(_, _).
+
+% T is ground when evaluating holdsAt
+% if the intervals of the cyclic fluent have been already computed then look no further
+holdsAtCyclic(Index, F=V, T) :-
+	processedCyclic(Index, F=V), !,
+	holdsAtProcessedSimpleFluent(Index, F=V, T).
+% check whether we already know whether holdsAt(F=V, T)
+holdsAtCyclic(Index, F=V, T) :-
+	% storedSFPoints stores some, but not necessarily all points of a cyclic fluent
+	% therefore, the cut in this rule has to go the end 
+	storedCyclicPoints(Index, F=V, StoredPoints), 
+	lastPointBeforeOrOnT(T, StoredPoints, (Point,Val)), !, 
+	findFluentVal(Index, F=V, T, (Point,Val)).
+% the rule below are classic EC simple fluent computation
+holdsAtCyclic(Index, F=V, T) :-
+	initTime(InitTime), 
+	initPointBetween(Index, F=V, InitTime, InitPoint, T),
+	nextTimePoint(InitPoint, NextPoint),
+	notBrokenOrReInitiated(Index, F=V, NextPoint, T), 
+	% since we computed a time-point for the cyclic fluent we store it 
+	% in order to avoid recomputing it in the future
+	addCyclicPoint(Index, F=V, T, t), !.
+% store that we failed to prove holdsAt(F=V, T)
+holdsAtCyclic(Index, F=V, T) :-
+	addCyclicPoint(Index, F=V, T, f), !, false.
+	
+	
+lastPointBeforeOrOnT(T, [(X,Val)], (X,Val)) :- !, X=<T.	
+lastPointBeforeOrOnT(T, [(X1,Val1),(X2,_)|_], (X1,Val1)) :- X1=<T, X2>T, !.	
+lastPointBeforeOrOnT(T, [(X,_)|Rest0], R) :-
+	X<T, lastPointBeforeOrOnT(T, Rest0, R).		
+	
+findFluentVal(_Index, _U, T, (T,Val)) :- !, Val=t.
+findFluentVal(Index, F=V, T, (Point,t)) :-
+	notBrokenOrReInitiated(Index, F=V, Point, T), !,
+	addCyclicPoint(Index, F=V, T, t).
+findFluentVal(Index, F=V, T, (_Point,t)) :-
+	addCyclicPoint(Index, F=V, T, f), !, false.
+findFluentVal(Index, F=V, T, (Point,f)) :-
+	startedBetween(Index, F=V, Point, InitPoint, T),
+	nextTimePoint(InitPoint, NextPoint),
+	notBrokenOrReInitiated(Index, F=V, NextPoint, T), !,
+	addCyclicPoint(Index, F=V, T, t).
+findFluentVal(Index, F=V, T, (_Point,f)) :-
+	addCyclicPoint(Index, F=V, T, f), !, false.
+	
+% we are looking in the interval [Ts,Te)
+notBrokenOrReInitiated(_, _, Ts, Te) :- Ts>=Te, !.
+notBrokenOrReInitiated(Index, F=V, Ts, Te) :-
+	brokenOnce(Index, F=V, Ts, T, Te), !,	
+	nextTimePoint(T, NextT),
+	startedBetween(Index, F=V, NextT, Init, Te),
+	notBrokenOrReInitiated(Index, F=V, Init, Te).
+notBrokenOrReInitiated(_, _, _, _).	
+
+% we are looking in the interval [Ts,Te)
+brokenOnce(Index, F=V1, Ts, T, Te) :-
+	simpleFluent(F=V2), \+V2=V1,
+	startedBetween(Index, F=V2, Ts, T, Te), !.
+brokenOnce(_Index, F=V, Ts, T, Te) :-
+	terminatedAt(F=V, Ts, T, Te), !.
+
+% we are looking in the interval [Ts,Te)
+startedBetween(_, _, Ts, _, Te) :- Ts>=Te, !, false.
+startedBetween(Index, F=V, Ts, T, Te) :-
+	startingPoints(Index, F=V, SPoints),
+	member(SPoint, SPoints), 
+	prevTimePoint(SPoint, T), 
+	Ts=<T, !, T<Te.	
+startedBetween(Index, F=V, Ts, T, Te) :-
+	initiatedAt(F=V, Ts, T, Te), !,
+	addStartingPoint(Index, F=V, T).
+
+% we are looking in the interval [Ts,Te)
+initPointBetween(Index, F=V, Ts, T, Te) :-
+	startingPoints(Index, F=V, SPoints), 
+	member(SPoint, SPoints), 
+	prevTimePoint(SPoint, T), 
+	Ts=<T, !, T<Te.	
+initPointBetween(_Index, F=V, Ts, Ts, Te) :- 
+	Ts<Te, initiallyCyclic(F=V), !.		
+initPointBetween(Index, F=V, Ts, T, Te) :-
+	nextTimePoint(Ts, NextTs),
+	initiatedAt(F=V, NextTs, T, Te), !,
+	addStartingPoint(Index, F=V, T).
+
+	
+addStartingPoint(Index, F=V, InitPoint) :-
+	retract(startingPoints(Index, F=V, SPoints)), !,
+	nextTimePoint(InitPoint, SPoint),
+	insertNo(SPoint, SPoints, NewSPoints),
+	assert(startingPoints(Index, F=V, NewSPoints)).
+addStartingPoint(Index, F=V, InitPoint) :-
+	nextTimePoint(InitPoint, SPoint),
+	assert(startingPoints(Index, F=V, [SPoint])).
+	
+addCyclicPoint(Index, F=V, T, Val) :-
+	retract(storedCyclicPoints(Index, F=V, OldCPoints)), !, 
+	insertTuple((T,Val), OldCPoints, NewCPoints),
+	assert(storedCyclicPoints(Index, F=V, NewCPoints)).
+addCyclicPoint(Index, F=V, T, Val) :-
+	assert(storedCyclicPoints(Index, F=V, [(T,Val)])).	
+
+insertNo(X, [], [X]).
+insertNo(X, [X|Rest], [X|Rest]) :- !.
+insertNo(X, [Y|Rest], [X,Y|Rest]) :- X<Y, !.
+insertNo(X, [Y|Rest0], [Y|Rest]) :- 
+	insertNo(X, Rest0, Rest).		
+	
+insertTuple(X, [], [X]) :- !.
+insertTuple((X,Val), [(X,Val)|Rest], [(X,Val)|Rest]) :- !.
+insertTuple((X,Val), [(Y,Val2)|Rest], [(X,Val),(Y,Val2)|Rest]) :- X<Y, !.
+insertTuple(X, [Y|Rest0], [Y|Rest]) :-
+	insertTuple(X, Rest0, Rest).
 
 /******************* entity index: use of cut to avoid backtracking *********************/
 
@@ -205,6 +544,82 @@ holdsAtSDFluent(F=V, T) :-
 %%% If it is then start(F=V) does not take place at the starting time 
 %%% of the first interval in (Qi-WM, Qi]
 
+
+:- if(rtec_v2).
+
+% old compute the starting points of processed input entities/statically determined fluents
+happensAtProcessedIE(Index, start(F=V), T) :-
+	iePList(Index, F=V, [(IntervalBreakingPoint,_)|Tail], [(_,IntervalBreakingPoint)]), 
+	member((S,_E), Tail), prevTimePoint(S, T).
+happensAtProcessedIE(Index, start(F=V), T) :-
+	iePList(Index, F=V, [H|Tail], []), 
+	member((S,_E), [H|Tail]), prevTimePoint(S, T).
+% compute the starting points of simple fluents
+happensAtProcessedSimpleFluent(Index, start(F=V), T) :-
+	simpleFPList(Index, F=V, [(IntervalBreakingPoint,_)|Tail], [(_,IntervalBreakingPoint)]), 
+	member((S,_E), Tail), prevTimePoint(S, T).
+happensAtProcessedSimpleFluent(Index, start(F=V), T) :-
+	simpleFPList(Index, F=V, [H|Tail], []),
+	member((S,_E), [H|Tail]), prevTimePoint(S, T).
+% compute the starting points of output entities/statically determined fluents
+happensAtProcessedSDFluent(Index, start(F=V), T) :-
+	sdFPList(Index, F=V, [(IntervalBreakingPoint,_)|Tail], [(_,IntervalBreakingPoint)]),  
+	member((S,_E), Tail), prevTimePoint(S, T).
+happensAtProcessedSDFluent(Index, start(F=V), T) :-
+	sdFPList(Index, F=V, [H|Tail], []), 
+	member((S,_E), [H|Tail]), prevTimePoint(S, T).
+
+% start(F=V) is not defined for fluents that are neither input nor output entities, 
+% ie fluents that are not cached
+% For such fluents we do not have access to the last interval before Qi-WM 
+% and therefore we cannot compute whether the last interval before Qi-WM 
+% is amalgamated with the first interval in (Qi-WM,Qi]
+
+
+%%%% special event: the ending time of a fluent interval 
+/*
+% compute the ending points of processed input entities/statically determined fluents
+happensAtProcessedIE(Index, end(F=V), E) :-
+	iePList(Index, F=V, [H|Tail], _), 
+	member((_S,E), [H|Tail]), \+ E=inf.
+% compute the ending points of simple fluents
+happensAtProcessedSimpleFluent(Index, end(F=V), E) :-
+	simpleFPList(Index, F=V, [H|Tail], _),
+	member((_S,E), [H|Tail]), \+ E=inf.
+% compute the ending points of output entities/statically determined fluents
+happensAtProcessedSDFluent(Index, endO(F=V), E) :-
+	sdFPList(Index, F=V, [H|Tail], _), 
+	member((_S,E), [H|Tail]), \+ E=inf.
+% compute the ending points of statically determined fluents
+% that are neither input nor output entities, ie these fluents are not cached
+happensAtSDFluent(endO(F=V), E) :-
+	holdsForSDFluent(F=V, [H|Tail]), 
+	member((_S,E), [H|Tail]), \+ E=inf.
+*/
+% compute the ending points of processed input entities/statically determined fluents
+happensAtProcessedIE(Index, end(F=V), T) :-
+	iePList(Index, F=V, [H|Tail], _), 
+	member((_S,E), [H|Tail]),
+	\+ E=inf, prevTimePoint(E, T).
+% compute the ending points of simple fluents
+happensAtProcessedSimpleFluent(Index, end(F=V), T) :-
+	simpleFPList(Index, F=V, [H|Tail], _),
+	member((_S,E), [H|Tail]), 
+	\+ E=inf, prevTimePoint(E, T).
+% compute the ending points of output entities/statically determined fluents
+happensAtProcessedSDFluent(Index, end(F=V), T) :-
+	sdFPList(Index, F=V, [H|Tail], _), 
+	member((_S,E), [H|Tail]),
+	\+ E=inf, 
+    prevTimePoint(E, T).
+% compute the ending points of statically determined fluents
+% that are neither input nor output entities, ie these fluents are not cached
+happensAtSDFluent(end(F=V), T) :-
+	holdsForSDFluent(F=V, [H|Tail]), 
+	member((_S,E), [H|Tail]),
+	\+ E=inf, prevTimePoint(E, T).
+
+:- else.
 % compute the starting points of processed input entities/statically determined fluents
 happensAtProcessedIE(Index, start(F=V), S) :-
 	iePList(Index, F=V, [(IntervalBreakingPoint,_)|Tail], [(_,IntervalBreakingPoint)]), !,
@@ -266,6 +681,7 @@ happensAtSDFluent(end(F=V), E) :-
 	member((_S,E), [H|Tail]),
 	\+ E=inf.
 
+:- endif.
 
 %%%% happensAtProcessed for non-special events
 
