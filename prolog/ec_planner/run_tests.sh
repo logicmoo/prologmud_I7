@@ -8,7 +8,19 @@ function test_sicstus() {
 }
 
 function test_swipl() {
+  
   swipl -O -l $1 -g run_tests
+  return_value=$?
+     if [ $return_value == 4 ]; then
+       echo "Command uncleanly exited"
+       exit -4
+     else 
+       if [ $return_value == 1 ]; then
+        echo "Command aborted"
+        exit -1
+       fi
+    fi
+    echo "EXIT($return_value)"
 }
 
 for i in ectest/test_*.pl; do

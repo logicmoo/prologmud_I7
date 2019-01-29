@@ -1,5 +1,4 @@
 :- include('../ec_test_incl').
-
 /*
    Test B
 */
@@ -38,24 +37,12 @@ do_test(test16) :-
      abdemo_special(easy,[holds_at(f16,t)], R).
 
 
-do_test(test160) :-
-     testing_msg('Test 160'),
-     abdemo_special(easy,[holds_at(f160,t)], R).
 
 
 
 
+axiom(initiates(a1,f1,T),[]).
 
-
-initiates(a1,f1).
-
-:- 
-  forall((between(1, 160, N), 
-          Np1 is N+1,
-          atom_concat(a,Np1,A2),atom_concat(f,N,F1),atom_concat(f,Np1,F2)),
-    process_ec( initiates(A,F2) <- F1 )).
-
-/*
 axiom(initiates(a2,f2,T),[holds_at(f1,T)]).
 
 axiom(initiates(a3,f3,T),[holds_at(f2,T)]).
@@ -85,7 +72,7 @@ axiom(initiates(a14,f14,T),[holds_at(f13,T)]).
 axiom(initiates(a15,f15,T),[holds_at(f14,T)]).
 
 axiom(initiates(a16,f16,T),[holds_at(f15,T)]).
-*/
+
 
 
 
@@ -125,3 +112,4 @@ executable(a14).
 executable(a15).
 
 executable(a16).
+

@@ -31,6 +31,7 @@ do_test(G) :- G= {happens(eat_cakes(1),now),holds_at(num_cakes(0),aft)}, abdemo_
 % rus out of stack but should just fail
 % do_test(G) :- G= {happens(eat_cakes(1),start),holds_at(num_cakes(1),aft)}, abdemo_solve(G,R).
 
+fluent(num_cakes(integer)).
 
 axiom(initially(hypothesizing(num_cakes(1))),[]).
 axiom(initially(hypothesizing(num_cakes(0))),[]).
@@ -65,15 +66,15 @@ axiom(terminates(imagine_terminates(neg(Propostion)),neg(Propostion),T), [holds_
 axiom(holds_at(num_cakes(0),T),
      [holds_at(neg(num_cakes(1)),T)]).
 
-axiom(holds_at(neg(num_cakes(0)),T),
-     [holds_at(num_cakes(1),T)]).
+%axiom(holds_at(neg(num_cakes(0)),T),
+%     [holds_at(num_cakes(1),T)]).
 
 axiom(holds_at(num_cakes(1),T),
      [holds_at(neg(num_cakes(0)),T)]).
 
 % Why causes loops?
-axiom(holds_at(neg(num_cakes(1)),T),
-     [holds_at(num_cakes(0),T)]):- fail.
+%axiom(holds_at(neg(num_cakes(1)),T),
+%     [holds_at(num_cakes(0),T)]):- fail.
 
 /* Abduction policy */
 

@@ -14,6 +14,9 @@ do_test(mail2)   :- abdemo_special(loops,[holds_at(inRoom(p1,r3),t)],R).
 /* Compound actions */
 
 
+fluent(atRoom(agent,room)).
+fluent(inRoom(package,room)).
+
 axiom(happens(shift_pack(Agnt,P,R1,R2,R3),T1,T6),
      [happens(go_to_room(Agnt,R1,R2),T1,T2),
      b(T2,T3), not(clipped(T2,atRoom(Agnt,R2),T3)), not(clipped(T1,inRoom(P,R2),T3)),
@@ -21,9 +24,8 @@ axiom(happens(shift_pack(Agnt,P,R1,R2,R3),T1,T6),
      b(T5,T6), not(clipped(T3,got(Agnt,P),T6)), not(clipped(T5,atRoom(Agnt,R3),T6)),
      happens(put_down(Agnt,P),T6)]).
 
-initiates(shift_pack(Agnt,P,R1,R2,R3),inRoom(P,R3)) <-
-     atRoom(Agnt,R1) & 
-     inRoom(P,R2).
+<-(initiates(shift_pack(Agnt,P,R1,R2,R3),inRoom(P,R3)),
+     &(atRoom(Agnt,R1),inRoom(P,R2))).
 
                                             
 axiom(happens(go_to_room(Agnt,R,R),T,T),[]).
