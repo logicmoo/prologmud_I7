@@ -1,3 +1,6 @@
+
+:- multifile(sentence/5).
+:- dynamic(sentence/5).
 :- op(1001,xfy, ('...' )).
 :- op(1200,xfx, ('--->')).
 

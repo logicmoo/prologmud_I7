@@ -32,7 +32,7 @@
 :- ensure_loaded('./marty_white/adv_telnet').
 :- ensure_loaded('./marty_white/adv_main').
 %:- use_module(library(dialect/ifprolog),except([time/1])).
-:- use_module('./chat80').
+%:- use_module('./chat80').
 
 %:- ensure_loaded('./adv_chat80').
 
