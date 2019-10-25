@@ -148,7 +148,7 @@ pprint(Term, B) :-
  player_format('~N~@~N',[our_pretty_printer(Term)]),!.
 pprint(_, _).
 
-:- use_module(library(hybrid_db/portray_vars)).
+:- use_module(library(logicmoo/portray_vars)).
 
 :- flag(our_pretty_printer,_,0).
 our_current_portray_level(Level) :- flag(our_pretty_printer,Was,Was),Was=Level.

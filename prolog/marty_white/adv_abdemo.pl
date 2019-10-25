@@ -393,7 +393,7 @@ abdemo_naf_cont(R1,Gs,R2,R3,N1,N2) :- R1 \= R2, abdemo_naf(Gs,R1,R3,N1,N2).
 */
 
  
-check_nafs(false,N1,R,R,N2,N2) :- !.
+check_nafs(false,N1,R,R,N2,N2) :- !.
 
 check_nafs(true,N,[[happens(A,T)|RH],RB],R,N1,N2) :-
      check_nafs(A,T,N,[[happens(A,T)|RH],RB],R,N1,N2).

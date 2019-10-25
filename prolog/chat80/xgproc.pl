@@ -5,7 +5,7 @@
 :- op(500,fx,+).
 :- op(500,fx,-).
 
-:- ensure_loaded(library(scope_locally/with_thread_local)).	% misc
+:- ensure_loaded(library(logicmoo/redo_locally)).	% misc
 
 %load_plus_xg_file(_M,F):- consume0(F,+).
 

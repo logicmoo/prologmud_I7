@@ -27,6 +27,8 @@
    asserta(user:file_search_path(library,X)).
 :- endif.
 
+:- pack_install(dictoo).
+
 :- ensure_loaded('./marty_white/adv_telnet').
 :- ensure_loaded('./marty_white/adv_main').
 %:- use_module(library(dialect/ifprolog),except([time/1])).
