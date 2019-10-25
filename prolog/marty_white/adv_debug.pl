@@ -136,7 +136,7 @@ if_tracing(G):- tracing -> notrace(G) ; true.
 
 % '$hide'(Pred) :- '$set_predicate_attribute'(Pred, trace, false).
 never_trace(_Spec):- prolog_load_context(reloading,true),!.
-never_trace(Spec):- '$hide'(Spec),'$iso'(Spec),trace(Spec, -all).
+never_trace(Spec):- '$hide'(Spec),'$iso'(Spec),ignore(trace(Spec, -all)).
 :- call(ensure_loaded,library(lists)).
 :- never_trace(lists:append(_,_,_)).
 :- never_trace(lists:list_to_set/2).
