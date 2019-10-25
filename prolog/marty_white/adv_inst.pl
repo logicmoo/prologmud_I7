@@ -128,7 +128,7 @@ create_objprop(Object, inherit(Other,t), S0, S0):- Other==Object,!.
 create_objprop(_Object, inherit(Other,t), S0, S0):- direct_props(Other, PropList, S0), member(no_copy(t),PropList),!.
 create_objprop(Object, inherit(Other,t), S0, S9):- 
  direct_props_or(Other, PropList0, [], S0),
- subst(PropList0,$class,Other,PropList1),
+ adv_subst(PropList0,$class,Other,PropList1),
  (member(adjs(_),PropList1)-> PropList1=PropList;  [nouns([Other])|PropList1]=PropList),
  copy_term(PropList,PropListC),!,
  % must_det(updateprop(Object, inherit(Other,t), S5, S9)), !,
@@ -142,7 +142,7 @@ create_objprop(Object, inherit(Other,t), S0, S9):-
 %create_objprop(Object, inherit(Other,t), S0, S0):- getprop(Object,inherited(Other),S0),!.
 
 create_objprop(Object, Prop, S0, S2):- 
- subst(equivalent,$self,Object,Prop,NewProp),Prop\==NewProp,!,
+ adv_subst(equivalent,$self,Object,Prop,NewProp),Prop\==NewProp,!,
  create_objprop(Object, NewProp, S0, S2).
 create_objprop(Object, Prop, S0, S2):- must_det(updateprop(Object,Prop,S0, S2)).
 

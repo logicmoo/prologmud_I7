@@ -52,7 +52,7 @@ defn_state_pred_wrapper(M,F,A,_,0):-
   functor(PP,F,A),PP=..[F|Args],
   append(Args,[S0,S9],NewArgs),
   PPS09=..[F|NewArgs],
-  M:asserta((PPS09:- M:PP, S0 = S9)).
+  asserta_if_undef(M, PPS09, (M:PP, S0 = S9)).
 
 defn_state_pred_wrapper(M,F,A,_,1):- 
   assertion(F\==('/')),assertion(F\==('//')),
@@ -61,10 +61,11 @@ defn_state_pred_wrapper(M,F,A,_,1):-
   PPS0 =..[F|NewArgs0],
   append(Args,[S0,S9],NewArgs09),
   PPS09 =..[F|NewArgs09],  
-  M:asserta((PPS09:- M:PPS0, S0 = S9)),
-  M:asserta((PP:- get_advstate(S0),M:PPS0)).
+  asserta_if_undef(M, PPS09,( M:PPS0, S0 = S9)),
+  asserta_if_undef(M, PP, (get_advstate(S0),M:PPS0)).
  
-
+asserta_if_undef(Mod,Head,_Body):- predicate_property(Mod:Head, defined),!.
+asserta_if_undef(Mod,Head, Body):- Mod:asserta((Head:-Body)).
 
 defn_state_none(P):- defn_state_pred(P,0).
 defn_state_getter(P):- defn_state_pred(P,1).
@@ -292,31 +293,31 @@ findterm(Term, T) :-
  T =.. List,
  findterm(Term, List).
 
-user:subst(Prop,Find,Replace,NewProp):- subst(equivalent,Find,Replace,Prop,NewProp).
+user:adv_subst(Prop,Find,Replace,NewProp):- adv_subst(equivalent,Find,Replace,Prop,NewProp).
 
 % Substitute 'Replace' for 'Find' in T0, yielding T.
 % TODO: add ^ handling like with bagof/setof.
 % bagof(Template, X^Goal, List) means to never instantiate X
 % Current behavior:
-% subst(copy_term, macro(Code), expanded(Code, X), macro(foo), expanded(foo, Y))
+% adv_subst(copy_term, macro(Code), expanded(Code, X), macro(foo), expanded(foo, Y))
 %  departing X unbound. Suppose I wanted X left bound?
-% subst(equivalent, macro(Code), expanded(Code, X), macro(foo), macro(foo))
+% adv_subst(equivalent, macro(Code), expanded(Code, X), macro(foo), macro(foo))
 %  This won't match Code.
-% subst(unify, macro(Code), expanded(Code, X), macro(foo), expanded(foo, X))
+% adv_subst(unify, macro(Code), expanded(Code, X), macro(foo), expanded(foo, X))
 %  This only matches all occurrences of the same first Code!
-subst(unify, Find1, Replace, Find2, Replace) :- Find1 = Find2,
+adv_subst(unify, Find1, Replace, Find2, Replace) :- Find1 = Find2,
  % The first unification of Find sticks! Doesn't seem too useful to me.
  % TODO: consider somehow allowing a solution for each match.
  % ground(Find) -> T0=Find, ! ; T0=Find. sort of does it
  !.
-subst(equivalent, Find, Replace, T0, Replace) :-
+adv_subst(equivalent, Find, Replace, T0, Replace) :-
  % Don't unify any variables. Safe and simple.
  T0 == Find,
  !.
-subst(copy_term, Find, Replace, FindCopy, ReplaceCopy) :-
+adv_subst(copy_term, Find, Replace, FindCopy, ReplaceCopy) :-
  % Unify with new instantiations at each replacement.
  % Allows sensible behavior like:
- % subst(my_macro(Code),
+ % adv_subst(my_macro(Code),
  %   expanded(Code),
  %   (this, my_macro(that), other, my_macro(another)),
  %   (this, expanded(that), other, expanded(another)) )
@@ -324,28 +325,28 @@ subst(copy_term, Find, Replace, FindCopy, ReplaceCopy) :-
  % TODO: think about how bagof works; apply here.
  copy_term(Find-Replace, FindCopy-ReplaceCopy),
  !.
-subst(BindType, Find, Replace, List, [T|Rest]) :-
+adv_subst(BindType, Find, Replace, List, [T|Rest]) :-
  is_list(List),
  List = [T0|Rest0], % fails when List = []
  !,
- subst(BindType, Find, Replace, T0, T),
- subst(BindType, Find, Replace, Rest0, Rest).
-subst(BindType, Find, Replace, T0, T) :-
+ adv_subst(BindType, Find, Replace, T0, T),
+ adv_subst(BindType, Find, Replace, Rest0, Rest).
+adv_subst(BindType, Find, Replace, T0, T) :-
  compound(T0),
  % \+ is_list(T0),
  !,
  T0 =.. [Functor0|Args0],
- subst(BindType, Find, Replace, Functor0, Functor1),
- subst(BindType, Find, Replace, Args0, Args1),
- % If Replacement would cause invalid functor, don't subst.
+ adv_subst(BindType, Find, Replace, Functor0, Functor1),
+ adv_subst(BindType, Find, Replace, Args0, Args1),
+ % If Replacement would cause invalid functor, don't adv_subst.
  ( atom(Functor1) -> T =.. [Functor1|Args1] ; T =.. [Functor0|Args1]).
-subst(_BindType, _Find, _Replace, T, T).
+adv_subst(_BindType, _Find, _Replace, T, T).
 
-% Call subst on T for each Find-Replace pair in the given list.
+% Call adv_subst on T for each Find-Replace pair in the given list.
 % Order of substitution may matter to you!
 subst_dict(_BindType, [], T, T).
 subst_dict(BindType, [Find-Replace|Rest], T0, T) :-
- subst(BindType, Find, Replace, T0, T1),
+ adv_subst(BindType, Find, Replace, T0, T1),
  subst_dict(BindType, Rest, T1, T).
 
 

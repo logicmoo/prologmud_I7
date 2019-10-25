@@ -55,7 +55,7 @@
 */
 
 
-
+:- style_check(- singleton).
 
 /*
    Top level calls to abdemo have to be transformed to the following form.

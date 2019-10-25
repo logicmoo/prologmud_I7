@@ -218,7 +218,7 @@ aXiom(switch(Agent, OnOff, Thing)) -->
   will_touch(Agent, Thing),
   getprop(Thing, can_be(switched(OnOff), t)),
   getprop(Thing, effect(switch(OnOff), Term0)),
-  {subst(equivalent, ($(self)), Thing, Term0, Term)},
+  {adv_subst(equivalent, ($(self)), Thing, Term0, Term)},
   call(Term),
   send_precept(Agent, [true, 'OK']).
 
@@ -305,7 +305,7 @@ aXiom(switch(OnOff, Thing)) -->
  will_touch(Agent, Thing),
  getprop(Thing, can_be(switch, t)),
  getprop(Thing, effect(switch(OnOff), Term0)),
- subst(equivalent, $self, Thing, Term0, Term),
+ adv_subst(equivalent, $self, Thing, Term0, Term),
  call(Term),
  send_precept(Agent, [true, 'OK']).
 */
@@ -369,9 +369,9 @@ change_state(Agent, Open, Thing, Opened, TF,  S0, S):-
 
  apply_forall(
   (getprop(Thing, effect(Open, Term0), S0),
-  subst(equivalent,$self, Thing, Term0, Term1),
-  subst(equivalent,$agent, Agent, Term1, Term2),
-  subst(equivalent,$here, Here, Term2, Term)),
+  adv_subst(equivalent,$self, Thing, Term0, Term1),
+  adv_subst(equivalent,$agent, Agent, Term1, Term2),
+  adv_subst(equivalent,$here, Here, Term2, Term)),
   call(Term),S0,S1),
 
  setprop(Thing, =(Opened, TF), S1, S2))),
