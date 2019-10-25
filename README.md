@@ -51,13 +51,13 @@ For built-in help, use ?- help(Topic). or ?- apropos(Word).
 
 ?-  pack_install(prologmud_I7).
 % Contacting server at https://www.swi-prolog.org/pack/query ... ok
-Install prologmud_I7@1.2.111 from https://github.com/TeamSPoon/small_adventure_games.git Y/n?
+Install prologmud_I7@1.2.111 from https://github.com/TeamSPoon/small_adventure_games.git Y/n? Y
 
 Create directory for packages
    (1) * /home/tmptest/.local/share/swi-prolog/pack
    (2)   Cancel
 
-Your choice?
+Your choice? 1
 % Cloning into '/home/tmptest/.local/share/swi-prolog/pack/small_adventure_games'...
 % Checking out files:  90% (1313/1458)
 % Checking out files:  91% (1327/1458)
@@ -113,7 +113,7 @@ true.
 ````
 ?- ensure_loaded(library(nomic_mu)).
 % Contacting server at https://www.swi-prolog.org/pack/query ... ok
-Install dictoo@1.2.111 from GIT at https://github.com/TeamSPoon/dictoo.git Y/n?
+Install dictoo@1.2.111 from GIT at https://github.com/TeamSPoon/dictoo.git Y/n? Y
 % Cloning into '/home/tmptest/.local/share/swi-prolog/pack/dictoo'...
 % Contacting server at https://www.swi-prolog.org/pack/query ... ok
 Warning: Package depends on the following:
@@ -124,7 +124,7 @@ What do you wish to do
    (2)   Only install requested package
    (3)   Cancel
 
-Your choice?
+Your choice? 1
 % "dictoo.git" was downloaded 10 times
 % Cloning into '/home/tmptest/.local/share/swi-prolog/pack/gvar_syntax'...
 i gvar_syntax@1.2.111       - Global Variable Syntax
@@ -137,7 +137,7 @@ Packager:               TeamSPoon/LogicMoo <https://github.com/TeamSPoon/>
 Home page:              https://github.com/TeamSPoon/dictoo
 Download URL:           https://github.com/TeamSPoon/dictoo/releases/*.zip
 Requires:               gvar_syntax
-Activate pack "dictoo" Y/n?
+Activate pack "dictoo" Y/n? Y
 Loading tt0_00022_cycl.qlf  ...
 % 28,465,540 inferences, 11.850 CPU in 11.859 seconds (100% CPU, 2402080 Lips)
 Loading ac_xnl_7166.qlf (this may take 60-120 seconds the very first time) ...
@@ -151,7 +151,7 @@ You may start the server with:
 
 true.
 
-[debug]  ?-
+[debug]  ?- halt.
 ````
 
 Lets exit though ..
