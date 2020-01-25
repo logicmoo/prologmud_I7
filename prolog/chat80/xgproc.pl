@@ -56,13 +56,13 @@ xg_process_te_clone((H ... T --> R),Mode,((P :- Q))) :- !, xg_process_te_clone((
 xg_process_te_clone((L --> R),Mode,((P :- Q))) :- !,xg_process_te_clone(L,R,Mode,P,Q).
 xg_process_te_clone((L ---> R),Mode,((P :- Q))) :- !,xg_process_te_clone(L,R,Mode,P,Q).
 
-chat80_term_expansion(In,Out):- compound(In),functor(In,'-->',_),trace,  must(xg_process_te_clone(In,+,Out)).
+chat80_term_expansion(In,Out):- compound(In),functor(In,'-->',_), fail,trace,fail, must(xg_process_te_clone(In,+,Out)).
 chat80_term_expansion((H ... T ---> R),((P :- Q))) :- must( xg_process_te_clone((H ... T),R,+,P,Q)).
 chat80_term_expansion((L ---> R), ((P :- Q))) :- must(xg_process_te_clone(L,R,+,P,Q)).
 
 
 chat80_term_expansion_now(( :- _) ,_ ):-!,fail.
-chat80_term_expansion_now(H,':-'(ain(O))):- trace, chat80_term_expansion(H,O),!.
+chat80_term_expansion_now(H,':-'(ain(O))):- fail,trace,fail, chat80_term_expansion(H,O),!.
 
 xgproc:term_expansion(H, O):- processing_xg->chat80_term_expansion_now(H,O).
 
